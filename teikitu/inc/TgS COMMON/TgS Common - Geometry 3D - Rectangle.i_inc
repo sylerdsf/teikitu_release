@@ -1,0 +1,322 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Rectangle.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_RT_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Reset)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0 )
+{
+    psRT0->m_vOrigin = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psRT0->m_avEdge[0] = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psRT0->m_avEdge[1] = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psRT0->m_vNormal = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_RT_Is_Valid)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    /* VEC_T(1,C)                          vNormal = FCN_V(tgMH_CX)( psRT1->m_avEdge + 0, psRT1->m_avEdge + 1 ); */
+
+    if (!FCN_V(tgMH_Is_Point_Valid)( &psRT1->m_vOrigin ))
+    {
+        return (false);
+    };
+
+    if (!FCN_V(tgMH_Is_Vector_Valid)( psRT1->m_avEdge + 0 ))
+    {
+        return (false);
+    };
+
+    if (!FCN_V(tgMH_Is_Vector_Valid)( psRT1->m_avEdge + 1 ))
+    {
+        return (false);
+    };
+
+    if ((FCN_V(tgMH_LSQ)( psRT1->m_avEdge + 0 ) <= VAR_K(KTgEPS)))
+    {
+        return (false);
+    };
+
+    if ((FCN_V(tgMH_LSQ)( &psRT1->m_vNormal ) <= VAR_K(KTgEPS)))
+    {
+        return (false);
+    };
+
+    if (FCN_V(tgMH_LSQ)( psRT1->m_avEdge + 1 ) <= VAR_K(KTgEPS))
+    {
+        return (false);
+    };
+
+    if (!FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( psRT1->m_avEdge + 0, psRT1->m_avEdge + 1 ) ))
+    {
+        return (false);
+    };
+    return (true);
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Support_Point) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_RT_Support_Point)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fAx_E0 = FCN_V(tgMH_DOT)( pvDN, psRT1->m_avEdge + 0 );
+    VAR_T(C)                            fAx_E1 = FCN_V(tgMH_DOT)( pvDN, psRT1->m_avEdge + 1 );
+    VAR_T(C)                            fE0 = FCN_F(tgPM_FSEL)( fAx_E0, TYPE_K(1), TYPE_K(0) );
+    VAR_T(C)                            fE1 = FCN_F(tgPM_FSEL)( fAx_E1, TYPE_K(1), TYPE_K(0) );
+    VEC_T(1,C)                          vE0 = FCN_V(tgMH_MUL_SV)( fE0, psRT1->m_avEdge + 0 );
+    VEC_T(1,C)                          vE1 = FCN_V(tgMH_MUL_SV)( fE1, psRT1->m_avEdge + 1 );
+    VEC_T(1,C)                          vB0 = FCN_V(tgMH_ADD)( &vE0, &vE1 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RT_Is_Valid)(psRT1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    return (FCN_V(tgMH_ADD)( &psRT1->m_vOrigin, &vB0) );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_RT_Area)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_CX)( psRT1->m_avEdge + 0, psRT1->m_avEdge + 1 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RT_Is_Valid)(psRT1));
+
+    return (FCN_V(tgMH_LEN)( &vX0) );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_ADD)( &psRT1->m_vOrigin, psRT1->m_avEdge + 0 );
+    VEC_T(1,C)                          vX1 = FCN_V(tgMH_ADD)( &psRT1->m_vOrigin, psRT1->m_avEdge + 1 );
+    VEC_T(1,C)                          vX2 = FCN_V(tgMH_ADD)( psRT1->m_avEdge + 0, psRT1->m_avEdge + 1 );
+    VEC_T(1,C)                          vX3 = FCN_V(tgMH_ADD)( &psRT1->m_vOrigin, &vX2 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RT_Is_Valid)(psRT1));
+
+    FCN_VO(tgGM_BA_Init_PT)( psBA0, &psRT1->m_vOrigin );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, &vX0 );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, &vX1 );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, &vX3 );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1, VEC_T(1,CPCU) pvDT )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RT_Is_Valid)(psRT1) && FCN_V(tgMH_Is_Vector_Valid)(pvDT));
+
+    FCN_VO(tgGM_RT_BA)( psBA0, psRT1 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fAx_E0 = FCN_V(tgMH_DOT)( pvDN, psRT1->m_avEdge + 0 );
+    VAR_T(C)                            fAx_E1 = FCN_V(tgMH_DOT)( pvDN, psRT1->m_avEdge + 1 );
+    VAR_T(C)                            fK0 = FCN_V(tgMH_DOT)( pvDN, &psRT1->m_vOrigin );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RT_Is_Valid)(psRT1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    *ptyMin = fK0;
+    *ptyMax = fK0;
+
+    *ptyMin += FCN_F(tgPM_FSEL)( fAx_E0, TYPE_K(0), fAx_E0 );
+    *ptyMax += FCN_F(tgPM_FSEL)( fAx_E0, fAx_E0, TYPE_K(0) );
+    *ptyMin += FCN_F(tgPM_FSEL)( fAx_E1, TYPE_K(0), fAx_E1 );
+    *ptyMax += FCN_F(tgPM_FSEL)( fAx_E1, fAx_E1, TYPE_K(0) );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_RT_Is_Contained)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1, VEC_T(1,CPCU) pvS0 )
+{
+    VAR_T(C)                            fE0_E0 = FCN_V(tgMH_LSQ)( psRT1->m_avEdge + 0 );
+    VAR_T(C)                            fE1_E1 = FCN_V(tgMH_LSQ)( psRT1->m_avEdge + 1 );
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS0, &psRT1->m_vOrigin );
+    VAR_T(C)                            fDS_E0 = FCN_V(tgMH_DOT)( &vDS, psRT1->m_avEdge + 0 );
+    VAR_T(C)                            fDS_E1 = FCN_V(tgMH_DOT)( &vDS, psRT1->m_avEdge + 1 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RT_Is_Valid)(psRT1) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    return (fDS_E0 >= TYPE_K(0) && fDS_E1 >= TYPE_K(0) && fDS_E0 <= fE0_E0 && fDS_E1 <= fE1_E1);
+}
+
+
+/* ---- FCN_VO(tgGM_RT_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_TX)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psRT0->m_avEdge[0] = FCN_04_3_V(tgMH_TX_V)( pxM0, psRT0->m_avEdge + 0 );
+    psRT0->m_avEdge[1] = FCN_04_3_V(tgMH_TX_V)( pxM0, psRT0->m_avEdge + 1 );
+    psRT0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psRT0->m_vNormal );
+    psRT0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psRT0->m_vOrigin );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Copy_TX)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0, VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RT_Is_Valid)(psRT1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psRT0->m_avEdge[0] = FCN_04_3_V(tgMH_TX_V)( pxM0, psRT1->m_avEdge + 0 );
+    psRT0->m_avEdge[1] = FCN_04_3_V(tgMH_TX_V)( pxM0, psRT1->m_avEdge + 1 );
+    psRT0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psRT1->m_vNormal );
+    psRT0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psRT1->m_vOrigin );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Init_SEN) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Init_SEN)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0, VEC_T(1,CPCU) pvOrigin, VEC_T(1,CPCU) pvEdge0, VEC_T(1,CPCU) pvEdge1, VEC_T(1,CPCU) pvNormal )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvOrigin) && FCN_V(tgMH_Is_Vector_Valid)(pvNormal));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvEdge0) && FCN_V(tgMH_Is_Vector_Valid)(pvEdge1));
+
+    psRT0->m_vOrigin = *pvOrigin;
+    psRT0->m_avEdge[0] = *pvEdge0;
+    psRT0->m_avEdge[1] = *pvEdge1;
+    psRT0->m_vNormal = *pvNormal;
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Init_SE) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Init_SE)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0, VEC_T(1,CPCU) pvOrigin, VEC_T(1,CPCU) pvEdge0, VEC_T(1,CPCU) pvEdge1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvEdge0) && FCN_V(tgMH_Is_Vector_Valid)(pvEdge1));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvOrigin));
+
+    psRT0->m_vOrigin = *pvOrigin;
+    psRT0->m_avEdge[0] = *pvEdge0;
+    psRT0->m_avEdge[1] = *pvEdge1;
+    psRT0->m_vNormal = FCN_V(tgMH_UCX)( pvEdge0, pvEdge1 );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Copy)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0, VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RT_Is_Valid)(psRT1));
+    tgMM_Copy( psRT0, sizeof( VEC_OBJ_T(TgRECTANGLE) ), psRT1, sizeof( VEC_OBJ_T(TgRECTANGLE) ) );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Set_Origin)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0, VEC_T(1,CPCU) pvOrigin )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvOrigin));
+    psRT0->m_vOrigin = *pvOrigin;
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Set_Edge_0) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Set_Edge_0)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0, VEC_T(1,CPCU) pvEdge0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvEdge0));
+
+    psRT0->m_avEdge[0] = *pvEdge0;
+    psRT0->m_vNormal = FCN_V(tgMH_UCX)( pvEdge0, psRT0->m_avEdge + 1 );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Set_Edge_1) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RT_Set_Edge_1)( VEC_OBJ_T(TgRECTANGLE,PCU) psRT0, VEC_T(1,CPCU) pvEdge1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvEdge1));
+
+    psRT0->m_avEdge[1] = *pvEdge1;
+    psRT0->m_vNormal = FCN_V(tgMH_UCX)( psRT0->m_avEdge + 0, pvEdge1 );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_RT_Query_Origin)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    return (&psRT1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Query_Edge_0) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_RT_Query_Edge_0)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    return (psRT1->m_avEdge + 0);
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Query_Edge_1) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_RT_Query_Edge_1)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    return (psRT1->m_avEdge + 1);
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Query_Normal) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_RT_Query_Normal)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    return (&psRT1->m_vNormal);
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Query_Point_0) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_RT_Query_Point_0)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    return (&psRT1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Query_Point_1) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_RT_Query_Point_1)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    return (FCN_V(tgMH_ADD)( &psRT1->m_vOrigin, psRT1->m_avEdge + 0) );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Query_Point_2) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_RT_Query_Point_2)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    return (FCN_V(tgMH_ADD)( &psRT1->m_vOrigin, psRT1->m_avEdge + 1) );
+}
+
+
+/* ---- FCN_VO(tgGM_RT_Query_Point_3) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_RT_Query_Point_3)( VEC_OBJ_T(TgRECTANGLE,CPCU) psRT1 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_ADD)( psRT1->m_avEdge + 0, psRT1->m_avEdge + 1 );
+
+    return (FCN_V(tgMH_ADD)( &psRT1->m_vOrigin, &vX0) );
+}

@@ -1,0 +1,241 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Disk.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_DK_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Reset)( VEC_OBJ_T(TgDISK,PCU) psDK0 )
+{
+    psDK0->m_vU = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psDK0->m_vNormal = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psDK0->m_vV = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psDK0->m_vOrigin = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psDK0->m_fRadius = TYPE_K(0);
+    psDK0->m_fRadiusSq = TYPE_K(0);
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_DK_Area)( VEC_OBJ_T(TgDISK,CPCU) psDK1 )
+{
+    return (VAR_K(KTgPI)*psDK1->m_fRadiusSq);
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgDISK,CPCU) psDK1, VEC_T(1,CPCU) pvDT )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDT));
+
+    FCN_VO(tgGM_DK_BA)( psBA0, psDK1 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_DK_Is_Contained)( VEC_OBJ_T(TgDISK,CPCU) psDK1, VEC_T(1,CPCU) pvS0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS0, &psDK1->m_vOrigin );
+    VAR_T(C)                            fDS_E0 = FCN_V(tgMH_DOT)( &vDS, &psDK1->m_vU );
+    VAR_T(C)                            fDS_E1 = FCN_V(tgMH_DOT)( &vDS, &psDK1->m_vV );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_DK_Is_Valid)(psDK1) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    return (fDS_E0*fDS_E0 + fDS_E1*fDS_E1 < psDK1->m_fRadiusSq);
+}
+
+
+/* ---- FCN_VO(tgGM_DK_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_TX)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psDK0->m_vU = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDK0->m_vU );
+    psDK0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDK0->m_vNormal );
+    psDK0->m_vV = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDK0->m_vV );
+    psDK0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psDK0->m_vOrigin );
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Copy_TX)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_OBJ_T(TgDISK,CPCU) psDK1, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_DK_Is_Valid)(psDK1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psDK0->m_vU = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDK1->m_vU );
+    psDK0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDK1->m_vNormal );
+    psDK0->m_vV = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDK1->m_vV );
+    psDK0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psDK1->m_vOrigin );
+    psDK0->m_fRadius = psDK1->m_fRadius;
+    psDK0->m_fRadiusSq = psDK1->m_fRadiusSq;
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Init)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_T(1,CPCU) pvU, VEC_T(1,CPCU) pvNM, VEC_T(1,CPCU) pvV, VEC_T(1,CPCU) pvOG, VAR_T(C) fRadius )
+{
+    FCN_VO(tgGM_DK_Set_U)( psDK0, pvU );
+    FCN_VO(tgGM_DK_Set_Normal)( psDK0, pvNM );
+    FCN_VO(tgGM_DK_Set_V)( psDK0, pvV );
+    FCN_VO(tgGM_DK_Set_Origin)( psDK0, pvOG );
+    FCN_VO(tgGM_DK_Set_Radius)( psDK0, fRadius );
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Init_3D) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Init_3D)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_04_3_T(CPCU) pxM0, VAR_T(C) fRadius )
+{
+    FCN_VO(tgGM_DK_Set_3D)( psDK0, pxM0 );
+    FCN_VO(tgGM_DK_Set_Radius)( psDK0, fRadius );
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Copy)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_OBJ_T(TgDISK,CPCU) psDK1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_DK_Is_Valid)(psDK1));
+
+    psDK0->m_vU = psDK1->m_vU;
+    psDK0->m_vNormal = psDK1->m_vNormal;
+    psDK0->m_vV = psDK1->m_vV;
+    psDK0->m_vOrigin = psDK1->m_vOrigin;
+    psDK0->m_fRadius = psDK1->m_fRadius;
+    psDK0->m_fRadiusSq = psDK1->m_fRadiusSq;
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Set_Origin)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+    psDK0->m_vOrigin = *pvS0;
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Set_Axes_Unit_Index) -------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Set_Axes_Unit_Index)( VEC_OBJ_T(TgDISK,PCU) psDK0, TgRSIZE_C uiIndex, VEC_T(1,CPCU) pvAxis )
+{
+    TgGEOM_ASSERT_PARAM(uiIndex < 3 && FCN_V(tgMH_Is_Vector_Valid)(pvAxis) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvAxis)));
+    psDK0->m_avData[uiIndex] = *pvAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Set_U) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Set_U)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_T(1,CPCU) pvU )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvU) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvU)));
+    psDK0->m_vU = *pvU;
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Set_Normal) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Set_Normal)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_T(1,CPCU) pvN )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvN) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvN)));
+    psDK0->m_vNormal = *pvN;
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Set_V) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Set_V)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_T(1,CPCU) pvV )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvV) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvV)));
+    psDK0->m_vV = *pvV;
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Set_3D) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Set_3D)( VEC_OBJ_T(TgDISK,PCU) psDK0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    FCN_04_3_V(tgMH_TR)(&psDK0->m_xData, pxM0);
+
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psDK0->m_avData + 0) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psDK0->m_avData + 0)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psDK0->m_avData + 1) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psDK0->m_avData + 1)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psDK0->m_avData + 2) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psDK0->m_avData + 2)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(psDK0->m_avData + 3));
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Set_Radius) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DK_Set_Radius)( VEC_OBJ_T(TgDISK,PCU) psDK0, VAR_T(C) fRadius )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fRadius) && fRadius > TYPE_K(0));
+
+    psDK0->m_fRadius = fRadius;
+    psDK0->m_fRadiusSq = fRadius*fRadius;
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_DK_Query_Origin)( VEC_OBJ_T(TgDISK,CPCU) psDK1 )
+{
+    return (&psDK1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Query_U) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_DK_Query_U)( VEC_OBJ_T(TgDISK,CPCU) psDK1 )
+{
+    return (&psDK1->m_vU);
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Query_Normal) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_DK_Query_Normal)( VEC_OBJ_T(TgDISK,CPCU) psDK1 )
+{
+    return (&psDK1->m_vNormal);
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Query_V) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_DK_Query_V)( VEC_OBJ_T(TgDISK,CPCU) psDK1 )
+{
+    return (&psDK1->m_vV);
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Query_Radius) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_DK_Query_Radius)( VEC_OBJ_T(TgDISK,CPCU) psDK1 )
+{
+    return (psDK1->m_fRadius);
+}
+
+
+/* ---- FCN_VO(tgGM_DK_Query_Radius_Sq) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_DK_Query_Radius_Sq)( VEC_OBJ_T(TgDISK,CPCU) psDK1 )
+{
+    return (psDK1->m_fRadiusSq);
+}

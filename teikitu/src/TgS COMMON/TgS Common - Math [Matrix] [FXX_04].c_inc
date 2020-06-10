@@ -1,0 +1,159 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Math [Matrix] [FXX_04].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if defined(TEMPLATE__ENABLE_INTEGER)
+
+    #error
+
+#else
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #if !defined(TEMPLATE__TYPE_SIZE)
+            #define TEMPLATE__TYPE_SIZE 32
+            #include __FILE__
+            #undef TEMPLATE__TYPE_SIZE
+            #define TEMPLATE__TYPE_SIZE 64
+        #endif
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_M(tgMH_CAT_IMPL) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_M(tgMH_CAT_IMPL)( MAT_T(PCU) pxRet, MAT_T(CPCU) pxM0, MAT_T(CPCU) pxM1 )
+{
+    for (TgRSIZE ui0 = 0; ui0 < 4; ++ui0)
+    {
+        pxRet->m_aRowCol[ui0][0] = pxM0->m_aRowCol[ui0][0] * pxM1->m_aRowCol[0][0]
+                                 + pxM0->m_aRowCol[ui0][1] * pxM1->m_aRowCol[1][0]
+                                 + pxM0->m_aRowCol[ui0][2] * pxM1->m_aRowCol[2][0]
+                                 + pxM0->m_aRowCol[ui0][3] * pxM1->m_aRowCol[3][0];
+
+        pxRet->m_aRowCol[ui0][1] = pxM0->m_aRowCol[ui0][0] * pxM1->m_aRowCol[0][1]
+                                 + pxM0->m_aRowCol[ui0][1] * pxM1->m_aRowCol[1][1]
+                                 + pxM0->m_aRowCol[ui0][2] * pxM1->m_aRowCol[2][1]
+                                 + pxM0->m_aRowCol[ui0][3] * pxM1->m_aRowCol[3][1];
+
+        pxRet->m_aRowCol[ui0][2] = pxM0->m_aRowCol[ui0][0] * pxM1->m_aRowCol[0][2]
+                                 + pxM0->m_aRowCol[ui0][1] * pxM1->m_aRowCol[1][2]
+                                 + pxM0->m_aRowCol[ui0][2] * pxM1->m_aRowCol[2][2]
+                                 + pxM0->m_aRowCol[ui0][3] * pxM1->m_aRowCol[3][2];
+
+        pxRet->m_aRowCol[ui0][3] = pxM0->m_aRowCol[ui0][0] * pxM1->m_aRowCol[0][3]
+                                 + pxM0->m_aRowCol[ui0][1] * pxM1->m_aRowCol[1][3]
+                                 + pxM0->m_aRowCol[ui0][2] * pxM1->m_aRowCol[2][3]
+                                 + pxM0->m_aRowCol[ui0][3] * pxM1->m_aRowCol[3][3];
+    };
+}
+
+
+/* ---- FCN_M(tgMH_INV_DET_IMPL) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_M(tgMH_INV_DET_IMPL)( MAT_T(PCU) pxRet, VAR_T(C) fDet, MAT_T(CPCU) pxM1 )
+{
+    if (FCN_F(tgCM_NR0)( fDet ))
+    {
+        TgERROR_MSGF( 0, "%-16.16s(%-32.32s): Matrix is Singular - Zero Matrix returned.\n", "Math", "F_INV" );
+        FCN_M(tgMH_CLR)(pxRet);
+    }
+    else
+    {
+        VAR_T(C)                            fInvDet = TYPE_K(1) / fDet;
+
+
+        pxRet->_11 =  fInvDet*(  pxM1->_22*(pxM1->_33*pxM1->_44 - pxM1->_34*pxM1->_43)
+                               - pxM1->_32*(pxM1->_23*pxM1->_44 - pxM1->_24*pxM1->_43)
+                               + pxM1->_42*(pxM1->_23*pxM1->_34 - pxM1->_24*pxM1->_33));
+
+        pxRet->_12 = -fInvDet*(  pxM1->_12*(pxM1->_33*pxM1->_44 - pxM1->_34*pxM1->_43)
+                               - pxM1->_32*(pxM1->_13*pxM1->_44 - pxM1->_14*pxM1->_43)
+                               + pxM1->_42*(pxM1->_13*pxM1->_34 - pxM1->_14*pxM1->_33));
+
+        pxRet->_13 =  fInvDet*(  pxM1->_12*(pxM1->_23*pxM1->_44 - pxM1->_24*pxM1->_43)
+                               - pxM1->_22*(pxM1->_13*pxM1->_44 - pxM1->_14*pxM1->_43)
+                               + pxM1->_42*(pxM1->_13*pxM1->_24 - pxM1->_14*pxM1->_23));
+
+        pxRet->_14 = -fInvDet*(  pxM1->_12*(pxM1->_23*pxM1->_34 - pxM1->_24*pxM1->_33)
+                               - pxM1->_22*(pxM1->_13*pxM1->_34 - pxM1->_14*pxM1->_33)
+                               + pxM1->_32*(pxM1->_13*pxM1->_24 - pxM1->_14*pxM1->_23));
+
+        pxRet->_21 = -fInvDet*(  pxM1->_21*(pxM1->_33*pxM1->_44 - pxM1->_34*pxM1->_43)
+                               - pxM1->_31*(pxM1->_23*pxM1->_44 - pxM1->_24*pxM1->_43)
+                               + pxM1->_41*(pxM1->_23*pxM1->_34 - pxM1->_24*pxM1->_33));
+
+        pxRet->_22 =  fInvDet*(  pxM1->_11*(pxM1->_33*pxM1->_44 - pxM1->_34*pxM1->_43)
+                               - pxM1->_31*(pxM1->_13*pxM1->_44 - pxM1->_14*pxM1->_43)
+                               + pxM1->_41*(pxM1->_13*pxM1->_34 - pxM1->_14*pxM1->_33));
+
+        pxRet->_23 = -fInvDet*(  pxM1->_11*(pxM1->_23*pxM1->_44 - pxM1->_24*pxM1->_43)
+                               - pxM1->_21*(pxM1->_13*pxM1->_44 - pxM1->_14*pxM1->_43)
+                               + pxM1->_41*(pxM1->_13*pxM1->_24 - pxM1->_14*pxM1->_23));
+
+        pxRet->_24 =  fInvDet*(  pxM1->_11*(pxM1->_23*pxM1->_34 - pxM1->_24*pxM1->_33)
+                               - pxM1->_21*(pxM1->_13*pxM1->_34 - pxM1->_14*pxM1->_33)
+                               + pxM1->_31*(pxM1->_13*pxM1->_24 - pxM1->_14*pxM1->_23));
+
+        pxRet->_31 =  fInvDet*(  pxM1->_21*(pxM1->_32*pxM1->_44 - pxM1->_34*pxM1->_42)
+                               - pxM1->_31*(pxM1->_22*pxM1->_44 - pxM1->_24*pxM1->_42)
+                               + pxM1->_41*(pxM1->_22*pxM1->_34 - pxM1->_24*pxM1->_32));
+
+        pxRet->_32 = -fInvDet*(  pxM1->_11*(pxM1->_32*pxM1->_44 - pxM1->_34*pxM1->_42)
+                               - pxM1->_31*(pxM1->_12*pxM1->_44 - pxM1->_14*pxM1->_42)
+                               + pxM1->_41*(pxM1->_12*pxM1->_34 - pxM1->_14*pxM1->_32));
+
+        pxRet->_33 =  fInvDet*(  pxM1->_11*(pxM1->_22*pxM1->_44 - pxM1->_24*pxM1->_42)
+                               - pxM1->_21*(pxM1->_12*pxM1->_44 - pxM1->_14*pxM1->_42)
+                               + pxM1->_41*(pxM1->_12*pxM1->_24 - pxM1->_14*pxM1->_22));
+
+        pxRet->_34 = -fInvDet*(  pxM1->_11*(pxM1->_22*pxM1->_34 - pxM1->_24*pxM1->_32)
+                               - pxM1->_21*(pxM1->_12*pxM1->_34 - pxM1->_14*pxM1->_32)
+                               + pxM1->_31*(pxM1->_12*pxM1->_24 - pxM1->_14*pxM1->_22));
+
+        pxRet->_41 = -fInvDet*(  pxM1->_21*(pxM1->_32*pxM1->_43 - pxM1->_33*pxM1->_42)
+                               - pxM1->_31*(pxM1->_22*pxM1->_43 - pxM1->_23*pxM1->_42)
+                               + pxM1->_41*(pxM1->_22*pxM1->_33 - pxM1->_23*pxM1->_32));
+
+        pxRet->_42 =  fInvDet*(  pxM1->_11*(pxM1->_32*pxM1->_43 - pxM1->_33*pxM1->_42)
+                               - pxM1->_31*(pxM1->_12*pxM1->_43 - pxM1->_13*pxM1->_42)
+                               + pxM1->_41*(pxM1->_12*pxM1->_33 - pxM1->_13*pxM1->_32));
+
+        pxRet->_43 = -fInvDet*(  pxM1->_11*(pxM1->_22*pxM1->_43 - pxM1->_23*pxM1->_42)
+                               - pxM1->_21*(pxM1->_12*pxM1->_43 - pxM1->_13*pxM1->_42)
+                               + pxM1->_41*(pxM1->_12*pxM1->_23 - pxM1->_13*pxM1->_22));
+
+        pxRet->_44 =  fInvDet*(  pxM1->_11*(pxM1->_22*pxM1->_33 - pxM1->_23*pxM1->_32)
+                               - pxM1->_21*(pxM1->_12*pxM1->_33 - pxM1->_13*pxM1->_32)
+                               + pxM1->_31*(pxM1->_12*pxM1->_23 - pxM1->_13*pxM1->_22));
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+/* MACROS defined in this file */
+#undef FPM
+#undef FCM
+

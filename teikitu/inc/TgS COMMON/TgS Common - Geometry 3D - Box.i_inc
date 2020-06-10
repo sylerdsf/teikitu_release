@@ -1,0 +1,850 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Box.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_BX_Calc_Point) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_BX_Calc_Point)( VEC_OBJ_T(TgBOX,CPCU) psBX1, VAR_T(C) fC0, VAR_T(C) fC1, VAR_T(C) fC2 )
+{
+    VEC_T(1,C)                          vE0 = FCN_V(tgMH_MUL_SV)( fC0, psBX1->m_avAxis + 0 );
+    VEC_T(1,C)                          vE1 = FCN_V(tgMH_MUL_SV)( fC1, psBX1->m_avAxis + 1 );
+    VEC_T(1,C)                          vE2 = FCN_V(tgMH_MUL_SV)( fC2, psBX1->m_avAxis + 2 );
+    VEC_T(1,C)                          vA0 = FCN_V(tgMH_ADD)( &vE0, &psBX1->m_vOrigin );
+    VEC_T(1,C)                          vA1 = FCN_V(tgMH_ADD)( &vE1, &vE2 );
+
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fC0) && (FCN_F(tgPM_ABS)(fC0) <= TYPE_K(1)));
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fC1) && (FCN_F(tgPM_ABS)(fC1) <= TYPE_K(1)));
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fC2) && (FCN_F(tgPM_ABS)(fC2) <= TYPE_K(1)));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1));
+
+    return (FCN_V(tgMH_ADD)( &vA0, &vA1) );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Calc_Point_Index) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_BX_Calc_Point_Index)( VEC_OBJ_T(TgBOX,CPCU) psBX1, TgRSIZE_C uiFlag )
+{
+    VAR_T(C)                            fT0 = (0 != (uiFlag & 1)) ? psBX1->m_vExtent.x : -psBX1->m_vExtent.x;
+    VAR_T(C)                            fT1 = (0 != (uiFlag & 2)) ? psBX1->m_vExtent.y : -psBX1->m_vExtent.y;
+    VAR_T(C)                            fT2 = (0 != (uiFlag & 4)) ? psBX1->m_vExtent.z : -psBX1->m_vExtent.z;
+    VEC_T(1)                            vResult;
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1));
+
+    vResult = FCN_V(tgMH_MAD_SVV)( fT0, psBX1->m_avAxis + 0, &psBX1->m_vOrigin );
+    vResult = FCN_V(tgMH_MAD_SVV)( fT1, psBX1->m_avAxis + 1, &vResult );
+    vResult = FCN_V(tgMH_MAD_SVV)( fT2, psBX1->m_avAxis + 2, &vResult );
+
+    return (vResult);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Reset)( VEC_OBJ_T(TgBOX,PCU) psBX0 )
+{
+    psBX0->m_avData[0] = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_avData[1] = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_avData[2] = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_avData[3] = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_vExtent = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Support_Point) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_BX_Support_Point)( VEC_OBJ_T(TgBOX,CPCU) psBX1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fDn_Ax0 = FCN_V(tgMH_DOT)( pvDN, psBX1->m_avAxis + 0 );
+    VAR_T(C)                            fDn_Ax1 = FCN_V(tgMH_DOT)( pvDN, psBX1->m_avAxis + 1 );
+    VAR_T(C)                            fDn_Ax2 = FCN_V(tgMH_DOT)( pvDN, psBX1->m_avAxis + 2 );
+    VAR_T(C)                            fX0 = FCN_F(tgPM_FSEL)( fDn_Ax0, psBX1->m_vExtent.x, -psBX1->m_vExtent.x );
+    VAR_T(C)                            fX1 = FCN_F(tgPM_FSEL)( fDn_Ax1, psBX1->m_vExtent.y, -psBX1->m_vExtent.y );
+    VAR_T(C)                            fX2 = FCN_F(tgPM_FSEL)( fDn_Ax2, psBX1->m_vExtent.z, -psBX1->m_vExtent.z );
+    VAR_T(C)                            fT0 = FCN_F(tgCM_NR0)(fDn_Ax0) ? TYPE_K(0) : fX0;
+    VAR_T(C)                            fT1 = FCN_F(tgCM_NR0)(fDn_Ax1) ? TYPE_K(0) : fX1;
+    VAR_T(C)                            fT2 = FCN_F(tgCM_NR0)(fDn_Ax2) ? TYPE_K(0) : fX2;
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+    TgGEOM_ASSERT_PARAM(FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvDN)));
+
+    return (FCN_VO(tgGM_BX_Calc_Point)( psBX1, fT0, fT1, fT2 ) );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Volume) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_BX_Volume)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1));
+    return (TYPE_K(8,0)*(psBX1->m_vExtent.x*psBX1->m_vExtent.y*psBX1->m_vExtent.z));
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_BX_Area)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1));
+
+    return (TYPE_K(8,0)*(
+          psBX1->m_vExtent.x*psBX1->m_vExtent.y
+        + psBX1->m_vExtent.x*psBX1->m_vExtent.z
+        + psBX1->m_vExtent.y*psBX1->m_vExtent.z));
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgBOX,CPCU) psBX1, VEC_T(1,CPCU) pvDT )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1) && FCN_V(tgMH_Is_Vector_Valid)(pvDT));
+
+    FCN_VO(tgGM_BX_BA)( psBA0, psBX1 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgBOX,CPCU) psBX1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fAx_X0 = FCN_V(tgMH_DOT)( pvDN, psBX1->m_avAxis + 0 );
+    VAR_T(C)                            fAx_X1 = FCN_V(tgMH_DOT)( pvDN, psBX1->m_avAxis + 1 );
+    VAR_T(C)                            fAx_X2 = FCN_V(tgMH_DOT)( pvDN, psBX1->m_avAxis + 2 );
+    VAR_T(C)                            fAx_C0 = FCN_V(tgMH_DOT)( pvDN, &psBX1->m_vOrigin );
+    VAR_T(C)                            fSUM = FCN_F(tgPM_ABS)( fAx_X0 + fAx_X1 + fAx_X2 );
+
+    TgGEOM_ASSERT_PARAM(nullptr != ptyMin && nullptr != ptyMax && FCN_VO(tgGM_BX_Is_Valid)(psBX1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    *ptyMin = fAx_C0 - fSUM;
+    *ptyMax = fAx_C0 + fSUM;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_BX_Is_Contained)( VEC_OBJ_T(TgBOX,CPCU) psBX1, VEC_T(1,CPCU) pvS0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS0, &psBX1->m_vOrigin );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    return (
+        (FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&vDS, psBX1->m_avAxis + 0)) <= psBX1->m_vExtent.x) &&
+        (FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&vDS, psBX1->m_avAxis + 1)) <= psBX1->m_vExtent.y) &&
+        (FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&vDS, psBX1->m_avAxis + 2)) <= psBX1->m_vExtent.z)
+    );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_TX)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(3,CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psBX0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psBX0->m_vOrigin );
+    psBX0->m_avAxis[0] = FCN_04_3_V(tgMH_TX_V)( pxM0, psBX0->m_avAxis + 0 );
+    psBX0->m_avAxis[1] = FCN_04_3_V(tgMH_TX_V)( pxM0, psBX0->m_avAxis + 1 );
+    psBX0->m_avAxis[2] = FCN_04_3_V(tgMH_TX_V)( pxM0, psBX0->m_avAxis + 2 );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Copy_TX)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_OBJ_T(TgBOX,CPCU) psBX1, VEC_T(3,CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psBX0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psBX1->m_vOrigin );
+    psBX0->m_avAxis[0] = FCN_04_3_V(tgMH_TX_V)( pxM0, psBX1->m_avAxis + 0 );
+    psBX0->m_avAxis[1] = FCN_04_3_V(tgMH_TX_V)( pxM0, psBX1->m_avAxis + 1 );
+    psBX0->m_avAxis[2] = FCN_04_3_V(tgMH_TX_V)( pxM0, psBX1->m_avAxis + 2 );
+    psBX0->m_vExtent = psBX1->m_vExtent;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Init_3D) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Init_3D)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(3,CPCU) pxTX, VAR_T(C) fX, VAR_T(C) fY, VAR_T(C) fZ )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fX) && (fX > TYPE_K(0)));
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fY) && (fY > TYPE_K(0)));
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fZ) && (fZ > TYPE_K(0)));
+
+    FCN_VO(tgGM_BX_Set_3D)( psBX0, pxTX );
+    psBX0->m_vExtent = FCN_V(tgMH_SETV_S)( fX, fY, fZ );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Copy)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_Is_Valid)(psBX1));
+
+    psBX0->m_avAxis[0] = psBX1->m_avAxis[0];
+    psBX0->m_avAxis[1] = psBX1->m_avAxis[1];
+    psBX0->m_avAxis[2] = psBX1->m_avAxis[2];
+    psBX0->m_vOrigin = psBX1->m_vOrigin;
+    psBX0->m_vExtent = psBX1->m_vExtent;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Origin)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(1,CPCU) pvOrigin )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvOrigin));
+    psBX0->m_vOrigin = *pvOrigin;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Axes_Unit) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Axes_Unit_List)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(3,CPCU) pxM0 )
+{
+    VEC_T(1,C)                          vS0 = psBX0->m_avData[3];
+
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    FCN_04_3_V(tgMH_TR)(&psBX0->m_xData, pxM0);
+
+    psBX0->m_avData[3] = vS0;
+
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psBX0->m_avData + 0) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psBX0->m_avData + 0)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psBX0->m_avData + 1) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psBX0->m_avData + 1)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psBX0->m_avData + 2) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psBX0->m_avData + 2)));
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Axis_Unit_Index) -------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Axis_Unit_Index)( VEC_OBJ_T(TgBOX,PCU) psBX0, TgRSIZE_C uiIndex, VEC_T(1,CPCU) pvAxis )
+{
+    TgGEOM_ASSERT_PARAM(uiIndex < 3 && FCN_V(tgMH_Is_Vector_Valid)(pvAxis) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvAxis)));
+    psBX0->m_avAxis[uiIndex] = *pvAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Axis_Unit_0) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Axis_Unit_0)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(1,CPCU) pvAxis )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvAxis) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvAxis)));
+    psBX0->m_avAxis[0] = *pvAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Axis_Unit_1) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Axis_Unit_1)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(1,CPCU) pvAxis )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvAxis) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvAxis)));
+    psBX0->m_avAxis[1] = *pvAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Axis_Unit_2) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Axis_Unit_2)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(1,CPCU) pvAxis )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvAxis) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvAxis)));
+    psBX0->m_avAxis[2] = *pvAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_3D) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_3D)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(3,CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    FCN_04_3_V(tgMH_TR)(&psBX0->m_xData, pxM0);
+
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psBX0->m_avData + 0) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psBX0->m_avData + 0)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psBX0->m_avData + 1) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psBX0->m_avData + 1)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psBX0->m_avData + 2) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psBX0->m_avData + 2)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(psBX0->m_avData + 3));
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Extent_List) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Extent_List)( VEC_OBJ_T(TgBOX,PCU) psBX0, VEC_T(1,CPCU) pvExtent )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(pvExtent->x) && (pvExtent->x > TYPE_K(0)));
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(pvExtent->y) && (pvExtent->y > TYPE_K(0)));
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(pvExtent->z) && (pvExtent->z > TYPE_K(0)));
+
+    psBX0->m_vExtent = *pvExtent;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Extent_Index) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Extent_Index)( VEC_OBJ_T(TgBOX,PCU) psBX0, TgRSIZE_C uiIndex, VAR_T(C) fExtent )
+{
+    TgGEOM_ASSERT_PARAM(uiIndex < 3 && !FCN_F(tgPM_NAN)(fExtent) && fExtent > TYPE_K(0));
+    psBX0->m_vExtent.m_aData[uiIndex] = fExtent;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Extent_0) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Extent_0)( VEC_OBJ_T(TgBOX,PCU) psBX0, VAR_T(C) fExtent )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fExtent) && fExtent > TYPE_K(0));
+    psBX0->m_vExtent.x = fExtent;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Extent_1) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Extent_1)( VEC_OBJ_T(TgBOX,PCU) psBX0, VAR_T(C) fExtent )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fExtent) && fExtent > TYPE_K(0));
+    psBX0->m_vExtent.y = fExtent;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Set_Extent_2) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_Set_Extent_2)( VEC_OBJ_T(TgBOX,PCU) psBX0, VAR_T(C) fExtent )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fExtent) && fExtent > TYPE_K(0));
+    psBX0->m_vExtent.z = fExtent;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_BX_Query_Origin)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    return (&psBX1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Axis_Unit) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_BX_Query_Axis_Unit)( VEC_OBJ_T(TgBOX,CPCU) psBX1, TgRSIZE_C uiIndex )
+{
+    return (&psBX1->m_avAxis[uiIndex]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Axis_Unit_0) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_BX_Query_Axis_Unit_0)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    return (&psBX1->m_avAxis[0]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Axis_Unit_1) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_BX_Query_Axis_Unit_1)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    return (&psBX1->m_avAxis[1]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Axis_Unit_2) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_BX_Query_Axis_Unit_2)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    return (&psBX1->m_avAxis[2]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Extent_List) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_BX_Query_Extent_List)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    return (&psBX1->m_vExtent);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Extent) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_BX_Query_Extent)( VEC_OBJ_T(TgBOX,CPCU) psBX1, TgRSIZE_C uiIndex )
+{
+    return (psBX1->m_vExtent.m_aData[uiIndex]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Extent_0) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_BX_Query_Extent_0)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    return (psBX1->m_vExtent.x);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Extent_1) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_BX_Query_Extent_1)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    return (psBX1->m_vExtent.y);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_Query_Extent_2) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_BX_Query_Extent_2)( VEC_OBJ_T(TgBOX,CPCU) psBX1 )
+{
+    return (psBX1->m_vExtent.z);
+}
+
+
+
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+
+/* ---- FCN_VO(tgGM_BX_N_Calc_Point) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Calc_Point)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1, VEC_N_T(1,C) vExt )
+{
+    VEC_N_T(1,C)                        vF0 = FCN_V(tgMH_SPX_N)( vExt );
+    VEC_N_T(1,C)                        vE0 = FCN_V(tgMH_MUL_N)( vF0, psBX1->m_avAxis[0] );
+    VEC_N_T(1,C)                        vF1 = FCN_V(tgMH_SPY_N)( vExt );
+    VEC_N_T(1,C)                        vE1 = FCN_V(tgMH_MUL_N)( vF1, psBX1->m_avAxis[1] );
+    VEC_N_T(1,C)                        vF2 = FCN_V(tgMH_SPZ_N)( vExt );
+    VEC_N_T(1,C)                        vE2 = FCN_V(tgMH_MUL_N)( vF2, psBX1->m_avAxis[2] );
+    VEC_N_T(1,C)                        vA0 = FCN_V(tgMH_ADD_N)( vE0, psBX1->m_vOrigin );
+    VEC_N_T(1,C)                        vA1 = FCN_V(tgMH_ADD_N)( vE1, vE2 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_N_Is_Valid)(psBX1));
+
+    return (FCN_V(tgMH_ADD_N)( vA0, vA1) );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Calc_Point_Index) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Calc_Point_Index)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1, TgRSIZE_C uiFlag )
+{
+    VEC_N_T(1,C)                        vE0 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[0], psBX1->m_avAxis[0] );
+    VEC_N_T(1,C)                        vE1 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[1], psBX1->m_avAxis[1] );
+    VEC_N_T(1,C)                        vE2 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[2], psBX1->m_avAxis[2] );
+    VEC_N_T(1)                          vResult = FCN_V(tgMH_SET1_N)( TYPE_K(0) );
+
+    if (0 != (uiFlag & 1))
+    {
+        FCN_V(tgMH_ADD_N)( vResult, vE0 );
+    }
+    else
+    {
+        FCN_V(tgMH_SUB_N)( vResult, vE0 );
+    };
+
+    if (0 != (uiFlag & 2))
+    {
+        FCN_V(tgMH_ADD_N)( vResult, vE1 );
+    }
+    else
+    {
+        FCN_V(tgMH_SUB_N)( vResult, vE1 );
+    };
+
+    if (0 != (uiFlag & 4))
+    {
+        FCN_V(tgMH_ADD_N)( vResult, vE2 );
+    }
+    else
+    {
+        FCN_V(tgMH_SUB_N)( vResult, vE2 );
+    };
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BX_N_Is_Valid)(psBX1));
+
+    return (FCN_V(tgMH_ADD_N)( vResult, psBX1->m_vOrigin ));
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Reset) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Reset)( VEC_OBJ_T(TgBOX_N,PCU) psBX0 )
+{
+    psBX0->m_avData[0] = FCN_V(tgMH_SETV_S_N)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_avData[1] = FCN_V(tgMH_SETV_S_N)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_avData[2] = FCN_V(tgMH_SETV_S_N)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_avData[3] = FCN_V(tgMH_SETP_S_N)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+
+    psBX0->m_avExtent[0] = FCN_V(tgMH_SETV_S_N)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_avExtent[1] = FCN_V(tgMH_SETV_S_N)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psBX0->m_avExtent[2] = FCN_V(tgMH_SETV_S_N)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Support_Point) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Support_Point)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1, VEC_N_T(1,C) vDN )
+{
+    VEC_N_T(1,C)                        vDn_Ax0 = FCN_V(tgMH_DOT_N)( vDN, psBX1->m_avAxis[0] );
+    VEC_N_T(1,C)                        vDn_Ax1 = FCN_V(tgMH_DOT_N)( vDN, psBX1->m_avAxis[1] );
+    VEC_N_T(1,C)                        vDn_Ax2 = FCN_V(tgMH_DOT_N)( vDN, psBX1->m_avAxis[2] );
+
+    VEC_N_T(1,C)                        vSgn0 = FCN_V(tgMH_SGN_N)( vDn_Ax0 );
+    VEC_N_T(1,C)                        vSgn1 = FCN_V(tgMH_SGN_N)( vDn_Ax1 );
+    VEC_N_T(1,C)                        vSgn2 = FCN_V(tgMH_SGN_N)( vDn_Ax2 );
+
+    VEC_N_T(1,C)                        vF0 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[0], vSgn0 );
+    VEC_N_T(1,C)                        vF1 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[1], vSgn1 );
+    VEC_N_T(1,C)                        vF2 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[2], vSgn2 );
+
+    VEC_N_T(1,C)                        vE0 = FCN_V(tgMH_MUL_N)( psBX1->m_avAxis[0], vF0 );
+    VEC_N_T(1,C)                        vE1 = FCN_V(tgMH_MUL_N)( psBX1->m_avAxis[1], vF1 );
+    VEC_N_T(1,C)                        vE2 = FCN_V(tgMH_MUL_N)( psBX1->m_avAxis[2], vF2 );
+    
+    VEC_N_T(1,C)                        vE3 = FCN_V(tgMH_ADD_N)( vE0, vE1 );
+    VEC_N_T(1,C)                        vE4 = FCN_V(tgMH_ADD_N)( vE2, vE3 );
+
+    return (vE4);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Volume) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Volume)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    VEC_N_T(1,C)                        vF0 = FCN_V(tgMH_SET1_N)( TYPE_K(8,0) );
+    VEC_N_T(1,C)                        vV0 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[0], psBX1->m_avExtent[1] );
+    VEC_N_T(1,C)                        vV1 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[2], vF0 );
+
+    return (FCN_V(tgMH_MUL_N)( vV0, vV1 ));
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Area) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Area)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    VEC_N_T(1,C)                        vF0 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[0], psBX1->m_avExtent[1] );
+    VEC_N_T(1,C)                        vF1 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[1], psBX1->m_avExtent[2] );
+    VEC_N_T(1,C)                        vF2 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[1], psBX1->m_avExtent[2] );
+    VEC_N_T(1,C)                        vF3 = FCN_V(tgMH_SET1_N)( TYPE_K(8,0) );
+    VEC_N_T(1,C)                        vF4 = FCN_V(tgMH_ADD_N)( vF0, vF1 );
+    VEC_N_T(1,C)                        vF5 = FCN_V(tgMH_MUL_N)( vF2, vF3 );
+    VEC_N_T(1,C)                        vF6 = FCN_V(tgMH_MAD_N)( vF3, vF4, vF5 );
+
+    return (vF6);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Sweep_BA) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Sweep_BA)( VEC_OBJ_T(TgBOXAA_N,PCU) psBA0, VEC_OBJ_T(TgBOX_N,CPCU) psBX1, VEC_N_T(1,C) vDT )
+{
+    FCN_VO(tgGM_BX_N_BA)( psBA0, psBX1 );
+    FCN_VO(tgGM_BA_N_Sweep)( psBA0, vDT );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Project) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Project)( VEC_N_T(1,PCU) pvMin, VEC_N_T(1,PCU) pvMax, VEC_OBJ_T(TgBOX_N,CPCU) psBX1, VEC_N_T(1,C) vDN )
+{
+    VEC_N_T(1,C)                        vDn_Ax0 = FCN_V(tgMH_DOT_N)( vDN, psBX1->m_avAxis[0] );
+    VEC_N_T(1,C)                        vDn_Ax1 = FCN_V(tgMH_DOT_N)( vDN, psBX1->m_avAxis[1] );
+    VEC_N_T(1,C)                        vDn_Ax2 = FCN_V(tgMH_DOT_N)( vDN, psBX1->m_avAxis[2] );
+    VEC_N_T(1,C)                        vDn_O = FCN_V(tgMH_DOT_N)( vDN, psBX1->m_vOrigin );
+
+    VEC_N_T(1,C)                        vSgn0 = FCN_V(tgMH_SGN_N)( vDn_Ax0 );
+    VEC_N_T(1,C)                        vSgn1 = FCN_V(tgMH_SGN_N)( vDn_Ax1 );
+    VEC_N_T(1,C)                        vSgn2 = FCN_V(tgMH_SGN_N)( vDn_Ax2 );
+
+    VEC_N_T(1,C)                        vF0 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[0], vSgn0 );
+    VEC_N_T(1,C)                        vF1 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[1], vSgn1 );
+    VEC_N_T(1,C)                        vF2 = FCN_V(tgMH_MUL_N)( psBX1->m_avExtent[2], vSgn2 );
+
+    VEC_N_T(1,C)                        vE0 = FCN_V(tgMH_MUL_N)( psBX1->m_avAxis[0], vF0 );
+    VEC_N_T(1,C)                        vE1 = FCN_V(tgMH_MUL_N)( psBX1->m_avAxis[1], vF1 );
+    VEC_N_T(1,C)                        vE2 = FCN_V(tgMH_MUL_N)( psBX1->m_avAxis[2], vF2 );
+    
+    VEC_N_T(1,C)                        vE3 = FCN_V(tgMH_ADD_N)( vE0, vE1 );
+    
+    *pvMax = FCN_V(tgMH_ADD_N)( FCN_V(tgMH_ADD_N)( vDn_O, vE2 ), vE3 );
+    *pvMin = FCN_V(tgMH_SUB_N)( FCN_V(tgMH_SUB_N)( vDn_O, vE2 ), vE3 );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Is_Contained) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_BX_N_Is_Contained)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1, VEC_N_T(1,C) vS0 )
+{
+    VEC_N_T(1,C)                        vDS = FCN_V(tgMH_SUB_N)( vS0, psBX1->m_vOrigin );
+
+    VEC_N_T(1,C)                        vDS_Ax0 = FCN_V(tgMH_DOT_N)( vDS, psBX1->m_avAxis[0] );
+    VEC_N_T(1,C)                        vDS_Ax1 = FCN_V(tgMH_DOT_N)( vDS, psBX1->m_avAxis[1] );
+    VEC_N_T(1,C)                        vDS_Ax2 = FCN_V(tgMH_DOT_N)( vDS, psBX1->m_avAxis[2] );
+
+    VEC_N_T(1,C)                        vSgn0 = FCN_V(tgMH_SGN_N)( vDS_Ax0 );
+    VEC_N_T(1,C)                        vSgn1 = FCN_V(tgMH_SGN_N)( vDS_Ax1 );
+    VEC_N_T(1,C)                        vSgn2 = FCN_V(tgMH_SGN_N)( vDS_Ax2 );
+
+    VEC_N_T(1,C)                        vABS_DS_Ax0 = FCN_V(tgMH_MUL_N)( vSgn0, vDS_Ax0 );
+    VEC_N_T(1,C)                        vABS_DS_Ax1 = FCN_V(tgMH_MUL_N)( vSgn1, vDS_Ax1 );
+    VEC_N_T(1,C)                        vABS_DS_Ax2 = FCN_V(tgMH_MUL_N)( vSgn2, vDS_Ax2 );
+
+    VEC_N_T(1,C)                        vN_CMP_0 = FCN_V(tgMH_CMP_LE_N)( vABS_DS_Ax0, psBX1->m_avExtent[0] );
+    VEC_N_T(1,C)                        vN_CMP_1 = FCN_V(tgMH_CMP_LE_N)( vABS_DS_Ax1, psBX1->m_avExtent[1] );
+    VEC_N_T(1,C)                        vN_CMP_2 = FCN_V(tgMH_CMP_LE_N)( vABS_DS_Ax2, psBX1->m_avExtent[2] );
+
+    VEC_N_T(1,C)                        vN_CMP_3 = FCN_V(tgMH_AND_N)( vN_CMP_0, vN_CMP_1 );
+    VEC_N_T(1,C)                        vN_CMP_4 = FCN_V(tgMH_AND_N)( vN_CMP_2, vN_CMP_3 );
+
+    return (FCN_V(tgMH_CMP_TO_BOOL_N)( vN_CMP_4 ));
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_TX) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_TX)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(3,CPCU) pxM0 )
+{
+    psBX0->m_vOrigin = FCN_04_3_V(tgMH_TX_P_N)( pxM0, psBX0->m_vOrigin );
+    psBX0->m_avAxis[0] = FCN_04_3_V(tgMH_TX_V_N)( pxM0, psBX0->m_avAxis[0] );
+    psBX0->m_avAxis[1] = FCN_04_3_V(tgMH_TX_V_N)( pxM0, psBX0->m_avAxis[1] );
+    psBX0->m_avAxis[2] = FCN_04_3_V(tgMH_TX_V_N)( pxM0, psBX0->m_avAxis[2] );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Copy_TX) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Copy_TX)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_OBJ_T(TgBOX_N,CPCU) psBX1, VEC_N_T(3,CPCU) pxM0 )
+{
+    psBX0->m_vOrigin = FCN_04_3_V(tgMH_TX_P_N)( pxM0, psBX1->m_vOrigin );
+    psBX0->m_avAxis[0] = FCN_04_3_V(tgMH_TX_V_N)( pxM0, psBX1->m_avAxis[0] );
+    psBX0->m_avAxis[1] = FCN_04_3_V(tgMH_TX_V_N)( pxM0, psBX1->m_avAxis[1] );
+    psBX0->m_avAxis[2] = FCN_04_3_V(tgMH_TX_V_N)( pxM0, psBX1->m_avAxis[2] );
+
+    psBX0->m_avExtent[0] = psBX1->m_avExtent[0];
+    psBX0->m_avExtent[1] = psBX1->m_avExtent[1];
+    psBX0->m_avExtent[2] = psBX1->m_avExtent[2];
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Init_3D) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Init_3D)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(3,CPCU) pxTX, VEC_N_T(1,C) vExt )
+{
+    FCN_VO(tgGM_BX_N_Set_3D)( psBX0, pxTX );
+    FCN_VO(tgGM_BX_N_Set_Extent_List)( psBX0, vExt );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Copy) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Copy)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    psBX0->m_avAxis[0] = psBX1->m_avAxis[0];
+    psBX0->m_avAxis[1] = psBX1->m_avAxis[1];
+    psBX0->m_avAxis[2] = psBX1->m_avAxis[2];
+    psBX0->m_vOrigin = psBX1->m_vOrigin;
+    psBX0->m_avExtent[0] = psBX1->m_avExtent[0];
+    psBX0->m_avExtent[1] = psBX1->m_avExtent[1];
+    psBX0->m_avExtent[2] = psBX1->m_avExtent[2];
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Origin)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(1,C) vOrigin )
+{
+    psBX0->m_vOrigin = vOrigin;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Axes_Unit) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Axes_Unit_List)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(3,CPCU) pxM0 )
+{
+    VEC_N_T(1,C)                        vS0 = psBX0->m_avData[3];
+
+    FCN_04_3_V(tgMH_TR_N)( &psBX0->m_xData, pxM0 );
+
+    psBX0->m_avData[3] = vS0;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Axis_Unit_Index) ------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Axis_Unit_Index)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, TgRSIZE_C uiIndex, VEC_N_T(1,C) vAxis )
+{
+    psBX0->m_avAxis[uiIndex] = vAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Axis_Unit_0) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Axis_Unit_0)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(1,C) vAxis )
+{
+    psBX0->m_avAxis[0] = vAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Axis_Unit_1) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Axis_Unit_1)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(1,C) vAxis )
+{
+    psBX0->m_avAxis[1] = vAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Axis_Unit_2) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Axis_Unit_2)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(1,C) vAxis )
+{
+    psBX0->m_avAxis[2] = vAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_3D) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_3D)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(3,CPCU) pxM0 )
+{
+    FCN_04_3_V(tgMH_TR_N)(&psBX0->m_xData, pxM0);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Extent_List) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Extent_List)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VEC_N_T(1,C) vExtent )
+{
+    psBX0->m_avExtent[0] = FCN_V(tgMH_SPX_N)( vExtent );
+    psBX0->m_avExtent[1] = FCN_V(tgMH_SPY_N)( vExtent );
+    psBX0->m_avExtent[2] = FCN_V(tgMH_SPZ_N)( vExtent );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Extent) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Extent)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, TgUINT_F08 uiIndex, VAR_T(C) fExtent )
+{
+    psBX0->m_avExtent[uiIndex] = FCN_V(tgMH_SET1_N)( fExtent );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Extent_0) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Extent_0)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VAR_T(C) fExtent )
+{
+    psBX0->m_avExtent[0] = FCN_V(tgMH_SET1_N)( fExtent );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Extent_1) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Extent_1)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VAR_T(C) fExtent )
+{
+    psBX0->m_avExtent[1] = FCN_V(tgMH_SET1_N)( fExtent );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Set_Extent_2) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_BX_N_Set_Extent_2)( VEC_OBJ_T(TgBOX_N,PCU) psBX0, VAR_T(C) fExtent )
+{
+    psBX0->m_avExtent[2] = FCN_V(tgMH_SET1_N)( fExtent );
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Origin) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Origin)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    return (psBX1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Axis_Unit) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Axis_Unit)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1, TgRSIZE_C uiIndex )
+{
+    return (psBX1->m_avAxis[uiIndex]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Axis_Unit_0) -------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Axis_Unit_0)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    return (psBX1->m_avAxis[0]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Axis_Unit_1) -------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Axis_Unit_1)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    return (psBX1->m_avAxis[1]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Axis_Unit_2) -------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Axis_Unit_2)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    return (psBX1->m_avAxis[2]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Extent_List) -------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Extent_List)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    VEC_N_T(1,C)                        vF0 = FCN_V(tgMH_AND_N)( psBX1->m_avExtent[0], VAR_UN_1_MEMBER(KTgF000_V128.m_N_) );
+    VEC_N_T(1,C)                        vF1 = FCN_V(tgMH_AND_N)( psBX1->m_avExtent[1], VAR_UN_1_MEMBER(KTg0F00_V128.m_N_) );
+    VEC_N_T(1,C)                        vF2 = FCN_V(tgMH_AND_N)( psBX1->m_avExtent[2], VAR_UN_1_MEMBER(KTg00F0_V128.m_N_) );
+    VEC_N_T(1,C)                        vF3 = FCN_V(tgMH_ADD_N)( vF0, vF1 );
+
+    return (FCN_V(tgMH_ADD_N)( vF2, vF3 ));
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Extent) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Extent)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1, TgRSIZE_C uiIndex )
+{
+    return (psBX1->m_avExtent[uiIndex]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Extent_0) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Extent_0)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    return (psBX1->m_avExtent[0]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Extent_1) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Extent_1)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    return (psBX1->m_avExtent[1]);
+}
+
+
+/* ---- FCN_VO(tgGM_BX_N_Query_Extent_2) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_N_T(1) FCN_VO(tgGM_BX_N_Query_Extent_2)( VEC_OBJ_T(TgBOX_N,CPCU) psBX1 )
+{
+    return (psBX1->m_avExtent[2]);
+}
+
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif

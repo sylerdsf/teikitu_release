@@ -1,0 +1,188 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Math API [Matrix] [N] [F].h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_LOAD
+                                                @brief Initialize a matrix with the translocation values for the homogenous matrix at OUT0
+                                                @param[out] OUT0 Matrix
+                                                @param[in] ARG1 Vector */
+TgINLINE TgVOID                             FCN_M(tgMH_INIT_T_N)( MAT_N_T(PCU) OUT0, VEC_N_T(1,C) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_LOAD
+                                                @brief Initialize a matrix with a matching rotation to the quaternion at ARG1
+                                                @param[out] OUT0 Matrix
+                                                @param[in] ARG1 Quaternion */
+TgINLINE TgVOID                             FCN_M(tgMH_Init_Quat_N)( MAT_N_T(PCU) OUT0, VEC_N_T(1,C) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_LOAD
+                                                @brief Store an identity matrix at the destination
+                                                @param[out] OUT Destination matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_CLI_N)( MAT_N_T(PCU) OUT );
+
+
+
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_LOAD
+                                                @brief Set the translocation values for the homogenous matrix at ARG0
+                                                @param[in,out] ARG0 Matrix
+                                                @param[in] ARG1 Vector */
+TgINLINE TgVOID                             FCN_M(tgMH_SET_T_N)( MAT_N_T(PCU) OUT0, VEC_N_T(1,C) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
+                                                @brief Set the rotation of the matrix (ARG0) to a matching rotation of the quaternion ARG1
+                                                @param[in,out] ARG0 Destination matrix
+                                                @param[in] ARG1 Quaternion */
+TgINLINE TgVOID                             FCN_M(tgMH_Set_Quat_N)( MAT_N_T(PCU) OUT0, VEC_N_T(1,C) ARG1 );
+
+
+
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation ARG1 + ARG2
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_ADD_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1, MAT_N_T(CPCU) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation ARG1 * ARG2
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_MUL_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1, MAT_N_T(CPCU) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation ARG1 * ARG2
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Scalar
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_MUL_SM_N)( MAT_N_T(PCU) OUT0, VEC_N_T(1,C) ARG1, MAT_N_T(CPCU) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation ARG1 * ARG2
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Scalar */
+TgINLINE TgVOID                             FCN_M(tgMH_MUL_MS_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1, VEC_N_T(1,C) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation ARG1 / ARG2
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_DIV_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1, MAT_N_T(CPCU) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation ARG1 / ARG2
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Scalar
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_DIV_SM_N)( MAT_N_T(PCU) OUT0, VEC_N_T(1,C) ARG1, MAT_N_T(CPCU) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation ARG1 / ARG2
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Scalar */
+TgINLINE TgVOID                             FCN_M(tgMH_DIV_MS_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1, VEC_N_T(1,C) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation ARG1 - ARG2
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_SUB_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1, MAT_N_T(CPCU) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_ART
+                                                @brief Store a matrix that is assigned the per-element operation -ARG1
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_NEG_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1 );
+
+
+
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Store the concatenation (multiplication) of the two arguments (ARG1 x ARG2)
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_CAT_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1, MAT_N_T(CPCU) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Store the inverse of the matrix at ARG2 in ARG0 and the determinant in ARG1
+                                                @param[out] OUT0 Destination for inverse matrix
+                                                @param[in] ARG1 Determinant of the matrix at ARG2
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_INV_DET_N)( MAT_N_T(PCU) OUT0, VEC_N_T(1,C) ARG1, MAT_N_T(CPCU) ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Store the inverse of the matrix at ARG1 in ARG0
+                                                @param[out] OUT0 Destination for inverse matrix
+                                                @param[in] ARG1 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_INV_N)( MAT_N_T(PCU) OUT0, MAT_N_T(CPCU) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Store a vector where each element is the determinant of the matrix at OUT0
+                                                @param[in] ARG Matrix
+                                                @return A vector where each element is the determinant of the matrix at OUT0 */
+TgINLINE VEC_N_T(1)                         FCN_M(tgMH_DET_N)( MAT_N_T(CPCU) ARG );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Transform the vector at ARG1 by the matrix at ARG0
+                                                @param[in] ARG Matrix
+                                                @return The result of the transform of the vector at ARG1 by the matrix at ARG0 */
+TgINLINE VEC_N_T(1)                         FCN_M(tgMH_TX_N)( MAT_N_T(CPCU), VEC_N_T(1,C) );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Transform the vector at ARG1 (and treated as a homogeneous point) by the matrix at ARG0
+                                                @param[in] ARG Matrix
+                                                @return The result of the transform of the vector at ARG1 (and treated as a homogeneous point) by the matrix at ARG0 */
+TgINLINE VEC_N_T(1)                         FCN_M(tgMH_TX_P_N)( MAT_N_T(CPCU), VEC_N_T(1,C) );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Transform the vector at ARG1 (and treated as a homogeneous vector) by the matrix at ARG0
+                                                @param[in] ARG Matrix
+                                                @return The result of the transform of the vector at ARG1 (and treated as a homogeneous vector) by the matrix at ARG0 */
+TgINLINE VEC_N_T(1)                         FCN_M(tgMH_TX_V_N)( MAT_N_T(CPCU) ARG0, VEC_N_T(1,C) ARG1 );
+
+
+
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Return the first column from the matrix at ARG
+                                                @param[in] ARG Matrix
+                                                @return The first column from the matrix at ARG */
+TgINLINE VEC_N_T(1)                         FCN_M(tgMH_Get_Col_0_N)( MAT_N_T(CPCU) ARG );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Return the second column from the matrix at ARG
+                                                @param[in] ARG Matrix
+                                                @return The second column from the matrix at ARG */
+TgINLINE VEC_N_T(1)                         FCN_M(tgMH_Get_Col_1_N)( MAT_N_T(CPCU) ARG );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Return the third column from the matrix at ARG
+                                                @param[in] ARG Matrix
+                                                @return The third column from the matrix at ARG */
+TgINLINE VEC_N_T(1)                         FCN_M(tgMH_Get_Col_2_N)( MAT_N_T(CPCU) ARG );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_N_CALC
+                                                @brief Return the fourth column from the matrix at ARG
+                                                @param[in] ARG Matrix
+                                                @return The fourth column from the matrix at ARG */
+TgINLINE VEC_N_T(1)                         FCN_M(tgMH_Get_Col_3_N)( MAT_N_T(CPCU) ARG );

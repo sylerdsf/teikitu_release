@@ -1,0 +1,144 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common [Unit Test] [Test] - Math [Matrix] [N] [F] [44].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Test Functions                                                                                                                                                                 */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_M_UT(tgMH_CAT_34_44_N) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_CAT_34_44_N) )
+{
+    union
+    {
+        VEC_N_T(4)                          xMN;
+        VEC_T(4)                            xMT;
+    }                                   sM0, sM1;
+    union
+    {
+        VEC_N_T(3)                          xMN;
+        VEC_T(3)                            xMT;
+    }                                   sM2;
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 12; ++uiIndex)
+    {
+        while (0 == (sM1.xMT.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+        while (0 == (sM2.xMT.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+    };
+    for (TgRSIZE uiIndex = 12; uiIndex < 16; ++uiIndex)
+    {
+        while (0 == (sM1.xMT.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_CAT_34_44_N)( &sM0.xMN, &sM2.xMN, &sM1.xMN );
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 12; ++uiIndex)
+    {
+        VAR_T()                             tTotal;
+
+        tTotal  = sM2.xMT.m_aElement[(uiIndex / 4)*4 + 0] * sM1.xMT.m_aElement[0*4 + uiIndex % 4];
+        tTotal += sM2.xMT.m_aElement[(uiIndex / 4)*4 + 1] * sM1.xMT.m_aElement[1*4 + uiIndex % 4];
+        tTotal += sM2.xMT.m_aElement[(uiIndex / 4)*4 + 2] * sM1.xMT.m_aElement[2*4 + uiIndex % 4];
+        tTotal += sM2.xMT.m_aElement[(uiIndex / 4)*4 + 3] * sM1.xMT.m_aElement[3*4 + uiIndex % 4];
+
+        Test__Expect_EQ(true, FCN_F(tgCM_NR0)( tTotal - sM0.xMT.m_aElement[uiIndex] ));
+    };
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sM1.xMT._41 - sM0.xMT._41 ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sM1.xMT._42 - sM0.xMT._42 ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sM1.xMT._43 - sM0.xMT._43 ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sM1.xMT._44 - sM0.xMT._44 ));
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
+/* ---- FCN_M_UT(tgMH_CAT_44_34_N) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_CAT_44_34_N) )
+{
+    union
+    {
+        VEC_N_T(4)                          xMN;
+        VEC_T(4)                            xMT;
+    }                                   sM0, sM1;
+    union
+    {
+        VEC_N_T(3)                          xMN;
+        VEC_T(3)                            xMT;
+    }                                   sM2;
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 12; ++uiIndex)
+    {
+        while (0 == (sM1.xMT.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+        while (0 == (sM2.xMT.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+    };
+    for (TgRSIZE uiIndex = 12; uiIndex < 16; ++uiIndex)
+    {
+        while (0 == (sM1.xMT.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_CAT_44_34_N)( &sM0.xMN, &sM1.xMN, &sM2.xMN );
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 16; ++uiIndex)
+    {
+        VAR_T()                             tTotal;
+
+        tTotal = TYPE_K(0);
+
+        for (TgRSIZE uiSumIndex = 0; uiSumIndex < 3; ++uiSumIndex)
+        {
+            tTotal += sM1.xMT.m_aRowCol[uiIndex / 4][uiSumIndex] * sM2.xMT.m_aRowCol[uiSumIndex][uiIndex % 4];
+        };
+        if (3 == (uiIndex % 4)) tTotal += sM1.xMT.m_aRowCol[uiIndex / 4][3];
+
+        Test__Expect_EQ(true, FCN_F(tgCM_NR0)( tTotal - sM0.xMT.m_aElement[uiIndex] ));
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
+/* ---- FCN_M_UT(tgMH_TR_N) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_TR_N) )
+{
+    union
+    {
+        VEC_N_T(4)                          xMN;
+        VEC_T(4)                            xMT;
+    }                                   sM0, sM1;
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 16; ++uiIndex)
+    {
+        while (0 == (sM1.xMT.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_TR_N)( &sM0.xMN, &sM1.xMN );
+
+    for (TgRSIZE uiRow = 0; uiRow < 4; ++uiRow)
+    {
+        for (TgRSIZE uiCol = 0; uiCol < 4; ++uiCol)
+        {
+            VAR_T()                             E0, E1;
+
+            E0 = sM0.xMT.m_aElement[uiCol*4 + uiRow];
+            E1 = sM1.xMT.m_aElement[uiRow*4 + uiCol];
+
+            Test__Expect_EQ( E0, E1 );
+        };
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}

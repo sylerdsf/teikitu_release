@@ -1,0 +1,336 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common [Unit Test].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#include "TgS COMMON/TgS Common [Unit Test] - Unit Test.h"
+
+MSVC_PRAGMA(warning( push, 0 ))
+#if defined(TgBUILD_COMPILER__MSVC)
+#include <crtdbg.h>
+/*# defined(TgBUILD_COMPILER__MSVC) */
+#endif
+MSVC_PRAGMA(warning( pop ))
+CLANG_WARN_SUPPRESS(missing-prototypes)
+
+
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Unit Test Data                                                                                                                                                                 */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+static STg2_Output                          g_sErrOut, g_sStdOut;
+
+#if defined(TgCOMPILE_PLATFORM_WIN)
+TgEXTN TgMS_HINSTANCE                       g_hInstance;
+TgEXTN TgMS_HWND                            g_hWnd;
+static _CrtMemState                         s_sMemState0;
+/*# defined(TgCOMPILE_PLATFORM_W64) */
+#endif
+
+static PROFILE_DEFINE( PROFILE_UNIT_TEST__EXECUTE );
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Local CRT Memory Function                                                                                                                                                      */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+void CDECL Test_End_Process(void)
+{
+#if defined(TgBUILD_COMPILER__MSVC)
+    _CrtMemState                        sMemState1, sMemState2;
+    _CrtMemCheckpoint( &sMemState1 );
+    if (_CrtMemDifference( &sMemState2, &g_sMemState0, &sMemState1 ))
+        _CrtMemDumpStatistics( &sMemState2 );
+    _CrtMemDumpAllObjectsSince( &g_sMemState0 );
+/*# defined(TgBUILD_COMPILER__MSVC) */
+#endif
+}
+
+TgBOOL g_bUnit_Test__Enabled_ERR_Write = true;
+static TgRSIZE tgUnit_Test__DBG_ERR_Write( STg2_Output_PC psOut, TgRSIZE_C uiOffset, TgVOID_CP mbzText, TgRSIZE_C _niText)
+{
+    if (g_bUnit_Test__Enabled_ERR_Write)
+    {
+        return (tgPM_DBG_ERR_Write( psOut, uiOffset, mbzText, _niText));
+    };
+    return (0);
+}
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+TgRESULT Test_Context__Init( TgVOID )
+{
+    if (TgFAILED(tgGB_Init()))
+        goto Fail_Init_GB;
+
+#if TgCOMPILE__CONSOLE
+    tgCN_Attach_Output( KTgCN_CHANEL_MESSAGE, &g_sStdOut );
+    tgCN_Attach_Output( KTgCN_CHANEL_ERROR, &g_sErrOut );
+    tgCN_Attach_Default_Break( KTgCN_CHANEL_ERROR );
+    tgCN_Attach_Output( KTgCN_CHANEL_CONSOLE, &g_sStdOut );
+/*# TgCOMPILE__CONSOLE */
+#endif
+
+#if TgS_RING_LEVEL >= 0 && (0 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgCO_Module_Init()))
+        goto Fail_Init_CO;
+#endif
+#if TgS_RING_LEVEL >= 2 && (2 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgGB_CMD_Push_Argument( "-//test/unit/kernel" );
+    if (TgFAILED(tgKN_Module_Init()))
+        goto Fail_Init_KN;
+#endif
+#if TgS_RING_LEVEL >= 3 && (3 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgAM_Module_Init()))
+        goto Fail_Init_AM;
+    if (TgFAILED(tgIN_Module_Init()))
+        goto Fail_Init_IN;
+    if (TgFAILED(tgPH_Module_Init()))
+        goto Fail_Init_PH;
+    if (TgFAILED(tgRN_Module_Init()))
+        goto Fail_Init_RN;
+    if (TgFAILED(tgSN_Module_Init()))
+        goto Fail_Init_SN;
+#endif
+#if TgS_RING_LEVEL >= 4 && (4 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgFX_Module_Init()))
+        goto Fail_Init_FX;
+    if (TgFAILED(tgOB_Module_Init()))
+        goto Fail_Init_OB;
+    if (TgFAILED(tgSE_Module_Init()))
+        goto Fail_Init_SE;
+#endif
+#if TgS_RING_LEVEL >= 5 && (5 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgEX_Module_Init()))
+        goto Fail_Init_EX;
+#endif
+
+    return (KTgS_OK);
+
+#if TgS_RING_LEVEL >= 5 && (5 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Init_EX: tgSE_Module_Free();
+#endif
+#if TgS_RING_LEVEL >= 4 && (4 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Init_SE: tgOB_Module_Free();
+    Fail_Init_OB: tgFX_Module_Free();
+    Fail_Init_FX: tgSN_Module_Free();
+#endif
+#if TgS_RING_LEVEL >= 3 && (3 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Init_SN: tgRN_Module_Free();
+    Fail_Init_RN: tgPH_Module_Free();
+    Fail_Init_PH: tgIN_Module_Free();
+    Fail_Init_IN: tgAM_Module_Free();
+    Fail_Init_AM: tgKN_Module_Free();
+#endif
+#if TgS_RING_LEVEL >= 2 && (2 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Init_KN: tgCO_Module_Free();
+#endif
+#if TgS_RING_LEVEL >= 0 && (0 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Init_CO: tgGB_Free();
+#endif
+    Fail_Init_GB: return (KTgE_FAIL);
+}
+
+
+TgRESULT Test_Context__Boot( TgVOID )
+{
+    if (TgFAILED(tgGB_Boot()))
+        goto Fail_Boot_GB;
+
+#if TgS_RING_LEVEL >= 0 && (0 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgCO_Module_Boot()))
+        goto Fail_Boot_CO;
+#endif
+#if TgS_RING_LEVEL >= 2 && (2 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgKN_Module_Boot()))
+        goto Fail_Boot_KN;
+#endif
+#if TgS_RING_LEVEL >= 3 && (3 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgAM_Module_Boot()))
+        goto Fail_Boot_AM;
+    if (TgFAILED(tgIN_Module_Boot()))
+        goto Fail_Boot_IN;
+    if (TgFAILED(tgPH_Module_Boot()))
+        goto Fail_Boot_PH;
+    if (TgFAILED(tgRN_Module_Boot()))
+        goto Fail_Boot_RN;
+    if (TgFAILED(tgSN_Module_Boot()))
+        goto Fail_Boot_SN;
+#endif
+#if TgS_RING_LEVEL >= 4 && (4 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgFX_Module_Boot()))
+        goto Fail_Boot_FX;
+    if (TgFAILED(tgOB_Module_Boot()))
+        goto Fail_Boot_OB;
+    if (TgFAILED(tgSE_Module_Boot()))
+        goto Fail_Boot_SE;
+#endif
+#if TgS_RING_LEVEL >= 5 && (5 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    if (TgFAILED(tgEX_Module_Boot()))
+        goto Fail_Boot_EX;
+#endif
+
+    return (KTgS_OK);
+
+#if TgS_RING_LEVEL >= 5 && (5 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Boot_EX: tgSE_Module_Stop();
+#endif
+#if TgS_RING_LEVEL >= 4 && (4 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Boot_SE: tgOB_Module_Stop();
+    Fail_Boot_OB: tgFX_Module_Stop();
+    Fail_Boot_FX: tgSN_Module_Stop();
+#endif
+#if TgS_RING_LEVEL >= 3 && (3 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Boot_SN: tgRN_Module_Stop();
+    Fail_Boot_RN: tgPH_Module_Stop();
+    Fail_Boot_PH: tgIN_Module_Stop();
+    Fail_Boot_IN: tgAM_Module_Stop();
+    Fail_Boot_AM: tgKN_Module_Stop();
+#endif
+#if TgS_RING_LEVEL >= 2 && (2 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Boot_KN: tgCO_Module_Stop();
+#endif
+#if TgS_RING_LEVEL >= 0 && (0 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    Fail_Boot_CO: tgGB_Stop();
+#endif
+    Fail_Boot_GB: return (KTgE_FAIL);
+}
+
+
+TgRESULT Test_Context__Stop( TgVOID )
+{
+#if TgS_RING_LEVEL >= 5 && (5 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgEX_Module_Stop();
+#endif
+#if TgS_RING_LEVEL >= 4 && (4 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgSE_Module_Stop();
+    tgOB_Module_Stop();
+    tgFX_Module_Stop();
+#endif
+#if TgS_RING_LEVEL >= 3 && (3 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgSN_Module_Stop();
+    tgRN_Module_Stop();
+    tgPH_Module_Stop();
+    tgIN_Module_Stop();
+    tgAM_Module_Stop();
+#endif
+#if TgS_RING_LEVEL >= 2 && (2 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgKN_Module_Stop();
+#endif
+#if TgS_RING_LEVEL >= 0 && (0 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgCO_Module_Stop();
+    tgGB_Stop();
+#endif
+    return (KTgS_OK);
+}
+
+
+TgRESULT Test_Context__Free( TgVOID )
+{
+#if TgS_RING_LEVEL >= 5 && (5 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgEX_Module_Free();
+#endif
+#if TgS_RING_LEVEL >= 4 && (4 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgSE_Module_Free();
+    tgOB_Module_Free();
+    tgFX_Module_Free();
+#endif
+#if TgS_RING_LEVEL >= 3 && (3 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgSN_Module_Free();
+    tgRN_Module_Free();
+    tgPH_Module_Free();
+    tgIN_Module_Free();
+    tgAM_Module_Free();
+#endif
+#if TgS_RING_LEVEL >= 2 && (2 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgKN_Module_Free();
+#endif
+#if TgS_RING_LEVEL >= 0 && (0 != TgS_RING_LEVEL || defined(TgS_RING_INCLUDE_PEERS))
+    tgCO_Module_Free();
+#endif
+
+#if TgCOMPILE__CONSOLE
+    tgCN_Remove_Output( KTgCN_CHANEL_CONSOLE, &g_sStdOut );
+    tgCN_Remove_Default_Break( KTgCN_CHANEL_ERROR );
+    tgCN_Remove_Output( KTgCN_CHANEL_ERROR, &g_sErrOut );
+    tgCN_Remove_Output( KTgCN_CHANEL_MESSAGE, &g_sStdOut );
+#endif
+
+    tgGB_Free();
+    return (KTgS_OK);
+}
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Main Execution                                                                                                                                                                 */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+#if !defined(TgCOMPILE_PLATFORM_UWP)
+TgMAIN_FUNCTION
+{
+    Test_Context                        tgUnit_Test_Context;
+    TgSINT_F64                          iTime_Start, iTime_End, iTime_Elapsed;
+    TgFLOAT32                           fTime_Elapsed;
+    
+#if !defined(TgCOMPILE_PLATFORM__WIN_CON) && defined(TgCOMPILE_PLATFORM__WIN)
+    (void)hPrevInstance;
+    (void)lpCmdLine;
+    (void)nCmdShow;
+/*# !defined(TgCOMPILE_PLATFORM__WIN_CON) && defined(TgCOMPILE_PLATFORM__WIN) */
+#endif
+
+    iTime_Start = tgTM_Query_Counter_Tick();
+    atexit( Test_End_Process );
+
+    TgMAIN_PLATFORM_GLOBAL_INIT;
+
+#if defined(TgBUILD_COMPILER__MSVC)
+    _CrtSetDbgFlag( _crtDbgFlag | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_CHECK_CRT_DF );
+    _CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
+/*# defined(TgBUILD_COMPILER__MSVC) */
+#endif
+
+    Unit_Test__Context_Init( &tgUnit_Test_Context );
+
+    g_sErrOut.m_pfnWrite = tgUnit_Test__DBG_ERR_Write;
+    g_sErrOut.m_pfnClose = nullptr;
+    g_sStdOut.m_pfnWrite = tgPM_DBG_OUT_Write;
+    g_sStdOut.m_pfnClose = nullptr;
+
+    tgUnit_Test_Context.m_pfnInit = Test_Context__Init;
+    tgUnit_Test_Context.m_pfnBoot = Test_Context__Boot;
+    tgUnit_Test_Context.m_pfnStop = Test_Context__Stop;
+    tgUnit_Test_Context.m_pfnFree = Test_Context__Free;
+
+    tgCM_Unit_Test_Register();
+
+    Unit_Test__Execute( &tgUnit_Test_Context );
+
+    TgMAIN_PLATFORM_GLOBAL_FREE;
+
+    iTime_End = tgTM_Query_Counter_Tick();
+    iTime_Elapsed = iTime_End - iTime_Start;
+    fTime_Elapsed = tgTM_Counter_Tick_To_MilliSeconds( iTime_Elapsed );
+
+    return (0);
+}
+/*# !defined(TgCOMPILE_PLATFORM_UWP) */
+#endif

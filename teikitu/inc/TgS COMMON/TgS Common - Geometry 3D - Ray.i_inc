@@ -1,0 +1,161 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Ray.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_RY_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_Reset)( VEC_OBJ_T(TgRAY,PCU) psRY0 )
+{
+    psRY0->m_vOrigin = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psRY0->m_vDirN = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_RY_Is_Valid)( VEC_OBJ_T(TgRAY,CPCU) psRY1 )
+{
+    if (!FCN_V(tgMH_Is_Point_Valid)(&psRY1->m_vOrigin))
+    {
+        return (false);
+    };
+
+    if (!FCN_V(tgMH_Is_Vector_Valid)(&psRY1->m_vDirN) || FCN_F(tgCM_NR0)( FCN_V(tgMH_LEN)(&psRY1->m_vDirN) ))
+    {
+        return (false);
+    };
+
+    return (true);
+}
+
+
+/* ---- FCN_VO(tgGM_RY_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgRAY,CPCU) UNUSED_PARAM psRY0 )
+{
+    FCN_VO(tgGM_BA_Set_Invalid)( psBA0 );
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgRAY,CPCU) UNUSED_PARAM psRY0, VEC_T(1,CPCU) UNUSED_PARAM pvDT )
+{
+    FCN_VO(tgGM_BA_Set_Invalid)( psBA0 );
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgRAY,CPCU) psRY1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fS0_AX = FCN_V(tgMH_DOT)( &psRY1->m_vOrigin, pvDN );
+    VAR_T(C)                            fD0_AX = FCN_V(tgMH_DOT)( &psRY1->m_vDirN, pvDN );
+
+    TgGEOM_ASSERT_PARAM(nullptr != ptyMin && nullptr != ptyMax && FCN_VO(tgGM_RY_Is_Valid)(psRY1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    *ptyMin = FCN_F(tgPM_FSEL)( fD0_AX, fS0_AX, -VAR_K(KTgMAX) );
+    *ptyMax = FCN_F(tgPM_FSEL)( fD0_AX, VAR_K(KTgMAX), fS0_AX );
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_RY_Is_Contained)( VEC_OBJ_T(TgRAY,CPCU) psRY1, VEC_T(1,CPCU) pvS0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS0, &psRY1->m_vOrigin );
+    VAR_T(C)                            fDS = FCN_F(tgCM_MAX)( FCN_V(tgMH_DOT)(&vDS, &psRY1->m_vDirN), TYPE_K(0) );
+    VEC_T(1,C)                          vS1 = FCN_V(tgMH_MUL_SV)( fDS, &psRY1->m_vDirN );
+    VEC_T(1,C)                          vS2 = FCN_V(tgMH_ADD)( &vS1, &psRY1->m_vOrigin );
+    VEC_T(1,C)                          vS3 = FCN_V(tgMH_SUB)( pvS0, &vS2 );
+
+    return (FCN_F(tgCM_NR0)( FCN_V(tgMH_LEN)(&vS3)) );
+}
+
+
+/* ---- FCN_VO(tgGM_RY_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_TX)( VEC_OBJ_T(TgRAY,PCU) psRY0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psRY0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psRY0->m_vOrigin );
+    psRY0->m_vDirN = FCN_04_3_V(tgMH_TX_V)( pxM0, &psRY0->m_vDirN );
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_Copy_TX)( VEC_OBJ_T(TgRAY,PCU) psRY0, VEC_OBJ_T(TgRAY,CPCU) psRY1, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RY_Is_Valid)(psRY1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psRY0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psRY1->m_vOrigin );
+    psRY0->m_vDirN = FCN_04_3_V(tgMH_TX_V)( pxM0, &psRY1->m_vDirN );
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_Init)( VEC_OBJ_T(TgRAY,PCU) psRY0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvDN )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    psRY0->m_vOrigin = *pvS0;
+    psRY0->m_vDirN = *pvDN;
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_Copy)( VEC_OBJ_T(TgRAY,PCU) psRY0, VEC_OBJ_T(TgRAY,CPCU) psRY1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_RY_Is_Valid)(psRY1));
+
+    psRY0->m_vOrigin = psRY1->m_vOrigin;
+    psRY0->m_vDirN = psRY1->m_vDirN;
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_Set_Origin)( VEC_OBJ_T(TgRAY,PCU) psRY0, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+    psRY0->m_vOrigin = *pvS0;
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Set_DirN) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_RY_Set_DirN)( VEC_OBJ_T(TgRAY,PCU) psRY0, VEC_T(1,CPCU) pvDN )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+    psRY0->m_vDirN = *pvDN;
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_RY_Query_Origin)( VEC_OBJ_T(TgRAY,CPCU) psRY1 )
+{
+    return (&psRY1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_RY_Query_DirN) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_RY_Query_DirN)( VEC_OBJ_T(TgRAY,CPCU) psRY1 )
+{
+    return (&psRY1->m_vDirN);
+}

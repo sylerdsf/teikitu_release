@@ -1,0 +1,166 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Segment.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_SG_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_Reset)( VEC_OBJ_T(TgSEGMENT,PCU) psSG0 )
+{
+    psSG0->m_vOrigin = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psSG0->m_vDirN = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_SG_Is_Valid)( VEC_OBJ_T(TgSEGMENT,CPCU) psSG1 )
+{
+    if (!FCN_V(tgMH_Is_Point_Valid)(&psSG1->m_vOrigin))
+    {
+        return (false);
+    };
+
+    if (!FCN_V(tgMH_Is_Vector_Valid)(&psSG1->m_vDirN) || FCN_F(tgCM_NR0)( FCN_V(tgMH_LEN)(&psSG1->m_vDirN) ))
+    {
+        return (false);
+    };
+
+    return (true);
+}
+
+
+/* ---- FCN_VO(tgGM_SG_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgSEGMENT,CPCU) psSG1 )
+{
+    FCN_VO(tgGM_BA_Init_PT)( psBA0, &psSG1->m_vOrigin );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, &psSG1->m_vDirN );
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgSEGMENT,CPCU) psSG1, VEC_T(1,CPCU) pvDT )
+{
+    FCN_VO(tgGM_SG_BA)( psBA0, psSG1 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgSEGMENT,CPCU) psSG1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fS0_AX = FCN_V(tgMH_DOT)( &psSG1->m_vOrigin, pvDN );
+    VAR_T(C)                            fS1_AX = FCN_V(tgMH_DOT)( &psSG1->m_vDirN, pvDN );
+
+    TgGEOM_ASSERT_PARAM(nullptr != ptyMin && nullptr != ptyMax && FCN_VO(tgGM_SG_Is_Valid)(psSG1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    *ptyMin = fS0_AX + FCN_F(tgPM_FSEL)( -fS1_AX, fS1_AX, TYPE_K(0) );
+    *ptyMax = fS0_AX + FCN_F(tgPM_FSEL)( fS1_AX, fS1_AX, TYPE_K(0) );
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_SG_Is_Contained)( VEC_OBJ_T(TgSEGMENT,CPCU) psSG1, VEC_T(1,CPCU) pvS0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS0, &psSG1->m_vOrigin );
+    VAR_T(C)                            fX0 = FCN_V(tgMH_DOT)( &vDS, &psSG1->m_vDirN );
+    VAR_T(C)                            fDS = FCN_F(tgCM_CLP)( fX0, TYPE_K(0), TYPE_K(1) );
+    VEC_T(1,C)                          vS1 = FCN_V(tgMH_MUL_SV)( fDS, &psSG1->m_vDirN );
+    VEC_T(1,C)                          vS2 = FCN_V(tgMH_ADD)( &vS1, &psSG1->m_vOrigin );
+    VEC_T(1,C)                          vS3 = FCN_V(tgMH_SUB)( pvS0, &vS2 );
+
+    return (FCN_F(tgCM_NR0)( FCN_V(tgMH_LEN)(&vS3)) );
+}
+
+
+/* ---- FCN_VO(tgGM_SG_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_TX)( VEC_OBJ_T(TgSEGMENT,PCU) psSG0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psSG0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psSG0->m_vOrigin );
+    psSG0->m_vDirN = FCN_04_3_V(tgMH_TX_V)( pxM0, &psSG0->m_vDirN );
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_Copy_TX)( VEC_OBJ_T(TgSEGMENT,PCU) psSG0, VEC_OBJ_T(TgSEGMENT,CPCU) psSG1, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SG_Is_Valid)(psSG1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psSG0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psSG1->m_vOrigin );
+    psSG0->m_vDirN = FCN_04_3_V(tgMH_TX_V)( pxM0, &psSG1->m_vDirN );
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_Init)( VEC_OBJ_T(TgSEGMENT,PCU) psSG0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvDN )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    psSG0->m_vOrigin = *pvS0;
+    psSG0->m_vDirN = *pvDN;
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_Copy)( VEC_OBJ_T(TgSEGMENT,PCU) psSG0, VEC_OBJ_T(TgSEGMENT,CPCU) psSG1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SG_Is_Valid)(psSG1));
+
+    psSG0->m_vOrigin = psSG1->m_vOrigin;
+    psSG0->m_vDirN = psSG1->m_vDirN;
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_Set_Origin)( VEC_OBJ_T(TgSEGMENT,PCU) psSG0, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    psSG0->m_vOrigin = *pvS0;
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Set_DirN) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SG_Set_DirN)( VEC_OBJ_T(TgSEGMENT,PCU) psSG0, VEC_T(1,CPCU) pvDN )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    psSG0->m_vDirN = *pvDN;
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_SG_Query_Origin)( VEC_OBJ_T(TgSEGMENT,CPCU) psSG1 )
+{
+    return (&psSG1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_SG_Query_DirN) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_SG_Query_DirN)( VEC_OBJ_T(TgSEGMENT,CPCU) psSG1 )
+{
+    return (&psSG1->m_vDirN);
+}

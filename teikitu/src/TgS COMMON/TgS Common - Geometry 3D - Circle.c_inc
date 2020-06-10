@@ -1,0 +1,160 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Circle.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_CI_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FCN_VO(tgGM_CI_Is_Valid)( VEC_OBJ_T(TgCIRCLE,CPCU) psCI1 )
+{
+    if (!FCN_V(tgMH_Is_Point_Valid)(&psCI1->m_vOrigin))
+    {
+        return (false);
+    };
+
+    if (!FCN_V(tgMH_Is_Vector_Valid)(&psCI1->m_vNormal) || !FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(&psCI1->m_vNormal)))
+    {
+        return (false);
+    };
+
+    if (FCN_F(tgPM_NAN)(psCI1->m_fRadius) || !(psCI1->m_fRadius > TYPE_K(0)))
+    {
+        return (false);
+    };
+
+    return (true);
+}
+
+
+/* ---- FCN_VO(tgGM_CI_Support_Point) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VEC_T(1) FCN_VO(tgGM_CI_Support_Point)( VEC_OBJ_T(TgCIRCLE,CPCU) psCI1, VEC_T(1,CPCU) ptvDN )
+{
+    VAR_T(C)                            fD_N = FCN_V(tgMH_DOT)(ptvDN, &psCI1->m_vNormal);
+
+    TgERROR(FCN_V(tgMH_Is_Vector_Valid)(ptvDN) && FCN_F(tgCM_NR0)(FCN_V(tgMH_LSQ)(ptvDN) - TYPE_K(1)));
+
+    if (FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(fD_N) - TYPE_K(1)))
+    {
+        return (FCN_V(tgMH_SETP_S)(VAR_K(KTgMAX), VAR_K(KTgMAX), VAR_K(KTgMAX)));
+    }
+    else
+    {
+        VAR_T()                             fTest;
+
+        VEC_T(1,C)                          vX0 = FCN_V(tgMH_MUL_SV)(fD_N, &psCI1->m_vNormal);
+        VEC_T(1,C)                          vX1 = FCN_V(tgMH_SUB)(ptvDN, &vX0);
+        VEC_T(1,C)                          vX2 = FCN_V(tgMH_NORM_LEN)(&fTest, &vX1);
+        VEC_T(1,C)                          vX3 = FCN_V(tgMH_MUL_VS)(&vX2, psCI1->m_fRadius);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        return (FCN_V(tgMH_ADD)(&psCI1->m_vOrigin, &vX3));
+    };
+}
+
+
+/* ---- FCN_VO(tgGM_CI_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgGM_CI_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgCIRCLE,CPCU) psCI1 )
+{
+    VAR_T()                             fTest;
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_CI_Is_Valid)(psCI1));
+
+    if (!FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(psCI1->m_vNormal.x) - TYPE_K(1)))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(-psCI1->m_vNormal.x, &psCI1->m_vNormal);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vK0, &(VEC_K(KTgUNIT_X)));
+        VEC_T(1,C)                          vK2 = FCN_V(tgMH_NORM_LEN)(&fTest, &vK1);
+
+        VAR_T(C)                            fR_A = FCN_F(tgPM_ABS)(psCI1->m_fRadius*vK2.x);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        FCN_VO(tgGM_BA_Set_MinX)( psBA0, psCI1->m_vOrigin.x - fR_A );
+        FCN_VO(tgGM_BA_Set_MaxX)( psBA0, psCI1->m_vOrigin.x + fR_A );
+    }
+    else
+    {
+        FCN_VO(tgGM_BA_Set_MinX)( psBA0, psCI1->m_vOrigin.x );
+        FCN_VO(tgGM_BA_Set_MaxX)( psBA0, psCI1->m_vOrigin.x );
+    };
+
+    if (!FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(psCI1->m_vNormal.y) - TYPE_K(1)))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(-psCI1->m_vNormal.y, &psCI1->m_vNormal);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vK0, &(VEC_K(KTgUNIT_Y)));
+        VEC_T(1,C)                          vA = FCN_V(tgMH_NORM_LEN)(&fTest, &vK1);
+        VAR_T(C)                            fR_A = FCN_F(tgPM_ABS)(psCI1->m_fRadius*vA.y);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        FCN_VO(tgGM_BA_Set_MinY)( psBA0, psCI1->m_vOrigin.y - fR_A );
+        FCN_VO(tgGM_BA_Set_MaxY)( psBA0, psCI1->m_vOrigin.y + fR_A );
+    }
+    else
+    {
+        FCN_VO(tgGM_BA_Set_MinY)( psBA0, psCI1->m_vOrigin.y );
+        FCN_VO(tgGM_BA_Set_MaxY)( psBA0, psCI1->m_vOrigin.y );
+    };
+
+    if (!FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(psCI1->m_vNormal.z) - TYPE_K(1)))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(-psCI1->m_vNormal.z, &psCI1->m_vNormal);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vK0, &(VEC_K(KTgUNIT_Z)));
+        VEC_T(1,C)                          vA = FCN_V(tgMH_NORM_LEN)(&fTest, &vK1);
+        VAR_T(C)                            fR_A = FCN_F(tgPM_ABS)(psCI1->m_fRadius*vA.z);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        FCN_VO(tgGM_BA_Set_MinZ)( psBA0, psCI1->m_vOrigin.z - fR_A );
+        FCN_VO(tgGM_BA_Set_MaxZ)( psBA0, psCI1->m_vOrigin.z + fR_A );
+    }
+    else
+    {
+        FCN_VO(tgGM_BA_Set_MinZ)( psBA0, psCI1->m_vOrigin.z );
+        FCN_VO(tgGM_BA_Set_MaxZ)( psBA0, psCI1->m_vOrigin.z );
+    };
+}
+
+
+/* ---- FCN_VO(tgGM_CI_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgGM_CI_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgCIRCLE,CPCU) psCI1, VEC_T(1,CPCU) ptvDN )
+{
+    VAR_T(C)                            fAx_N = FCN_V(tgMH_DOT)(ptvDN, &psCI1->m_vNormal);
+
+    TgGEOM_ASSERT_PARAM(0 != ptyMin && 0 != ptyMax && FCN_VO(tgGM_CI_Is_Valid)(psCI1) && FCN_V(tgMH_Is_Vector_Valid)(ptvDN));
+
+    if (FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(fAx_N) - TYPE_K(1)))
+    {
+        *ptyMin = VAR_K(KTgMAX);
+        *ptyMax = -VAR_K(KTgMAX);
+    }
+    else
+    {
+        VAR_T()                             fTest;
+
+        VEC_T(1,C)                          vX0 = FCN_V(tgMH_MUL_SV)(fAx_N, &psCI1->m_vNormal);
+        VEC_T(1,C)                          vX1 = FCN_V(tgMH_SUB)(ptvDN, &vX0);
+        VEC_T(1,C)                          vX2 = FCN_V(tgMH_NORM_LEN)(&fTest, &vX1);
+        VAR_T(C)                            fOR_DN = FCN_V(tgMH_DOT)(&psCI1->m_vOrigin, ptvDN);
+        VAR_T(C)                            fX2_DN = FCN_V(tgMH_DOT)(ptvDN, &vX2);
+        VAR_T(C)                            fRS_AX = FCN_F(tgPM_ABS)(psCI1->m_fRadius * fX2_DN);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        *ptyMin = fOR_DN - fRS_AX;
+        *ptyMax = fOR_DN + fRS_AX;
+    };
+}

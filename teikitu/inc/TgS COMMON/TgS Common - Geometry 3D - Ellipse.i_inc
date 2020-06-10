@@ -1,0 +1,303 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Ellipse.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_EL_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Reset)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0 )
+{
+    psEL0->m_vMajor_Axis = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psEL0->m_vNormal = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psEL0->m_vMinor_Axis = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psEL0->m_vOrigin = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psEL0->m_fMajor = TYPE_K(0);
+    psEL0->m_fMinor = TYPE_K(0);
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_EL_Area)( VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    return (VAR_K(KTgPI) * psEL1->m_fMajor * psEL1->m_fMinor);
+}
+
+
+/* ---- FCN_VO(tgGM_EL_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_MUL_SV)( psEL1->m_fMajor, &psEL1->m_vMajor_Axis );
+    VEC_T(1,C)                          vX1 = FCN_V(tgMH_MUL_SV)( psEL1->m_fMajor, &psEL1->m_vMajor_Axis );
+    VEC_T(1,C)                          vX2 = FCN_V(tgMH_MUL_SV)( psEL1->m_fMinor, &psEL1->m_vMinor_Axis );
+    VEC_T(1,C)                          vX3 = FCN_V(tgMH_MUL_SV)( psEL1->m_fMinor, &psEL1->m_vMinor_Axis );
+    VEC_T(1,C)                          vX4 = FCN_V(tgMH_SUB)( &psEL1->m_vOrigin, &vX0 );
+    VEC_T(1,C)                          vX5 = FCN_V(tgMH_ADD)( &psEL1->m_vOrigin, &vX1 );
+    VEC_T(1,C)                          vX6 = FCN_V(tgMH_SUB)( &psEL1->m_vOrigin, &vX2 );
+    VEC_T(1,C)                          vX7 = FCN_V(tgMH_ADD)( &psEL1->m_vOrigin, &vX3 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_EL_Is_Valid)(psEL1));
+
+    FCN_VO(tgGM_BA_Init_PT)( psBA0, &psEL1->m_vOrigin );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, &vX4 );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, &vX5 );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, &vX6 );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, &vX7 );
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgELLIPSE,CPCU) psEL1, VEC_T(1,CPCU) pvDT )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDT));
+
+    FCN_VO(tgGM_EL_BA)( psBA0, psEL1 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgELLIPSE,CPCU) psEL1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fAx_A0 = FCN_F(tgPM_ABS)( FCN_V(tgMH_DOT)(pvDN, &psEL1->m_vMajor_Axis) );
+    VAR_T(C)                            fAx_A1 = FCN_F(tgPM_ABS)( FCN_V(tgMH_DOT)(pvDN, &psEL1->m_vMinor_Axis) );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_EL_Is_Valid)(psEL1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    *ptyMin = *ptyMax = FCN_V(tgMH_DOT)( pvDN, &psEL1->m_vOrigin );;
+
+    if (FCN_F(tgCM_NR0)(fAx_A0) && FCN_F(tgCM_NR0)(fAx_A1))
+    {
+        return;
+    };
+
+    *ptyMin -= fAx_A0 * psEL1->m_fMajor;
+    *ptyMin -= fAx_A1 * psEL1->m_fMinor;
+    *ptyMax += fAx_A0 * psEL1->m_fMajor;
+    *ptyMax += fAx_A1 * psEL1->m_fMinor;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_EL_Is_Contained)( VEC_OBJ_T(TgELLIPSE,CPCU) psEL1, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_EL_Is_Valid)(psEL1) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    if (psEL1->m_fMajor <= VAR_K(KTgEPS) || psEL1->m_fMinor <= VAR_K(KTgEPS))
+    {
+        return (false);
+    }
+    else
+    {
+        VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS0, &psEL1->m_vOrigin );
+        VAR_T(C)                            fX = FCN_V(tgMH_DOT)(&vDS, &psEL1->m_vMajor_Axis) / psEL1->m_fMajor;
+        VAR_T(C)                            fY = FCN_V(tgMH_DOT)(&vDS, &psEL1->m_vMinor_Axis) / psEL1->m_fMinor;
+
+        return (1 >= fX*fX + fY*fY);
+    };
+}
+
+
+/* ---- FCN_VO(tgGM_EL_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_TX)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psEL0->m_vMajor_Axis = FCN_04_3_V(tgMH_TX_V)( pxM0, &psEL0->m_vMajor_Axis );
+    psEL0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psEL0->m_vNormal );
+    psEL0->m_vMinor_Axis = FCN_04_3_V(tgMH_TX_V)( pxM0, &psEL0->m_vMinor_Axis );
+    psEL0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psEL0->m_vOrigin );
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Copy_TX)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_OBJ_T(TgELLIPSE,CPCU) psEL1, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_EL_Is_Valid)(psEL1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psEL0->m_vOrigin = FCN_04_3_V(tgMH_TX_V)( pxM0, &psEL1->m_vOrigin );
+    psEL0->m_vMajor_Axis = FCN_04_3_V(tgMH_TX_V)( pxM0, &psEL1->m_vMajor_Axis );
+    psEL0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psEL1->m_vNormal );
+    psEL0->m_vMinor_Axis = FCN_04_3_V(tgMH_TX_P)( pxM0, &psEL1->m_vMinor_Axis );
+    psEL0->m_fMajor = psEL1->m_fMajor;
+    psEL0->m_fMinor = psEL1->m_fMinor;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Init)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_T(1,CPCU) pvMJ, VEC_T(1,CPCU) pvNM, VEC_T(1,CPCU) pvMN, VEC_T(1,CPCU) pvOG, VAR_T(C) fMaj, VAR_T(C) fMin )
+{
+    FCN_VO(tgGM_EL_Set_Major_Unit)( psEL0, pvMJ );
+    FCN_VO(tgGM_EL_Set_Normal)( psEL0, pvNM );
+    FCN_VO(tgGM_EL_Set_Minor_Unit)( psEL0, pvMN );
+    FCN_VO(tgGM_EL_Set_Origin)( psEL0, pvOG );
+    FCN_VO(tgGM_EL_Set_Major_Radius)( psEL0, fMaj );
+    FCN_VO(tgGM_EL_Set_Minor_Radius)( psEL0, fMin );
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Init_3D) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Init_3D)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_04_3_T(CPCU) pxM0, VAR_T(C) fMaj, VAR_T(C) fMin )
+{
+    FCN_VO(tgGM_EL_Set_3D)( psEL0, pxM0 );
+    FCN_VO(tgGM_EL_Set_Major_Radius)( psEL0, fMaj );
+    FCN_VO(tgGM_EL_Set_Minor_Radius)( psEL0, fMin );
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Copy)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_EL_Is_Valid)(psEL1));
+
+    psEL0->m_vMajor_Axis = psEL1->m_vMajor_Axis;
+    psEL0->m_vNormal = psEL1->m_vNormal;
+    psEL0->m_vMinor_Axis = psEL1->m_vMinor_Axis;
+    psEL0->m_vOrigin = psEL1->m_vOrigin;
+    psEL0->m_fMajor = psEL1->m_fMajor;
+    psEL0->m_fMinor = psEL1->m_fMinor;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Set_Origin)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_T(1,CPCU) pvOrigin )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvOrigin));
+    psEL0->m_vOrigin = *pvOrigin;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Set_Axes_Unit_Index) -------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Set_Axes_Unit_Index)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, TgRSIZE_C uiIndex, VEC_T(1,CPCU) pvAxis )
+{
+    TgGEOM_ASSERT_PARAM(uiIndex < 3 && FCN_V(tgMH_Is_Vector_Valid)(pvAxis) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvAxis)));
+    psEL0->m_avData[uiIndex] = *pvAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Set_Major_Unit) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Set_Major_Unit)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_T(1,CPCU) pvAxis )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)( pvAxis ) && FCN_F(tgCM_NR1)( FCN_V(tgMH_LSQ)( pvAxis ) ));
+    psEL0->m_vMajor_Axis = *pvAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Set_Normal) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Set_Normal)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_T(1,CPCU) pvNormal )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)( pvNormal ) && FCN_F(tgCM_NR1)( FCN_V(tgMH_LSQ)( pvNormal ) ));
+    psEL0->m_vNormal = *pvNormal;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Set_Minor_Unit) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Set_Minor_Unit)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_T(1,CPCU) pvAxis )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)( pvAxis ) && FCN_F(tgCM_NR1)( FCN_V(tgMH_LSQ)( pvAxis ) ));
+    psEL0->m_vMinor_Axis = *pvAxis;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Set_3D) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Set_3D)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    FCN_04_3_V(tgMH_TR)(&psEL0->m_xData, pxM0);
+
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psEL0->m_avData + 0) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psEL0->m_avData + 0)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psEL0->m_avData + 1) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psEL0->m_avData + 1)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(psEL0->m_avData + 2) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(psEL0->m_avData + 2)));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(psEL0->m_avData + 3));
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Set_Major_Radius) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Set_Major_Radius)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VAR_T(C) fRadius )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fRadius) && fRadius > TYPE_K(0));
+    psEL0->m_fMajor = fRadius;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Set_Minor_Radius) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_EL_Set_Minor_Radius)( VEC_OBJ_T(TgELLIPSE,PCU) psEL0, VAR_T(C) fRadius )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fRadius) && fRadius > TYPE_K(0));
+    psEL0->m_fMinor = fRadius;
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_EL_Query_Origin)( VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    return (&psEL1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Query_Major_Unit) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_EL_Query_Major_Unit)( VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    return (&psEL1->m_vMajor_Axis);
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Query_Normal) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_EL_Query_Normal)( VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    return (&psEL1->m_vNormal);
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Query_Minor_Unit) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_EL_Query_Minor_Unit)( VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    return (&psEL1->m_vMinor_Axis);
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Query_Major_Radius) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_EL_Query_Major_Radius)( VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    return (psEL1->m_fMajor);
+}
+
+
+/* ---- FCN_VO(tgGM_EL_Query_Minor_Radius) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_EL_Query_Minor_Radius)( VEC_OBJ_T(TgELLIPSE,CPCU) psEL1 )
+{
+    return (psEL1->m_fMinor);
+}

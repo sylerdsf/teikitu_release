@@ -1,0 +1,95 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Line.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+                                                /** @brief Invalidate the geometry object (line)
+                                                    @param[out] OUT Pointer to the geometry object (line) */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_Reset)( VEC_OBJ_T(TgLINE,PCU) OUT );
+
+                                                /** @brief Validate the integrity of the geometry object (line)
+                                                    @param[in] ARG0 Pointer to a geometry object (line)
+                                                    @return True if the geometry object (line) is valid and false otherwise */
+TgINLINE TgBOOL                                 FCN_VO(tgGM_LN_Is_Valid)( VEC_OBJ_T(TgLINE,CPCU) ARG );
+
+                                                /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (line)
+                                                    @param[out] ARG0 Pointer to an axis-aligned bounding box object
+                                                    @param[in] ARG1 Pointer to a geometry object (line) */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgLINE,CPCU) ARG1 );
+
+                                                /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (line)
+                                                    @param[out] ARG0 Pointer to an axis-aligned bounding box object
+                                                    @param[in] ARG1 Pointer to a geometry object (line)
+                                                    @param[in] ARG2 Pointer to a vector describing the swept direction and magnitude */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgLINE,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+
+                                                /** @brief Project the geometry object (line) along the direction vector
+                                                    @param[out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
+                                                    @param[out] OUT1 Pointer to a scalar value to hold the upper bound of the projection
+                                                    @param[in] ARG2 Pointer to a geometry object (line)
+                                                    @param[in] ARG3 Pointer to a direction vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_Project)( VAR_T(PCU) ARG0, VAR_T(PCU) ARG1, VEC_OBJ_T(TgLINE,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
+
+                                                /** @brief Test to see if a point is either on or in the geometry object (line)
+                                                    @param[in] ARG0 Pointer to a geometry object (line)
+                                                    @param[in] ARG1 Pointer to a position vector
+                                                    @return True if the position is either on or in the geometry object (line) and false otherwise */
+TgINLINE TgBOOL                                 FCN_VO(tgGM_LN_Is_Contained)( VEC_OBJ_T(TgLINE,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+
+                                                /** @brief Transform the geometry object (line) at ARG0 by the matrix at ARG1
+                                                    @param[in,out] ARG0 Pointer to a geometry object (line)
+                                                    @param[in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_TX)( VEC_OBJ_T(TgLINE,PCU) ARG0, VEC_04_3_T(CPCU) ARG1 );
+
+                                                /** @brief Transform the geometry object (line) at ARG1 by the matrix at ARG2 and store it in ARG0
+                                                    @param[out] ARG0 Pointer to a geometry object (line)
+                                                    @param[in] ARG1 Pointer to a geometry object (line)
+                                                    @param[in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_Copy_TX)( VEC_OBJ_T(TgLINE,PCU) ARG0, VEC_OBJ_T(TgLINE,CPCU) ARG1, VEC_04_3_T(CPCU) ARG2 );
+
+
+                                                /** @brief Initialize a new geometry object (line) with the function arguments
+                                                    @param[out] ARG0 Pointer to a geometry object (line)
+                                                    @param[in] ARG1 Pointer to a position vector - point on the line
+                                                    @param[in] ARG2 Pointer to a direction vector - direction of the line */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_Init)( VEC_OBJ_T(TgLINE,PCU) ARG0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+
+                                                /** @brief Copy the one geometry object (line) to another of the same type
+                                                    @param[out] ARG0 Pointer to a geometry object (line)
+                                                    @param[in] ARG1 Pointer to a geometry object (line) */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_Copy)( VEC_OBJ_T(TgLINE,PCU) ARG0, VEC_OBJ_T(TgLINE,CPCU) ARG1 );
+
+
+                                                /** @brief Set the origin
+                                                    @param[in,out] ARG0 Pointer to a geometry object (line)
+                                                    @param[in] ARG1 Pointer to a position vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_Set_Origin)( VEC_OBJ_T(TgLINE,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+
+                                                /** @brief Set the direction of the line
+                                                    @param[in,out] ARG0 Pointer to a geometry object (line)
+                                                    @param[in] ARG1 Pointer to a direction vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_LN_Set_DirN)( VEC_OBJ_T(TgLINE,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+
+
+                                                /** @brief Return the origin
+                                                    @param[in] ARG Pointer to a geometry object (line)
+                                                    @return The origin */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_LN_Query_Origin)( VEC_OBJ_T(TgLINE,CPCU) ARG );
+
+                                                /** @brief Return the direction of the line
+                                                    @param[in] ARG Pointer to a geometry object (line)
+                                                    @return The direction of the line */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_LN_Query_DirN)( VEC_OBJ_T(TgLINE,CPCU) ARG );

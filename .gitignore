@@ -1,0 +1,14 @@
+CMakeCache.txt
+
+teikitu/bin
+teikitu/doc
+teikitu/lib
+teikitu/obj
+
+teikitu/prj/cmake_stream.cmake
+teikitu/prj/*/
+!teikitu/prj/bootstrap
+teikitu/prj/bootstrap/*
+!teikitu/prj/bootstrap/CMakeLists.txt
+
+teikitu/src/TgS COMMON/backup

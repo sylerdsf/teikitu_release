@@ -1,0 +1,129 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Capsule.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_CP_Support_Point) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_CP_Support_Point)( VEC_OBJ_T(TgTUBE,CPCU) psCP0, VEC_T(1,CPCU) pvDirN )
+{
+    VAR_T(C)                            fAx_Dn = FCN_V(tgMH_DOT)( pvDirN, &psCP0->m_vU_HAX );
+    VEC_T(1)                            vResult;
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TB_Is_Valid)(psCP0) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvDirN)) && FCN_V(tgMH_Is_Vector_Valid)(pvDirN));
+
+    if (fAx_Dn > VAR_K(KTgEPS))
+    {
+        vResult = FCN_V(tgMH_ADD)( &psCP0->m_sAX.m_vOrigin, &psCP0->m_sAX.m_vDirN );
+    }
+    else if (fAx_Dn < -VAR_K(KTgEPS))
+    {
+        vResult = FCN_V(tgMH_SUB)( &psCP0->m_sAX.m_vOrigin, &psCP0->m_sAX.m_vDirN );
+    }
+    else
+    {
+        vResult = psCP0->m_sAX.m_vOrigin;
+    };
+
+    return (FCN_V(tgMH_MAD_SVV)( psCP0->m_fRadius, pvDirN, &vResult) );
+}
+
+
+/* ---- FCN_VO(tgGM_CP_Volume) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_CP_Volume)( VEC_OBJ_T(TgTUBE,CPCU) psCP0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TB_Is_Valid)(psCP0));
+    return (VAR_K(KTgTWO_PI)*(psCP0->m_fRadiusSq)*((psCP0->m_fExtent) + TYPE_K(2,0)*(psCP0->m_fRadius) / TYPE_K(3,0)));
+}
+
+
+/* ---- FCN_VO(tgGM_CP_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_CP_Area)( VEC_OBJ_T(TgTUBE,CPCU) psCP0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TB_Is_Valid)(psCP0));
+    return (VAR_K(KTgTWO_PI)*(psCP0->m_fRadius)*(TYPE_K(2,0)*(psCP0->m_fExtent) + TYPE_K(2,0)*(psCP0->m_fRadius)));
+}
+
+
+/* ---- FCN_VO(tgGM_CP_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_CP_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgTUBE,CPCU) psCP0 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_SUB)( &psCP0->m_vOrigin, &psCP0->m_vHAX );
+    VEC_T(1,C)                          vX1 = FCN_V(tgMH_ADD)( &psCP0->m_vOrigin, &psCP0->m_vHAX );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TB_Is_Valid)(psCP0));
+
+    FCN_VO(tgGM_BA_Init_PT)( psBA0, &vX0 );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, &vX1 );
+    FCN_VO(tgGM_BA_Expand)( psBA0, psCP0->m_fRadius );
+}
+
+
+/* ---- FCN_VO(tgGM_CP_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_CP_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgTUBE,CPCU) psCP0, VEC_T(1,CPCU) pvDT )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TB_Is_Valid)(psCP0) && FCN_V(tgMH_Is_Vector_Valid)(pvDT));
+
+    FCN_VO(tgGM_CP_BA)( psBA0, psCP0 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_CP_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_CP_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgTUBE,CPCU) psCP0, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fE2 = FCN_V(tgMH_DOT)( pvDN, &psCP0->m_vHAX );
+    VAR_T(C)                            fE1 = FCN_V(tgMH_DOT)( pvDN, &psCP0->m_vOrigin );
+    VAR_T(C)                            fE3 = FCN_F(tgPM_ABS)( fE2 );
+
+    TgGEOM_ASSERT_PARAM(nullptr != ptyMin && nullptr != ptyMax && FCN_VO(tgGM_TB_Is_Valid)(psCP0) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+    TgERROR(FCN_V(tgMH_LSQ)(&psCP0->m_vHAX) > VAR_K(KTgEPS));
+
+    *ptyMin = fE1 - fE3 - psCP0->m_fRadius;
+    *ptyMax = fE1 + fE3 + psCP0->m_fRadius;
+}
+
+
+/* ---- FCN_VO(tgGM_CP_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_CP_Is_Contained)( VEC_OBJ_T(TgTUBE,CPCU) psCP0, VEC_T(1,CPCU) pvS0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS0, &psCP0->m_sAX.m_vOrigin );
+    VAR_T(C)                            fD0_D0 = FCN_V(tgMH_LSQ)( &psCP0->m_sAX.m_vDirN );
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)( &vDS );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TB_Is_Valid)(psCP0) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    if (fD0_D0 > VAR_K(KTgEPS))
+    {
+        VAR_T(C)                            fDS_D0 = FCN_V(tgMH_DOT)( &vDS, &psCP0->m_sAX.m_vDirN );
+
+        if (fDS_D0 > VAR_K(KTgEPS))
+        {
+            if (fDS_D0 <= fD0_D0)
+            {   /* [2] [DS•DS - γ_(DS•D0,D0)] */
+                return (fDS_DS - fDS_D0*(fDS_D0 / fD0_D0) <= psCP0->m_fRadiusSq);
+            }
+            else
+            {   /* [3] [DS•DS - 2•DS•D0 + D0•D0] */
+                return (fDS_DS - TYPE_K(2,0)*fDS_D0 + fD0_D0 <= psCP0->m_fRadiusSq);
+            };
+        };
+    };
+
+    return (fDS_DS <= psCP0->m_fRadiusSq);
+}

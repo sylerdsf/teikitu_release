@@ -1,0 +1,145 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Base - Type [Vector].h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if defined(TGS_COMMON_BASE_TYPE_VECTOR_HINC)
+    #error This file should be included by TGS_COMMON_BASE_TYPE_VECTOR_Hs
+#endif
+
+#if defined(TEMPLATE__ENABLE_INTEGER)
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #define TEMPLATE__ENABLE_UNSIGNED
+        #include __FILE__
+        #undef TEMPLATE__ENABLE_UNSIGNED
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#else
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #if !defined(TEMPLATE__TYPE_SIZE)
+            #define TEMPLATE__TYPE_SIZE 32
+            #include __FILE__
+            #undef TEMPLATE__TYPE_SIZE
+            #define TEMPLATE__TYPE_SIZE 64
+        #endif
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+#undef TgMACRO_VECTOR_
+#undef TgMACRO_NATIVE_VECTOR_
+
+#if TEMPLATE__VECTOR_DIM < 10
+    #define TgMACRO_VECTOR_(A,B,C,D,E) TgVEC_##A##B##_##C##_0##D
+    #define TgMACRO_NATIVE_VECTOR_(A,B,C,D,E) TgVEC_N_##A##B##_##C##_0##D
+#else
+    #define TgMACRO_VECTOR_(A,B,C,D,E) TgVEC_##A##B##_##C##_##D
+    #define TgMACRO_NATIVE_VECTOR_(A,B,C,D,E) TgVEC_N_##A##B##_##C##_##D
+#endif
+
+
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Types                                                                                                                                                                   */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+#if !defined(TGS_COMMON_MATH_VECTOR_SPECIALIZATION) && ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
+/** @union Native vector */
+TgTYPE_UNION( VEC_N_T(1), )
+{
+    VAR_T() TgALIGN(16)                         m_aData[TEMPLATE__VECTOR_DIM];
+};
+/*# !defined(TGS_COMMON_MATH_VECTOR_SPECIALIZATION) && ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE)) */
+#endif
+
+#if ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
+/** @union Native and Non-native (scalar) vector with common direct member variable access */
+TgTYPE_UNION( VEC_T(1), )
+{
+    VAR_T() TgALIGN(16)                         m_aData[TEMPLATE__VECTOR_DIM];
+    #if 4 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            x,y,z,w; };
+    struct { VAR_T()                            r,g,b,a; };
+    #elif 3 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            x,y,z; };
+    struct { VAR_T()                            r,g,b; };
+    #elif 2 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            x,y; };
+    #endif
+};
+#else
+/** @union Non-native (scalar) vector with common direct member variable access */
+TgTYPE_UNION( VEC_T(1), )
+{
+    VAR_T()                                     m_aData[TEMPLATE__VECTOR_DIM];
+    #if 4 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            x,y,z,w; };
+    struct { VAR_T()                            r,g,b,a; };
+    #elif 3 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            x,y,z; };
+    struct { VAR_T()                            r,g,b; };
+    #elif 2 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            x,y; };
+    #endif
+};
+#endif
+
+#if !defined(TEMPLATE__ENABLE_INTEGER) && (TEMPLATE__VECTOR_DIM > 2)
+
+/** @union Non-native (scalar) vector with 3 rows (a DIMx3 matrix) */
+TgTYPE_UNION( VEC_T(3), )
+{
+#if 4 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            _11,_12,_13,_14,_21,_22,_23,_24,_31,_32,_33,_34; };
+#endif
+#if 3 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            _11,_12,_13,_21,_22,_23,_31,_32,_33; };
+#endif
+    struct { VEC_T(1)                           m_r0, m_r1, m_r2; };
+    VAR_T()                                     m_aElement[3*TEMPLATE__VECTOR_DIM];
+    VAR_T()                                     m_aRowCol[3][TEMPLATE__VECTOR_DIM];
+    VEC_T(1)                                    m_avRow[3];
+};
+
+#endif
+
+#if !defined(TEMPLATE__ENABLE_INTEGER) && (TEMPLATE__VECTOR_DIM > 3)
+
+/** @union Non-native (scalar) vector with 4 rows (a DIMx4 matrix) */
+TgTYPE_UNION( VEC_T(4), )
+{
+#if 4 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            _11,_12,_13,_14,_21,_22,_23,_24,_31,_32,_33,_34,_41,_42,_43,_44; };
+#endif
+#if 3 == TEMPLATE__VECTOR_DIM
+    struct { VAR_T()                            _11,_12,_13,_21,_22,_23,_31,_32,_33,_41,_42,_43; };
+#endif
+    struct { VEC_T(1)                           m_r0,m_r1,m_r2,m_r3; };
+    VAR_T()                                     m_aElement[4*TEMPLATE__VECTOR_DIM];
+    VAR_T()                                     m_aRowCol[4][TEMPLATE__VECTOR_DIM];
+    VEC_T(1)                                    m_avRow[4];
+};
+
+#endif
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,50 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Math API [Matrix] [F] [34].h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
+                                                @brief Store the transpose of the matrix ARG1
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_TR)( VEC_04_4_T(PCU) OUT0, MAT_T(CPCU) ARG1 );
+
+
+
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
+                                                @brief Store a left-handed view matrix
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Vector, Eye Position
+                                                @param[in] ARG2 Vector, Look at Position
+                                                @param[in] ARG3 Vector, Camera Up Direction */
+TgINLINE TgVOID                             FCN_M(tgMH_LookLH)( MAT_T(PCU) OUT0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
+                                                @brief Store a right-handed view matrix
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Vector, Eye Position
+                                                @param[in] ARG2 Vector, Look at Position
+                                                @param[in] ARG3 Vector, Camera Up Direction */
+TgINLINE TgVOID                             FCN_M(tgMH_LookRH)( MAT_T(PCU) OUT0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
+                                                @brief Store a left-handed view matrix
+                                                @param[out] OUT0 Destination matrix
+                                                @param[in] ARG1 Vector, Eye Position
+                                                @param[in] ARG2 Vector, Look at Position
+                                                @param[in] ARG3 Vector, Camera Up Direction */
+TgINLINE TgVOID                             FCN_M(tgMH_Look)( MAT_T(PCU) OUT0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );

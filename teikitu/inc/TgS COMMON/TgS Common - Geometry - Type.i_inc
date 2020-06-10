@@ -1,0 +1,103 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry - Type.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if defined(TGS_COMMON_GEOMETRY_TYPE_IINC)
+    #error This file should be included by TGS_COMMON_GEOMETRY_INL
+#endif
+
+#if defined(TEMPLATE__ENABLE_INTEGER)
+
+    #error Geometry is assumed to be floating point
+
+#else
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #if !defined(TEMPLATE__TYPE_SIZE)
+            #define TEMPLATE__TYPE_SIZE 32
+            #include __FILE__
+            #undef TEMPLATE__TYPE_SIZE
+            #define TEMPLATE__TYPE_SIZE 64
+        #endif
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- V(tgGMt_DT_Rese) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DT_Reset)( VEC_OBJ_T(TgDELTA,PCU) psDT0 )
+{
+    psDT0->m_vUDT = FCN_V(tgMH_SET1)( TYPE_K(0) );
+    psDT0->m_vDT = FCN_V(tgMH_SET1)( TYPE_K(0) );
+    psDT0->m_fDT = TYPE_K(0);
+    psDT0->m_fDT_DT = TYPE_K(0);
+    psDT0->m_fInv_DT = TYPE_K(0);
+}
+
+
+/* ---- FCN_VO(tgGM_DT_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_DT_Is_Valid)( VEC_OBJ_T(TgDELTA,CPCU) psDT )
+{
+    return (
+        FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(&psDT->m_vUDT)) &&
+        FCN_V(tgMH_Is_Vector_Valid)(&psDT->m_vUDT) &&
+        FCN_V(tgMH_Is_Vector_Valid)(&psDT->m_vDT) &&
+        !FCN_F(tgPM_NAN)(psDT->m_fDT) &&
+        !FCN_F(tgPM_NAN)(psDT->m_fDT_DT) &&
+        !FCN_F(tgPM_NAN)(psDT->m_fInv_DT)
+    );
+}
+
+
+/* ---- FCN_VO(tgGM_DT_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DT_TX)( VEC_OBJ_T(TgDELTA,PCU) psDT0, VEC_04_3_T(CPCU) pxM0 )
+{
+    psDT0->m_vUDT = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDT0->m_vUDT );
+    psDT0->m_vDT = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDT0->m_vDT );
+}
+
+
+/* ---- FCN_VO(tgGM_DT_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DT_Copy_TX)( VEC_OBJ_T(TgDELTA,PCU) psDT0, VEC_OBJ_T(TgDELTA,CPCU) psDT1, VEC_04_3_T(CPCU) pxM0 )
+{
+    psDT0->m_vUDT = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDT1->m_vUDT );
+    psDT0->m_vDT = FCN_04_3_V(tgMH_TX_V)( pxM0, &psDT1->m_vDT );
+    psDT0->m_fDT = psDT1->m_fDT;
+    psDT0->m_fDT_DT = psDT1->m_fDT_DT;
+    psDT0->m_fInv_DT = psDT1->m_fInv_DT;
+}
+
+
+/* ---- FCN_VO(tgGM_DT_Set) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_DT_Set)( VEC_OBJ_T(TgDELTA,PCU) psDT0, VEC_T(1,CPCU) pvDT )
+{
+    psDT0->m_vUDT = FCN_V(tgMH_NORM_LEN)( &psDT0->m_fDT, pvDT );
+    psDT0->m_vDT = *pvDT;
+    psDT0->m_fDT_DT = psDT0->m_fDT*psDT0->m_fDT;
+    psDT0->m_fInv_DT = FCN_F(tgPM_FSEL)( FCN_F(tgPM_ABS)( psDT0->m_fDT ) - VAR_K(KTgEPS), TYPE_K(1) / psDT0->m_fDT, TYPE_K(0) );
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

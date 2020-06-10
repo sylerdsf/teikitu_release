@@ -1,0 +1,711 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Math [Matrix] [F] [44].i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_M(tgMH_INIT_ROT) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_INIT_ROT)( MAT_T(PCU) pxM0, MAT_T(CPCU) pxM1 )
+{
+    pxM0->_11 = pxM1->_11; pxM0->_12 = pxM1->_12; pxM0->_13 = pxM1->_13; pxM0->_14 = TYPE_K(0);
+    pxM0->_21 = pxM1->_21; pxM0->_22 = pxM1->_22; pxM0->_23 = pxM1->_23; pxM0->_24 = TYPE_K(0);
+    pxM0->_31 = pxM1->_31; pxM0->_32 = pxM1->_32; pxM0->_33 = pxM1->_33; pxM0->_34 = TYPE_K(0);
+    pxM0->_41 = TYPE_K(0); pxM0->_42 = TYPE_K(0); pxM0->_43 = TYPE_K(0); pxM0->_44 = TYPE_K(1);
+}
+
+/* ---- FCN_M(tgMH_INIT_T) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_INIT_T)( MAT_T(PCU) pxM0, VEC_T(1,CPCU) pvS0 )
+{
+    pxM0->_11 = TYPE_K(1); pxM0->_12 = TYPE_K(0); pxM0->_13 = TYPE_K(0); pxM0->_14 = pvS0->m_aData[0];
+    pxM0->_21 = TYPE_K(0); pxM0->_22 = TYPE_K(1); pxM0->_23 = TYPE_K(0); pxM0->_24 = pvS0->m_aData[1];
+    pxM0->_31 = TYPE_K(0); pxM0->_32 = TYPE_K(0); pxM0->_33 = TYPE_K(1); pxM0->_34 = pvS0->m_aData[2];
+    pxM0->_41 = TYPE_K(0); pxM0->_42 = TYPE_K(0); pxM0->_43 = TYPE_K(0); pxM0->_44 = TYPE_K(1);
+}
+
+
+/* ---- FCN_M(tgMH_INIT_T_S) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_INIT_T_S)( MAT_T(PCU) pxM0, VAR_T(C) fX, VAR_T(C) fY, VAR_T(C) fZ )
+{
+    pxM0->_11 = TYPE_K(1); pxM0->_12 = TYPE_K(0); pxM0->_13 = TYPE_K(0); pxM0->_14 = fX;
+    pxM0->_21 = TYPE_K(0); pxM0->_22 = TYPE_K(1); pxM0->_23 = TYPE_K(0); pxM0->_24 = fY;
+    pxM0->_31 = TYPE_K(0); pxM0->_32 = TYPE_K(0); pxM0->_33 = TYPE_K(1); pxM0->_34 = fZ;
+    pxM0->_41 = TYPE_K(0); pxM0->_42 = TYPE_K(0); pxM0->_43 = TYPE_K(0); pxM0->_44 = TYPE_K(1);
+}
+
+
+/* ---- FCN_M(tgMH_Init_Euler) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Init_Euler)( MAT_T(PCU) pxRet, VEC_T(1,CPCU) pvEul )
+{
+    FCN_M(tgMH_Set_Euler_S)( pxRet, pvEul->x, pvEul->y, pvEul->z );
+    pxRet->_14 = TYPE_K(0);
+    pxRet->_24 = TYPE_K(0);
+    pxRet->_34 = TYPE_K(0);
+    pxRet->m_avRow[3] = VEC_K(KTgUNIT_W);
+}
+
+
+/* ---- FCN_M(tgMH_Init_Euler_S) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Init_Euler_S)( MAT_T(PCU) pxRet, VAR_T(C)  fX, VAR_T(C)  fY, VAR_T(C)  fZ )
+{
+    FCN_M(tgMH_Set_Euler_S)( pxRet, fX, fY, fZ );
+    pxRet->_14 = TYPE_K(0);
+    pxRet->_24 = TYPE_K(0);
+    pxRet->_34 = TYPE_K(0);
+    pxRet->m_avRow[3] = VEC_K(KTgUNIT_W);
+}
+
+
+/* ---- FCN_M(tgMH_Init_EulerX) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Init_EulerX)( MAT_T(PCU) pxRet, VAR_T(C)  fX )
+{
+    FCN_M(tgMH_Set_EulerX)( pxRet, fX );
+    pxRet->_14 = TYPE_K(0);
+    pxRet->_24 = TYPE_K(0);
+    pxRet->_34 = TYPE_K(0);
+    pxRet->m_avRow[3] = VEC_K(KTgUNIT_W);
+}
+
+
+/* ---- FCN_M(tgMH_Init_EulerY) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Init_EulerY)( MAT_T(PCU) pxRet, VAR_T(C)  fY )
+{
+    FCN_M(tgMH_Set_EulerY)( pxRet, fY );
+    pxRet->_14 = TYPE_K(0);
+    pxRet->_24 = TYPE_K(0);
+    pxRet->_34 = TYPE_K(0);
+    pxRet->m_avRow[3] = VEC_K(KTgUNIT_W);
+}
+
+
+/* ---- FCN_M(tgMH_Init_EulerZ) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Init_EulerZ)( MAT_T(PCU) pxRet, VAR_T(C) fZ )
+{
+    FCN_M(tgMH_Set_EulerZ)( pxRet, fZ );
+    pxRet->_14 = TYPE_K(0);
+    pxRet->_24 = TYPE_K(0);
+    pxRet->_34 = TYPE_K(0);
+    pxRet->m_avRow[3] = VEC_K(KTgUNIT_W);
+}
+
+
+/* ---- FCN_M(tgMH_Init_Quat) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Init_Quat)( MAT_T(PCU) pxRet, VEC_T(1,CPCU) pqR0 )
+{
+    FCN_M(tgMH_Set_Quat)( pxRet, pqR0 );
+    pxRet->_14 = TYPE_K(0);
+    pxRet->_24 = TYPE_K(0);
+    pxRet->_34 = TYPE_K(0);
+    pxRet->m_avRow[3] = VEC_K(KTgUNIT_W);
+}
+
+
+/* ---- FCN_M(tgMH_CAT) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_CAT)( MAT_T(PCU) pxRet, MAT_T(CPCU) pxM0, MAT_T(CPCU) pxM1 )
+{
+    FCN_M(tgMH_CAT_IMPL)( pxRet, pxM0, pxM1 );
+}
+
+
+/* ---- FCN_M(tgMH_INV_DET) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_INV_DET)( MAT_T(PCU) pxRet, VAR_T(C) fDet, MAT_T(CPCU) pxM1 )
+{
+    FCN_M(tgMH_INV_DET_IMPL)(pxRet, fDet, pxM1);
+}
+
+
+/* ---- FCN_M(tgMH_INV) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_INV)( MAT_T(PCU) pxRet, MAT_T(CPCU) pxM1 )
+{
+    FCN_M(tgMH_INV_DET)( pxRet, FCN_M(tgMH_DET)(pxM1), pxM1 );
+}
+
+
+/* ---- FCN_M(tgMH_DET) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_M(tgMH_DET)( MAT_T(CPCU) pxM1 )
+{
+    return (
+          pxM1->_11*(pxM1->_22*(pxM1->_33*pxM1->_44 - pxM1->_34*pxM1->_43)
+                        + pxM1->_23*(pxM1->_34*pxM1->_42 - pxM1->_32*pxM1->_44)
+                        + pxM1->_24*(pxM1->_32*pxM1->_43 - pxM1->_33*pxM1->_42))
+        - pxM1->_12*(pxM1->_21*(pxM1->_33*pxM1->_44 - pxM1->_34*pxM1->_43)
+                        + pxM1->_23*(pxM1->_34*pxM1->_41 - pxM1->_31*pxM1->_44)
+                        + pxM1->_24*(pxM1->_31*pxM1->_43 - pxM1->_33*pxM1->_41))
+        + pxM1->_13*(pxM1->_21*(pxM1->_32*pxM1->_44 - pxM1->_34*pxM1->_42)
+                        + pxM1->_22*(pxM1->_34*pxM1->_41 - pxM1->_31*pxM1->_44)
+                        + pxM1->_24*(pxM1->_31*pxM1->_42 - pxM1->_32*pxM1->_41))
+        - pxM1->_14*(pxM1->_21*(pxM1->_32*pxM1->_43 - pxM1->_33*pxM1->_42)
+                        + pxM1->_22*(pxM1->_33*pxM1->_41 - pxM1->_31*pxM1->_43)
+                        + pxM1->_23*(pxM1->_31*pxM1->_42 - pxM1->_32*pxM1->_41))
+    );
+}
+
+
+/* ---- FCN_M(tgMH_TX) ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_M(tgMH_TX)( MAT_T(CPCU) ptxM0, VEC_T(1,CPCU) pvX0 )
+{
+    VEC_T(1)                            vRet;
+
+    vRet.x = FCN_V(tgMH_DOT)( ptxM0->m_avRow + 0, pvX0 );
+    vRet.y = FCN_V(tgMH_DOT)( ptxM0->m_avRow + 1, pvX0 );
+    vRet.z = FCN_V(tgMH_DOT)( ptxM0->m_avRow + 2, pvX0 );
+    vRet.w = FCN_V(tgMH_DOT)( ptxM0->m_avRow + 3, pvX0 );
+
+    return (vRet);
+}
+
+
+/* ---- FCN_M(tgMH_TX_P) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_M(tgMH_TX_P)( MAT_T(CPCU) pxTX, VEC_T(1,CPCU) pv3 )
+{
+    VEC_T(1)                            vRet;
+
+    vRet.x = FCN_V(tgMH_DOT3)(pxTX->m_avRow + 0, pv3) + pxTX->_14;
+    vRet.y = FCN_V(tgMH_DOT3)(pxTX->m_avRow + 1, pv3) + pxTX->_24;
+    vRet.z = FCN_V(tgMH_DOT3)(pxTX->m_avRow + 2, pv3) + pxTX->_34;
+    vRet.w = TYPE_K(1);
+
+    return (vRet);
+}
+
+
+/* ---- FCN_M(tgMH_TX_V) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_M(tgMH_TX_V)( MAT_T(CPCU) pxTX, VEC_T(1,CPCU) pv3 )
+{
+    VEC_T(1)                            vRet;
+
+    vRet.x = FCN_V(tgMH_DOT3)(pxTX->m_avRow + 0, pv3);
+    vRet.y = FCN_V(tgMH_DOT3)(pxTX->m_avRow + 1, pv3);
+    vRet.z = FCN_V(tgMH_DOT3)(pxTX->m_avRow + 2, pv3);
+    vRet.w = TYPE_K(0);
+
+    return (vRet);
+}
+
+
+/* ---- FCN_M(tgMH_Get_Col_0) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_M(tgMH_Get_Col_0)( MAT_T(CPCU) pxM0 )
+{
+    return (FCN_V(tgMH_SET_S)(pxM0->_11, pxM0->_21, pxM0->_31, pxM0->_41));
+}
+
+
+/* ---- FCN_M(tgMH_Get_Col_1) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_M(tgMH_Get_Col_1)( MAT_T(CPCU) pxM0 )
+{
+    return (FCN_V(tgMH_SET_S)(pxM0->_12, pxM0->_22, pxM0->_32, pxM0->_42));
+}
+
+
+/* ---- FCN_M(tgMH_Get_Col_2) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_M(tgMH_Get_Col_2)( MAT_T(CPCU) pxM0 )
+{
+    return (FCN_V(tgMH_SET_S)(pxM0->_13, pxM0->_23, pxM0->_33, pxM0->_43));
+}
+
+
+/* ---- FCN_M(tgMH_Get_Col_3) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_M(tgMH_Get_Col_3)( MAT_T(CPCU) pxM0 )
+{
+    return (FCN_V(tgMH_SET_S)(pxM0->_14, pxM0->_24, pxM0->_34, pxM0->_44));
+}
+
+
+/* ---- FCN_M(tgMH_Matrix2Euler_S) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Matrix2Euler_S)( VAR_T(P) pfX, VAR_T(P) pfY, VAR_T(P) pfZ, MAT_T(CPC) pxR0 )
+{
+    FCN_04_3_V(tgMH_Matrix2Euler_S)( pfX, pfY, pfZ, (VEC_04_3_T(CP))pxR0 );
+}
+
+
+/* ---- FCN_M(tgMH_Matrix2Euler) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Matrix2Euler)( VEC_T(1,PCU) pvEul, MAT_T(CPC) pxR0 )
+{
+    FCN_04_3_V(tgMH_Matrix2Euler)( pvEul, (VEC_04_3_T(CP))pxR0 );
+}
+
+
+/* ---- FCN_M(tgMH_Matrix2Quat) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Matrix2Quat)( VEC_T(1,PCU) pvEul, MAT_T(CPC) pxR0 )
+{
+    FCN_04_3_V(tgMH_Matrix2Quat)( pvEul, (VEC_04_3_T(CP))pxR0 );
+}
+
+
+/* ---- FCN_M(tgMH_Init_Basis_From_Vector) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Init_Basis_From_Vector)( MAT_T(PCU) pxRet, VEC_T(1,CPCU) pvAxis )
+{
+    FCN_04_3_V(tgMH_Init_Basis_From_Vector)( (VEC_04_3_T(P))pxRet, pvAxis );
+    pxRet->m_avRow[3] = VEC_K(KTgUNIT_W);
+}
+
+
+
+
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/*  TgS Common - Math API [Matrix] [F] [44] */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/* ---- FCN_M(tgMH_CAT_34_44) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_CAT_34_44)( MAT_T(PCU) pxM0, VEC_04_3_T(CPCU) pxM1, MAT_T(CPCU) pxM2 )
+{
+    TgUINT_F32                          ui0;
+
+    for (ui0 = 0; ui0 < 3; ++ui0)
+    {
+        pxM0->m_aRowCol[ui0][0] =  pxM1->m_aRowCol[ui0][0] * pxM2->m_aRowCol[0][0]
+                                   +  pxM1->m_aRowCol[ui0][1] * pxM2->m_aRowCol[1][0]
+                                   +  pxM1->m_aRowCol[ui0][2] * pxM2->m_aRowCol[2][0]
+                                   +  pxM1->m_aRowCol[ui0][3] * pxM2->m_aRowCol[3][0];
+        pxM0->m_aRowCol[ui0][1] =  pxM1->m_aRowCol[ui0][0] * pxM2->m_aRowCol[0][1]
+                                   +  pxM1->m_aRowCol[ui0][1] * pxM2->m_aRowCol[1][1]
+                                   +  pxM1->m_aRowCol[ui0][2] * pxM2->m_aRowCol[2][1]
+                                   +  pxM1->m_aRowCol[ui0][3] * pxM2->m_aRowCol[3][1];
+        pxM0->m_aRowCol[ui0][2] =  pxM1->m_aRowCol[ui0][0] * pxM2->m_aRowCol[0][2]
+                                   +  pxM1->m_aRowCol[ui0][1] * pxM2->m_aRowCol[1][2]
+                                   +  pxM1->m_aRowCol[ui0][2] * pxM2->m_aRowCol[2][2]
+                                   +  pxM1->m_aRowCol[ui0][3] * pxM2->m_aRowCol[3][2];
+        pxM0->m_aRowCol[ui0][3] =  pxM1->m_aRowCol[ui0][0] * pxM2->m_aRowCol[0][3]
+                                   +  pxM1->m_aRowCol[ui0][1] * pxM2->m_aRowCol[1][3]
+                                   +  pxM1->m_aRowCol[ui0][2] * pxM2->m_aRowCol[2][3]
+                                   +  pxM1->m_aRowCol[ui0][3] * pxM2->m_aRowCol[3][3];
+    };
+
+    pxM0->m_avRow[3] = pxM2->m_avRow[3];
+}
+
+
+/* ---- FCN_M(tgMH_CAT_44_34) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_CAT_44_34)( MAT_T(PCU) pxM0, MAT_T(CPCU) pxM1, VEC_04_3_T(CPCU) pxM2 )
+{
+    TgUINT_F32                          ui0;
+
+    for (ui0 = 0; ui0 < 4; ++ui0)
+    {
+        pxM0->m_aRowCol[ui0][0] =  pxM1->m_aRowCol[ui0][0] * pxM2->m_aRowCol[0][0]
+                                   +  pxM1->m_aRowCol[ui0][1] * pxM2->m_aRowCol[1][0]
+                                   +  pxM1->m_aRowCol[ui0][2] * pxM2->m_aRowCol[2][0];
+
+        pxM0->m_aRowCol[ui0][1] =  pxM1->m_aRowCol[ui0][0] * pxM2->m_aRowCol[0][1]
+                                   +  pxM1->m_aRowCol[ui0][1] * pxM2->m_aRowCol[1][1]
+                                   +  pxM1->m_aRowCol[ui0][2] * pxM2->m_aRowCol[2][1];
+
+        pxM0->m_aRowCol[ui0][2] =  pxM1->m_aRowCol[ui0][0] * pxM2->m_aRowCol[0][2]
+                                   +  pxM1->m_aRowCol[ui0][1] * pxM2->m_aRowCol[1][2]
+                                   +  pxM1->m_aRowCol[ui0][2] * pxM2->m_aRowCol[2][2];
+
+        pxM0->m_aRowCol[ui0][3] =  pxM1->m_aRowCol[ui0][0] * pxM2->m_aRowCol[0][3]
+                                   +  pxM1->m_aRowCol[ui0][1] * pxM2->m_aRowCol[1][3]
+                                   +  pxM1->m_aRowCol[ui0][2] * pxM2->m_aRowCol[2][3]
+                                   +  pxM1->m_aRowCol[ui0][3];
+    };
+}
+
+
+/* ---- FCN_M(tgMH_TR) ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_TR)( MAT_T(PCU) pxTX, MAT_T(CPCU) pxM0 )
+{
+    pxTX->m_aRowCol[0][0] = pxM0->m_aRowCol[0][0];
+    pxTX->m_aRowCol[0][1] = pxM0->m_aRowCol[1][0];
+    pxTX->m_aRowCol[0][2] = pxM0->m_aRowCol[2][0];
+    pxTX->m_aRowCol[0][3] = pxM0->m_aRowCol[3][0];
+
+    pxTX->m_aRowCol[1][0] = pxM0->m_aRowCol[0][1];
+    pxTX->m_aRowCol[1][1] = pxM0->m_aRowCol[1][1];
+    pxTX->m_aRowCol[1][2] = pxM0->m_aRowCol[2][1];
+    pxTX->m_aRowCol[1][3] = pxM0->m_aRowCol[3][1];
+
+    pxTX->m_aRowCol[2][0] = pxM0->m_aRowCol[0][2];
+    pxTX->m_aRowCol[2][1] = pxM0->m_aRowCol[1][2];
+    pxTX->m_aRowCol[2][2] = pxM0->m_aRowCol[2][2];
+    pxTX->m_aRowCol[2][3] = pxM0->m_aRowCol[3][2];
+
+    pxTX->m_aRowCol[3][0] = pxM0->m_aRowCol[0][3];
+    pxTX->m_aRowCol[3][1] = pxM0->m_aRowCol[1][3];
+    pxTX->m_aRowCol[3][2] = pxM0->m_aRowCol[2][3];
+    pxTX->m_aRowCol[3][3] = pxM0->m_aRowCol[3][3];
+}
+
+
+/* ---- FCN_M(tgMH_LookLH) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_LookLH)( MAT_T(PCU) pxRet, VEC_T(1,CPCU) pvFrom, VEC_T(1,CPCU) pvTo, VEC_T(1,CPCU) pvUp )
+{
+    VEC_T(1)                            vLook, vRight, vCamUp;
+    VAR_T()                             fLength;
+
+    /* VectorNorm and Build Orthonormal Camera Axis */
+    vLook = FCN_V(tgMH_SUB)( pvTo, pvFrom );
+    vLook = FCN_V(tgMH_NORM_LEN)( &fLength, &vLook );
+    if (FCN_F(tgCM_NR0)(fLength))
+    {
+        FCN_M(tgMH_CLI)(pxRet);
+        return;
+    };
+
+    vRight = FCN_V(tgMH_UCX_LEN)( &fLength, pvUp, &vLook );
+    if (FCN_F(tgCM_NR0)(fLength))
+    {
+        FCN_M(tgMH_CLI)(pxRet);
+        return;
+    };
+
+    vCamUp = FCN_V(tgMH_CX)( &vLook, &vRight );
+
+    pxRet->_11 = vRight.x;  pxRet->_21 = vRight.y;  pxRet->_31 = vRight.z;  pxRet->_41 = -FCN_V(tgMH_DOT)( &vRight, pvFrom );
+    pxRet->_12 = vCamUp.x;  pxRet->_22 = vCamUp.y;  pxRet->_32 = vCamUp.z;  pxRet->_42 = -FCN_V(tgMH_DOT)( &vCamUp, pvFrom );
+    pxRet->_13 = vLook.x;   pxRet->_23 = vLook.y;   pxRet->_33 = vLook.z;   pxRet->_43 = -FCN_V(tgMH_DOT)( &vLook, pvFrom );
+    pxRet->_14 = TYPE_K(0);     pxRet->_24 = TYPE_K(0);     pxRet->_34 = TYPE_K(0);     pxRet->_44 = TYPE_K(1);
+}
+
+
+/* ---- FCN_M(tgMH_LookRH) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_LookRH)( MAT_T(PCU) pxRet, VEC_T(1,CPCU) pvFrom, VEC_T(1,CPCU) pvTo, VEC_T(1,CPCU) pvUp )
+{
+    VEC_T(1)                            vLook, vRight, vCamUp;
+    VAR_T()                             fLength;
+
+    /* VectorNorm and Build Orthonormal Camera Axis */
+    vLook = FCN_V(tgMH_SUB)( pvFrom, pvTo );
+    vLook = FCN_V(tgMH_NORM_LEN)( &fLength, &vLook );
+    if (FCN_F(tgCM_NR0)(fLength))
+    {
+        FCN_M(tgMH_CLI)(pxRet);
+        return;
+    };
+
+    vRight = FCN_V(tgMH_UCX_LEN)( &fLength, pvUp, &vLook );
+    if (FCN_F(tgCM_NR0)(fLength))
+    {
+        FCN_M(tgMH_CLI)(pxRet);
+        return;
+    };
+
+    vCamUp = FCN_V(tgMH_CX)( &vLook, &vRight );
+
+    pxRet->_11 = vRight.x;  pxRet->_21 = vRight.y;  pxRet->_31 = vRight.z;  pxRet->_41 = FCN_V(tgMH_DOT)( &vRight, pvFrom );
+    pxRet->_12 = vCamUp.x;  pxRet->_22 = vCamUp.y;  pxRet->_32 = vCamUp.z;  pxRet->_42 = FCN_V(tgMH_DOT)( &vCamUp, pvFrom );
+    pxRet->_13 = vLook.x;   pxRet->_23 = vLook.y;   pxRet->_33 = vLook.z;   pxRet->_43 = FCN_V(tgMH_DOT)( &vLook, pvFrom );
+    pxRet->_14 = TYPE_K(0);     pxRet->_24 = TYPE_K(0);     pxRet->_34 = TYPE_K(0);     pxRet->_44 = TYPE_K(1);
+}
+
+
+/* ---- FCN_M(tgMH_Look) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Look)( MAT_T(PCU) pxRet, VEC_T(1,CPCU) pvFrom, VEC_T(1,CPCU) pvTo, VEC_T(1,CPCU) pvUp )
+{
+    FCN_M(tgMH_LookLH)(pxRet, pvFrom, pvTo, pvUp);
+}
+
+
+/* ---- FCN_M(tgMH_PProjLH) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProjLH)( MAT_T(PCU) pxRet, VAR_T(C) fViewWidth, VAR_T(C) fViewHeight, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    VAR_T(C)                            fZR = fMaxZ - fMinZ;
+    VAR_T(C)                            fFoVx = (fMinZ + fMinZ) / fViewWidth;
+    VAR_T(C)                            fFoVy = (fMinZ + fMinZ) / fViewHeight;
+    VAR_T(C)                            fFoVz = fMaxZ * (fZR > TYPE_K(0) ? TYPE_K(1) / fZR : TYPE_K(0));
+
+    FCN_M(tgMH_CLR)(pxRet);
+
+    pxRet->_11 = fFoVx;
+    pxRet->_22 = fFoVy;
+    pxRet->_33 = fFoVz;
+    pxRet->_34 = TYPE_K(1);
+    pxRet->_43 = -fFoVz * fMinZ;
+}
+
+
+/* ---- FCN_M(tgMH_PProjRH) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProjRH)( MAT_T(PCU) pxRet, VAR_T(C) fViewWidth, VAR_T(C) fViewHeight, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    VAR_T(C)                            fZR = fMinZ - fMaxZ;
+    VAR_T(C)                            fFoVx = TYPE_K(2,0) * fMinZ / fViewWidth;
+    VAR_T(C)                            fFoVy = TYPE_K(2,0) * fMinZ / fViewHeight;
+    VAR_T(C)                            fFoVz = fMaxZ * (fZR > TYPE_K(0) ? TYPE_K(1) / fZR : TYPE_K(0));
+
+    FCN_M(tgMH_CLR)(pxRet);
+
+    pxRet->_11 = fFoVx;
+    pxRet->_22 = fFoVy;
+    pxRet->_33 = fFoVz;
+    pxRet->_34 = -TYPE_K(1);
+    pxRet->_43 = fFoVz * fMinZ;
+}
+
+
+/* ---- FCN_M(tgMH_PProj) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProj)( MAT_T(PCU) pxRet, VAR_T(C) fViewWidth, VAR_T(C) fViewHeight, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    FCN_M(tgMH_PProjLH)(pxRet, fViewWidth, fViewHeight, fMinZ, fMaxZ);
+}
+
+
+/* ---- FCN_M(tgMH_PProj_OffsetLH) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProj_OffsetLH)(  MAT_T(PCU) pxRet, VAR_T(C) fRight, VAR_T(C) fLeft, VAR_T(C) fTop, VAR_T(C) fBottom, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    VAR_T(C)                            fXR = fRight - fLeft;
+    VAR_T(C)                            fYR = fTop - fBottom;
+    VAR_T(C)                            fZR = fMaxZ - fMinZ;
+    VAR_T(C)                            fFoVx = TYPE_K(2,0) * fMinZ * (fXR > TYPE_K(0) ? TYPE_K(1) / fXR : TYPE_K(0));
+    VAR_T(C)                            fFoVy = TYPE_K(2,0) * fMinZ * (fYR > TYPE_K(0) ? TYPE_K(1) / fYR : TYPE_K(0));
+    VAR_T(C)                            fFoVz = fMaxZ * (fZR > TYPE_K(0) ? TYPE_K(1) / fZR : TYPE_K(0));
+
+    FCN_M(tgMH_CLR)(pxRet);
+
+    pxRet->_11 = fFoVx;
+    pxRet->_22 = fFoVy;
+    pxRet->_31 = (fLeft + fRight) * (fXR > TYPE_K(0) ? -TYPE_K(1) / fXR : TYPE_K(0));
+    pxRet->_32 = (fTop + fBottom) * (fYR > TYPE_K(0) ? -TYPE_K(1) / fYR : TYPE_K(0));
+    pxRet->_33 = fFoVz;
+    pxRet->_34 = TYPE_K(1);
+    pxRet->_43 = -fFoVz * fMinZ;
+}
+
+
+/* ---- FCN_M(tgMH_PProj_OffsetRH) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProj_OffsetRH)(  MAT_T(PCU) pxRet, VAR_T(C) fRight, VAR_T(C) fLeft, VAR_T(C) fTop, VAR_T(C) fBottom, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    VAR_T(C)                            fXR = fRight - fLeft;
+    VAR_T(C)                            fYR = fTop - fBottom;
+    VAR_T(C)                            fZR = fMaxZ - fMinZ;
+    VAR_T(C)                            fFoVx = TYPE_K(2,0) * fMinZ * (fXR > TYPE_K(0) ? TYPE_K(1) / fXR : TYPE_K(0));
+    VAR_T(C)                            fFoVy = TYPE_K(2,0) * fMinZ * (fYR > TYPE_K(0) ? TYPE_K(1) / fYR : TYPE_K(0));
+    VAR_T(C)                            fFoVz = fMaxZ * (fZR > TYPE_K(0) ? TYPE_K(1) / fZR : TYPE_K(0));
+
+    FCN_M(tgMH_CLR)(pxRet);
+
+    pxRet->_11 = fFoVx;
+    pxRet->_22 = fFoVy;
+    pxRet->_31 = (fLeft + fRight) * (fXR > TYPE_K(0) ? TYPE_K(1) / fXR : TYPE_K(0));
+    pxRet->_32 = (fTop + fBottom) * (fYR > TYPE_K(0) ? TYPE_K(1) / fYR : TYPE_K(0));
+    pxRet->_33 = fFoVz;
+    pxRet->_34 = -TYPE_K(1);
+    pxRet->_43 = fFoVz * fMinZ;
+}
+
+
+/* ---- FCN_M(tgMH_PProj_Offset) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProj_Offset)(  MAT_T(PCU) pxRet, VAR_T(C) fRight, VAR_T(C) fLeft, VAR_T(C) fTop, VAR_T(C) fBottom, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    FCN_M(tgMH_PProj_OffsetLH)(pxRet, fRight, fLeft, fTop, fBottom, fMinZ, fMaxZ);
+}
+
+
+/* ---- FCN_M(tgMH_PProj_FoVLH) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProj_FoVLH)( MAT_T(PCU) pxRet, VAR_T(C) fFoV, VAR_T(C) fAspect, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    VAR_T(C)                            fFoVy = TYPE_K(1) / FCN_F(tgPM_TAN)( TYPE_K(0,5) * fFoV );
+    VAR_T(C)                            fFoVx = fFoVy / fAspect;
+    VAR_T(C)                            fZR = fMaxZ - fMinZ;
+    VAR_T(C)                            fFoVz = fMaxZ * (fZR > TYPE_K(0) ? TYPE_K(1) / fZR : TYPE_K(0));
+
+    FCN_M(tgMH_CLR)(pxRet);
+
+    pxRet->_11 = fFoVx;
+    pxRet->_22 = fFoVy;
+    pxRet->_33 = fFoVz;
+    pxRet->_34 = TYPE_K(1);
+    pxRet->_43 = -fFoVz * fMinZ;
+}
+
+
+/* ---- FCN_M(tgMH_PProj_FoVRH) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProj_FoVRH)( MAT_T(PCU) pxRet, VAR_T(C) fFoV, VAR_T(C) fAspect, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+
+    VAR_T(C)                            fFoVy = TYPE_K(1) / FCN_F(tgPM_TAN)( TYPE_K(0,5) * fFoV );
+    VAR_T(C)                            fFoVx = fFoVy / fAspect;
+    VAR_T(C)                            fZR = fMaxZ - fMinZ;
+    VAR_T(C)                            fFoVz = fMaxZ * (fZR > TYPE_K(0) ? TYPE_K(1) / fZR : TYPE_K(0));
+
+    FCN_M(tgMH_CLR)(pxRet);
+
+    pxRet->_11 = fFoVx;
+    pxRet->_22 = fFoVy;
+    pxRet->_33 = fFoVz;
+    pxRet->_34 = -TYPE_K(1);
+    pxRet->_43 = fFoVz * fMinZ;
+}
+
+
+/* ---- FCN_M(tgMH_PProj_FoV) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_PProj_FoV)( MAT_T(PCU) pxRet, VAR_T(C) fFoV, VAR_T(C) fAspect, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    FCN_M(tgMH_PProj_FoVLH)(pxRet, fFoV, fAspect, fMinZ, fMaxZ);
+}
+
+
+/* ---- FCN_M(tgMH_OrthoLH) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+CLANG_WARN_DISABLE_PUSH(float-equal)
+TgINLINE TgVOID FCN_M(tgMH_OrthoLH)( MAT_T(PCU) pxRet, VAR_T(C) fViewWidth, VAR_T(C) fViewHeight, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    if ((TYPE_K(0) == fViewWidth) || (TYPE_K(0) == fViewHeight) || (fMinZ == fMaxZ))
+    {
+        TgWARNING_MSGF( false, "%-16.16s(%-32.32s): Invalid Function Parameter\n", "Matrix API", "F_OrthoLH" );
+        FCN_M(tgMH_CLR)(pxRet);
+    }
+    else
+    {
+        VAR_T(C)                            fFoVz = TYPE_K(1) / (fMaxZ - fMinZ);
+
+        FCN_M(tgMH_CLI)(pxRet);
+
+        pxRet->_11 = TYPE_K(2) / fViewWidth;
+        pxRet->_22 = TYPE_K(2) / fViewHeight;
+        pxRet->_33 = fFoVz;
+        pxRet->_43 = -fFoVz * fMinZ;
+        pxRet->_44 = TYPE_K(1);
+    };
+}
+CLANG_WARN_DISABLE_POP(float-equal)
+
+
+/* ---- FCN_M(tgMH_OrthoRH) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+CLANG_WARN_DISABLE_PUSH(float-equal)
+TgINLINE TgVOID FCN_M(tgMH_OrthoRH)( MAT_T(PCU) pxRet, VAR_T(C) fViewWidth, VAR_T(C) fViewHeight, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    if ((TYPE_K(0) == fViewWidth) || (TYPE_K(0) == fViewHeight) || (fMinZ == fMaxZ))
+    {
+        TgWARNING_MSGF( 0, "%-16.16s(%-32.32s): Invalid Function Parameter\n", "Matrix API", "F_OrthoLH" );
+        FCN_M(tgMH_CLR)(pxRet);
+    }
+    else
+    {
+        VAR_T(C)                            fFoVz = TYPE_K(1) / (fMinZ - fMaxZ);
+
+        FCN_M(tgMH_CLI)(pxRet);
+
+        pxRet->_11 = TYPE_K(2) / fViewWidth;
+        pxRet->_22 = TYPE_K(2) / fViewHeight;
+        pxRet->_33 = fFoVz;
+        pxRet->_43 = fFoVz * fMinZ;
+        pxRet->_44 = TYPE_K(1);
+    };
+}
+CLANG_WARN_DISABLE_POP(float-equal)
+
+
+/* ---- FCN_M(tgMH_Ortho) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Ortho)( MAT_T(PCU) pxRet, VAR_T(C) fViewWidth, VAR_T(C) fViewHeight, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    FCN_M(tgMH_OrthoLH)(pxRet, fViewWidth, fViewHeight, fMinZ, fMaxZ);
+}
+
+
+/* ---- FCN_V(tgMH_Ortho_OffsetLH_S) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+CLANG_WARN_DISABLE_PUSH(float-equal)
+TgINLINE TgVOID FCN_M(tgMH_Ortho_OffsetLH)(  MAT_T(PCU) pxRet, VAR_T(C) fRight, VAR_T(C) fLeft, VAR_T(C) fTop, VAR_T(C) fBottom, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    if ((fRight == fLeft) || (fTop == fBottom) || (fMinZ == fMaxZ))
+    {
+        TgWARNING_MSGF( 0, "%-16.16s(%-32.32s): Invalid Function Parameter\n", "Matrix API", "F_OrthoLH" );
+        FCN_M(tgMH_CLR)(pxRet);
+    }
+    else
+    {
+        VAR_T(C)                            fFoVx = TYPE_K(2,0) / (fRight - fLeft);
+        VAR_T(C)                            fFoVy = TYPE_K(2,0) / (fTop - fBottom);
+        VAR_T(C)                            fFoVz = TYPE_K(1) / (fMaxZ - fMinZ);
+
+        FCN_M(tgMH_CLI)(pxRet);
+
+        pxRet->_11 = fFoVx;
+        pxRet->_22 = fFoVy;
+        pxRet->_33 = fFoVz;
+        pxRet->_41 = (fLeft + fRight) / (fLeft - fRight);
+        pxRet->_42 = (fTop + fBottom) / (fBottom - fTop);
+        pxRet->_43 = -fFoVz * fMinZ;
+        pxRet->_44 = TYPE_K(1);
+    };
+}
+
+
+/* ---- FCN_V(tgMH_Ortho_OffsetRH_S) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+CLANG_WARN_DISABLE_PUSH(float-equal)
+TgINLINE TgVOID FCN_M(tgMH_Ortho_OffsetRH)(  MAT_T(PCU) pxRet, VAR_T(C) fRight, VAR_T(C) fLeft, VAR_T(C) fTop, VAR_T(C) fBottom, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    if ((fRight == fLeft) || (fTop == fBottom) || (fMinZ == fMaxZ))
+    {
+        TgWARNING_MSGF( 0, "%-16.16s(%-32.32s): Invalid Function Parameter\n", "Matrix API", "F_OrthoLH" );
+        FCN_M(tgMH_CLR)(pxRet);
+    }
+    else
+    {
+        VAR_T(C)                            fFoVx = TYPE_K(2) / (fRight - fLeft);
+        VAR_T(C)                            fFoVy = TYPE_K(2) / (fTop - fBottom);
+        VAR_T(C)                            fFoVz = TYPE_K(1) / (fMinZ - fMaxZ);
+
+        FCN_M(tgMH_CLI)(pxRet);
+
+        pxRet->_11 = fFoVx;
+        pxRet->_22 = fFoVy;
+        pxRet->_33 = fFoVz;
+        pxRet->_41 = (fLeft + fRight) / (fLeft - fRight);
+        pxRet->_42 = (fTop + fBottom) / (fBottom - fTop);
+        pxRet->_43 = fFoVz * fMinZ;
+        pxRet->_44 = TYPE_K(1);
+    };
+}
+CLANG_WARN_DISABLE_POP(float-equal)
+
+
+/* ---- FCN_V(tgMH_Ortho_Offset_S) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_M(tgMH_Ortho_Offset)(  MAT_T(PCU) pxRet, VAR_T(C) fRight, VAR_T(C) fLeft, VAR_T(C) fTop, VAR_T(C) fBottom, VAR_T(C) fMinZ, VAR_T(C) fMaxZ )
+{
+    FCN_M(tgMH_Ortho_OffsetLH)(pxRet, fRight, fLeft, fTop, fBottom, fMinZ, fMaxZ);
+}

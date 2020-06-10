@@ -1,0 +1,197 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Sphere.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_SP_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_Reset)( VEC_OBJ_T(TgSPHERE,PCU) psSP0 )
+{
+    psSP0->m_vOrigin = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psSP0->m_fRadius = TYPE_K(0);
+    psSP0->m_fRadiusSq = TYPE_K(0);
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_SP_Is_Valid)( VEC_OBJ_T(TgSPHERE,CPCU) psSP1 )
+{
+    if (!FCN_V(tgMH_Is_Point_Valid)(&psSP1->m_vOrigin) || FCN_F(tgPM_NAN)(psSP1->m_fRadius) || FCN_F(tgPM_NAN)(psSP1->m_fRadiusSq) || (TYPE_K(0) == psSP1->m_fRadius))
+    {
+        return (false);
+    };
+
+    return (true);
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Support_Point) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_VO(tgGM_SP_Support_Point)( VEC_OBJ_T(TgSPHERE,CPCU) psSP1, VEC_T(1,CPCU) pvDN )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SP_Is_Valid)(psSP1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvDN)));
+
+    return (FCN_V(tgMH_MAD_SVV)( psSP1->m_fRadius, pvDN, &psSP1->m_vOrigin) );
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Volume) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_SP_Volume)( VEC_OBJ_T(TgSPHERE,CPCU) psSP1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SP_Is_Valid)(psSP1));
+    return (TYPE_K(2,0)*VAR_K(KTgTWO_PI)*psSP1->m_fRadiusSq*psSP1->m_fRadius / TYPE_K(3,0));
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_SP_Area)( VEC_OBJ_T(TgSPHERE,CPCU) psSP1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SP_Is_Valid)(psSP1));
+    return (TYPE_K(2,0)*VAR_K(KTgTWO_PI)*psSP1->m_fRadiusSq);
+}
+
+
+/* ---- FCN_VO(tgGM_SP_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgSPHERE,CPCU) psSP1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SP_Is_Valid)(psSP1));
+
+    FCN_VO(tgGM_BA_Init_SP)( psBA0, &psSP1->m_vOrigin, psSP1->m_fRadius );
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgSPHERE,CPCU) psSP1, VEC_T(1,CPCU) pvDT )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDT));
+
+    FCN_VO(tgGM_SP_BA)( psBA0, psSP1 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgSPHERE,CPCU) psSP1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fS0_AX = FCN_V(tgMH_DOT)( &psSP1->m_vOrigin, pvDN );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SP_Is_Valid)(psSP1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvDN)));
+
+    *ptyMin = fS0_AX - psSP1->m_fRadius;
+    *ptyMax = fS0_AX + psSP1->m_fRadius;
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_SP_Is_Contained)( VEC_OBJ_T(TgSPHERE,CPCU) psSP1, VEC_T(1,CPCU) pvS0 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_SUB)( pvS0, &psSP1->m_vOrigin );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SP_Is_Valid)( psSP1 ));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvS0));
+
+    return (FCN_V(tgMH_LSQ)( &vX0) < psSP1->m_fRadiusSq);
+}
+
+
+/* ---- FCN_VO(tgGM_SP_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_TX)( VEC_OBJ_T(TgSPHERE,PCU) psSP0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psSP0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psSP0->m_vOrigin );
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_Copy_TX)( VEC_OBJ_T(TgSPHERE,PCU) psSP0, VEC_OBJ_T(TgSPHERE,CPCU) psSP1, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SP_Is_Valid)(psSP1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psSP0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psSP1->m_vOrigin );
+    psSP0->m_fRadius = psSP1->m_fRadius;
+    psSP0->m_fRadiusSq = psSP1->m_fRadiusSq;
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_Init)( VEC_OBJ_T(TgSPHERE,PCU) psSP0, VEC_T(1,CPCU) pvS0, VAR_T(C) fRad )
+{
+    FCN_VO(tgGM_SP_Set_Origin)( psSP0, pvS0 );
+    FCN_VO(tgGM_SP_Set_Radius)( psSP0, fRad );
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_Copy)( VEC_OBJ_T(TgSPHERE,PCU) psSP0, VEC_OBJ_T(TgSPHERE,CPCU) psSP1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_SP_Is_Valid)(psSP1));
+
+    psSP0->m_vOrigin = psSP1->m_vOrigin;
+    psSP0->m_fRadius = psSP1->m_fRadius;
+    psSP0->m_fRadiusSq = psSP1->m_fRadiusSq;
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_Set_Origin)( VEC_OBJ_T(TgSPHERE,PCU) psSP0, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    psSP0->m_vOrigin = *pvS0;
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Set_Radius) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_SP_Set_Radius)( VEC_OBJ_T(TgSPHERE,PCU) psSP0, VAR_T(C) fRad )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fRad) && fRad > TYPE_K(0));
+
+    psSP0->m_fRadius = fRad;
+    psSP0->m_fRadiusSq = fRad*fRad;
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_SP_Query_Origin)( VEC_OBJ_T(TgSPHERE,CPCU) psSP1 )
+{
+    return (&psSP1->m_vOrigin);
+}
+
+/* ---- FCN_VO(tgGM_SP_Query_Radius) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_SP_Query_Radius)( VEC_OBJ_T(TgSPHERE,CPCU) psSP1 )
+{
+    return (psSP1->m_fRadius);
+}
+
+
+/* ---- FCN_VO(tgGM_SP_Query_Radius_Sq) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_SP_Query_Radius_Sq)( VEC_OBJ_T(TgSPHERE,CPCU) psSP1 )
+{
+    return (psSP1->m_fRadiusSq);
+}

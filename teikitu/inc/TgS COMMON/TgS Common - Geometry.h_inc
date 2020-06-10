@@ -1,0 +1,71 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry - API.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if defined(TGS_COMMON_GEOMETRY_API_HINC)
+    #error This file should be include by TGS_COMMON_GEOMETRY_API_H
+#endif
+
+#if defined(TEMPLATE__ENABLE_INTEGER)
+
+    #error Geometry is assumed to be floating point
+
+#else
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #if !defined(TEMPLATE__TYPE_SIZE)
+            #define TEMPLATE__TYPE_SIZE 32
+            #include __FILE__
+            #undef TEMPLATE__TYPE_SIZE
+            #define TEMPLATE__TYPE_SIZE 64
+        #endif
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Common ===================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Geometry 2D - Rectangle.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Box - Axis Aligned.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Box.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Capsule.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Circle.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Cylinder.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Disk.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Ellipse.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Line.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Mesh [BA].h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Mesh [BVT].h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Mesh [Simple].h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Parallelogram.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Particle.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Plane.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Ray.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Rectangle.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Segment.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Sphere.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Torus.h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Triangle [Collision].h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Triangle [Edge].h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Triangle [Point].h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Triangle [Space].h_inc"
+#include "TgS COMMON/TgS Common - Geometry 3D - Tube.h_inc"
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

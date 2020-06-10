@@ -1,0 +1,198 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common [Unit Test] [Test] - Math [Matrix] [N].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Test Functions                                                                                                                                                                 */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_M_UT(tgMH_CLR_N) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_CLR_N) )
+{
+    union
+    {
+        VEC_N_T(TEMPLATE__VECTOR_ROW)       xMN;
+        VEC_T(TEMPLATE__VECTOR_ROW)         xMT;
+    }                                   sM0;
+
+    FCN_M(tgMH_CLR_N)( &sM0.xMN );
+
+    for (TgRSIZE uiRow = 0; uiRow < TEMPLATE__VECTOR_ROW; ++uiRow)
+    {
+        for (TgRSIZE uiCol = 0; uiCol < TEMPLATE__VECTOR_DIM; ++uiCol)
+        {
+            Test__Expect_EQ( TYPE_K(0), sM0.xMT.m_aElement[uiRow*TEMPLATE__VECTOR_DIM + uiCol] );
+        };
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
+/* ---- FCN_M_UT(tgMH_MAX_N) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_MAX_N) )
+{
+    union
+    {
+        VEC_N_T(TEMPLATE__VECTOR_ROW)       xMN;
+        VEC_T(TEMPLATE__VECTOR_ROW)         xMT;
+        TgUINT_E08                          auiM0[sizeof(VEC_N_T(TEMPLATE__VECTOR_ROW))];
+    }                                   sM0, sM1, sM2;
+
+    for (TgRSIZE ui0 = 0; ui0 < TEMPLATE__VECTOR_ROW*TEMPLATE__VECTOR_DIM; ++ui0)
+    {
+        while (0 == (sM0.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+        while (0 == (sM1.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_MAX_N)( &sM2.xMN, &sM0.xMN, &sM1.xMN );
+
+    for (TgRSIZE uiRow = 0; uiRow < TEMPLATE__VECTOR_ROW; ++uiRow)
+    {
+        for (TgRSIZE uiCol = 0; uiCol < TEMPLATE__VECTOR_DIM; ++uiCol)
+        {
+            VAR_T()                             E0, E1, E2;
+
+            E0 = sM0.xMT.m_aElement[uiRow*TEMPLATE__VECTOR_DIM + uiCol];
+            E1 = sM1.xMT.m_aElement[uiRow*TEMPLATE__VECTOR_DIM + uiCol];
+            E2 = sM2.xMT.m_aElement[uiRow*TEMPLATE__VECTOR_DIM + uiCol];
+
+            Test__Expect_EQ( E2, FCN_F(tgCM_MAX)( E0, E1 ) );
+        };
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
+/* ---- FCN_M_UT(tgMH_MIN_N) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_MIN_N) )
+{
+    union
+    {
+        VEC_N_T(TEMPLATE__VECTOR_ROW)       xMN;
+        VEC_T(TEMPLATE__VECTOR_ROW)         xMT;
+        TgUINT_E08                          auiM0[sizeof(VEC_N_T(TEMPLATE__VECTOR_ROW))];
+    }                                   sM0, sM1, sM2;
+
+    for (TgRSIZE ui0 = 0; ui0 < TEMPLATE__VECTOR_ROW*TEMPLATE__VECTOR_DIM; ++ui0)
+    {
+        while (0 == (sM0.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+        while (0 == (sM1.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_MIN_N)( &sM2.xMN, &sM0.xMN, &sM1.xMN );
+
+    for (TgRSIZE uiRow = 0; uiRow < TEMPLATE__VECTOR_ROW; ++uiRow)
+    {
+        for (TgRSIZE uiCol = 0; uiCol < TEMPLATE__VECTOR_DIM; ++uiCol)
+        {
+            VAR_T()                             E0, E1, E2;
+
+            E0 = sM0.xMT.m_aElement[uiRow*TEMPLATE__VECTOR_DIM + uiCol];
+            E1 = sM1.xMT.m_aElement[uiRow*TEMPLATE__VECTOR_DIM + uiCol];
+            E2 = sM2.xMT.m_aElement[uiRow*TEMPLATE__VECTOR_DIM + uiCol];
+
+            Test__Expect_EQ( E2, FCN_F(tgCM_MIN)( E0, E1 ) );
+        };
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
+/* ---- FCN_M_UT(tgMH_AND_N) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_AND_N) )
+{
+    union
+    {
+        VEC_N_T(TEMPLATE__VECTOR_ROW)       xMN;
+        VEC_T(TEMPLATE__VECTOR_ROW)         xMT;
+        TgUINT_E08                          auiM0[sizeof(VEC_N_T(TEMPLATE__VECTOR_ROW))];
+    }                                   sM0, sM1, sM2;
+
+    for (TgRSIZE ui0 = 0; ui0 < TEMPLATE__VECTOR_ROW * TEMPLATE__VECTOR_DIM; ++ui0)
+    {
+        while (0 == (sM0.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+        while (0 == (sM1.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_AND_N)( &sM2.xMN, &sM0.xMN, &sM1.xMN );
+
+    for (TgRSIZE ui0 = 0; ui0 < (TgSINT_F32 )(TEMPLATE__VECTOR_ROW * TEMPLATE__VECTOR_DIM * sizeof( VAR_T() )); ++ui0)
+    {
+        Test__Expect_EQ( sM2.auiM0[ui0], sM0.auiM0[ui0] & sM1.auiM0[ui0] );
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
+/* ---- FCN_M_UT(tgMH_OR_N) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_OR_N) )
+{
+    union
+    {
+        VEC_N_T(TEMPLATE__VECTOR_ROW)       xMN;
+        VEC_T(TEMPLATE__VECTOR_ROW)         xMT;
+        TgUINT_E08                          auiM0[sizeof(VEC_N_T(TEMPLATE__VECTOR_ROW))];
+    }                                   sM0, sM1, sM2;
+
+    for (TgRSIZE ui0 = 0; ui0 < TEMPLATE__VECTOR_ROW * TEMPLATE__VECTOR_DIM; ++ui0)
+    {
+        while (0 == (sM0.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+        while (0 == (sM1.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_OR_N)( &sM2.xMN, &sM0.xMN, &sM1.xMN );
+
+    for (TgRSIZE ui0 = 0; ui0 < (TgSINT_F32 )(TEMPLATE__VECTOR_ROW * TEMPLATE__VECTOR_DIM * sizeof( VAR_T() )); ++ui0)
+    {
+        Test__Expect_EQ( sM2.auiM0[ui0], sM0.auiM0[ui0] | sM1.auiM0[ui0] );
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
+/* ---- FCN_M_UT(tgMH_XOR_N) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_XOR_N) )
+{
+    union
+    {
+        VEC_N_T(TEMPLATE__VECTOR_ROW)       xMN;
+        VEC_T(TEMPLATE__VECTOR_ROW)         xMT;
+        TgUINT_E08                          auiM0[sizeof(VEC_N_T(TEMPLATE__VECTOR_ROW))];
+    }                                   sM0, sM1, sM2;
+
+    for (TgRSIZE ui0 = 0; ui0 < TEMPLATE__VECTOR_ROW * TEMPLATE__VECTOR_DIM; ++ui0)
+    {
+        while (0 == (sM0.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+        while (0 == (sM1.xMT.m_aElement[ui0] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_XOR_N)( &sM2.xMN, &sM0.xMN, &sM1.xMN );
+
+    for (TgRSIZE ui0 = 0; ui0 < (TgSINT_F32 )(TEMPLATE__VECTOR_ROW * TEMPLATE__VECTOR_DIM * sizeof( VAR_T() )); ++ui0)
+    {
+        Test__Expect_EQ( sM2.auiM0[ui0], sM0.auiM0[ui0] ^ sM1.auiM0[ui0] );
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}

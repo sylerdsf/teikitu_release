@@ -1,0 +1,198 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Torus.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_TS_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FCN_VO(tgGM_TS_Is_Valid)( VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    if (!FCN_V(tgMH_Is_Point_Valid)(&psTS1->m_vOrigin))
+    {
+        return (false);
+    };
+
+    if (!FCN_V(tgMH_Is_Vector_Valid)(&psTS1->m_vNormal) || !FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(&psTS1->m_vNormal)))
+    {
+        return (false);
+    };
+
+    if (FCN_F(tgPM_NAN)(psTS1->m_fRI) || psTS1->m_fRI <= TYPE_K(0) || FCN_F(tgPM_NAN)(psTS1->m_fRO) || psTS1->m_fRO <= TYPE_K(0))
+    {
+        return (false);
+    };
+
+    return (true);
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Support_Point) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VEC_T(1) FCN_VO(tgGM_TS_Support_Point)( VEC_OBJ_T(TgTORUS,CPCU) psTS1, VEC_T(1,CPCU) ptvDN )
+{
+    VAR_T(C)                            fD_N = FCN_V(tgMH_DOT)(ptvDN, &psTS1->m_vNormal);
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TS_Is_Valid)(psTS1) && FCN_V(tgMH_Is_Vector_Valid)(ptvDN) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(ptvDN)));
+
+    if (FCN_F(tgCM_NR1)(FCN_F(tgPM_ABS)(fD_N)))
+    {
+        return (FCN_V(tgMH_SETP_S)(VAR_K(KTgMAX), VAR_K(KTgMAX), VAR_K(KTgMAX)));
+    }
+    else
+    {
+        VAR_T()                             fTest;
+
+        VEC_T(1,C)                          vX0 = FCN_V(tgMH_NMS_VSV)(&psTS1->m_vNormal, fD_N, ptvDN);
+        VEC_T(1,C)                          vX1 = FCN_V(tgMH_NORM_LEN)(&fTest, &vX0);
+        VEC_T(1,C)                          vX2 = FCN_V(tgMH_MAD_VSV)(ptvDN, psTS1->m_fRI, &psTS1->m_vOrigin);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        return (FCN_V(tgMH_MAD_VSV)(&vX1, psTS1->m_fRO, &vX2));
+    };
+}
+
+
+/* ---- FCN_VO(tgGM_TS_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgGM_TS_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    VAR_T()                             fTest;
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TS_Is_Valid)(psTS1));
+
+    if (!FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(psTS1->m_vNormal.x) - TYPE_K(1)))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(-psTS1->m_vNormal.x, &psTS1->m_vNormal);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vK0, &(VEC_K(KTgUNIT_X)));
+        VEC_T(1,C)                          vA = FCN_V(tgMH_NORM_LEN)(&fTest, &vK1);
+        VAR_T(C)                            fR_A = FCN_F(tgPM_ABS)(psTS1->m_fRO*vA.x);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        FCN_VO(tgGM_BA_Set_MinX)( psBA0, psTS1->m_vOrigin.x - fR_A );
+        FCN_VO(tgGM_BA_Set_MaxX)( psBA0, psTS1->m_vOrigin.x + fR_A );
+    }
+    else
+    {
+        FCN_VO(tgGM_BA_Set_MinX)( psBA0, psTS1->m_vOrigin.x );
+        FCN_VO(tgGM_BA_Set_MaxX)( psBA0, psTS1->m_vOrigin.x );
+    };
+
+    if (!FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(psTS1->m_vNormal.y) - TYPE_K(1)))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(-psTS1->m_vNormal.y, &psTS1->m_vNormal);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vK0, &(VEC_K(KTgUNIT_Y)));
+        VEC_T(1,C)                          vA = FCN_V(tgMH_NORM_LEN)(&fTest, &vK1);
+        VAR_T(C)                            fR_A = FCN_F(tgPM_ABS)(psTS1->m_fRO*vA.y);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        FCN_VO(tgGM_BA_Set_MinY)( psBA0, psTS1->m_vOrigin.y - fR_A );
+        FCN_VO(tgGM_BA_Set_MaxY)( psBA0, psTS1->m_vOrigin.y + fR_A );
+    }
+    else
+    {
+        FCN_VO(tgGM_BA_Set_MinY)( psBA0, psTS1->m_vOrigin.y );
+        FCN_VO(tgGM_BA_Set_MaxY)( psBA0, psTS1->m_vOrigin.y );
+    };
+
+    if (!FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(psTS1->m_vNormal.z) - TYPE_K(1)))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(-psTS1->m_vNormal.z, &psTS1->m_vNormal);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vK0, &(VEC_K(KTgUNIT_Z)));
+        VEC_T(1,C)                          vA = FCN_V(tgMH_NORM_LEN)(&fTest, &vK1);
+        VAR_T(C)                            fR_A = FCN_F(tgPM_ABS)(psTS1->m_fRO*vA.z);
+
+        TgERROR(!FCN_F(tgCM_NR0)(fTest));
+
+        FCN_VO(tgGM_BA_Set_MinZ)( psBA0, psTS1->m_vOrigin.z - fR_A );
+        FCN_VO(tgGM_BA_Set_MaxZ)( psBA0, psTS1->m_vOrigin.z + fR_A );
+    }
+    else
+    {
+        FCN_VO(tgGM_BA_Set_MinZ)( psBA0, psTS1->m_vOrigin.z );
+        FCN_VO(tgGM_BA_Set_MaxZ)( psBA0, psTS1->m_vOrigin.z );
+    };
+
+    FCN_VO(tgGM_BA_Expand)( psBA0, psTS1->m_fRI );
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgGM_TS_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgTORUS,CPCU) psTS1, VEC_T(1,CPCU) ptvDN )
+{
+    VAR_T(C)                            fDN_N = FCN_V(tgMH_DOT)(ptvDN, &psTS1->m_vNormal);
+    VAR_T()                             fLength;
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TS_Is_Valid)(psTS1) && FCN_V(tgMH_Is_Vector_Valid)(ptvDN) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(ptvDN)));
+
+    if (FCN_F(tgCM_NR0)(FCN_F(tgPM_ABS)(fDN_N) - TYPE_K(1)))
+    {
+        *ptyMin = VAR_K(KTgMAX);
+        *ptyMax = -VAR_K(KTgMAX);
+    }
+    else
+    {
+        VEC_T(1,C)                          vX0 = FCN_V(tgMH_NMS_SVV)(fDN_N, &psTS1->m_vNormal, ptvDN);
+        VEC_T(1,C)                          vX1 = FCN_V(tgMH_NORM_LEN)(&fLength, &vX0);
+        VAR_T(C)                            fO_DN = FCN_V(tgMH_DOT)(&psTS1->m_vOrigin, ptvDN);
+        VAR_T(C)                            fR_DN = FCN_F(tgPM_ABS)(psTS1->m_fRO*(FCN_V(tgMH_DOT)(ptvDN, &vX1)));
+
+        TgERROR(!FCN_F(tgCM_NR0)(fLength));
+
+        *ptyMin = fO_DN - fR_DN - psTS1->m_fRI;
+        *ptyMax = fO_DN + fR_DN + psTS1->m_fRI;
+    };
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FCN_VO(tgGM_TS_Is_Contained)( VEC_OBJ_T(TgTORUS,CPCU) psTS1, VEC_T(1,CPCU) ptvS0 )
+{
+    VEC_T(1)                            vDirN = FCN_V(tgMH_SUB)(ptvS0, &psTS1->m_vOrigin);
+    VAR_T(C)                            fDN_N = FCN_V(tgMH_DOT)(&vDirN, &psTS1->m_vNormal);
+    VAR_T()                             fLength;
+
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(ptvS0));
+
+    /* Check to see if its within the inner radius of the plane defining the torus. */
+    if (FCN_F(tgPM_ABS)(fDN_N) > psTS1->m_fRI)
+    {
+        return (false);
+    }
+    else
+    {
+        VEC_T(1,C)                          vX0 = FCN_V(tgMH_NMS_SVV)(fDN_N, &psTS1->m_vNormal, &vDirN);
+        VEC_T(1,C)                          vX1 = FCN_V(tgMH_NORM_LEN)(&fLength, &vX0);
+
+        /* Check if the point is not contained by infinite projections of the minimal and maximal circles of the torus. */
+        if (fLength < psTS1->m_fRO - psTS1->m_fRI || fLength > psTS1->m_fRO + psTS1->m_fRI)
+        {
+            return (false);
+        }
+        else
+        {
+            VEC_T(1,C)                         vP0 = FCN_V(tgMH_MAD_SVV)(psTS1->m_fRO, &vX1, &psTS1->m_vOrigin);
+            VEC_T(1,C)                         vX2 = FCN_V(tgMH_SUB)(ptvS0, &vP0);
+
+            if (FCN_V(tgMH_LSQ)(&vX2) > psTS1->m_fRI*psTS1->m_fRI)
+            {
+                return (false);
+            };
+
+            return (true);
+        };
+    };
+}

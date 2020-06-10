@@ -1,0 +1,169 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Torus.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_TS_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Reset)( VEC_OBJ_T(TgTORUS,PCU) psTS0 )
+{
+    psTS0->m_vOrigin = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psTS0->m_vNormal = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psTS0->m_fRI = TYPE_K(0);
+    psTS0->m_fRO = TYPE_K(0);
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Volume) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_TS_Volume)( VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TS_Is_Valid)(psTS1));
+    return (VAR_K(KTgTWO_PI)*psTS1->m_fRO*(VAR_K(KTgPI) * psTS1->m_fRI * psTS1->m_fRI));
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_TS_Area)( VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TS_Is_Valid)(psTS1));
+    return (VAR_K(KTgTWO_PI)*psTS1->m_fRO*VAR_K(KTgTWO_PI)*psTS1->m_fRI);
+
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgTORUS,CPCU) psTS1, VEC_T(1,CPCU) pvDT )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDT));
+
+    FCN_VO(tgGM_TS_BA)( psBA0, psTS1 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_TS_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_TX)( VEC_OBJ_T(TgTORUS,PCU) psTS0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psTS0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psTS0->m_vOrigin );
+    psTS0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psTS0->m_vNormal );
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Copy_TX)( VEC_OBJ_T(TgTORUS,PCU) psTS0, VEC_OBJ_T(TgTORUS,CPCU) psTS1, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TS_Is_Valid)(psTS1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psTS0->m_vOrigin = FCN_04_3_V(tgMH_TX_P)( pxM0, &psTS1->m_vOrigin );
+    psTS0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psTS1->m_vNormal );
+    FCN_VO(tgGM_TS_Set_Inner_Radius)( psTS0, psTS1->m_fRI );
+    FCN_VO(tgGM_TS_Set_Outer_Radius)( psTS0, psTS1->m_fRO );
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Init)( VEC_OBJ_T(TgTORUS,PCU) psTS0, VEC_T(1,CPCU) pvS, VEC_T(1,CPCU) pvN, VAR_T(C) fRI, VAR_T(C) fRO )
+{
+    FCN_VO(tgGM_TS_Set_Origin)( psTS0, pvS );
+    FCN_VO(tgGM_TS_Set_Normal)( psTS0, pvN );
+    FCN_VO(tgGM_TS_Set_Inner_Radius)( psTS0, fRI );
+    FCN_VO(tgGM_TS_Set_Outer_Radius)( psTS0, fRO );
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Copy)( VEC_OBJ_T(TgTORUS,PCU) psTS0, VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_TS_Is_Valid)(psTS1));
+
+    psTS0->m_vOrigin = psTS1->m_vOrigin;
+    psTS0->m_vNormal = psTS1->m_vNormal;
+    psTS0->m_fRI = psTS1->m_fRI;
+    psTS0->m_fRO = psTS1->m_fRO;
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Set_Origin)( VEC_OBJ_T(TgTORUS,PCU) psTS0, VEC_T(1,CPCU) pvS )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvS));
+    psTS0->m_vOrigin = *pvS;
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Set_Normal) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Set_Normal)( VEC_OBJ_T(TgTORUS,PCU) psTS0, VEC_T(1,CPCU) pvN )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvN) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvN)));
+    psTS0->m_vNormal = *pvN;
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Set_Inner_Radius) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Set_Inner_Radius)( VEC_OBJ_T(TgTORUS,PCU) psTS0, VAR_T(C) fR )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fR) && fR > TYPE_K(0));
+    psTS0->m_fRI = fR;
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Set_Outer_Radius) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_TS_Set_Outer_Radius)( VEC_OBJ_T(TgTORUS,PCU) psTS0, VAR_T(C) fR )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fR) && fR > TYPE_K(0));
+    psTS0->m_fRO = fR;
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_TS_Query_Origin)( VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    return (&psTS1->m_vOrigin);
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Query_Normal) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_TS_Query_Normal)( VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    return (&psTS1->m_vNormal);
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Query_Inner_Radius) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_TS_Query_Inner_Radius)( VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    return (psTS1->m_fRI);
+}
+
+
+/* ---- FCN_VO(tgGM_TS_Query_Outer_Radius) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_TS_Query_Outer_Radius)( VEC_OBJ_T(TgTORUS,CPCU) psTS1 )
+{
+    return (psTS1->m_fRO);
+}

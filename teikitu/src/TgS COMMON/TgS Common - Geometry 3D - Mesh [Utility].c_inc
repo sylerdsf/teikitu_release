@@ -1,0 +1,346 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Mesh [Utility].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FI(tgGM_Volume_MS) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FI(tgGM_Volume_MS)( VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1 )
+{
+    VAR_T()                             fVolume = TYPE_K(0);
+    TgMESH_ITER                         itMS;
+    TgUINT_F32                          uiIndex;
+
+    FI(tgGM_Iterator_Init_MS)(&itMS, psMS1);
+
+    for (uiIndex = 0; uiIndex < itMS.m_nuiFace; ++uiIndex)
+    {
+        VEC_T(1,CPCU)                       ptvS0 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,CPCU)                       ptvS1 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,CPCU)                       ptvS2 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,C)                          vE0 = FCN_V(tgMH_SUB)(ptvS1, ptvS0);
+        VEC_T(1,C)                          vE2 = FCN_V(tgMH_SUB)(ptvS2, ptvS0);
+        VAR_T(C)                            fNx = vE0.y*vE2.z - vE0.z*vE2.y;
+        VAR_T(C)                            fNy = vE0.z*vE2.x - vE0.x*vE2.z;
+        VAR_T(C)                            fNz = vE0.x*vE2.y - vE0.y*vE2.x;
+        VAR_T(C)                            fTriD = fNx*ptvS0->x + fNy*ptvS0->y + fNz*ptvS0->z;
+
+        VAR_T()                             fDA, fDB, fAA, fBB, fC1, fCA, fCB, fP1, fPA, fPB;
+        TgSINT_F32                          i0, i1, i2;
+
+        if (fNx > fNy && fNx > fNz)
+        {
+            i2 = 0;
+        }
+        else
+        {
+            i2 = (fNy > fNz) ? 1 : 2;
+        };
+
+        i0 = (i2 + 1) % 3;
+        i1 = (i2 + 2) % 3;
+
+        fDA = ptvS1->x - ptvS0->x;
+        fDB = ptvS1->y - ptvS0->y;
+        fAA = ptvS0->x * ptvS0->x;
+        fBB = ptvS0->y * ptvS0->y;
+
+        fC1 = ptvS1->x + ptvS0->x;
+        fCA = ptvS1->x * fC1 + fAA;
+        fCB = ptvS1->y * (ptvS1->y + ptvS0->y) + fBB;
+
+        fP1 = fDB * fC1;
+        fPA = fDB * fCA;
+        fPB = fDA * fCB;
+
+        fDA = ptvS2->x - ptvS1->x;
+        fDB = ptvS2->y - ptvS1->y;
+        fAA = ptvS1->x * ptvS1->x;
+        fBB = ptvS1->y * ptvS1->y;
+
+        fC1 = ptvS2->x + ptvS1->x;
+        fCA = ptvS2->x * fC1 + fAA;
+        fCB = ptvS2->y * (ptvS2->y + ptvS1->y) + fBB;
+
+        fP1 += fDB * fC1;
+        fPA += fDB * fCA;
+        fPB += fDA * fCB;
+
+        fDA = ptvS0->x - ptvS2->x;
+        fDB = ptvS0->y - ptvS2->y;
+        fAA = ptvS2->x * ptvS2->x;
+        fBB = ptvS2->y * ptvS2->y;
+
+        fC1 = ptvS0->x + ptvS2->x;
+        fCA = ptvS0->x * fC1 + fAA;
+        fCB = ptvS0->y * (ptvS0->y + ptvS2->y) + fBB;
+
+        fP1 += fDB * fC1;
+        fPA += fDB * fCA;
+        fPB += fDA * fCB;
+
+        fP1 /= TYPE_K(2,0);
+        fPA /= TYPE_K(6,0);
+        fPB /= TYPE_K(-6,0);
+
+        if (i0 == 0) /* 0,1,2 */
+        {
+            fVolume += fNx * fPA / fNz;
+        }
+        else if (i1 == 0) /* 2,0,1 */
+        {
+            fVolume += fNz * fPB / fNy;
+        }
+        else /* 1,2,0 */
+        {
+            fVolume += (fNy / -(fNx * fNx)) * (fNy * fPA + fNz * fPB - fTriD * fP1);
+        };
+    };
+
+    return (fVolume);
+}
+
+
+/* ---- FI(tgGM_Area_MS) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FI(tgGM_Area_MS)(VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1)
+{
+    VAR_T()                             fArea = TYPE_K(0);
+    TgMESH_ITER                         itMS;
+    TgUINT_F32                          uiIndex;
+
+    FI(tgGM_Iterator_Init_MS)(&itMS, psMS1);
+
+    for (uiIndex = 0; uiIndex < itMS.m_nuiFace; ++uiIndex)
+    {
+        VEC_T(1,CPCU)                       ptvS0 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,CPCU)                       ptvS1 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,CPCU)                       ptvS2 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,C)                          vE0 = FCN_V(tgMH_SUB)(ptvS1, ptvS0);
+        VEC_T(1,C)                          vE2 = FCN_V(tgMH_SUB)(ptvS2, ptvS0);
+        VEC_T(1,C)                          vNM = FCN_V(tgMH_CX)(&vE0, &vE2);
+
+        fArea += TYPE_K(0,5)*FCN_V(tgMH_LEN)(&vNM);
+    };
+
+    return (fArea);
+}
+
+
+/* ---- FI(tgGM_Is_Contained_MS) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FI(tgGM_Is_Contained_MS)(VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_T(1,CPCU) ptvS3)
+{
+    TgMESH_ITER                         itMS;
+    TgUINT_F32                          uiIndex;
+
+    FI(tgGM_Iterator_Init_MS)(&itMS, psMS1);
+
+    for (uiIndex = 0; uiIndex < itMS.m_nuiFace; ++uiIndex)
+    {
+        VEC_T(1,CPCU)                       ptvS0 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,CPCU)                       ptvS1 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,CPCU)                       ptvS2 = psMS1->m_pvVert_List + FI(tgGM_Iterator_Incr_MS)(&itMS, psMS1);
+        VEC_T(1,C)                          vE0 = FCN_V(tgMH_SUB)(ptvS1, ptvS0);
+        VEC_T(1,C)                          vE2 = FCN_V(tgMH_SUB)(ptvS2, ptvS0);
+        VEC_T(1,C)                          vNM = FCN_V(tgMH_CX)(&vE0, &vE2);
+        VEC_T(1,C)                          vX0 = FCN_V(tgMH_SUB)(ptvS3, ptvS0);
+
+        if (TYPE_K(0) >= FCN_V(tgMH_DOT3)(&vNM, &vX0))
+        {
+            return (false);
+        };
+    };
+
+    return (true);
+}
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions - Mesh BA */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FI(tgGM_MA_Update_Face_BA) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FI(tgGM_MA_Update_Face_BA)(VEC_OBJ_T(TgMESH_BA,PCU) psMA0)
+{
+    TgMESH_ITER                         itMS;
+    TgUINT_F32                          uiFace;
+
+    FI(tgGM_Iterator_Init_MS)(&itMS, &psMA0->m_sMS);
+
+    psMA0->m_vCG[0] = VEC_K(KTgZERO);
+    psMA0->m_vCG[1] = VEC_K(KTgZERO);
+
+    if (ETgSWEEP_ROTATIONAL == psMA0->m_enSweep)
+    {
+        for (uiFace = 0; uiFace < itMS.m_nuiFace; ++uiFace)
+        {
+            TgUINT_F32_C                        uiI0 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI1 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI2 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+
+            VEC_T(1,CPCU)                       ptvX0 = psMA0->m_sMS.m_pvVert_List + uiI0;
+            VEC_T(1,CPCU)                       ptvX1 = psMA0->m_sMS.m_pvVert_List + uiI1;
+            VEC_T(1,CPCU)                       ptvX2 = psMA0->m_sMS.m_pvVert_List + uiI2;
+
+            VEC_T(1,C)                          vX3 = FCN_V(tgMH_ADD)(ptvX0, psMA0->m_pvVert_DT + uiI0);
+            VEC_T(1,C)                          vX4 = FCN_V(tgMH_ADD)(ptvX1, psMA0->m_pvVert_DT + uiI1);
+            VEC_T(1,C)                          vX5 = FCN_V(tgMH_ADD)(ptvX2, psMA0->m_pvVert_DT + uiI2);
+
+            FCN_VO(tgGM_BA_Init_PT)( psMA0->m_psBA + uiFace, ptvX0 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX1 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX2 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, &vX3 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, &vX4 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, &vX5 );
+        };
+    }
+    else if (ETgSWEEP_LINEAR == psMA0->m_enSweep)
+    {
+        for (uiFace = 0; uiFace < itMS.m_nuiFace; ++uiFace)
+        {
+            TgUINT_F32_C                        uiI0 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI1 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI2 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+
+            VEC_T(1,CPCU)                       ptvX0 = psMA0->m_sMS.m_pvVert_List + uiI0;
+            VEC_T(1,CPCU)                       ptvX1 = psMA0->m_sMS.m_pvVert_List + uiI1;
+            VEC_T(1,CPCU)                       ptvX2 = psMA0->m_sMS.m_pvVert_List + uiI2;
+
+            FCN_VO(tgGM_BA_Init_PT)( psMA0->m_psBA + uiFace, ptvX0 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX1 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX2 );
+            FCN_VO(tgGM_BA_Sweep)( psMA0->m_psBA + uiFace, &psMA0->m_sDT.m_vDT );
+        };
+    }
+    else if (ETgSWEEP_STATIC == psMA0->m_enSweep)
+    {
+        for (uiFace = 0; uiFace < itMS.m_nuiFace; ++uiFace)
+        {
+            TgUINT_F32_C                        uiI0 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI1 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI2 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+
+            VEC_T(1,CPCU)                       ptvX0 = psMA0->m_sMS.m_pvVert_List + uiI0;
+            VEC_T(1,CPCU)                       ptvX1 = psMA0->m_sMS.m_pvVert_List + uiI1;
+            VEC_T(1,CPCU)                       ptvX2 = psMA0->m_sMS.m_pvVert_List + uiI2;
+
+            FCN_VO(tgGM_BA_Init_PT)( psMA0->m_psBA + uiFace, ptvX0 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX1 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX2 );
+        };
+    };
+}
+
+
+/* ---- FI(tgGM_MA_Update_Face_CG_BA) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FI(tgGM_MA_Update_Face_CG_BA)(VEC_OBJ_T(TgMESH_BA,PCU) psMA0)
+{
+    TgMESH_ITER                         itMS;
+    TgUINT_F32                          uiFace;
+
+    FI(tgGM_Iterator_Init_MS)(&itMS, &psMA0->m_sMS);
+
+    psMA0->m_vCG[0] = VEC_K(KTgZERO);
+    psMA0->m_vCG[1] = VEC_K(KTgZERO);
+
+    if (ETgSWEEP_ROTATIONAL == psMA0->m_enSweep)
+    {
+        for (uiFace = 0; uiFace < itMS.m_nuiFace; ++uiFace)
+        {
+            TgUINT_F32_C                        uiI0 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI1 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI2 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+
+            VEC_T(1,CPCU)                       ptvX0 = psMA0->m_sMS.m_pvVert_List + uiI0;
+            VEC_T(1,CPCU)                       ptvX1 = psMA0->m_sMS.m_pvVert_List + uiI1;
+            VEC_T(1,CPCU)                       ptvX2 = psMA0->m_sMS.m_pvVert_List + uiI2;
+
+            VEC_T(1,C)                          vX3 = FCN_V(tgMH_ADD)(ptvX0, psMA0->m_pvVert_DT + uiI0);
+            VEC_T(1,C)                          vX4 = FCN_V(tgMH_ADD)(ptvX1, psMA0->m_pvVert_DT + uiI1);
+            VEC_T(1,C)                          vX5 = FCN_V(tgMH_ADD)(ptvX2, psMA0->m_pvVert_DT + uiI2);
+
+            VEC_T(1,C)                          vX6 = FCN_V(tgMH_ADD)(ptvX1, ptvX2);
+            VEC_T(1,C)                          vX7 = FCN_V(tgMH_ADD)(&vX4, &vX5);
+            VEC_T(1,C)                          vX8 = FCN_V(tgMH_ADD)(ptvX0, &vX6);
+            VEC_T(1,C)                          vX9 = FCN_V(tgMH_ADD)(&vX3, &vX7);
+
+            psMA0->m_vCG[0] = FCN_V(tgMH_ADD)(psMA0->m_vCG + 0, &vX8);
+            psMA0->m_vCG[1] = FCN_V(tgMH_ADD)(psMA0->m_vCG + 1, &vX9);
+
+            FCN_VO(tgGM_BA_Init_PT)( psMA0->m_psBA + uiFace, ptvX0 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX1 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX2 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, &vX3 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, &vX4 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, &vX5 );
+        };
+
+        psMA0->m_vCG[0] = FCN_V(tgMH_DIV_VS)(psMA0->m_vCG + 0, (VAR_T())(itMS.m_nuiFace * TYPE_K(3,0)));
+        psMA0->m_vCG[1] = FCN_V(tgMH_DIV_VS)(psMA0->m_vCG + 1, (VAR_T())(itMS.m_nuiFace * TYPE_K(3,0)));
+    }
+    else if (ETgSWEEP_LINEAR == psMA0->m_enSweep)
+    {
+        for (uiFace = 0; uiFace < itMS.m_nuiFace; ++uiFace)
+        {
+            TgUINT_F32_C                        uiI0 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI1 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI2 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+
+            VEC_T(1,CPCU)                       ptvX0 = psMA0->m_sMS.m_pvVert_List + uiI0;
+            VEC_T(1,CPCU)                       ptvX1 = psMA0->m_sMS.m_pvVert_List + uiI1;
+            VEC_T(1,CPCU)                       ptvX2 = psMA0->m_sMS.m_pvVert_List + uiI2;
+            VEC_T(1,C)                          vX3 = FCN_V(tgMH_ADD)(ptvX1, ptvX2);
+            VEC_T(1,C)                          vX4 = FCN_V(tgMH_ADD)(ptvX0, &vX3);
+
+            psMA0->m_vCG[0] = FCN_V(tgMH_ADD)(psMA0->m_vCG + 0, &vX4);
+
+            FCN_VO(tgGM_BA_Init_PT)( psMA0->m_psBA + uiFace, ptvX0 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX1 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX2 );
+            FCN_VO(tgGM_BA_Sweep)( psMA0->m_psBA + uiFace, &psMA0->m_sDT.m_vDT );
+        };
+
+        psMA0->m_vCG[0] = FCN_V(tgMH_DIV_VS)(psMA0->m_vCG + 0, (VAR_T())(itMS.m_nuiFace * TYPE_K(3,0)));
+        psMA0->m_vCG[1] = FCN_V(tgMH_ADD)(psMA0->m_vCG + 0, &psMA0->m_sDT.m_vDT);
+    }
+    else if (ETgSWEEP_STATIC == psMA0->m_enSweep)
+    {
+        for (uiFace = 0; uiFace < itMS.m_nuiFace; ++uiFace)
+        {
+            TgUINT_F32_C                        uiI0 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI1 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+            TgUINT_F32_C                        uiI2 = FI(tgGM_Iterator_Incr_MS)(&itMS, &psMA0->m_sMS);
+
+            VEC_T(1,CPCU)                       ptvX0 = psMA0->m_sMS.m_pvVert_List + uiI0;
+            VEC_T(1,CPCU)                       ptvX1 = psMA0->m_sMS.m_pvVert_List + uiI1;
+            VEC_T(1,CPCU)                       ptvX2 = psMA0->m_sMS.m_pvVert_List + uiI2;
+            VEC_T(1,C)                          vX3 = FCN_V(tgMH_ADD)(ptvX1, ptvX2);
+            VEC_T(1,C)                          vX4 = FCN_V(tgMH_ADD)(ptvX0, &vX3);
+
+            psMA0->m_vCG[0] = FCN_V(tgMH_ADD)(psMA0->m_vCG + 0, &vX4);
+
+            FCN_VO(tgGM_BA_Init_PT)( psMA0->m_psBA + uiFace, ptvX0 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX1 );
+            FCN_VO(tgGM_BA_Union_PT)( psMA0->m_psBA + uiFace, ptvX2 );
+        }
+
+        psMA0->m_vCG[0] = FCN_V(tgMH_DIV_VS)(psMA0->m_vCG + 0, (VAR_T())(itMS.m_nuiFace * TYPE_K(3,0)));
+        psMA0->m_vCG[1] = VEC_K(KTgZERO);
+    }
+    else
+    {
+        TgERROR( false );
+    };
+}

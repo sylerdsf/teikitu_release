@@ -1,0 +1,154 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Parallelogram.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+                                                /** @brief Invalidate the geometry object (parallelogram)
+                                                    @param[out] OUT Pointer to the geometry object (parallelogram) */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Reset)( VEC_OBJ_T(TgPARALLELOGRAM,PCU) OUT );
+
+                                                /** @brief Validate the integrity of the geometry object (parallelogram)
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return True if the geometry object (parallelogram) is valid and false otherwise */
+TgINLINE TgBOOL                                 FCN_VO(tgGM_PE_Is_Valid)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Determine the point on the geometry object (parallelogram) that is furthest along the direction of ARG1
+                                                    @param[in] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Pointer to a direction vector
+                                                    @return The point on the geometry object (parallelogram) that is furthest along the direction of ARG1 */
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_PE_Support_Point)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+
+                                                /** @brief Calculate the surface area of the geometry object (parallelogram)
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The surface area of the geometry object (parallelogram) */
+TgINLINE VAR_T()                                FCN_VO(tgGM_PE_Area)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (parallelogram)
+                                                    @param[out] ARG0 Pointer to an axis-aligned bounding box object
+                                                    @param[in] ARG1 Pointer to a geometry object (parallelogram) */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG1 );
+
+                                                /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (parallelogram)
+                                                    @param[out] ARG0 Pointer to an axis-aligned bounding box object
+                                                    @param[in] ARG1 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG2 Pointer to a vector describing the swept direction and magnitude */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+
+                                                /** @brief Project the geometry object (parallelogram) along the direction vector
+                                                    @param[out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
+                                                    @param[out] OUT1 Pointer to a scalar value to hold the upper bound of the projection
+                                                    @param[in] ARG2 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG3 Pointer to a direction vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Project)( VAR_T(PCU) ARG0, VAR_T(PCU) ARG1, VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
+
+                                                /** @brief Test to see if a point is either on or in the geometry object (parallelogram)
+                                                    @param[in] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Pointer to a position vector
+                                                    @return True if the position is either on or in the geometry object (parallelogram) and false otherwise */
+TgINLINE TgBOOL                                 FCN_VO(tgGM_PE_Is_Contained)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+
+                                                /** @brief Transform the geometry object (parallelogram) at ARG0 by the matrix at ARG1
+                                                    @param[in,out] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_TX)( VEC_OBJ_T(TgPARALLELOGRAM,PCU) ARG0, VEC_04_3_T(CPCU) ARG1 );
+
+                                                /** @brief Transform the geometry object (parallelogram) at ARG1 by the matrix at ARG2 and store it in ARG0
+                                                    @param[out] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Copy_TX)( VEC_OBJ_T(TgPARALLELOGRAM,PCU) ARG0, VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG1, VEC_04_3_T(CPCU) ARG2 );
+
+
+                                                /** @brief Initialize a new geometry object (parallelogram) with the function arguments
+                                                    @param[out] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Pointer to a position vector - origin
+                                                    @param[in] ARG2 Pointer to a direction vector - direction and length of the first edge
+                                                    @param[in] ARG3 Pointer to a direction vector - direction and length of the second edge
+                                                    @param[in] ARG4 Pointer to a direction vector - normal to the plane of the parallelogram */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Init)(
+                                                    VEC_OBJ_T(TgPARALLELOGRAM,PCU) ARG0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2, VEC_T(1,CPCU) ARG3, VEC_T(1,CPCU) ARG4 );
+
+                                                /** @brief Copy the one geometry object (parallelogram) to another of the same type
+                                                    @param[out] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Pointer to a geometry object (parallelogram) */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Copy)( VEC_OBJ_T(TgPARALLELOGRAM,PCU) ARG0, VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG1 );
+
+
+                                                /** @brief Set the origin
+                                                    @param[in,out] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Pointer to a position vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Set_Origin)( VEC_OBJ_T(TgPARALLELOGRAM,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+
+                                                /** @brief Set the direction and length of the first edge
+                                                    @param[in,out] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Pointer to a direction vector - Direction and length of the edge */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Set_Edge_0)( VEC_OBJ_T(TgPARALLELOGRAM,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+
+                                                /** @brief Set the direction and length of the second edge
+                                                    @param[in,out] ARG0 Pointer to a geometry object (parallelogram)
+                                                    @param[in] ARG1 Pointer to a direction vector - Direction and length of the edge */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PE_Set_Edge_1)( VEC_OBJ_T(TgPARALLELOGRAM,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+
+
+                                                /** @brief Return the origin
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The origin */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PE_Query_Origin)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return the direction and length of the first edge
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The direction and length of the first edge */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PE_Query_Edge_0)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return the direction and length of the second edge
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The direction and length of the second edge */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PE_Query_Edge_1)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return the normal of the plane
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The normal of the plane */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PE_Query_Normal)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return a direction vector in the plane of the parallelogram and orthogonal to the first edge
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return A direction vector in the plane of the parallelogram and orthogonal to the first edge */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PE_Query_Edge_Normal_0)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return a direction vector in the plane of the parallelogram and orthogonal to the second edge
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return A direction vector in the plane of the parallelogram and orthogonal to the second edge */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PE_Query_Edge_Normal_1)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return the first point of the parallelogram
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The first point of the parallelogram */
+TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PE_Query_Point_0)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return the second point of the parallelogram
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The second point of the parallelogram */
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_PE_Query_Point_1)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return the third point of the parallelogram
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The third point of the parallelogram */
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_PE_Query_Point_2)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );
+
+                                                /** @brief Return the fourth point of the parallelogram
+                                                    @param[in] ARG Pointer to a geometry object (parallelogram)
+                                                    @return The fourth point of the parallelogram */
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_PE_Query_Point_3)( VEC_OBJ_T(TgPARALLELOGRAM,CPCU) ARG );

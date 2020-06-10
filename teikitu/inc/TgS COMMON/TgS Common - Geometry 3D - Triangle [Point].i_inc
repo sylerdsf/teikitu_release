@@ -1,0 +1,270 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry 3D - Triangle [Point].i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgGM_PT_Calc_Normal) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Calc_Normal)( VEC_OBJ_T(TgPTRI,PCU) psPT0 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_SUB)( psPT0->m_avPoint + 1, psPT0->m_avPoint + 0 );
+    VEC_T(1,C)                          vX1 = FCN_V(tgMH_SUB)( psPT0->m_avPoint + 2, psPT0->m_avPoint + 0 );
+
+    psPT0->m_vNormal = FCN_V(tgMH_UCX)( &vX0, &vX1 );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Reset) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Reset)( VEC_OBJ_T(TgPTRI,PCU) psPT0 )
+{
+    psPT0->m_avPoint[0] = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psPT0->m_avPoint[1] = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psPT0->m_avPoint[2] = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psPT0->m_vNormal = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgGM_PT_Area)( VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_SUB)( psPT1->m_avPoint + 1, psPT1->m_avPoint + 0 );
+    VEC_T(1,C)                          vX1 = FCN_V(tgMH_SUB)( psPT1->m_avPoint + 2, psPT1->m_avPoint + 0 );
+    VEC_T(1,C)                          vX2 = FCN_V(tgMH_CX)( &vX0, &vX1 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PT_Is_Valid)(psPT1));
+
+    return (TYPE_K(0,5) * FCN_V(tgMH_LEN)( &vX2) );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_BA) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PT_Is_Valid)(psPT1));
+
+    FCN_VO(tgGM_BA_Init_PT)( psBA0, psPT1->m_avPoint + 0 );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, psPT1->m_avPoint + 1 );
+    FCN_VO(tgGM_BA_Union_PT)( psBA0, psPT1->m_avPoint + 2 );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgPTRI,CPCU) psPT1, VEC_T(1,CPCU) pvDT )
+{
+    FCN_VO(tgGM_PT_BA)( psBA0, psPT1 );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgPTRI,CPCU) psPT1, VEC_T(1,CPCU) pvDN )
+{
+    VAR_T(C)                            fP0_AX = FCN_V(tgMH_DOT)( pvDN, psPT1->m_avPoint + 0 );
+    VAR_T(C)                            fP1_AX = FCN_V(tgMH_DOT)( pvDN, psPT1->m_avPoint + 1 );
+    VAR_T(C)                            fP2_AX = FCN_V(tgMH_DOT)( pvDN, psPT1->m_avPoint + 2 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PT_Is_Valid)(psPT1) && FCN_V(tgMH_Is_Vector_Valid)(pvDN));
+
+    *ptyMin = FCN_F(tgPM_FSEL)( fP1_AX - fP0_AX, FCN_F(tgPM_FSEL)(fP0_AX - fP2_AX, fP2_AX, fP0_AX), FCN_F(tgPM_FSEL)(fP1_AX - fP2_AX, fP2_AX, fP1_AX) );
+    *ptyMax = FCN_F(tgPM_FSEL)( fP0_AX - fP1_AX, FCN_F(tgPM_FSEL)(fP2_AX - fP0_AX, fP2_AX, fP0_AX), FCN_F(tgPM_FSEL)(fP2_AX - fP1_AX, fP2_AX, fP1_AX) );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgGM_PT_Is_Contained)( VEC_OBJ_T(TgPTRI,CPCU) psPT1, VEC_T(1,CPCU) pvS0 )
+{
+    /* Note: For both the point and edge triangles are bary-centric approach is used to compute containment.  This is, of course, very susceptible to floating point errors, */
+    /* made more prominent as the aspect ratio of the triangle becomes extended.  Thus, if even a reasonable amount of accuracy is required for a general case triangle -  */
+    /* create a space tri so that the space variation will be used (plane containment). */
+
+    VEC_T(1)                            vP0 = FCN_V(tgMH_SUB)( psPT1->m_avPoint + 0, pvS0 );
+    VEC_T(1)                            vP1 = FCN_V(tgMH_SUB)( psPT1->m_avPoint + 1, pvS0 );
+    VEC_T(1)                            vP2 = FCN_V(tgMH_SUB)( psPT1->m_avPoint + 2, pvS0 );
+
+    VAR_T(C)                            fP0_P1 = FCN_V(tgMH_DOT)( &vP0, &vP1 );
+    VAR_T(C)                            fP0_P2 = FCN_V(tgMH_DOT)( &vP0, &vP2 );
+    VAR_T(C)                            fP1_P2 = FCN_V(tgMH_DOT)( &vP1, &vP2 );
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PT_Is_Valid)(psPT1) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    return (fP1_P2*fP0_P2 >= fP0_P1*FCN_V(tgMH_LSQ)(&vP2) && fP0_P1*fP1_P2 >= fP0_P2*FCN_V(tgMH_LSQ)(&vP1));
+}
+
+
+/* ---- FCN_VO(tgGM_PT_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_TX)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psPT0->m_avPoint[0] = FCN_04_3_V(tgMH_TX_P)( pxM0, psPT0->m_avPoint + 0 );
+    psPT0->m_avPoint[1] = FCN_04_3_V(tgMH_TX_P)( pxM0, psPT0->m_avPoint + 1 );
+    psPT0->m_avPoint[2] = FCN_04_3_V(tgMH_TX_P)( pxM0, psPT0->m_avPoint + 2 );
+    psPT0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psPT0->m_vNormal );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Copy_TX)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_OBJ_T(TgPTRI,CPCU) psPT1, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PT_Is_Valid)(psPT1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+
+    psPT0->m_avPoint[0] = FCN_04_3_V(tgMH_TX_P)( pxM0, psPT1->m_avPoint + 0 );
+    psPT0->m_avPoint[1] = FCN_04_3_V(tgMH_TX_P)( pxM0, psPT1->m_avPoint + 1 );
+    psPT0->m_avPoint[2] = FCN_04_3_V(tgMH_TX_P)( pxM0, psPT1->m_avPoint + 2 );
+    psPT0->m_vNormal = FCN_04_3_V(tgMH_TX_V)( pxM0, &psPT1->m_vNormal );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Init_PN) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Init_PN)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvS1, VEC_T(1,CPCU) pvS2, VEC_T(1,CPCU) pvN )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS1 ));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS2 ));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)( pvN ));
+    TgGEOM_ASSERT_PARAM(FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)( pvN )));
+
+    psPT0->m_avPoint[0] = *pvS0;
+    psPT0->m_avPoint[1] = *pvS1;
+    psPT0->m_avPoint[2] = *pvS2;
+    psPT0->m_vNormal = *pvN;
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Init_P) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Init_P)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvS1, VEC_T(1,CPCU) pvS2 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS1 ));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS2 ));
+
+    psPT0->m_avPoint[0] = *pvS0;
+    psPT0->m_avPoint[1] = *pvS1;
+    psPT0->m_avPoint[2] = *pvS2;
+    FCN_VO(tgGM_PT_Calc_Normal)( psPT0 );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Copy) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Copy)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PT_Is_Valid)( psPT1 ));
+
+    psPT0->m_avPoint[0] = psPT1->m_avPoint[0];
+    psPT0->m_avPoint[1] = psPT1->m_avPoint[1];
+    psPT0->m_avPoint[2] = psPT1->m_avPoint[2];
+    psPT0->m_vNormal = psPT1->m_vNormal;
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Set_Origin)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    psPT0->m_avPoint[0] = *pvS0;
+    FCN_VO(tgGM_PT_Calc_Normal)( psPT0 );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Set_Point_0) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Set_Point_0)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    psPT0->m_avPoint[0] = *pvS0;
+    FCN_VO(tgGM_PT_Calc_Normal)( psPT0 );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Set_Point_1) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Set_Point_1)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    psPT0->m_avPoint[1] = *pvS0;
+    FCN_VO(tgGM_PT_Calc_Normal)( psPT0 );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Set_Point_2) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgGM_PT_Set_Point_2)( VEC_OBJ_T(TgPTRI,PCU) psPT0, VEC_T(1,CPCU) pvS0 )
+{
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    psPT0->m_avPoint[2] = *pvS0;
+    FCN_VO(tgGM_PT_Calc_Normal)( psPT0 );
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PT_Query_Origin)( VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
+{
+    return (psPT1->m_avPoint + 0);
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Query_Normal) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PT_Query_Normal)( VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
+{
+    return (&psPT1->m_vNormal);
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Query_Point_0) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PT_Query_Point_0)( VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
+{
+    return (psPT1->m_avPoint + 0);
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Query_Point_1) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PT_Query_Point_1)( VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
+{
+    return (psPT1->m_avPoint + 1);
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Query_Point_2) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PT_Query_Point_2)( VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
+{
+    return (psPT1->m_avPoint + 2);
+}
+
+
+/* ---- FCN_VO(tgGM_PT_Query_Point) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PT_Query_Point)( VEC_OBJ_T(TgPTRI,CPCU) psPT1, TgRSIZE_C uiIndex )
+{
+    TgGEOM_ASSERT_PARAM(uiIndex <= 2);
+    return (psPT1->m_avPoint + uiIndex);
+}

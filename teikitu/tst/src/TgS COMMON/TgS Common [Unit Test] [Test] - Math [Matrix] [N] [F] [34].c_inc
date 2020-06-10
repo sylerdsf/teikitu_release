@@ -1,0 +1,57 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common [Unit Test] [Test] - Math [Matrix] [N] [F] [34].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Test Functions                                                                                                                                                                 */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_M_UT(tgMH_TR_N) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_M_UT(tgMH_TR_N) )
+{
+    union
+    {
+        VEC_N_T(4)                          xMN;
+        VEC_T(4)                            xMT;
+    }                                   sM0;
+
+    union
+    {
+        VEC_N_T(3)                          xMN;
+        VEC_T(3)                            xMT;
+    }                                   sM1;
+
+    TgSINT_F32                          iIndex, iRow, iCol;
+
+    for (iIndex = 0; iIndex < TEMPLATE__VECTOR_ROW * TEMPLATE__VECTOR_DIM; ++iIndex)
+    {
+        while (0 == (sM1.xMT.m_aElement[iIndex] = FCN_F(tgCM_RAND)()));
+    };
+
+    FCN_M(tgMH_TR_N)( &sM0.xMN, &sM1.xMN );
+
+    for (iRow = 0; iRow < 3; ++iRow)
+    {
+        for (iCol = 0; iCol < 4; ++iCol)
+        {
+            Test__Expect_EQ( sM0.xMT.m_aRowCol[iCol][iRow], sM1.xMT.m_aRowCol[iRow][iCol] );
+        };
+    };
+    for (iCol = 0; iCol < 4; ++iCol)
+    {
+        Test__Expect_EQ( sM0.xMT.m_aRowCol[iCol][3], VEC_K(KTgUNIT_W).m_aData[iCol] );
+    };
+
+    TEST_END_METHOD( KTgS_OK );
+}

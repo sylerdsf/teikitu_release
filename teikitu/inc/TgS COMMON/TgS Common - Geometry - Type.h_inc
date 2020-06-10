@@ -1,0 +1,646 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Geometry - Type.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if defined(TGS_COMMON_GEOMETRY_TYPE_HINC)
+    #error This file should be included by TGS_COMMON_GEOMETRY_TYPE_H
+#endif
+
+#if defined(TEMPLATE__ENABLE_INTEGER)
+
+    #error Geometry is assumed to be floating point
+
+#else
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #if !defined(TEMPLATE__TYPE_SIZE)
+            #define TEMPLATE__TYPE_SIZE 32
+            #include __FILE__
+            #undef TEMPLATE__TYPE_SIZE
+            #define TEMPLATE__TYPE_SIZE 64
+        #endif
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Types                                                                                                                                                                   */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgDELTA), )
+{
+    VEC_T(1)                                    m_vUDT; /* Unit Displacement */
+    VEC_T(1)                                    m_vDT; /* Displacement */
+    VAR_T()                                     m_fDT; /* Displacement Mangitude */
+    VAR_T()                                     m_fDT_DT; /* Displacement Mangitude Squared */
+    VAR_T()                                     m_fInv_DT; /* Inverse Magnitude of Displacement */
+#if 0 != STRUCT_PAD(4,0)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(4,0)];
+#endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgDELTA_N), )
+{
+    VEC_N_T(1)                                  m_vUDT;
+    VEC_N_T(1)                                  m_vDT;
+    VEC_N_T(1)                                  m_vMag_DT;
+    VEC_N_T(1)                                  m_vDT_DT;
+    VEC_N_T(1)                                  m_vInv_Mag_DT;
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgRECT2D), )
+{
+    VAR_T()                                     m_fX0, m_fY0; /**< Upper left point. */
+    VAR_T()                                     m_fX1, m_fY1; /**< Lower right point. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgRECT2D_N), )
+{
+    VEC_N_T(1)                                  m_vRect;
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgBOXAA), )
+{
+    VEC_T(1)                                    m_vMin, m_vMax;
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgBOXAA_N), )
+{
+    VEC_N_T(1)                                  m_vMin, m_vMax;
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgBOX), )
+{
+    union {
+        VEC_T(1)                                    m_avData[4];
+        VEC_04_4_T()                                m_xData;
+        struct {
+            VEC_T(1)                                    m_avAxis[3]; /**< The three ortho-normal axes used to define the box edges. */
+            VEC_T(1)                                    m_vOrigin; /**< Origin | Centroid of the box. */
+        };
+    };
+    VEC_T(1)                                    m_vExtent; /**< The box's length along each axis from origin to extremity. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgBOX_N), )
+{
+    union {
+        VEC_N_T(1)                                  m_avData[4];
+        VEC_N_T(4)                                  m_xData;
+        struct {
+            VEC_N_T(1)                                  m_avAxis[3]; /**< The three ortho-normal axes used to define the box edges. */
+            VEC_N_T(1)                                  m_vOrigin; /**< Origin | Centroid of the box. */
+        };
+    };
+    VEC_N_T(1)                                  m_avExtent[3]; /**< The box's length along each axis from origin to extremity. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgCIRCLE), )
+{
+    union {
+        VEC_T(1)                                    m_avData[4]; /**< Full basis set */
+        VEC_04_4_T()                                m_xData;
+        struct {
+            VEC_T(1)                                    m_vU; /**< [x-axis] */
+            VEC_T(1)                                    m_vNormal; /**< Normal of the plane. [y-axis] */
+            VEC_T(1)                                    m_vV; /**< [z-axis] */
+            VEC_T(1)                                    m_vOrigin; /**< Origin of the circle in the reference frame. */
+        };
+    };
+    VAR_T()                                     m_fRadius; /**< Radius of the circle. */
+    VAR_T()                                     m_fRadiusSq;/**< Radius Squared of the circle. */
+#if 0 != STRUCT_PAD(8,0)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(8,0)];
+#endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgCIRCLE_N), )
+{
+    union {
+        VEC_N_T(1)                                  m_avData[4]; /**< Full basis set */
+        VEC_N_T(4)                                  m_xData;
+        struct {
+            VEC_N_T(1)                                  m_vU; /**< [x-axis] */
+            VEC_N_T(1)                                  m_vNormal; /**< Normal of the plane. [y-axis] */
+            VEC_N_T(1)                                  m_vV; /**< [z-axis] */
+            VEC_N_T(1)                                  m_vOrigin; /**< Origin of the circle in the reference frame. */
+        };
+    };
+    VEC_N_T(1)                                  m_fRadius; /**< Radius of the circle. */
+    VEC_N_T(1)                                  m_fRadiusSq;/**< Radius Squared of the circle. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgDISK), )
+{
+    union {
+        VEC_T(1)                                    m_avData[4]; /**< Full basis set */
+        VEC_04_4_T()                                m_xData;
+        struct {
+            VEC_T(1)                                    m_vU; /**< [x-axis] */
+            VEC_T(1)                                    m_vNormal; /**< Normal of the plane. [y-axis] */
+            VEC_T(1)                                    m_vV; /**< [z-axis] */
+            VEC_T(1)                                    m_vOrigin; /**< Origin of the circle in the reference frame. */
+        };
+    };
+    VAR_T()                                     m_fRadius; /**< Radius of the disk. */
+    VAR_T()                                     m_fRadiusSq;/**< Radius Squared of the disk. */
+    #if 0 != STRUCT_PAD(8,0)
+        TgUINT_E08                                  m_iPad[STRUCT_PAD(8,0)];
+    #endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgDISK_N), )
+{
+    union {
+        VEC_N_T(1)                                  m_avData[4]; /**< Full basis set */
+        VEC_N_T(4)                                  m_xData;
+        struct {
+            VEC_N_T(1)                                  m_vU; /**< [x-axis] */
+            VEC_N_T(1)                                  m_vNormal; /**< Normal of the plane. [y-axis] */
+            VEC_N_T(1)                                  m_vV; /**< [z-axis] */
+            VEC_N_T(1)                                  m_vOrigin; /**< Origin of the circle in the reference frame. */
+        };
+    };
+    VEC_N_T(1)                                  m_fRadius; /**< Radius of the disk. */
+    VEC_N_T(1)                                  m_fRadiusSq;/**< Radius Squared of the disk. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgELLIPSE), )
+{
+    union {
+        VEC_T(1)                                    m_avData[4]; /**< Full basis set */
+        VEC_04_4_T()                                m_xData;
+        struct {
+            VEC_T(1)                                    m_vMajor_Axis; /**< [x-axis] */
+            VEC_T(1)                                    m_vNormal; /**< Normal of the plane. [y-axis] */
+            VEC_T(1)                                    m_vMinor_Axis; /**< [z-axis] */
+            VEC_T(1)                                    m_vOrigin; /**< Origin *| Centre of the ellipse. */
+        };
+    };
+    VAR_T()                                     m_fMajor; /**< Major radius. */
+    VAR_T()                                     m_fMinor; /**< Minor radius. */
+    #if 0 != STRUCT_PAD(8,0)
+        TgUINT_E08                                  m_iPad[STRUCT_PAD(8,0)];
+    #endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgELLIPSE_N), )
+{
+    union {
+        VEC_N_T(1)                                  m_avData[4]; /**< Full basis set */
+        VEC_N_T(4)                                  m_xData;
+        struct {
+            VEC_N_T(1)                                  m_vMajor_Axis; /**< [x-axis] */
+            VEC_N_T(1)                                  m_vNormal; /**< Normal of the plane. [y-axis] */
+            VEC_N_T(1)                                  m_vMinor_Axis; /**< [z-axis] */
+            VEC_N_T(1)                                  m_vOrigin; /**< Origin *| Centre of the ellipse. */
+        };
+    };
+    VEC_N_T(1)                                  m_fMajor; /**< Major radius. */
+    VEC_N_T(1)                                  m_fMinor; /**< Minor radius. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgLINE), )
+{
+    VEC_T(1)                                    m_vOrigin; /**< Origin of the line segment (start point). */
+    VEC_T(1)                                    m_vDirN; /**< The line direction. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgLINE_N), )
+{
+    VEC_N_T(1)                                  m_vOrigin; /**< Origin of the line segment (start point). */
+    VEC_N_T(1)                                  m_vDirN; /**< The line direction. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgMESH_SIMPLE), )
+{
+    VEC_T(1,P)                                  m_pvVert_List;
+    TgUINT_E16_P                                m_puiIndx_List;
+    TgUINT_E32                                  m_nuiVert; /**< Number of vertices in the mesh */
+    TgUINT_E32                                  m_nuiIndx; /**< Number of indices in the mesh, can be zero depending on primitive expectations */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgMESH_SIMPLE_N), )
+{
+    VEC_N_T(1,P)                                m_pvVert_List;
+    TgUINT_E16_P                                m_puiIndx_List;
+    TgUINT_E32                                  m_nuiVert; /**< Number of vertices in the mesh */
+    TgUINT_E32                                  m_nuiIndx; /**< Number of indices in the mesh, can be zero depending on primitive expectations */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgMESH_BA), )
+{
+    VEC_OBJ_T(TgMESH_SIMPLE)                    m_sMS; /**< Vertex and Face Data */
+
+    VEC_T(1,P)                                  m_pvVert_DT; /**< Vertex delta for a swept mesh */
+    VEC_OBJ_T(TgBOXAA,P)                        m_psBA; /**< Bounding box per face */
+    TgUINT_E32_P                                m_puiFlags; /**< Collision flags per face */
+    TgUINT_E32                                  m_nuiFace; /**< Number of faces */
+    ETgSWEEP_TYPE                               m_enSweep; /**< Static, Linear or Rotational test indicator. */
+    #if 0 != STRUCT_PAD(8,0)
+        TgUINT_E08                                  m_iPad[STRUCT_PAD(8,0)];
+    #endif
+
+    VEC_OBJ_T(TgDELTA)                          m_sDT; /**< Linear displacement vector, valid only for linear sweep. */
+    VEC_T(1)                                    m_vCG[2]; /**< Centre of gravity at sweep interval. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgMESH_BA_N), )
+{
+    VEC_OBJ_T(TgMESH_SIMPLE_N)                  m_sMS; /**< Vertex and Face Data */
+
+    VEC_N_T(1,P)                                m_pvVert_DT; /**< Vertex delta for a swept mesh */
+    VEC_OBJ_T(TgBOXAA_N,P)                      m_psBA; /**< Bounding box per face */
+    TgUINT_E32_P                                m_puiFlags; /**< Collision flags per face */
+    TgUINT_E32                                  m_nuiFace; /**< Number of faces */
+    ETgSWEEP_TYPE                               m_enSweep; /**< Static, Linear or Rotational test indicator. */
+    #if 0 != STRUCT_PAD(8,0)
+        TgUINT_E08                                  m_iPad[STRUCT_PAD(8,0)];
+    #endif
+
+    VEC_OBJ_T(TgDELTA_N)                        m_sDT; /**< Linear displacement vector, valid only for linear sweep. */
+    VEC_N_T(1)                                  m_vCG[2]; /**< Centre of gravity at sweep interval. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgMESH_BVT), )
+{
+    VEC_OBJ_T(TgMESH_SIMPLE)                    m_sMS; /**< Vertex and Face Data */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgMESH_BVT_N), )
+{
+    VEC_OBJ_T(TgMESH_SIMPLE_N)                  m_sMS; /**< Vertex and Face Data */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgPARALLELOGRAM), )
+{
+    VEC_T(1)                                    m_vOrigin; /**< Common point of two of the parallelogram's edges. */
+    VEC_T(1)                                    m_avEdge[2]; /**< The two edge's sourced at the origin point. */
+    VEC_T(1)                                    m_vNormal; /**< The normal for the plane defined by the two edges. */
+    VEC_T(1)                                    m_avEdgeNormal[2]; /**< The normal of the plane defined by an edge and normal. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgPARALLELOGRAM_N), )
+{
+    VEC_N_T(1)                                  m_vOrigin; /**< Common point of two of the parallelogram's edges. */
+    VEC_N_T(1)                                  m_avEdge[2]; /**< The two edge's sourced at the origin point. */
+    VEC_N_T(1)                                  m_vNormal; /**< The normal for the plane defined by the two edges. */
+    VEC_N_T(1)                                  m_avEdgeNormal[2]; /**< The normal of the plane defined by an edge and normal. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgPARTICLE), )
+{
+    VEC_T(1)                                    m_vPos; /**< Initial position. */
+    VEC_T(1)                                    m_vVel; /**< Initial velocity. */
+    VEC_T(1)                                    m_vAccel; /**< Initial acceleration. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgPARTICLE_N), )
+{
+    VEC_N_T(1)                                  m_vPos; /**< Initial position. */
+    VEC_N_T(1)                                  m_vVel; /**< Initial velocity. */
+    VEC_N_T(1)                                  m_vAccel; /**< Initial acceleration. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgPLANE), )
+{
+    VEC_T(1)                                    m_vPlnEqN; /**< Store the plane constant in the last element of the vector. */
+    VEC_T(1)                                    m_vNormal; /**< Plane unit-normal. */
+    VAR_T()                                     m_fD; /**< Plane constant. */
+#if 0 != STRUCT_PAD(12,0)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(12,0)];
+#endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgPLANE_N), )
+{
+    VEC_N_T(1)                                  m_vPlnEqN; /**< Store the plane constant in the last element of the vector. */
+    VEC_N_T(1)                                  m_vNormal; /**< Plane unit-normal. */
+    VEC_N_T(1)                                  m_fD; /**< Plane constant. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgRAY), )
+{
+    VEC_T(1)                                    m_vOrigin; /**< Origin of the line segment (start point). */
+    VEC_T(1)                                    m_vDirN; /**< The line direction. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgRAY_N), )
+{
+    VEC_N_T(1)                                  m_vOrigin; /**< Origin of the line segment (start point). */
+    VEC_N_T(1)                                  m_vDirN; /**< The line direction. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgRECTANGLE), )
+{
+    VEC_T(1)                                    m_vOrigin; /**< Common point of two of the rectangle's edges. */
+    VEC_T(1)                                    m_avEdge[2]; /**< The two edge's sourced at the origin point. */
+    VEC_T(1)                                    m_vNormal; /**< The normal for the plane defined by the two edges. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgRECTANGLE_N), )
+{
+    VEC_N_T(1)                                  m_vOrigin; /**< Common point of two of the rectangle's edges. */
+    VEC_N_T(1)                                  m_avEdge[2]; /**< The two edge's sourced at the origin point. */
+    VEC_N_T(1)                                  m_vNormal; /**< The normal for the plane defined by the two edges. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgSEGMENT), )
+{
+    VEC_T(1)                                    m_vOrigin; /**< Origin of the line segment (start point). */
+    VEC_T(1)                                    m_vDirN; /**< The line direction. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgSEGMENT_N), )
+{
+    VEC_N_T(1)                                  m_vOrigin; /**< Origin of the line segment (start point). */
+    VEC_N_T(1)                                  m_vDirN; /**< The line direction. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgSPHERE), )
+{
+    VEC_T(1)                                    m_vOrigin; /**< Origin of the sphere. */
+    VAR_T()                                     m_fRadius; /**< Radius of the sphere. */
+    VAR_T()                                     m_fRadiusSq; /**< Radius squared of the sphere. */
+#if 0 != STRUCT_PAD(8,0)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(8,0)];
+#endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgSPHERE_N), )
+{
+    VEC_N_T(1)                                  m_vOrigin; /**< Origin of the sphere. */
+    VEC_N_T(1)                                  m_fRadius; /**< Radius of the sphere. */
+    VEC_N_T(1)                                  m_fRadiusSq; /**< Radius squared of the sphere. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgTORUS), )
+{
+    VEC_T(1)                                    m_vOrigin; /**< Origin of the torus. */
+    VEC_T(1)                                    m_vNormal; /**<  */
+    VAR_T()                                     m_fRI; /**< Radius of the tube. */
+    VAR_T()                                     m_fRO; /**< Radius of the torus path. */
+    #if 0 != STRUCT_PAD(8,0)
+        TgUINT_E08                                  m_iPad[STRUCT_PAD(8,0)];
+    #endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgTORUS_N), )
+{
+    VEC_N_T(1)                                  m_vOrigin; /**< Origin of the torus. */
+    VEC_N_T(1)                                  m_vNormal; /**<  */
+    VEC_N_T(1)                                  m_fRI; /**< Radius of the tube. */
+    VEC_N_T(1)                                  m_fRO; /**< Radius of the torus path. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgPTRI), )
+{
+    VEC_T(1)                                    m_avPoint[3]; /**< Three vertices defining the triangle */
+    VEC_T(1)                                    m_vNormal; /**< Triangle normal, not necessarily valid. */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgPTRI_N), )
+{
+    VEC_N_T(1)                                  m_avPoint[3]; /**< Three vertices defining the triangle */
+    VEC_N_T(1)                                  m_vNormal; /**< Triangle normal, not necessarily valid. */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgETRI), )
+{
+    VEC_OBJ_T(TgPTRI)                           m_sPT;
+    VEC_T(1)                                    m_avEdge[3]; /**< [0-1], [1-2], [2-0] segments between vertices */
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgETRI_N), )
+{
+    VEC_OBJ_T(TgPTRI_N)                         m_sPT;
+    VEC_N_T(1)                                  m_avEdge[3]; /**< [0-1], [1-2], [2-0] segments between vertices */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgCTRI), )
+{
+    VEC_OBJ_T(TgETRI)                           m_sET;
+    TgUINT_E32                                  m_bfFlags; /**< Bitfield container for a collection of booleans. */
+#if 0 != STRUCT_PAD(12,4)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(12,4)];
+#endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgCTRI_N), )
+{
+    VEC_OBJ_T(TgETRI_N)                         m_sET;
+    TgUINT_E32                                  m_bfFlags; /**< Bitfield container for a collection of booleans. */
+#if 0 != STRUCT_PAD(12,4)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(12,4)];
+#endif
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgSTRI), )
+{
+    VEC_OBJ_T(TgCTRI)                           m_sCT;
+    VEC_OBJ_T(TgPLANE)                          m_avPlane[3];
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgSTRI_N), )
+{
+    VEC_OBJ_T(TgCTRI_N)                         m_sCT;
+    VEC_OBJ_T(TgPLANE_N)                        m_avPlane[3];
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+TgTYPE_STRUCT( VEC_OBJ_T(TgTUBE), )
+{
+    /* Ortho-normal definition of the reference frame of the tube. */
+    union {
+        VEC_T(1)                                    m_avData[4]; /**< Full basis set */
+        VEC_04_4_T()                                m_xData;
+        struct {
+            VEC_T(1)                                    m_vU_Basis0; /**< Another vector to make an ortho-normal basis set */
+            VEC_T(1)                                    m_vU_HAX; /**< Primary unit half-axis */
+            VEC_T(1)                                    m_vU_Basis1; /**< Another vector to make an ortho-normal basis set */
+            VEC_T(1)                                    m_vOrigin; /**< Mid point of the tube primary axis */
+        };
+    };
+
+    /* Tube definition - centre point and the vector such that its sum and difference with the origin are the two end points. */
+
+    VEC_T(1)                                    m_vHAX; /**< Primary half-axis of the tube */
+
+    /* The line segment that forms the primary axis of the tube, enclosing both end points inclusively. */
+
+    VEC_OBJ_T(TgSEGMENT)                        m_sAX; /**< Segment from end-to-end of the tube */
+
+    /* Scalar properties of the tube. */
+
+    VAR_T()                                     m_fExtent; /**< Half-height of the tube */
+    VAR_T()                                     m_fRadius; /**< Radius of the tube */
+    VAR_T()                                     m_fRadiusSq; /**< Radius Squared */
+    #if 0 != STRUCT_PAD(4,0)
+        TgUINT_E08                                  m_iPad[STRUCT_PAD(4,0)];
+    #endif
+};
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgTYPE_STRUCT( VEC_OBJ_T(TgTUBE_N), )
+{
+    /* Ortho-normal definition of the reference frame of the tube. */
+    union {
+        VEC_N_T(1)                                  m_avData[4]; /**< Full basis set */
+        VEC_N_T(4)                                  m_xData;
+        struct {
+            VEC_N_T(1)                                  m_vU_Basis0; /**< Another vector to make an ortho-normal basis set */
+            VEC_N_T(1)                                  m_vU_HAX; /**< Primary unit half-axis */
+            VEC_N_T(1)                                  m_vU_Basis1; /**< Another vector to make an ortho-normal basis set */
+            VEC_N_T(1)                                  m_vOrigin; /**< Mid point of the tube primary axis */
+        };
+    };
+
+    /* Tube definition - centre point and the vector such that its sum and difference with the origin are the two end points. */
+
+    VEC_N_T(1)                                  m_vHAX; /**< Primary half-axis of the tube */
+
+    /* The line segment that forms the primary axis of the tube, enclosing both end points inclusively. */
+
+    VEC_OBJ_T(TgSEGMENT_N)                      m_sAX; /**< Segment from end-to-end of the tube */
+
+    /* Scalar properties of the tube. */
+
+    VEC_N_T(1)                                  m_fExtent; /**< Half-height of the tube */
+    VEC_N_T(1)                                  m_fRadius; /**< Radius of the tube */
+    VEC_N_T(1)                                  m_fRadiusSq; /**< Radius Squared */
+};
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+TgINLINE TgVOID                             FCN_VO(tgGM_DT_Reset)( VEC_OBJ_T(TgDELTA,PCU) );
+TgINLINE TgBOOL                             FCN_VO(tgGM_DT_Is_Valid)( VEC_OBJ_T(TgDELTA,CPCU) );
+TgINLINE TgVOID                             FCN_VO(tgGM_DT_TX)( VEC_OBJ_T(TgDELTA,PCU), VEC_T(3,CPCU) );
+TgINLINE TgVOID                             FCN_VO(tgGM_DT_Copy_TX)( VEC_OBJ_T(TgDELTA,PCU), VEC_OBJ_T(TgDELTA,CPCU), VEC_T(3,CPCU) );
+TgINLINE TgVOID                             FCN_VO(tgGM_DT_Set)( VEC_OBJ_T(TgDELTA,PCU), VEC_T(1,CPCU) );
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+TgINLINE TgVOID                             FCN_VO(tgGM_DT_N_Reset)( VEC_OBJ_T(TgDELTA_N,PCU) );
+TgINLINE TgBOOL                             FCN_VO(tgGM_DT_N_Is_Valid)( VEC_OBJ_T(TgDELTA_N,CPCU) );
+TgINLINE TgVOID                             FCN_VO(tgGM_DT_N_TX)( VEC_OBJ_T(TgDELTA_N,PCU), VEC_N_T(3,CPCU) );
+TgINLINE TgVOID                             FCN_VO(tgGM_DT_N_Copy_TX)( VEC_OBJ_T(TgDELTA_N,PCU), VEC_OBJ_T(TgDELTA_N,CPCU), VEC_N_T(3,CPCU) );
+TgINLINE TgVOID                             FCN_VO(tgGM_DT_N_Set)( VEC_OBJ_T(TgDELTA_N,PCU), VEC_N_T(1,CPCU) );
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

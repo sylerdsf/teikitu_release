@@ -1,0 +1,166 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Math [Vector] [I].i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_V(tgMH_ADD_S) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_V(tgMH_ADD_S)( VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+{
+    VEC_T(1)                            vResult;
+    TgUINT_F32                          uiIndex;
+
+    tgMM_Set_U08_0x00( &vResult, sizeof( vResult ) );
+    for (uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
+    {
+        if (pv1->m_aData[uiIndex] == 0)
+        {
+            vResult.m_aData[uiIndex] = pv0->m_aData[uiIndex];
+        }
+        else if (pv1->m_aData[uiIndex] > 0)
+        {
+            if (pv0->m_aData[uiIndex] > (VAR_K(KTgMAX) - pv1->m_aData[uiIndex]))
+            {
+                vResult.m_aData[uiIndex] = VAR_K(KTgMAX);
+            }
+            else
+            {
+                vResult.m_aData[uiIndex] = (VAR_T())((pv0->m_aData[uiIndex] + pv1->m_aData[uiIndex]));
+            };
+        }
+        else
+        {
+            if (pv0->m_aData[uiIndex] < (VAR_K(KTgMIN) - pv1->m_aData[uiIndex]))
+            {
+                vResult.m_aData[uiIndex] = VAR_K(KTgMIN);
+            }
+            else
+            {
+                vResult.m_aData[uiIndex] = (VAR_T())((pv0->m_aData[uiIndex] + pv1->m_aData[uiIndex]));
+            };
+        };
+    };
+
+    return (vResult);
+}
+
+
+/* ---- FCN_V(tgMH_ADD) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_V(tgMH_ADD)( VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+{
+    #define EQN(A) (VAR_T())((pv0->m_aData[A] + pv1->m_aData[A]) & UVAR_MASK)
+    GENERATE__VEC_ASSIGN_EQN;
+    #undef EQN
+}
+
+
+/* ---- FCN_V(tgMH_SUB_S) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_V(tgMH_SUB_S)( VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+{
+    VEC_T(1)                            vResult;
+    TgUINT_F32                          uiIndex;
+
+    tgMM_Set_U08_0x00( &vResult, sizeof( vResult ) );
+    for (uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
+    {
+        if (pv1->m_aData[uiIndex] == 0)
+        {
+            vResult.m_aData[uiIndex] = pv0->m_aData[uiIndex];
+        }
+        else if (pv1->m_aData[uiIndex] > 0)
+        {
+            if (pv0->m_aData[uiIndex] < (VAR_K(KTgMIN) + pv1->m_aData[uiIndex]))
+            {
+                vResult.m_aData[uiIndex] = VAR_K(KTgMIN);
+            }
+            else
+            {
+                vResult.m_aData[uiIndex] = (VAR_T())((pv0->m_aData[uiIndex] - pv1->m_aData[uiIndex]));
+            };
+        }
+        else
+        {
+            if (pv0->m_aData[uiIndex] < (VAR_K(KTgMAX) + pv1->m_aData[uiIndex]))
+            {
+                vResult.m_aData[uiIndex] = VAR_K(KTgMAX);
+            }
+            else
+            {
+                vResult.m_aData[uiIndex] = (VAR_T())((pv0->m_aData[uiIndex] - pv1->m_aData[uiIndex]));
+            };
+        };
+    };
+
+    return (vResult);
+}
+
+
+/* ---- FCN_V(tgMH_SUB) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_V(tgMH_SUB)( VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+{
+    #define EQN(A) (VAR_T())((pv0->m_aData[A] - pv1->m_aData[A]) & UVAR_MASK)
+    GENERATE__VEC_ASSIGN_EQN;
+    #undef EQN
+}
+
+
+/* ---- FCN_V(tgMH_AVG) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_V(tgMH_AVG)( VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+{
+    VEC_T(1)                            vResult;
+    TgUINT_F32                          uiIndex;
+
+    tgMM_Set_U08_0x00( &vResult, sizeof( vResult ) );
+    for (uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
+    {
+        if ((VAR_K(KTgMAX) == pv0->m_aData[uiIndex]) && (VAR_K(KTgMAX) == pv1->m_aData[uiIndex]))
+        {
+            vResult.m_aData[uiIndex] = VAR_K(KTgMAX);
+        }
+        else if (pv1->m_aData[uiIndex] == 0)
+        {
+            vResult.m_aData[uiIndex] = (VAR_T())(pv0->m_aData[uiIndex] / 2);
+        }
+        else if (pv1->m_aData[uiIndex] > 0)
+        {
+            if (pv0->m_aData[uiIndex] > (VAR_K(KTgMAX) - pv1->m_aData[uiIndex]))
+            {
+                vResult.m_aData[uiIndex] = (VAR_T())((pv0->m_aData[uiIndex] - (VAR_K(KTgMAX) - pv1->m_aData[uiIndex]) + 1) / 2 + VAR_K(KTgMAX) / 2);
+            }
+            else
+            {
+                vResult.m_aData[uiIndex] = (VAR_T())((pv0->m_aData[uiIndex] + pv1->m_aData[uiIndex]) / 2);
+            };
+        }
+        else
+        {
+            if (pv0->m_aData[uiIndex] < (VAR_K(KTgMIN) - pv1->m_aData[uiIndex]))
+            {
+                vResult.m_aData[uiIndex] = (VAR_T())((pv0->m_aData[uiIndex] - (VAR_K(KTgMIN) - pv1->m_aData[uiIndex])) / 2 + VAR_K(KTgMIN) / 2);
+            }
+            else
+            {
+                vResult.m_aData[uiIndex] = (VAR_T())((pv0->m_aData[uiIndex] + pv1->m_aData[uiIndex]) / 2);
+            };
+        };
+    };
+
+    return (vResult);
+}
