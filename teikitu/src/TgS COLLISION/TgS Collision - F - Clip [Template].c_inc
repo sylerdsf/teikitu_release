@@ -1,0 +1,213 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Clip [Template].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- VCO_F(Clip) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT VCO_F(Clip)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, PRIM_CPC psPM0 )
+{
+    TgSINT_F32                          iIdx = 0, niCount = 0;
+    TgBOOL                              bFirst = false;
+    VAR_T()                             fG0, fG1;
+    VEC_T(1,PC)                         avData = psCL->m_avPoint;
+    VEC_T(1,P)                          avPoint;
+
+    TgALLOCA( VEC_T(1), (TgUINT_F32)psCL->m_niPoint + 2u, avPoint );
+
+    if (!avPoint || psCL->m_niMax <= 2)
+    {
+        /* Integrity check on the data stream.  There must exist at least two points in the clip list. */
+        return (KTgE_FAIL);
+    };
+
+    /* First iterate to find the first point contained inside of the tube. */
+    for (; iIdx < psCL->m_niPoint; ++iIdx)
+    {
+        /* Check to see if the point is contained within the primitive */
+
+        if (!VGM(Is_Contained)( psPM0, avData + iIdx ))
+        {
+            continue;
+        };
+
+        if (iIdx != 0)
+        {
+            /* F_Clip the line segment from iPrevIdx to iIdx to the primitive, adding the clipped point to the list */
+            if (TgSUCCEEDED( VCO_F(Clip_Points)( &fG0, &fG1, psPM0, &avData[iIdx], &avData[iIdx - 1] ) ))
+            {
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fG1, &(avData[iIdx - 1] ));
+                VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( TYPE_K(1) - fG1, &(avData[iIdx]) );
+
+                TgERROR( (!FCN_F(tgPM_NAN)(fG1)) && fG1 > TYPE_K(0) && fG1 < TYPE_K(1) );
+
+                avPoint[niCount++] = FCN_V(tgMH_ADD)( &vK1, &vK0 );
+            }
+            else
+            {
+                TgERROR_MSGF( 0, "%-16.16s(%-32.32s): tgCO_F_Internal_Clip did not find intersection.\n", "Collision", "F_Internal_Clip" );
+            };
+        }
+        else
+        {
+            bFirst = true;
+        };
+
+        /* Add the first point contained by the primitive */
+
+        avPoint[niCount++] = avData[iIdx];
+
+        break;
+    };
+
+    /*  Either all points have been found to be outside of the primitive, which will cause processing to logically terminate or the first point contained within the */
+    /* primitive has been isolated. Further processing is done by sequentially adding contained points or clipping the segment between a known contained point and an */
+    /* uncontained point. */
+    for (; iIdx < psCL->m_niPoint; ++iIdx)
+    {
+        TgSINT_F32                          iNIdx = (iIdx + 1) % psCL->m_niPoint;
+
+        /* Check to see if the point is contained inside the primitive */
+
+        if (!VGM(Is_Contained)( psPM0, avData + iNIdx ))
+        {
+            /* F_Clip the line segment from iIdx to iNIdx to the primitive, adding the clipped point to the list */
+            if (TgSUCCEEDED( VCO_F(Clip_Points)( &fG0, &fG1, psPM0, avData + iIdx, avData + iNIdx ) ))
+            {
+                TgERROR( (!FCN_F(tgPM_NAN)( fG1 )) && fG1 > TYPE_K(0) && fG1 < TYPE_K(1) );
+                if (niCount >= psCL->m_niMax)
+                {
+                    TgFREEA( avPoint );
+                    return (KTgE_FAIL);
+                }
+                else
+                {
+                    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( TYPE_K(1) - fG1, avData + iIdx );
+                    VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)( fG1, avData + iNIdx );
+
+                    avPoint[niCount++] = FCN_V(tgMH_ADD)(&vK1, &vK2);
+                };
+            }
+            else
+            {
+                TgERROR_MSGF( 0, "%-16.16s(%-32.32): tgCO_F_Internal_Clip did not find intersection.\n", "Collision", "F_Internal_Clip" );
+            };
+
+            /* Continue through the list until a new valid point is found */
+            for (++iIdx; iIdx < psCL->m_niPoint; ++iIdx)
+            {
+                iNIdx = (iIdx + 1) % psCL->m_niPoint;
+
+                /* Check to see if the point is contained within the primitive */
+
+                if (!VGM(Is_Contained) (psPM0, avData + iNIdx ))
+                {
+                    continue;
+                }
+
+                /* F_Clip the line segment from iIdx to iNIdx to the primitive, adding the clipped point to the list */
+                if (TgSUCCEEDED( VCO_F(Clip_Points)( &fG0, &fG1, psPM0, avData + iNIdx, avData + iIdx ) ))
+                {
+                    TgERROR( (!FCN_F(tgPM_NAN)( fG1 )) && fG1 > TYPE_K(0) && fG1 < TYPE_K(1) );
+                    if (niCount >= psCL->m_niMax)
+                    {
+                        TgFREEA( avPoint );
+                        return (KTgE_FAIL);
+                    }
+                    else
+                    {
+                        VEC_T(1,C)                          vK4 = FCN_V(tgMH_MUL_SV)( TYPE_K(1) - fG1, avData + iNIdx );
+                        VEC_T(1,C)                          vK5 = FCN_V(tgMH_MUL_SV)( fG1, avData + iIdx );
+
+                        avPoint[niCount++] = FCN_V(tgMH_ADD)( &vK4, &vK5 );
+                    }
+                }
+                else
+                {
+                    TgERROR_MSGF( 0, "%-16.16s(%-32.32): tgCO_F_Internal_Clip did not find intersection.\n", "Collision", "F_Internal_Clip" );
+                };
+
+                break;
+            };
+
+            if (iIdx == psCL->m_niPoint - 1)
+            {
+                if (bFirst)
+                {
+                    /* F_Clip the line segment from iIdx to iNIdx to the primitive, adding the clipped point to the list */
+                    if (TgSUCCEEDED( VCO_F(Clip_Points)( &fG0, &fG1, psPM0, avData, avData + iIdx ) ))
+                    {
+                        TgERROR( (!FCN_F(tgPM_NAN)( fG1 )) && fG1 > TYPE_K(0) && fG1 < TYPE_K(1) );
+                        if (niCount >= psCL->m_niMax)
+                        {
+                            TgFREEA( avPoint );
+                            return (KTgE_FAIL);
+                        }
+                        else
+                        {
+                            VEC_T(1,C)                          vK6 = FCN_V(tgMH_MUL_SV)( TYPE_K(1) - fG1, avData );
+                            VEC_T(1,C)                          vK7 = FCN_V(tgMH_MUL_SV)( fG1, avData + iIdx );
+
+                            avPoint[niCount++] = FCN_V(tgMH_ADD)( &vK6, &vK7 );
+                        }
+                    }
+                    else
+                    {
+                        TgERROR_MSGF( 0, "%-16.16s(%-32.32s): Algorithm - Tube F_Clip did not find intersection.\n", "Collision", "F_Internal_Clip" );
+                    };
+                };
+
+                break;
+            };
+        };
+
+        if (niCount >= psCL->m_niMax)
+        {
+            TgFREEA( avPoint );
+            return (KTgE_FAIL);
+        };
+
+        avPoint[niCount++] = avData[iNIdx];
+    };
+
+    TgERROR( niCount < psCL->m_niMax );
+
+    for (iIdx = 0; iIdx < niCount; ++iIdx)
+    {
+        psCL->m_avPoint[iIdx] = avPoint[iIdx];
+    };
+
+    psCL->m_niPoint = niCount;
+    TgFREEA( avPoint );
+
+    return (KTgS_OK);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

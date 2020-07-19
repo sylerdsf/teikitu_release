@@ -1,0 +1,265 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Cylinder-Plane.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_CY_Dist_PN) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* Input:  psCY0: Cylinder primitive                                                                                                                                               */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_CY_Dist_PN)(VEC_OBJ_T(TgTUBE,CPC) psCY0, VEC_OBJ_T(TgPLANE,CPC) psPN0)
+{
+    /* Calculate out the projection of the cylinder onto the plane's normal */
+
+    VAR_T(C)                            fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psPN0, &psCY0->m_vOrigin);
+
+    TgERROR( FCN_VO(tgGM_TB_Is_Valid)(psCY0) && FCN_VO(tgGM_PN_Is_Valid)(psPN0) );
+
+    if (fDist < TYPE_K(0))
+    {
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T(C)                            fUAX_N = FCN_V(tgMH_DOT)(&psPN0->m_vNormal, &psCY0->m_vU_HAX);
+        VAR_T(C)                            fE2 = psCY0->m_fExtent*FCN_F(tgPM_ABS)(fUAX_N);
+        VAR_T(C)                            fE3 = psCY0->m_fRadius*FCN_F(tgPM_SQRT)(FCN_F(tgPM_ABS)(TYPE_K(1) - fUAX_N*fUAX_N));
+
+        if (fE2 + fE3 >= fDist)
+        {
+            /* The cylinder is penetration this plane, return back the error state. */
+
+            return (-VAR_K(KTgMAX));
+        };
+
+        return (fDist - (fE2 + fE3));
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_CY_Closest_PN) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psCY0: Cylinder primitive                                                                                                                                               */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Output: vCY0,vPN0: Point of closest proximity on the cylinder and plane respectively                                                                                            */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/*   For distance functions, planes are not considered to be cutting (ie dividing into two half-spaces).  Thus, cylinders on the                                                   */
+/*  negative side of the plane are not ignored/culled. The distance value returned                                                                                                 */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_CY_Closest_PN)(VEC_T(1,PC) pvCY0, VEC_T(1,PC) pvPN0, VEC_OBJ_T(TgTUBE,CPC) psCY0, VEC_OBJ_T(TgPLANE,CPC) psPN0)
+{
+    /* Calculate out the projection of the cylinder onto the plane's normal */
+
+    VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psPN0, &psCY0->m_vOrigin);
+
+    TgERROR( FCN_VO(tgGM_TB_Is_Valid)(psCY0) && FCN_VO(tgGM_PN_Is_Valid)(psPN0) );
+
+    if (fDist < TYPE_K(0))
+    {
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T(C)                            fUAX_N = FCN_V(tgMH_DOT)(&psPN0->m_vNormal, &psCY0->m_vU_HAX);
+        VAR_T(C)                            fE2 = psCY0->m_fExtent*FCN_F(tgPM_ABS)(fUAX_N);
+        VAR_T(C)                            fE3 = psCY0->m_fRadius*FCN_F(tgPM_SQRT)(FCN_F(tgPM_ABS)(TYPE_K(1) - fUAX_N*fUAX_N));
+
+        if (fE2 + fE3 >= fDist)
+        {   /* The cylinder is penetration this plane, return back the error state. */
+            return (-VAR_K(KTgMAX));
+        }
+        else
+        {
+            VEC_T(1)                            vK6;
+            VAR_T()                             fNM;
+
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_VS)(&psCY0->m_vU_HAX, fUAX_N);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(&vK0, &psPN0->m_vNormal);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_NORM_LEN)(&fNM, &vK1);
+            VAR_T(C)                            fK0 = fUAX_N < -VAR_K(KTgEPS) ? TYPE_K(1) : TYPE_K(0);
+            VAR_T(C)                            fK1 = fUAX_N > VAR_K(KTgEPS) ? -TYPE_K(1) : fK0;
+            VAR_T(C)                            fK2 = fNM <= VAR_K(KTgEPS) ? TYPE_K(0) : psCY0->m_fRadius;
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)(fK2, &vK2);
+            VEC_T(1,C)                          vK4 = FCN_V(tgMH_MUL_SV)(fK1, &psCY0->m_vHAX);
+            VEC_T(1,C)                          vK5 = FCN_V(tgMH_ADD)(&vK3, &vK4);
+            VEC_T(1,C)                          vPnt = FCN_V(tgMH_ADD)(&psCY0->m_vOrigin, &vK5);
+
+            fDist -= fE2 + fE3;
+            vK6 = FCN_V(tgMH_MUL_SV)(fDist, &psPN0->m_vNormal);
+
+            *pvCY0 = vPnt;
+            *pvPN0 = FCN_V(tgMH_SUB)(&vPnt, &vK6);
+
+            return (fDist);
+        };
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Penetrate_CY) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Input:  psCY0: Cylinder primitive - contact points are generated on this primitive                                                                                              */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_PN_Penetrate_CY)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgTUBE,CPC) psCY0)
+{
+    TgPARAM_CHECK( FCN_VO(tgGM_TB_Is_Valid)(psCY0) && FCN_VO(tgGM_PN_Is_Valid)(psPN0) );
+    TgPARAM_CHECK( psCY0->m_fExtent > VAR_K(KTgEPS) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        /* Project the cylinder onto the plane normal and verify that some portion lies below the plane. */
+
+        VAR_T(C)                            fUAX_N = FCN_V(tgMH_DOT)(&psPN0->m_vNormal, &psCY0->m_vU_HAX);
+        VAR_T(C)                            fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psPN0, &psCY0->m_vOrigin);
+        VAR_T(C)                            fE2 = psCY0->m_fExtent*FCN_F(tgPM_ABS)(fUAX_N);
+        VAR_T(C)                            fE3 = psCY0->m_fRadius*FCN_F(tgPM_SQRT)(FCN_F(tgPM_ABS)(TYPE_K(1) - fUAX_N*fUAX_N));
+
+        if (fE2 + fE3 < fDist)
+        {
+            return (KTgE_NO_INTERSECT);
+        }
+        else
+        {
+            VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+            VAR_T()                             fNM;
+
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fUAX_N, &psCY0->m_vU_HAX);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(&vK0, &psPN0->m_vNormal);
+            VEC_T(1)                            vK2 = FCN_V(tgMH_NORM_LEN)(&fNM, &vK1);
+            VAR_T(C)                            fDN = FCN_F(tgPM_FSEL)(fUAX_N, -TYPE_K(1), TYPE_K(1));
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)(fDN, &psCY0->m_vHAX);
+            VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)(&psCY0->m_vOrigin, &vK3);
+
+            /* If the cylinder is at a 45 degree angle or less to the plane, create contact points at both extreme points of the cylinder. */
+
+            if (FCN_F(tgPM_ABS)(fUAX_N) < VAR_K(KTgSQRT1_2))
+            {
+                VEC_T(1,C)                          vK5 = FCN_V(tgMH_MUL_VS)(&vK2, psCY0->m_fRadius);
+                VEC_T(1,C)                          vK6 = FCN_V(tgMH_SUB)(&psCY0->m_vOrigin, &vK3);
+
+                psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+                psContact->m_vS0 = FCN_V(tgMH_ADD)(&vK4, &vK5);
+                psContact->m_vN0 = psPN0->m_vNormal;
+                psContact->m_fT0 = TYPE_K(0);
+                psContact->m_fDepth = fE2 + fE3 - fDist;
+
+                ++psPacket->m_niContact;
+
+                if (fE3 < fE2 + fDist)
+                {
+                    return (KTgS_OK);
+                };
+
+                if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+                {
+                    return (KTgE_MAX_CONTACTS);
+                };
+
+                psContact = (VEC_OBJ_T(STg2_CO_Contact,P))(psPacket->m_psContact + psPacket->m_niContact);
+
+                psContact->m_vS0 = FCN_V(tgMH_ADD)(&vK6, &vK5);
+                psContact->m_vN0 = psPN0->m_vNormal;
+                psContact->m_fT0 = TYPE_K(0);
+                psContact->m_fDepth = fE3 - fE2 - fDist;
+
+                ++psPacket->m_niContact;
+
+                return (KTgS_OK);
+            }
+            else
+            {
+                /* The cylinder is at 45 degrees or more to the plane, create 3 points around the rim of the cylinder for contact points. */
+                VEC_T(1,C)                          vK5 = FCN_V(tgMH_UCX)(&vK2, &psCY0->m_vU_HAX);
+                VEC_T(1,C)                          vK6 = fNM <= VAR_K(KTgEPS) ? psCY0->m_vU_Basis1 : vK5;
+                VEC_T(1,C)                          vK7 = fNM <= VAR_K(KTgEPS) ? psCY0->m_vU_Basis0 : vK2;
+                VAR_T(C)                            fDepth = fE2 + fE3*TYPE_K(0,5) - fDist;
+                VEC_T(1,C)                          vK8 = FCN_V(tgMH_MUL_SV)(VAR_K(KTgSQRT3), &vK6);
+                VEC_T(1,C)                          vKD = FCN_V(tgMH_MUL_VS)(&vK7, psCY0->m_fRadius);
+
+                psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+                psContact->m_vS0 = FCN_V(tgMH_ADD)(&vK4, &vKD);
+                psContact->m_vN0 = psPN0->m_vNormal;
+                psContact->m_fT0 = TYPE_K(0);
+                psContact->m_fDepth = fE2 + fE3 - fDist;
+
+                ++psPacket->m_niContact;
+
+                if (fDepth > TYPE_K(0))
+                {
+                    VEC_T(1,C)                          vK9 = FCN_V(tgMH_ADD)(&vK7, &vK8);
+                    VEC_T(1,C)                          vKA = FCN_V(tgMH_MUL_SV)(TYPE_K(0,5)*psCY0->m_fRadius, &vK9);
+                    VEC_T(1,C)                          vKB = FCN_V(tgMH_SUB)(&vK7, &vK8);
+                    VEC_T(1,C)                          vKC = FCN_V(tgMH_MUL_SV)(TYPE_K(0,5)*psCY0->m_fRadius, &vKB);
+
+                    if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+                    {
+                        return (KTgE_MAX_CONTACTS);
+                    };
+
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+                    psContact->m_vS0 = FCN_V(tgMH_SUB)(&vK4, &vKA);
+                    psContact->m_vN0 = psPN0->m_vNormal;
+                    psContact->m_fT0 = TYPE_K(0);
+                    psContact->m_fDepth = fDepth;
+
+                    ++psPacket->m_niContact;
+
+                    if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+                    {
+                        return (KTgE_MAX_CONTACTS);
+                    };
+
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+                    psContact->m_vS0 = FCN_V(tgMH_SUB)(&vK4, &vKC);
+                    psContact->m_vN0 = psPN0->m_vNormal;
+                    psContact->m_fT0 = TYPE_K(0);
+                    psContact->m_fDepth = fDepth;
+
+                    ++psPacket->m_niContact;
+                };
+
+                return (KTgS_OK);
+            };
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

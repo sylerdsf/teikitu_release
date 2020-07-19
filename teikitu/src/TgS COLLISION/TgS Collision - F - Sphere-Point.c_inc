@@ -1,0 +1,218 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Sphere-Point.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_VT_Penetrate_SP) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_VT_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_T(1,CPC) pvS0, VEC_OBJ_T(TgSPHERE,CPC) psSP0 )
+{
+    VEC_T(1)                            vNormal, vT0;
+    VAR_T()                             fNM;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_SP_Is_Valid)(psSP0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    };
+
+    vNormal = FCN_V(tgMH_SUB)(&psSP0->m_vOrigin, pvS0);
+    fNM = FCN_V(tgMH_LSQ)(&vNormal);
+
+    if (fNM > psSP0->m_fRadiusSq)
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (fNM <= VAR_K(KTgEPS))
+    {
+        vNormal = FCN_V(tgMH_SETV_S)(TYPE_K(0), TYPE_K(1), TYPE_K(0));
+        fNM = TYPE_K(0);
+    }
+    else
+    {
+        vNormal = FCN_V(tgMH_NORM_LEN)(&fNM, &vNormal);
+    };
+
+    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+    vT0 = FCN_V(tgMH_MUL_SV)(psSP0->m_fRadius, &vNormal);
+
+    psContact->m_vS0 = FCN_V(tgMH_SUB)(&psSP0->m_vOrigin, &vT0);
+    psContact->m_vN0 = vNormal;
+    psContact->m_fT0 = TYPE_K(0);
+    psContact->m_fDepth = psSP0->m_fRadius - fNM;
+
+    ++psPacket->m_niContact;
+
+    return (KTgS_OK);
+}
+
+
+/* ---- FCN_VO(tgCO_F_SP_Sweep_VT) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_SP_Sweep_VT)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_T(1,CPC) pvS0, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    TgSINT_F32                          niContact = psPacket->m_niContact;
+    VAR_T(C)                            fT = *pfPM;
+    VEC_OBJ_T(TgDELTA)                  tgNegDT;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+    TgSINT_F32                          iIdx;
+    TgRESULT                            iResult;
+    VEC_T(1)                            vT0;
+
+    tgNegDT.m_vUDT = FCN_V(tgMH_NEG)(&psDT->m_vUDT);
+    tgNegDT.m_vDT = FCN_V(tgMH_NEG)(&psDT->m_vDT);
+    tgNegDT.m_fDT = psDT->m_fDT;
+    tgNegDT.m_fDT_DT = psDT->m_fDT_DT;
+    tgNegDT.m_fInv_DT = psDT->m_fInv_DT;
+
+    iResult = FCN_VO(tgCO_F_VT_Sweep_SP)(psPacket, pfPM, pvS0, psSP0, &tgNegDT);
+
+    if (iResult == KTgE_PREPENETRATION)
+    {
+        for (iIdx = niContact; iIdx < psPacket->m_niContact; ++iIdx)
+        {
+            psContact = psPacket->m_psContact + iIdx;
+
+            vT0 = FCN_V(tgMH_MUL_VS)(&psContact->m_vN0, psContact->m_fDepth);
+
+            psContact->m_vS0 = FCN_V(tgMH_ADD)(&psContact->m_vS0, &vT0);
+            psContact->m_vN0 = FCN_V(tgMH_NEG)(&psContact->m_vN0);
+        };
+
+        return (iResult);
+    }
+
+    if (TgFAILED( iResult ))
+    {
+        return (iResult);
+    };
+
+    iIdx = (*pfPM < fT - psPacket->m_fSweepTol ? 0 : niContact);
+
+    TgERROR( iIdx < psPacket->m_niContact );
+
+    for (; iIdx < psPacket->m_niContact; ++iIdx)
+    {
+        psContact = psPacket->m_psContact + iIdx;
+
+        vT0 = FCN_V(tgMH_MUL_SV)(psContact->m_fT0, &psDT->m_vDT);
+
+        psContact->m_vS0 = FCN_V(tgMH_ADD)(&psContact->m_vS0, &vT0);
+        psContact->m_vN0 = FCN_V(tgMH_NEG)(&psContact->m_vN0);
+    };
+
+    return (iResult);
+}
+
+
+/* ---- FCN_VO(tgCO_F_VT_Sweep_SP) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  fPM: Current normalized time of first contact.                                                                                                                          */
+/* Input:  bPenetrate: If the swept primitives are in penetration, if true the function will return points of penetration.                                                         */
+/* Input:  psSP0: Sphere primitives                                                                                                                                                */
+/* Input:  vS0: Point                                                                                                                                                              */
+/* Input:  psDT: A structure holding the swept primitive displacement for the entire duration of the test period                                                                   */
+/* Output: tgPacket: Contact points are added or replace the current set depending on the time comparison and given parameters                                                     */
+/* Output: fPM: New normalized time of first contact                                                                                                                               */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_VT_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_T(1,CPC) pvS0, VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    VEC_T(1)                            vDS = FCN_V(tgMH_SUB)(pvS0, &psSP0->m_vOrigin);
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)(&vDS);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_DT_Is_Valid)(psDT) && FCN_VO(tgGM_SP_Is_Valid)(psSP0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+
+    if (fDS_DS <= psSP0->m_fRadiusSq)
+    {
+        if (*pfPM > psPacket->m_fSweepTol)
+        {
+            psPacket->m_niContact = 0;
+        };
+
+        *pfPM = TYPE_K(0);
+
+        if ((psPacket->m_bReport_Penetration) && KTgE_MAX_CONTACTS == FCN_VO(tgCO_F_VT_Penetrate_SP)(psPacket, pvS0, psSP0))
+        {
+            return (KTgE_MAX_CONTACTS);
+        };
+
+        return (KTgE_PREPENETRATION);
+    }
+    else
+    {
+        VAR_T()                             fK0 = psDT->m_fDT - VAR_K(KTgEPS);
+        VAR_T(C)                            fDS_UDT = FCN_V(tgMH_DOT)(&vDS, &psDT->m_vUDT);
+
+        fK0 = FCN_F(tgPM_FSEL)(fK0, fDS_UDT - VAR_K(KTgEPS), -TYPE_K(1)); /* Negligible distance towards each other. */
+        fK0 = FCN_F(tgPM_FSEL)(fK0, psSP0->m_fRadius + *pfPM*psDT->m_fDT - fDS_UDT, -TYPE_K(1)); /* Separation along displacement */
+        fK0 = FCN_F(tgPM_FSEL)(fK0, psSP0->m_fRadiusSq - fDS_DS + fDS_UDT*fDS_UDT, -TYPE_K(1)); /* Orthogonal separation */
+        fK0 = FCN_F(tgPM_FSEL)(fK0, fDS_UDT - FCN_F(tgPM_SQRT)(fK0), -TYPE_K(1)); /* Time occurs after first time of contact. */
+
+        if (fK0 > (*pfPM + psPacket->m_fSweepTol)*psDT->m_fDT)
+        {
+            return (KTgE_NO_INTERSECT); /* Outside of sweep space. */
+        }
+        else
+        {
+            VAR_T(C)                            fT0 = fK0 / psDT->m_fDT;
+
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fK0, &psDT->m_vUDT);
+            VEC_T(1,C)                          vS1 = FCN_V(tgMH_ADD)(&psSP0->m_vOrigin, &vK0);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(&vS1, pvS0);
+            VEC_T(1,C)                          vNormal = FCN_V(tgMH_NORM)(&vK1);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_VS)(&vNormal, psSP0->m_fRadius);
+            VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+            if (fT0 < *pfPM - psPacket->m_fSweepTol)
+            {
+                psPacket->m_niContact = 0;
+                *pfPM = fT0;
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = FCN_V(tgMH_SUB)(&vS1, &vK2);
+            psContact->m_vN0 = vNormal;
+            psContact->m_fT0 = fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+            return (KTgS_OK);
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

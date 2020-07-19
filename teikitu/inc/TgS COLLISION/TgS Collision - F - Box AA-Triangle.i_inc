@@ -1,0 +1,42 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box AA-Triangle.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_BA_Test_PT) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_BA_Test_PT)( VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_OBJ_T(TgPTRI,CPC) psPT0 )
+{
+    VAR_T()                             fTest;
+
+    fTest  = FCN_F(tgPM_FSEL)( psPT0->m_avPoint[0].x - psBA0->m_vMin.x, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psPT0->m_avPoint[1].x - psBA0->m_vMin.x, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psPT0->m_avPoint[2].x - psBA0->m_vMin.x, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psPT0->m_avPoint[0].y - psBA0->m_vMin.y, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psPT0->m_avPoint[1].y - psBA0->m_vMin.y, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psPT0->m_avPoint[2].y - psBA0->m_vMin.y, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psPT0->m_avPoint[0].z - psBA0->m_vMin.z, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psPT0->m_avPoint[1].z - psBA0->m_vMin.z, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psPT0->m_avPoint[2].z - psBA0->m_vMin.z, TYPE_K(0), TYPE_K(1) );
+
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.x - psPT0->m_avPoint[0].x, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.x - psPT0->m_avPoint[1].x, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.x - psPT0->m_avPoint[2].x, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.y - psPT0->m_avPoint[0].y, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.y - psPT0->m_avPoint[1].y, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.y - psPT0->m_avPoint[2].y, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.z - psPT0->m_avPoint[0].z, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.z - psPT0->m_avPoint[1].z, TYPE_K(0), TYPE_K(1) );
+    fTest += FCN_F(tgPM_FSEL)( psBA0->m_vMax.z - psPT0->m_avPoint[2].z, TYPE_K(0), TYPE_K(1) );
+
+    return (fTest == TYPE_K(0));
+}

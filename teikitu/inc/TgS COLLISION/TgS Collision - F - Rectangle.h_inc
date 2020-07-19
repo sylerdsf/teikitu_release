@@ -1,0 +1,91 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Rectangle.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions - Scalar Functions                                                                                                                                            */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* Rectangle - Point                                                                                                                                                               */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_DistSq_VT)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Dist_VT)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ClosestSq_VT)( VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Closest_VT)( VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Param_VT)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_RT_ParamSq_VT)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC) );
+
+/* Rectangle - Line                                                                                                                                                                */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_DistSq_LN)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Dist_LN)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ClosestSq_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Closest_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ParamSq_LN)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Param_LN)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_RT_Test_LN)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RT_Clip_Param_LN)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RT_Clip_LN)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_RT_ParamSq_LR00)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_RT_Clip_Param_LR00)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Rectangle - Ray                                                                                                                                                                 */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_DistSq_RY)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Dist_RY)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ClosestSq_RY)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Closest_RY)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ParamSq_RY)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Param_RY)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_RT_Test_RY)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RT_Clip_Param_RY)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RT_Clip_RY)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_RT_ParamSq_LR10)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_RT_Clip_Param_LR10)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Rectangle - Segment                                                                                                                                                             */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_DistSq_SG)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Dist_SG)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ClosestSq_SG)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Closest_SG)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ParamSq_SG)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Param_SG)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_RT_Test_SG)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RT_Clip_Param_SG)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RT_Clip_SG)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_RT_ParamSq_LR11)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_RT_Clip_Param_LR11)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Rectangle - Triangle                                                                                                                                                            */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_DistSq_ST)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Dist_ST)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ClosestSq_ST)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Closest_ST)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Param_ST)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RT_Clip_ST)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_RT_ParamSq_ST)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+
+/* Rectangle - Rectangle                                                                                                                                                           */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_DistSq_RT)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRECTANGLE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Dist_RT)( VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRECTANGLE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_ClosestSq_RT)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRECTANGLE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Closest_RT)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRECTANGLE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_RT_Param_RT)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRECTANGLE,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_RT_ParamSq_RT)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_OBJ_T(TgRECTANGLE,CPC) );
+
+/* Rectangle - Utility                                                                                                                                                             */
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RT_Clip_Points)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgRECTANGLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_RT_Clip)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgRECTANGLE,CPC) );

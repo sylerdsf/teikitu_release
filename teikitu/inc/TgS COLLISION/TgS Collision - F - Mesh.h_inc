@@ -1,0 +1,26 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Mesh.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions - Scalar Functions                                                                                                                                            */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_BX_Penetrate_CX)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgBOX,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgBOXAA,CPC), TgSINT_F32_C );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_CY_Penetrate_CX)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgBOXAA,CPC), TgSINT_F32_C );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_CP_Penetrate_CX)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgBOXAA,CPC), TgSINT_F32_C );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_SP_Penetrate_CX)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgBOXAA,CPC), TgSINT_F32_C );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ST_Sweep_CX)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgBOXAA,CPC), TgSINT_F32_C, VEC_OBJ_T(TgDELTA,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_PN_Sweep_MA)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgPLANE,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgBOXAA,CPC), TgSINT_F32_C );

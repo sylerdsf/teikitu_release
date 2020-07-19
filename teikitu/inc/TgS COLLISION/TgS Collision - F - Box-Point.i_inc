@@ -1,0 +1,68 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box-Point.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_BX_DistSq_VT) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_DistSq_VT)( VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fT0, fT1, fT2;
+
+    return (FCN_VO(tgCO_F_BX_ParamSq_VT)( &fT0, &fT1, &fT2, psBX0, pvS0 ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_Dist_VT) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_Dist_VT)( VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_BX_DistSq_VT)( psBX0, pvS0 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_ClosestSq_VT) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_ClosestSq_VT)( VEC_T(1,PC) pvBX0, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fT0, fT1, fT2;
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_BX_ParamSq_VT)( &fT0, &fT1, &fT2, psBX0, pvS0 );
+
+    *pvBX0 = FCN_VO(tgGM_BX_Calc_Point)( psBX0, fT0, fT1, fT2 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, fDistSq, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_Closest_VT) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_Closest_VT)( VEC_T(1,PC) pvBX0, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fT0, fT1, fT2;
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_BX_ParamSq_VT)( &fT0, &fT1, &fT2, psBX0, pvS0 );
+
+    *pvBX0 = FCN_VO(tgGM_BX_Calc_Point)( psBX0, fT0, fT1, fT2 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_Param_VT) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_Param_VT)( VAR_T(P) pfBX0, VAR_T(P) pfBX1, VAR_T(P) pfBX2, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_BX_ParamSq_VT)( pfBX0, pfBX1, pfBX2, psBX0, pvS0 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}

@@ -1,0 +1,68 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box [Util].i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+
+/* ---- FCN_VO(tgCO_F_BX_Clip_Points) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_BX_Clip_Points)( VAR_T(P) pfSG0, VAR_T(P) pfSG1, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvS1 )
+{
+    VEC_T(1)                            vD0;
+
+    vD0 = FCN_V(tgMH_SUB)( pvS1, pvS0 );
+    return (FCN_VO(tgCO_FI_BX_Clip_Param_LR11)( pfSG0, pfSG1, psBX0, pvS0, &vD0 ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BXF_Init_Face) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_OBJ_T(TgRECTANGLE,P) FCN_VO(tgCO_F_BXF_Init_Face)( VEC_OBJ_T(TgRECTANGLE,PC) psRT0, VEC_OBJ_T(TgBOX,CPC) psBX0, TgSINT_F32_C i0 )
+{
+    VEC_T(1)                            vK0, vK1, vK2;
+
+    switch (i0)
+    {
+        case 0:
+            vK0 = FCN_VO(tgGM_BX_Calc_Point)( psBX0, psBX0->m_vExtent.x, psBX0->m_vExtent.y, psBX0->m_vExtent.z );
+            vK1 = FCN_V(tgMH_MUL_SV)( -psBX0->m_vExtent.y, psBX0->m_avAxis + 1 );
+            vK2 = FCN_V(tgMH_MUL_SV)( -psBX0->m_vExtent.z, psBX0->m_avAxis + 2 );
+            FCN_VO(tgGM_RT_Init_SEN)( psRT0, &vK0, &vK1, &vK2, psBX0->m_avAxis + 0 );
+            break;
+        case 1:
+            vK0 = FCN_VO(tgGM_BX_Calc_Point)( psBX0, psBX0->m_vExtent.x, psBX0->m_vExtent.y, psBX0->m_vExtent.z );
+            vK1 = FCN_V(tgMH_MUL_SV)( -psBX0->m_vExtent.x, psBX0->m_avAxis + 0 );
+            vK2 = FCN_V(tgMH_MUL_SV)( -psBX0->m_vExtent.z, psBX0->m_avAxis + 2 );
+            FCN_VO(tgGM_RT_Init_SEN)( psRT0, &vK0, &vK1, &vK2, psBX0->m_avAxis + 1 );
+            break;
+        case 2:
+            vK0 = FCN_VO(tgGM_BX_Calc_Point)( psBX0, psBX0->m_vExtent.x, psBX0->m_vExtent.y, psBX0->m_vExtent.z );
+            vK1 = FCN_V(tgMH_MUL_SV)( -psBX0->m_vExtent.x, psBX0->m_avAxis + 0 );
+            vK2 = FCN_V(tgMH_MUL_SV)( -psBX0->m_vExtent.y, psBX0->m_avAxis + 1 );
+            FCN_VO(tgGM_RT_Init_SEN)( psRT0, &vK0, &vK1, &vK2, psBX0->m_avAxis + 2 );
+            break;
+        default:
+            TgS_NO_DEFAULT(break);
+    };
+
+    return (psRT0);
+}
+
+
+/* ---- FCN_VO(tgCO_F_BXF_Clip) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_BXF_Clip)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgBOX,CPC) psBX0, TgSINT_F32_C i0 )
+{
+    VEC_OBJ_T(TgRECTANGLE)              sFace;
+
+    return (FCN_VO(tgCO_F_RT_Clip)( psCL, FCN_VO(tgCO_F_BXF_Init_Face)( &sFace, psBX0, i0 ) ));
+}

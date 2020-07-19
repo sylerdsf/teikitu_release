@@ -1,0 +1,148 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Parallelogram-Parallelogram.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_PE_ParamSq_PE) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psPE0, psPE1: Parallelogram primitives                                                                                                                                  */
+/* Output: fPE0, fPE1: Parametric parameters to generate point of minimal distance on parallelogram #1                                                                             */
+/* Output: tyPE2, tyPE3: Parametric parameters to generate point of minimal distance on parallelogram #2                                                                           */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_PE_ParamSq_PE)( VAR_T(P) pfPE00, VAR_T(P) pfPE01, VAR_T(P) pfPE10, VAR_T(P) pfPE11, VEC_OBJ_T(TgPARALLELOGRAM,CPC) psPE0, VEC_OBJ_T(TgPARALLELOGRAM,CPC) psPE1 )
+{
+    VAR_T()                             fT_E0, fT_E1, fT_G1, fT_RetVal;
+    VAR_T()                             fPE00, fPE01, fPE10, fPE11;
+    VAR_T()                             fRetVal;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_PE_Is_Valid)(psPE0) );
+
+    /* Compare the edges of the parallelogram against the parallelogram. */
+
+    fRetVal = FCN_VO(tgCO_F_PE_ParamSq_LR11)(&fPE00, &fPE01, &fPE10, psPE0, &psPE1->m_vOrigin, psPE1->m_avEdge + 0);
+    fPE11 = TYPE_K(0);
+
+    {
+        VEC_T(1,C)                          vK0 = FCN_VO(tgGM_PE_Query_Point_2)(psPE1);
+
+        fT_RetVal = FCN_VO(tgCO_F_PE_ParamSq_LR11)(&fT_E0, &fT_E1, &fT_G1, psPE0, &vK0, psPE1->m_avEdge + 0);
+        if (fT_RetVal < fRetVal)
+        {
+            fRetVal = fT_RetVal;
+            fPE00 = fT_E0;
+            fPE01 = fT_E1;
+            fPE10 = fT_G1;
+            fPE11 = TYPE_K(1);
+        };
+    };
+
+    fT_RetVal = FCN_VO(tgCO_F_PE_ParamSq_LR11)(&fT_E0, &fT_E1, &fT_G1, psPE0, &psPE1->m_vOrigin, psPE1->m_avEdge + 1);
+    if (fT_RetVal < fRetVal)
+    {
+        fRetVal = fT_RetVal;
+        fPE00 = fT_E0;
+        fPE01 = fT_E1;
+        fPE10 = TYPE_K(0);
+        fPE11 = fT_G1;
+    };
+
+    {
+        VEC_T(1,C)                          vK0 = FCN_VO(tgGM_PE_Query_Point_1)(psPE1);
+
+        fT_RetVal = FCN_VO(tgCO_F_PE_ParamSq_LR11)(&fT_E0, &fT_E1, &fT_G1, psPE0, &vK0, psPE1->m_avEdge + 1);
+        if (fT_RetVal < fRetVal)
+        {
+            fRetVal = fT_RetVal;
+            fPE00 = fT_E0;
+            fPE01 = fT_E1;
+            fPE10 = TYPE_K(1);
+            fPE11 = fT_G1;
+        };
+    };
+
+    /* Compare the edges of the parallelogram to the parallelogram. */
+
+    fT_RetVal = FCN_VO(tgCO_F_PE_ParamSq_LR11)(&fT_E0, &fT_E1, &fT_G1, psPE1, &psPE0->m_vOrigin, psPE0->m_avEdge + 0);
+    if (fT_RetVal < fRetVal)
+    {
+        fRetVal = fT_RetVal;
+        fPE00 = fT_G1;
+        fPE01 = TYPE_K(0);
+        fPE10 = fT_E0;
+        fPE11 = fT_E1;
+    };
+
+    {
+        VEC_T(1,C)                          vK0 = FCN_VO(tgGM_PE_Query_Point_2)(psPE0);
+
+        fT_RetVal = FCN_VO(tgCO_F_PE_ParamSq_LR11)(&fT_E0, &fT_E1, &fT_G1, psPE1, &vK0, psPE0->m_avEdge + 0);
+        if (fT_RetVal < fRetVal)
+        {
+            fRetVal = fT_RetVal;
+            fPE00 = fT_G1;
+            fPE01 = TYPE_K(1);
+            fPE10 = fT_E0;
+            fPE11 = fT_E1;
+        };
+    };
+
+    fT_RetVal = FCN_VO(tgCO_F_PE_ParamSq_LR11)(&fT_E0, &fT_E1, &fT_G1, psPE1, &psPE0->m_vOrigin, psPE0->m_avEdge + 1);
+    if (fT_RetVal < fRetVal)
+    {
+        fRetVal = fT_RetVal;
+        fPE00 = TYPE_K(0);
+        fPE01 = fT_G1;
+        fPE10 = fT_E0;
+        fPE11 = fT_E1;
+    };
+
+    {
+        VEC_T(1,C)                          vK0 = FCN_VO(tgGM_PE_Query_Point_1)(psPE0);
+
+        fT_RetVal = FCN_VO(tgCO_F_PE_ParamSq_LR11)(&fT_E0, &fT_E1, &fT_G1, psPE1, &vK0, psPE0->m_avEdge + 1);
+        if (fT_RetVal < fRetVal)
+        {
+            fRetVal = fT_RetVal;
+            fPE00 = TYPE_K(1);
+            fPE01 = fT_G1;
+            fPE10 = fT_E0;
+            fPE11 = fT_E1;
+        };
+    };
+
+    *pfPE00 = fPE00;
+    *pfPE01 = fPE01;
+    *pfPE10 = fPE10;
+    *pfPE11 = fPE11;
+
+    return (fRetVal);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

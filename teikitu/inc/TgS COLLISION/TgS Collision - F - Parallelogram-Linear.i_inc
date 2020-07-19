@@ -1,0 +1,85 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Parallelogram-Linear.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+MSVC_WARN_DISABLE_PUSH( 6285 ) /* Analysis - (<non-zero constant> || <non-zero constant>) is always a non-zero constant. */
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_FI_PE_Test_LR) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL VI(tgCO_FI_PE_Test_LR)( VEC_OBJ_T(TgPARALLELOGRAM,CPC) psPE0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)( pvS0, &psPE0->m_vOrigin );
+    VAR_T()                             fDist = FCN_V(tgMH_DOT)( &psPE0->m_vNormal, &vK0 );
+    VAR_T()                             fD1_N = FCN_V(tgMH_DOT)( &psPE0->m_vNormal, pvD0 );
+
+    TgPARAM_CHECK( FCN_VO(tgGM_PE_Is_Valid)( psPE0 ) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ) && FCN_V(tgMH_Is_Vector_Valid)( pvD0 ) );
+
+    if (FCN_F(tgCM_NR0)( fD1_N ) || (LR_CAP_0 && !((fDist > TYPE_K(0)) ^ (fD1_N > TYPE_K(0)))))
+    {
+        return (false);
+    }
+#if LR_CAP_1
+    else if (FCN_F(tgPM_ABS)( fDist ) > FCN_F(tgPM_ABS)( fD1_N ))
+    {
+        return (false);
+    }
+#endif
+    else
+    {
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( -fDist / fD1_N, pvD0 );
+        VEC_T(1,C)                          vK2 = FCN_V(tgMH_ADD)( pvS0, &vK1 );
+
+        return (FCN_VO(tgGM_PE_Is_Contained)( psPE0, &vK2 ));
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_FI_PE_Clip_LR) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT VI(tgCO_FI_PE_Clip_LR)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgPARALLELOGRAM,CPC) psPE0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VAR_T()                             fT0, fT1;
+
+    if (psCL->m_niMax < 2)
+    {
+        return (KTgE_FAIL);
+    };
+
+    if (TgFAILED(VI(tgCO_FI_PE_Clip_Param_LR)( &fT0, &fT1, psPE0, pvS0, pvD0 )))
+    {
+        psCL->m_niPoint = 0;
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if ((LR_CAP_0 && fT0 < TYPE_K(0) && fT1 <= TYPE_K(0)) || (LR_CAP_1 && fT0 >= TYPE_K(1) && fT1 > TYPE_K(1)))
+    {
+        psCL->m_niPoint = 0;
+        return (KTgE_NO_INTERSECT);
+    }
+    else
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fT1, pvD0 );
+
+        psCL->m_avPoint[0] = FCN_V(tgMH_ADD)( pvS0, &vK0 );
+        psCL->m_avPoint[1] = FCN_V(tgMH_ADD)( pvS0, &vK1 );
+
+        psCL->m_niPoint = 2;
+        return (KTgS_OK);
+    };
+}
+
+
+MSVC_WARN_DISABLE_POP( 6285 )

@@ -1,0 +1,106 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Rectangle-Triangle.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_RT_DistSq_ST) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_RT_DistSq_ST)( VEC_OBJ_T(TgRECTANGLE,CPC) psRT0, VEC_OBJ_T(TgSTRI,CPC) psST0 )
+{
+    VAR_T()                             fT0, fT1, fT2, fT3;
+
+    return (FCN_VO(tgCO_F_RT_ParamSq_ST)( &fT0, &fT1, &fT2, &fT3, psRT0, psST0 ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_RT_Dist_ST) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_RT_Dist_ST)( VEC_OBJ_T(TgRECTANGLE,CPC) psRT0, VEC_OBJ_T(TgSTRI,CPC) psST0 )
+{
+    VAR_T()                             fT0, fT1, fT2, fT3;
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_RT_ParamSq_ST)( &fT0, &fT1, &fT2, &fT3, psRT0, psST0 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_RT_ClosestSq_ST) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_RT_ClosestSq_ST)( VEC_T(1,PC) pvRT0, VEC_T(1,PC) pvST0, VEC_OBJ_T(TgRECTANGLE,CPC) psRT0, VEC_OBJ_T(TgSTRI,CPC) psST0 )
+{
+    VAR_T()                             fRT00, fRT01, fST00, fST01;
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_RT_ParamSq_ST)( &fRT00, &fRT01, &fST00, &fST01, psRT0, psST0 );
+
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fRT00, psRT0->m_avEdge + 0 );
+    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fRT01, psRT0->m_avEdge + 1 );
+    VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)( fST00, psST0->m_sCT.m_sET.m_avEdge + 0 );
+    VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)( fST01, psST0->m_sCT.m_sET.m_avEdge + 2 );
+    VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)( &psRT0->m_vOrigin, &vK0 );
+    VEC_T(1,C)                          vK5 = FCN_V(tgMH_ADD)( psST0->m_sCT.m_sET.m_sPT.m_avPoint, &vK2 );
+
+    *pvRT0 = FCN_V(tgMH_ADD)( &vK4, &vK1 );
+    *pvST0 = FCN_V(tgMH_SUB)( &vK5, &vK3 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, fDistSq, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_RT_Closest_ST) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_RT_Closest_ST)( VEC_T(1,PC) pvRT0, VEC_T(1,PC) pvST0, VEC_OBJ_T(TgRECTANGLE,CPC) psRT0, VEC_OBJ_T(TgSTRI,CPC) psST0 )
+{
+    VAR_T()                             fRT00, fRT01, fST00, fST01;
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_RT_ParamSq_ST)( &fRT00, &fRT01, &fST00, &fST01, psRT0, psST0 );
+
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fRT00, psRT0->m_avEdge + 0 );
+    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fRT01, psRT0->m_avEdge + 1 );
+    VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)( fST00, psST0->m_sCT.m_sET.m_avEdge + 0 );
+    VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)( fST01, psST0->m_sCT.m_sET.m_avEdge + 2 );
+    VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)( &psRT0->m_vOrigin, &vK0 );
+    VEC_T(1,C)                          vK5 = FCN_V(tgMH_ADD)( psST0->m_sCT.m_sET.m_sPT.m_avPoint, &vK2 );
+
+    *pvRT0 = FCN_V(tgMH_ADD)( &vK4, &vK1 );
+    *pvST0 = FCN_V(tgMH_SUB)( &vK5, &vK3 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_RT_Param_ST) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_RT_Param_ST)( VAR_T(P) pfRT0, VAR_T(P) pfRT1, VAR_T(P) pfST0, VAR_T(P) pfST1, VEC_OBJ_T(TgRECTANGLE,CPC) psRT0, VEC_OBJ_T(TgSTRI,CPC) psST0 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_RT_ParamSq_ST)( pfRT0, pfRT1, pfST0, pfST1, psRT0, psST0 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_RT_Clip_ST) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_RT_Clip_ST)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgRECTANGLE,CPC) psRT0, VEC_OBJ_T(TgSTRI,CPC) psST0 )
+{
+    if (psCL->m_niMax < 8)
+    {
+        TgERROR(false);
+        return (KTgE_FAIL);
+    };
+
+    psCL->m_avPoint[0] = psRT0->m_vOrigin;
+    psCL->m_avPoint[1] = FCN_VO(tgGM_RT_Query_Point_1)( psRT0 );
+    psCL->m_avPoint[2] = FCN_VO(tgGM_RT_Query_Point_2)( psRT0 );
+    psCL->m_avPoint[3] = FCN_VO(tgGM_RT_Query_Point_3)( psRT0 );
+
+    psCL->m_niPoint = 4;
+
+    return (FCN_VO(tgCO_F_ST_Clip)( psCL, psST0 ));
+}

@@ -1,0 +1,70 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box AA.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* Box AA - Point                                                                                                                                                                  */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_DistSq_VT)( VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_Dist_VT)( VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC) );
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_BA_ClosestSq_VT)( VEC_T(1,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_Closest_VT)( VEC_T(1,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_BA_Test_VT)( VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC) );
+
+/* Box AA - Linear                                                                                                                                                                 */
+TgEXTN TgBOOL                               FCN_VO(tgCO_F_BA_Test_LR00)( VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgBOOL                               FCN_VO(tgCO_F_BA_Test_LR10)( VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgBOOL                               FCN_VO(tgCO_F_BA_Test_LR11)( VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Box AA - Sphere                                                                                                                                                                 */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_DistSq_SP)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_Dist_SP)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_ClosestSq_SP)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_Closest_SP)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_BA_Test_SP)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_BA_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_SP_Penetrate_BA)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgBOXAA,CPC) );
+
+/* Box AA - Box AA                                                                                                                                                                 */
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_BA_DistSq_BA)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgBOXAA,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_Dist_BA)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgBOXAA,CPC) );
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_BA_ClosestSq_BA)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgBOXAA,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_Closest_BA)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgBOXAA,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_BA_Sweep_Test_BA)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgBOXAA,CPC), VEC_T(1,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_BA_Test_BA)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgBOXAA,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_BA_Test_Elem_BA)( VEC_T(1,CPC), VEC_T(1,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_BA_Penetrate_BA)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgBOXAA,CPC) );
+
+/* Box AA - Plane                                                                                                                                                                  */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_DistSq_PN)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_Dist_PN)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_ClosestSq_PN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_BA_Closest_PN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_BA_Test_PN)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_PN_Penetrate_BA)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgPLANE,CPC), VEC_OBJ_T(TgBOXAA,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_PN_Sweep_BA)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgPLANE,CPC), VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Box AA - Triangle                                                                                                                                                               */
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_BA_Test_PT)( VEC_OBJ_T(TgBOXAA,CPC), VEC_OBJ_T(TgPTRI,CPC) );
+
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+/* Box AA - Box AA                                                                                                                                                                 */
+TgINLINE TgBOOL                             FCN_VO(tgCO_N_BA_Test_BA)( VEC_OBJ_T(TgBOXAA_N,CPC), VEC_OBJ_T(TgBOXAA_N,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_N_BA_Test_Elem_BA)( VEC_N_T(1,C), VEC_N_T(1,C), VEC_N_T(1,C), VEC_N_T(1,C) );
+
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif

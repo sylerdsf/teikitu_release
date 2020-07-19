@@ -1,0 +1,169 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Utility.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_V(tgMH_Internal_Intersect) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/*  -- Internal Function -- Used in contact generation, for multiple point returns on parallel case.                                                                               */
+/* Assume: The two segments are in contact.                                                                                                                                        */
+/* Input:  pvS0,pvD0: Origin and Direction for Segment #1                                                                                                                          */
+/* Input:  vS1,pvD1: Origin and Direction for Segment #2                                                                                                                           */
+/* Output:  vRN0, vRN1: Points of contact between the two segments.                                                                                                                */
+/* Return: The number of contacts between the two segments, where a negative value represents an error condition.                                                                  */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgSINT_F32 FCN_VO(tgCO_F_LN_Internal_Intersect_LN)( VEC_T(1,PC) pvRN0, VEC_T(1,PC) pvRN1, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0, VEC_T(1,CPC) pvS1, VEC_T(1,CPC) pvD1 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS1, pvS0 );
+
+    VAR_T(C)                            fD0_D0 = FCN_V(tgMH_LSQ)( pvD0 );
+    VAR_T(C)                            fD1_D1 = FCN_V(tgMH_LSQ)( pvD1 );
+    VAR_T(C)                            fD0_D1 = FCN_V(tgMH_DOT)( pvD0, pvD1 );
+    VAR_T(C)                            fDS_D0 = FCN_V(tgMH_DOT)( &vDS, pvD0 );
+    VAR_T(C)                            fDS_D1 = -FCN_V(tgMH_DOT)( &vDS, pvD1 );
+    VAR_T(C)                            fDet = fD0_D0*fD1_D1 - fD0_D1*fD0_D1;
+
+    VEC_T(1,C)                          vOrgSum = FCN_V(tgMH_ADD)(pvS0, pvS1);
+
+    if (fDet > VAR_K(KTgEPS)*fD0_D0*fD1_D1)
+    {
+        VAR_T(C)                            fT0 = (fDS_D0*fD1_D1 + fDS_D1*fD0_D1) / fDet;
+        VAR_T(C)                            fT1 = (fDS_D0*fD0_D1 + fDS_D1*fD0_D0) / fDet;
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fT1, pvD1 );
+        VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+        VEC_T(1,C)                          vK3 = FCN_V(tgMH_ADD)( &vOrgSum, &vK2 );
+        VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)( &vK3, &vK1 );
+
+        if ((fT0 < TYPE_K(0)) || (fT0 > TYPE_K(1)) || (fT1 < TYPE_K(0)) || (fT1 > TYPE_K(1)))
+        {
+            TgERROR_CO( "Edge-Edge outside of range.\n" );
+        };
+
+        *pvRN0 = FCN_V(tgMH_MUL_SV)( TYPE_K(0,5), &vK4 );
+
+        return (1);
+    }
+    else
+    {
+        /* Linears are parallel */
+
+        VAR_T(C)                            fDE_D0 = fDS_D0 + fD0_D1; /* vDE = vS1+pvD1, fDE_D1 = (vS1+pvD1 - pvS0)•pvD0 */
+        VAR_T(C)                            fDF_D1 = fD0_D1 - fDS_D1; /* vDF = pvS0+pvD0, fDF_D1 = (pvS0+pvD0 - vS1)•pvD1 */
+
+        VAR_T(C)                            fTA = fDS_D0 / fD0_D0;
+        VAR_T(C)                            fTC = fDE_D0 / fD0_D0;
+
+        /* Point 0 of segment 0 if contained in segment 1, otherwise if segments are mutually directed point 0 of segment 1, else point 1 of segment 1. */
+        VAR_T(C)                            fF0 = FCN_F(tgPM_FSEL)( fDS_D1, FCN_F(tgPM_FSEL)( fD1_D1 - fDS_D1, TYPE_K(1), -TYPE_K(1)), -TYPE_K(1) );
+        VAR_T(C)                            fT0 = FCN_F(tgPM_FSEL)( fF0, TYPE_K(0), FCN_F(tgPM_FSEL)( fD0_D1, fTA, fTC ) );
+        VAR_T(C)                            fT1 = FCN_F(tgPM_FSEL)( fF0, (fDS_D1 / fD1_D1), FCN_F(tgPM_FSEL)( fD0_D1, TYPE_K(0), TYPE_K(1) ) );
+
+        /* Point 1 of segment 0 if contained in segment 1, otherwise if segments are mutually directed point 1 of segment 1, else point 0 of segment 1. */
+        VAR_T(C)                            fF1 = FCN_F(tgPM_FSEL)( fDF_D1, FCN_F(tgPM_FSEL)( fD1_D1 - fDF_D1, TYPE_K(1), TYPE_K(-1,0)), TYPE_K(-1,0) );
+        VAR_T(C)                            fT2 = FCN_F(tgPM_FSEL)( fF1, TYPE_K(1), FCN_F(tgPM_FSEL)( fD0_D1, fTC, fTA ) );
+        VAR_T(C)                            fT3 = FCN_F(tgPM_FSEL)( fF1, (fDF_D1 / fD1_D1), FCN_F(tgPM_FSEL)( fD0_D1, TYPE_K(1), TYPE_K(0,0) ) );
+
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fT1, pvD1 );
+        VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)( fT2, pvD0 );
+        VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)( fT3, pvD1 );
+        VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)( &vOrgSum, &vK0 );
+        VEC_T(1,C)                          vK5 = FCN_V(tgMH_ADD)( &vOrgSum, &vK2 );
+        VEC_T(1,C)                          vK6 = FCN_V(tgMH_ADD)( &vK4, &vK1 );
+        VEC_T(1,C)                          vK7 = FCN_V(tgMH_ADD)( &vK5, &vK3 );
+
+        *pvRN0 = FCN_V(tgMH_MUL_SV)( TYPE_K(0,5), &vK6 );
+        *pvRN1 = FCN_V(tgMH_MUL_SV)( TYPE_K(0,5), &vK7 );
+
+        if ((fD0_D1 >= TYPE_K(0) && (fDE_D0 < TYPE_K(0) || fDS_D0 > TYPE_K(1))) || (fD0_D1 <= TYPE_K(0) && (fDS_D0 < TYPE_K(0) || fDE_D0 > TYPE_K(1))))
+        {
+            return (-1);
+        };
+
+        return (2);
+    };
+}
+
+
+/* ---- FCN_V(tgMH_Internal_Parallel) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/*  -- Internal Function -- Used in contact generation, for multiple point returns on parallel case.                                                                               */
+/* Assume: The two segments are in contact, and are parallel.                                                                                                                      */
+/* Input:  pvS0,pvD0: Origin and Direction for Segment #1                                                                                                                          */
+/* Input:  vS1,pvD1: Origin and Direction for Segment #2                                                                                                                           */
+/* Output:  vRN0, vRN1: Points of contact between the two segments.                                                                                                                */
+/* Return: The number of contacts between the two segments, where a negative value represents an error condition.                                                                  */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgSINT_F32 FCN_VO(tgCO_F_LN_Internal_Parallel_LN)( VEC_T(1,PC) pvRN0, VEC_T(1,PC) pvRN1, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0, VEC_T(1,CPC) pvS1, VEC_T(1,CPC) pvD1 )
+{
+    VAR_T(C)                            fD0_D0 = FCN_V(tgMH_LSQ)( pvD0 ), fD1_D1 = FCN_V(tgMH_LSQ)( pvD1 );
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS1, pvS0 );
+
+    /*                                  Projection Values */
+    VAR_T(C)                            fD0_D1 = FCN_V(tgMH_DOT)( pvD0, pvD1 );
+    VAR_T(C)                            fDS_D0 = FCN_V(tgMH_DOT)( &vDS, pvD0 );
+    VAR_T(C)                            fDS_D1 = -FCN_V(tgMH_DOT)( &vDS, pvD1 );
+
+    VAR_T(C)                            fDE_D0 = fDS_D0 + fD0_D1; /* vDE = vS1+pvD1, fDE_D1 = (vS1+pvD1 - pvS0)•pvD0 */
+    VAR_T(C)                            fDF_D1 = fD0_D1 - fDS_D1; /* vDF = pvS0+pvD0, fDF_D1 = (pvS0+pvD0 - vS1)•pvD1 */
+
+    VAR_T(C)                            fTA = fDS_D0 / fD0_D0;
+    VAR_T(C)                            fTC = fDE_D0 / fD0_D0;
+
+    /* Point 0 of segment 0 if contained in segment 1, otherwise if segments are mutually directed point 0 of segment 1, else point 1 of segment 1. */
+    VAR_T(C)                            fF0 = FCN_F(tgPM_FSEL)( fDS_D1, FCN_F(tgPM_FSEL)( fD1_D1 - fDS_D1, TYPE_K(1), -TYPE_K(1)), -TYPE_K(1) );
+    VAR_T(C)                            fT0 = FCN_F(tgPM_FSEL)( fF0, TYPE_K(0), FCN_F(tgPM_FSEL)( fD0_D1, fTA, fTC ) );
+    VAR_T(C)                            fT1 = FCN_F(tgPM_FSEL)( fF0, (fDS_D1 / fD1_D1), FCN_F(tgPM_FSEL)( fD0_D1, TYPE_K(0), TYPE_K(1) ) );
+
+    /* Point 1 of segment 0 if contained in segment 1, otherwise if segments are mutually directed point 1 of segment 1, else point 0 of segment 1. */
+    VAR_T(C)                            fF1 = FCN_F(tgPM_FSEL)( fDF_D1, FCN_F(tgPM_FSEL)( fD1_D1 - fDF_D1, TYPE_K(1), -TYPE_K(1)), -TYPE_K(1) );
+    VAR_T(C)                            fT2 = FCN_F(tgPM_FSEL)( fF1, TYPE_K(1), FCN_F(tgPM_FSEL)( fD0_D1, fTC, fTA ) );
+    VAR_T(C)                            fT3 = FCN_F(tgPM_FSEL)( fF1, (fDF_D1 / fD1_D1), FCN_F(tgPM_FSEL)( fD0_D1, TYPE_K(1), TYPE_K(0) ) );
+
+    VEC_T(1,C)                          vOrgSum = FCN_V(tgMH_ADD)( pvS0, pvS1 );
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fT1, pvD1 );
+    VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)( fT2, pvD0 );
+    VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)( fT3, pvD1 );
+    VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)( &vOrgSum, &vK0 );
+    VEC_T(1,C)                          vK5 = FCN_V(tgMH_ADD)( &vOrgSum, &vK2 );
+    VEC_T(1,C)                          vK6 = FCN_V(tgMH_ADD)( &vK4, &vK1 );
+    VEC_T(1,C)                          vK7 = FCN_V(tgMH_ADD)( &vK5, &vK3 );
+
+    *pvRN0 = FCN_V(tgMH_MUL_SV)( TYPE_K(0,5), &vK6 );
+    *pvRN1 = FCN_V(tgMH_MUL_SV)( TYPE_K(0,5), &vK7 );
+
+    if ((fD0_D1 >= TYPE_K(0) && (fDE_D0 < TYPE_K(0) || fDS_D0 > TYPE_K(1))) || (fD0_D1 <= TYPE_K(0) && (fDS_D0 < TYPE_K(0) || fDE_D0 > TYPE_K(1))))
+    {
+        return (-1);
+    };
+
+    return (2);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

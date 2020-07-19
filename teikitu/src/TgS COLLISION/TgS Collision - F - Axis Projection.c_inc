@@ -1,0 +1,114 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Axis Projection.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_Test_Seperating_Axis) -------------------------------------------------------------------------------------------------------------------------------------- */
+/*  Contact occurs between the two primitives when they overlap along all possible axis of separation.  Thus, contact will occur at the maximum contact start time untilililililil */
+/* the minimal contact end time.                                                                                                                                                   */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgSINT_F32 FCN_VO(tgCO_F_Test_Seperating_Axis)(VEC_OBJ_T(STg2_CO_Axis_Test,PC) psAxTest )
+{
+    TgSINT_F32                          iResult = 0;
+
+    if (psAxTest->m_fMax1 < psAxTest->m_fMin0)
+    {
+        /* Primitive 1's projection is in the negative direction of the projection of primitive 0. */
+
+        if (psAxTest->m_fSpeed <= TYPE_K(0)) /* Primitive 1 is moving away from primitive 0, no possible contact. */
+        {
+            return (-1);
+        }
+        else
+        {
+                                                /* Compute first, and last time of contact - current maximum and minimum */
+            VAR_T(C)                            fT0 = (psAxTest->m_fMin0 - psAxTest->m_fMax1) / psAxTest->m_fSpeed;
+            VAR_T(C)                            fT1 = (psAxTest->m_fMax0 - psAxTest->m_fMin1) / psAxTest->m_fSpeed;
+            VAR_T(C)                            fMinT = FCN_F(tgPM_FSEL)( psAxTest->m_fMinT - fT0, psAxTest->m_fMinT, fT0 );
+            VAR_T(C)                            fMaxT = FCN_F(tgPM_FSEL)( fT1 - psAxTest->m_fMaxT, psAxTest->m_fMaxT, fT1 );
+
+            psAxTest->m_fMinT = fMinT;
+            psAxTest->m_fMaxT = fMaxT;
+            iResult = fT0 <= psAxTest->m_fMinT ? iResult : 1;
+
+            /* No contact occurs if t-value exceeds the imposed limit or the current min and max pass each other. */
+            if ((fMinT > psAxTest->m_fLimitT) || (fMinT > fMaxT))
+            {
+                return (-1);
+            };
+        };
+    }
+    else if (psAxTest->m_fMax0 < psAxTest->m_fMin1)
+    {
+        /* Primitive 1's projection is in the positive direction of the projection of primitive 0. */
+
+        if (psAxTest->m_fSpeed <= TYPE_K(0)) /* Primitive 1 is moving away from primitive 0, no possible contact. */
+        {
+            return (-1);
+        }
+        else
+        {
+                                                /* Compute first, and last time of contact - current maximum and minimum */
+            VAR_T(C)                            fT0 = (psAxTest->m_fMax0 - psAxTest->m_fMin1) / psAxTest->m_fSpeed;
+            VAR_T(C)                            fT1 = (psAxTest->m_fMin0 - psAxTest->m_fMax1) / psAxTest->m_fSpeed;
+            VAR_T(C)                            fMinT = FCN_F(tgPM_FSEL)( psAxTest->m_fMinT - fT0, psAxTest->m_fMinT, fT0 );
+            VAR_T(C)                            fMaxT = FCN_F(tgPM_FSEL)( fT1 - psAxTest->m_fMaxT, psAxTest->m_fMaxT, fT1 );
+
+            psAxTest->m_fMinT = fMinT;
+            psAxTest->m_fMaxT = fMaxT;
+            iResult = fT0 <= psAxTest->m_fMinT ? iResult : 1;
+
+            /* No contact occurs on this axis if it now exceeds the limit imposed on the t-value. */
+            if ((fMinT > psAxTest->m_fLimitT) || (fMinT > fMaxT))
+            {
+                return (-1);
+            };
+        };
+    }
+    else if (!FCN_F(tgCM_NR0)(psAxTest->m_fSpeed)) /* V and U on overlapping interval */
+    {
+        VAR_T(C)                            fK0 = psAxTest->m_fMax0 - psAxTest->m_fMin1;
+        VAR_T(C)                            fK1 = psAxTest->m_fMin0 - psAxTest->m_fMax1;
+        VAR_T(C)                            fT = (psAxTest->m_fSpeed > TYPE_K(0)) ? fK0 : fK1;
+        VAR_T(C)                            fT1 = fT / psAxTest->m_fSpeed; /* Compute first time of contact. */
+        VAR_T(C)                            fMaxT = FCN_F(tgPM_FSEL)( fT1 - psAxTest->m_fMaxT, psAxTest->m_fMaxT, fT1 );
+
+        psAxTest->m_fMaxT = fMaxT;
+
+        if (psAxTest->m_fMinT > fMaxT) /* No contact occurs on this axis if the current if the min and max pass each other. */
+        {
+            return (-1);
+        };
+    };
+
+    return (iResult);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

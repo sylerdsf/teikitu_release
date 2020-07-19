@@ -1,0 +1,113 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Disk-Point.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_DK_DistSq_VT) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psDK0: Disk - The set of points on the plane that are at or less than the radius value.                                                                                 */
+/* Input:  pvS0: Point, not necessarily in the plane.                                                                                                                              */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_DK_DistSq_VT)( VEC_OBJ_T(TgDISK,CPC) psDK0, VEC_T(1,CPC) pvS0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(pvS0, &psDK0->m_vOrigin);
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)(&vDS);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_DK_Is_Valid)(psDK0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+
+    if (fDS_DS <= VAR_K(KTgEPS))
+    {
+        return (fDS_DS); /* Quick Out - the point is within tolerance of circle origin. */
+    }
+    else
+    {
+        VAR_T(C)                            fDS_N = FCN_V(tgMH_DOT)(&vDS, &psDK0->m_vNormal);
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fDS_N, &psDK0->m_vNormal);
+        VEC_T(1,C)                          vPDS = FCN_V(tgMH_SUB)(&vDS, &vK0);
+        VAR_T(C)                            fPDS_PDS = FCN_V(tgMH_LSQ)(&vPDS);
+
+        if (fPDS_PDS <= psDK0->m_fRadiusSq)
+        {
+            return (fDS_N*fDS_N); /* Quick Out - the point is directly above the disk */
+        }
+        else
+        {
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(psDK0->m_fRadius / FCN_F(tgPM_SQRT)(fPDS_PDS), &vPDS);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_SUB)(&vDS, &vK1);
+
+            return (FCN_V(tgMH_LSQ)(&vK2));
+        };
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_DK_ClosestSq_VT) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psDK0: Disk - The set of points on the plane that are at or less than the radius value.                                                                                 */
+/* Input:  pvS0: Point, not necessarily in the plane.                                                                                                                              */
+/* Output: vDK0: Point of closest proximity on the circle.                                                                                                                         */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_DK_ClosestSq_VT)(VEC_T(1,PC) pvDK0, VEC_OBJ_T(TgDISK,CPC) psDK0, VEC_T(1,CPC) pvS0)
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(pvS0, &psDK0->m_vOrigin);
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)(&vDS);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_DK_Is_Valid)(psDK0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+
+    if (fDS_DS <= VAR_K(KTgEPS))
+    {
+        *pvDK0 = psDK0->m_vOrigin;
+        return (fDS_DS);  /* Quick Out - the point is within tolerance of circle origin. */
+    }
+    else
+    {
+        VAR_T(C)                            fDS_N = FCN_V(tgMH_DOT)(&vDS, &psDK0->m_vNormal);
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fDS_N, &psDK0->m_vNormal);
+        VEC_T(1,C)                          vPDS = FCN_V(tgMH_SUB)(&vDS, &vK0);
+        VAR_T(C)                            fPDS_PDS = FCN_V(tgMH_LSQ)(&vPDS);
+
+        if (fPDS_PDS <= psDK0->m_fRadiusSq)
+        {
+            *pvDK0 = FCN_V(tgMH_ADD)(&psDK0->m_vOrigin, &vPDS);
+            return (fDS_N*fDS_N); /* Quick Out - the point is directly above the disk */
+        }
+        else
+        {
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(psDK0->m_fRadius / FCN_F(tgPM_SQRT)(fPDS_PDS), &vPDS);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_ADD)(&psDK0->m_vOrigin, &vK1);
+            VEC_T(1,C)                          vK4 = FCN_V(tgMH_SUB)(pvS0, &vK3);
+
+            *pvDK0 = vK3;
+            return (FCN_V(tgMH_LSQ)(&vK4));
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,199 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box [Axis Separation].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_BX_Axis_ProjInfo) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* Input:  pvAxis: Axis of separation being tested                                                                                                                                 */
+/* Input:  psBX0: Box primitive                                                                                                                                                    */
+/* Output: tgConfig: Holds the resulting information for the axis separation tests for this primitive                                                                              */
+/*   Their are a few different ways, depending on relative orientation, that a box's vertices can be mapped onto a line (axis.)                                                    */
+/*  First, if the axis is identical to one of the box's axes then the four points on each face that is normal to the line will be                                                  */
+/*  projected only onto one unique point ( two in total for the entire box ).  The second way would be if the line is parallel to                                                  */
+/*  one of the box's faces.  The four vertices defining the face to which the line is parallel would each map to a unique point.                                                   */
+/*  However, the other four points would map one to one to the existing projections since the edge formed between the two faces                                                    */
+/*  is normal to the line in question (by definition).  The last case has the line being in arbitrary orientation, non-collinear                                                   */
+/*  or co-planar to the box in any way.                                                                                                                                            */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgCO_F_BX_Axis_ProjInfo)( VEC_OBJ_T(STg2_CO_Axis_Project,PC) psConfig, VEC_T(1,CPC) pvAxis, VEC_OBJ_T(TgBOX,CPC) psBX0 )
+{
+    /* Project the vertices onto the normal from the first triangle. */
+
+    VAR_T(C)                            fAX_X0 = FCN_V(tgMH_DOT)(psBX0->m_avAxis + 0, pvAxis);
+    VAR_T(C)                            fAX_X1 = FCN_V(tgMH_DOT)(psBX0->m_avAxis + 1, pvAxis);
+    VAR_T(C)                            fAX_X2 = FCN_V(tgMH_DOT)(psBX0->m_avAxis + 2, pvAxis);
+    VAR_T(C)                            fABS_AX_EX0 = psBX0->m_vExtent.x*FCN_F(tgPM_ABS)(fAX_X0);
+    VAR_T(C)                            fABS_AX_EX1 = psBX0->m_vExtent.y*FCN_F(tgPM_ABS)(fAX_X1);
+    VAR_T(C)                            fABS_AX_EX2 = psBX0->m_vExtent.z*FCN_F(tgPM_ABS)(fAX_X2);
+
+    /* This is a direct sort using the projections as the key. */
+
+    switch ((FCN_F(tgCM_NR0)(fAX_X0) ? 0 : 1) + (FCN_F(tgCM_NR0)(fAX_X1) ? 0 : 2) + (FCN_F(tgCM_NR0)(fAX_X2) ? 0 : 4))
+    {
+        case 7:
+        { /* Unique maximal and minimal vertices */
+
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fABS_AX_EX0, psBX0->m_avAxis + 0);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fABS_AX_EX1, psBX0->m_avAxis + 1);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(fABS_AX_EX2, psBX0->m_avAxis + 2);
+            VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)(&vK0, &vK1);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_ADD)(&vK4, &vK2);
+
+            psConfig->m_avMinVert[0] = FCN_V(tgMH_SUB)(&psBX0->m_vOrigin, &vK3);
+            psConfig->m_avMaxVert[0] = FCN_V(tgMH_ADD)(&psBX0->m_vOrigin, &vK3);
+            psConfig->m_iMinID = 1;
+            psConfig->m_iMaxID = 1;
+
+            break;
+        }
+
+        case 6: /* Parallel to the x-axis normal-defined plane (perpendicular to x-axis). */
+
+            if (fAX_X1 > TYPE_K(0))
+            {
+                psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 0 : 4));
+                psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 1 : 5));
+                psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 6 : 2));
+                psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 7 : 3));
+
+            }
+            else
+            {
+                psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 2 : 6));
+                psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 3 : 7));
+                psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 4 : 0));
+                psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 5 : 1));
+            };
+
+            psConfig->m_iMinID = 2;
+            psConfig->m_iMaxID = 2;
+
+            break;
+
+        case 5: /* Parallel to the y-axis normal-defined plane. */
+
+            if (fAX_X0 > TYPE_K(0))
+            {
+                psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 0 : 4));
+                psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 2 : 6));
+                psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 5 : 1));
+                psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 7 : 3));
+
+            }
+            else
+            {
+                psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 1 : 5));
+                psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 3 : 7));
+                psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 4 : 0));
+                psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 6 : 2));
+            };
+
+            psConfig->m_iMinID = 2;
+            psConfig->m_iMaxID = 2;
+
+            break;
+
+        case 4: /* Separation axis is parallel to box z-axis. */
+
+            psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 0 : 4));
+            psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 1 : 5));
+            psConfig->m_avMinVert[2] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 2 : 6));
+            psConfig->m_avMinVert[3] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 3 : 7));
+            psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 4 : 0));
+            psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 5 : 1));
+            psConfig->m_avMaxVert[2] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 6 : 2));
+            psConfig->m_avMaxVert[3] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X2 > TYPE_K(0) ? 7 : 3));
+
+            psConfig->m_iMinID = 4;
+            psConfig->m_iMaxID = 4;
+
+            break;
+
+        case 3: /* Parallel to the z-axis normal-defined plane. */
+
+            if (fAX_X0 > TYPE_K(0))
+            {
+                psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 0 : 2));
+                psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 4 : 6));
+                psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 3 : 1));
+                psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 7 : 5));
+
+            }
+            else
+            {
+                psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 1 : 3));
+                psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 5 : 7));
+                psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 2 : 0));
+                psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 6 : 4));
+            };
+
+            psConfig->m_iMinID = 2;
+            psConfig->m_iMaxID = 2;
+
+            break;
+
+        case 2: /* Separation axis is parallel to box y-axis. */
+
+            psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 0 : 2));
+            psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 1 : 3));
+            psConfig->m_avMinVert[2] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 4 : 6));
+            psConfig->m_avMinVert[3] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 5 : 7));
+            psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 2 : 0));
+            psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 3 : 1));
+            psConfig->m_avMaxVert[2] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 6 : 4));
+            psConfig->m_avMaxVert[3] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X1 > TYPE_K(0) ? 7 : 5));
+
+            psConfig->m_iMinID = 4;
+            psConfig->m_iMaxID = 4;
+
+            break;
+
+        case 1: /* Separation axis is parallel to box x-axis. */
+
+            psConfig->m_avMinVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X0 > TYPE_K(0) ? 0 : 5));
+            psConfig->m_avMinVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X0 > TYPE_K(0) ? 2 : 7));
+            psConfig->m_avMinVert[2] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X0 > TYPE_K(0) ? 6 : 3));
+            psConfig->m_avMinVert[3] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X0 > TYPE_K(0) ? 4 : 1));
+            psConfig->m_avMaxVert[0] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X0 > TYPE_K(0) ? 5 : 0));
+            psConfig->m_avMaxVert[1] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X0 > TYPE_K(0) ? 7 : 2));
+            psConfig->m_avMaxVert[2] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X0 > TYPE_K(0) ? 3 : 6));
+            psConfig->m_avMaxVert[3] = FCN_VO(tgGM_BX_Calc_Point_Index)(psBX0, (fAX_X0 > TYPE_K(0) ? 1 : 4));
+
+            psConfig->m_iMinID = 4;
+            psConfig->m_iMaxID = 4;
+
+            break;
+
+        default:
+            TgS_NO_DEFAULT(return);
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

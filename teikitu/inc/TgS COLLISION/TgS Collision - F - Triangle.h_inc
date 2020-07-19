@@ -1,0 +1,131 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions - Scalar Functions                                                                                                                                            */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* Triangle - Point                                                                                                                                                                */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ET_DistSq_VT)( VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ET_Dist_VT)( VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ET_ClosestSq_VT)( VEC_T(1,PC), VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ET_Closest_VT)( VEC_T(1,PC), VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ET_Param_VT)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_ET_ParamSq_VT)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC) );
+
+/* Triangle - Line                                                                                                                                                                 */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_DistSq_LN) (VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Dist_LN)( VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_ClosestSq_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Closest_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_ParamSq_LN)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Param_LN)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_ST_ParamSq_LR00)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_LN)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_Param_LN)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_LR00)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_ST_Clip_Param_LR00)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_F_LN)( VEC_OBJ_T(STg2_CO_Clip_List,PC), TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_Param_F_LN)( VAR_T(P) , VAR_T(P) , TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_F_LR00)( VEC_OBJ_T(STg2_CO_Clip_List,PC), TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_Param_F_LR00)( VAR_T(P) , VAR_T(P) , TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_ET_Test_LN)( VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ET_Intersect_LN)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ET_Intersect_Param_LN)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ET_Intersect_Param_LR00)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Triangle - Ray                                                                                                                                                                  */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_DistSq_RY) (VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Dist_RY)( VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_ClosestSq_RY)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Closest_RY)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_ParamSq_RY)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Param_RY)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_ST_ParamSq_LR10)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_RY)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_Param_RY)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_LR10)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_ST_Clip_Param_LR10)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_F_RY)( VEC_OBJ_T(STg2_CO_Clip_List,PC), TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_Param_F_RY)( VAR_T(P) , VAR_T(P) , TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_F_LR10)( VEC_OBJ_T(STg2_CO_Clip_List,PC), TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_Param_F_LR10)( VAR_T(P) , VAR_T(P) , TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_ET_Test_RY)( VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ET_Intersect_RY)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ET_Intersect_Param_RY)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ET_Intersect_Param_LR10)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Triangle - Segment                                                                                                                                                              */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_DistSq_SG) (VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Dist_SG)( VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_ClosestSq_SG)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Closest_SG)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_ParamSq_SG)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Param_SG)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_ST_ParamSq_LR11)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_SG)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_Param_SG)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_LR11)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_ST_Clip_Param_LR11)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_F_SG)( VEC_OBJ_T(STg2_CO_Clip_List,PC), TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_Param_F_SG)( VAR_T(P) , VAR_T(P) , TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_F_LR11)( VEC_OBJ_T(STg2_CO_Clip_List,PC), TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Clip_Param_F_LR11)( VAR_T(P) , VAR_T(P) , TgSINT_F32_PC, VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_ET_Test_SG)( VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ET_Intersect_SG)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ET_Intersect_Param_SG)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ET_Intersect_Param_LR11)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Triangle - Triangle                                                                                                                                                             */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_DistSq_ST)( VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Dist_ST)( VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_ClosestSq_ST)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Closest_ST)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_ST_Param_ST)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_ST_ParamSq_ST)( VAR_T(P) , VAR_T(P) , VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+
+TgEXTN TgBOOL                               FCN_VO(tgCO_F_PT_Is_Seperating_Axis_PT)( VEC_T(1,PC), VEC_OBJ_T(TgPTRI,CPC), VEC_OBJ_T(TgPTRI,CPC) );
+TgEXTN TgVOID                               FCN_VO(tgCO_F_PT_Axis_ProjInfo)( VEC_OBJ_T(STg2_CO_Axis_Project,PC), VEC_T(1,CPC), VEC_OBJ_T(TgPTRI,CPC) );
+
+TgEXTN TgBOOL                               FCN_VO(tgCO_F_ST_Test_ST)( VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgEXTN TgBOOL                               FCN_VO(tgCO_F_ST_Test_Sweep_ST)( VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ST_Intersect_ST)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ST_Sweep_ST)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_PT)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgPTRI,CPC) );
+
+/* Triangle - Box */
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ST_Sweep_BX)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgBOX,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Triangle - Particle                                                                                                                                                             */
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_PC_Sweep_ET)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgPARTICLE,CPC), VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ET_Sweep_PC)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgETRI,CPC), VEC_OBJ_T(TgPARTICLE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Triangle Utility                                                                                                                                                                */
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Clip_Points)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ST_Clip)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSTRI,CPC) );

@@ -1,0 +1,71 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box AA-Box AA.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_BA_Dist_BA) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BA_Dist_BA)( VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_OBJ_T(TgBOXAA,CPC) psBA1 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_BA_DistSq_BA)( psBA0, psBA1 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BA_Closest_BA) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BA_Closest_BA)( VEC_T(1,PC) pvBA0, VEC_T(1,PC) pvBA1, VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_OBJ_T(TgBOXAA,CPC) psBA1 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_BA_ClosestSq_BA)( pvBA0, pvBA1, psBA0, psBA1 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BA_Sweep_Test_BA) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_BA_Sweep_Test_BA)( VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_OBJ_T(TgBOXAA,CPC) psBA1, VEC_T(1,CPC) pvDT )
+{
+    VAR_T()                             fMinX = FCN_F(tgPM_FSEL)( pvDT->x, psBA1->m_vMin.x, psBA1->m_vMin.x + pvDT->x );
+    VAR_T()                             fMinY = FCN_F(tgPM_FSEL)( pvDT->y, psBA1->m_vMin.y, psBA1->m_vMin.y + pvDT->y );
+    VAR_T()                             fMinZ = FCN_F(tgPM_FSEL)( pvDT->z, psBA1->m_vMin.z, psBA1->m_vMin.z + pvDT->z );
+    VAR_T()                             fMaxX = FCN_F(tgPM_FSEL)( pvDT->x, psBA1->m_vMax.x + pvDT->x, psBA1->m_vMax.x );
+    VAR_T()                             fMaxY = FCN_F(tgPM_FSEL)( pvDT->y, psBA1->m_vMax.y + pvDT->y, psBA1->m_vMax.y );
+    VAR_T()                             fMaxZ = FCN_F(tgPM_FSEL)( pvDT->z, psBA1->m_vMax.z + pvDT->z, psBA1->m_vMax.z );
+
+    return (
+        fMaxX >= psBA0->m_vMin.x && psBA0->m_vMax.x >= fMinX && fMaxY >= psBA0->m_vMin.y && psBA0->m_vMax.y >= fMinY &&
+        fMaxZ >= psBA0->m_vMin.z && psBA0->m_vMax.z >= fMinZ);
+}
+
+
+/* ---- FCN_VO(tgCO_F_BA_Test_BA) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_BA_Test_BA)( VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_OBJ_T(TgBOXAA,CPC) psBA1 )
+{
+    return (
+        (psBA0->m_vMin.x <= psBA1->m_vMax.x) && (psBA0->m_vMax.x >= psBA1->m_vMin.x) &&
+        (psBA0->m_vMin.y <= psBA1->m_vMax.y) && (psBA0->m_vMax.y >= psBA1->m_vMin.y) &&
+        (psBA0->m_vMin.z <= psBA1->m_vMax.z) && (psBA0->m_vMax.z >= psBA1->m_vMin.z));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BA_Test_Elem_BA) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_BA_Test_Elem_BA)( VEC_T(1,CPC) pvMin_BA0, VEC_T(1,CPC) pvMax_BA0, VEC_T(1,CPC) pvMin_BA1, VEC_T(1,CPC) pvMax_BA1 )
+{
+    return (
+        (pvMin_BA0->x <= pvMax_BA1->x) && (pvMax_BA0->x >= pvMin_BA1->x) &&
+        (pvMin_BA0->y <= pvMax_BA1->y) && (pvMax_BA0->y >= pvMin_BA1->y) &&
+        (pvMin_BA0->z <= pvMax_BA1->z) && (pvMax_BA0->z >= pvMin_BA1->z));
+}

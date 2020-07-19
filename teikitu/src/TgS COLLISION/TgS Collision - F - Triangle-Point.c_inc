@@ -1,0 +1,141 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle-Point.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_ET_ParamSq_VT) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psET0: Edge triangle primitive                                                                                                                                          */
+/* Input:  vS0: Point                                                                                                                                                              */
+/* Output: _fET0, _fET1: Parametric parameters to generate point of minimal distance on the triangle                                                                               */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_ET_ParamSq_VT)(VAR_T(P) pfET0, VAR_T(P) pfET1, VEC_OBJ_T(TgETRI,CPC) psET0, VEC_T(1,CPC) pvS0)
+{
+    VEC_T(1)                            vX0 = FCN_V(tgMH_SUB)(pvS0, psET0->m_sPT.m_avPoint + 0);
+    VAR_T(C)                            fX0_X0 = FCN_V(tgMH_LSQ)(&vX0);
+
+    TgERROR( FCN_VO(tgGM_ET_Is_Valid)(psET0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+
+    if (fX0_X0 <= VAR_K(KTgEPS))
+    {
+        /* Quick Out - the point is within tolerance of triangle origin. */
+
+        *pfET0 = TYPE_K(0);
+        *pfET1 = TYPE_K(0);
+
+        return (fX0_X0);
+    }
+    else
+    {
+        VAR_T(C)                            fE0_E0 = FCN_V(tgMH_LSQ)(psET0->m_avEdge + 0);
+        VAR_T(C)                            fE2_E2 = FCN_V(tgMH_LSQ)(psET0->m_avEdge + 2);
+        VAR_T(C)                            fE0_E2 = -FCN_V(tgMH_DOT)(psET0->m_avEdge + 0, psET0->m_avEdge + 2);
+        VAR_T(C)                            fDet = FCN_F(tgPM_ABS)(fE0_E0*fE2_E2 - fE0_E2*fE0_E2);
+
+        if (fE0_E0 <= VAR_K(KTgEPS) || fE2_E2 <= VAR_K(KTgEPS))
+        {   /* Degenerate triangle - One or both of the edges has a near-zero length */
+            return (-VAR_K(KTgMAX));
+        };
+
+        if (fDet <= VAR_K(KTgEPS))
+        {   /* Degenerate triangle - Edges are co-linear (zero-area triangle) */
+            return (-VAR_K(KTgMAX));
+        }
+        else
+        {
+            VAR_T(C)                            fX0_E0 = FCN_V(tgMH_DOT)(psET0->m_avEdge + 0, &vX0);
+            VAR_T(C)                            fX0_E2 = -FCN_V(tgMH_DOT)(psET0->m_avEdge + 2, &vX0);
+            VAR_T(C)                            fPM0 = fE2_E2*fX0_E0 - fE0_E2*fX0_E2;
+            VAR_T(C)                            fPM1 = fE0_E0*fX0_E2 - fE0_E2*fX0_E0;
+
+            VAR_T()                             fET0, fET1;
+
+            /* Categorize the point according to how its contained by the edges, and the sum of the edges. */
+
+            if (fPM0 + fPM1 <= fDet)
+            {
+                if (fPM1 >= TYPE_K(0))
+                {
+                    VAR_T(C)                            fK0 = FCN_F(tgCM_CLP)(fX0_E2 / fE2_E2, TYPE_K(0), TYPE_K(1));
+
+                    fET0 = FCN_F(tgPM_FSEL)(fPM0, fPM0 / fDet, TYPE_K(0));
+                    fET1 = FCN_F(tgPM_FSEL)(fPM0, fPM1 / fDet, fK0);
+                }
+                else
+                {
+                    VAR_T(C)                            fK0 = FCN_F(tgCM_CLP)(fX0_E2 / fE2_E2, TYPE_K(0), TYPE_K(1));
+
+                    fET0 = FCN_F(tgCM_CLP)(fX0_E0 / fE0_E0, TYPE_K(0), TYPE_K(1));
+                    fET1 = (fPM0 >= TYPE_K(0) || fX0_E0 > TYPE_K(0)) ? TYPE_K(0) : fK0;
+                };
+            }
+            else
+            {
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)(pvS0, psET0->m_sPT.m_avPoint + 1);
+                VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(psET0->m_sPT.m_avPoint + 2, pvS0);
+                VAR_T(C)                            fE1_X1 = FCN_V(tgMH_DOT)(psET0->m_avEdge + 1, &vK0);
+                VAR_T(C)                            fE1_X2 = FCN_V(tgMH_DOT)(psET0->m_avEdge + 1, &vK1);
+                VAR_T(C)                            fE1_E1 = FCN_V(tgMH_LSQ)(psET0->m_avEdge + 1);
+
+                if (fPM1 >= TYPE_K(0))
+                {
+                    VAR_T(C)                            fK0 = FCN_F(tgCM_CLP)(fX0_E2 / fE2_E2, TYPE_K(0), TYPE_K(1));
+                    VAR_T(C)                            fK1 = FCN_F(tgCM_CLP)(fE1_X1 / fE1_E1, TYPE_K(0), TYPE_K(1));
+
+                    fET0 = FCN_F(tgCM_CLP)(fE1_X2 / fE1_E1, TYPE_K(0), TYPE_K(1));
+                    fET1 = (fPM0 < TYPE_K(0) && fE1_X2 <= TYPE_K(0)) ? fK0 : fK1;
+                }
+                else
+                {
+                    VAR_T(C)                            fK0 = FCN_F(tgCM_CLP)(fE1_X2 / fE1_E1, TYPE_K(0), TYPE_K(1));
+                    VAR_T(C)                            fK1 = FCN_F(tgCM_CLP)(fX0_E0 / fE0_E0, TYPE_K(0), TYPE_K(1));
+
+                    fET1 = FCN_F(tgCM_CLP)(fE1_X1 / fE1_E1, TYPE_K(0), TYPE_K(1));
+                    fET0 = fE1_X1 > TYPE_K(0) ? fK0 : fK1;
+                };
+            };
+
+            *pfET0 = fET0;
+            *pfET1 = fET1;
+
+            {
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fET0, psET0->m_avEdge + 0);
+                VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fET1, psET0->m_avEdge + 2);
+                VEC_T(1,C)                          vK2 = FCN_V(tgMH_ADD)(psET0->m_sPT.m_avPoint, &vK0);
+                VEC_T(1,C)                          vK3 = FCN_V(tgMH_SUB)(&vK2, &vK1);
+                VEC_T(1,C)                          vK4 = FCN_V(tgMH_SUB)(pvS0, &vK3);
+
+                return (FCN_V(tgMH_LSQ)(&vK4));
+            };
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

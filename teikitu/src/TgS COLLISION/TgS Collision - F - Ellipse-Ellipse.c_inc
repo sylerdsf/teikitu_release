@@ -1,0 +1,297 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Ellipse-Ellipse.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_EL_Intersect_EL) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_EL_Intersect_EL)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgELLIPSE,CPC) psEL0, VEC_OBJ_T(TgELLIPSE,CPC) psEL1 )
+{
+    /*  Based/Modified from 3D Game Engine Design, by David H. Eberly */
+    /*    Published: Morgan Kaufmann, 2000 - ISBN: 1558605932 */
+
+    /* ---- Place Ellipses into Reference Frame -- */
+
+    VAR_T(C)                            fC00 = FCN_V(tgMH_DOT)(&psEL0->m_vOrigin, &psEL0->m_vMajor_Axis);
+    VAR_T(C)                            fC01 = FCN_V(tgMH_DOT)(&psEL0->m_vOrigin, &psEL0->m_vMinor_Axis);
+    VAR_T(C)                            fR00 = psEL0->m_fMajor;
+    VAR_T(C)                            fR01 = psEL0->m_fMinor;
+
+    VAR_T(C)                            fX000 = fR00;
+    VAR_T(C)                            fX011 = fR01;
+
+    VAR_T(C)                            fC10 = FCN_V(tgMH_DOT)(&psEL1->m_vOrigin, &psEL0->m_vMajor_Axis);
+    VAR_T(C)                            fC11 = FCN_V(tgMH_DOT)(&psEL1->m_vOrigin, &psEL0->m_vMinor_Axis);
+    VAR_T(C)                            fR10 = psEL1->m_fMajor;
+    VAR_T(C)                            fR11 = psEL1->m_fMinor;
+
+    VAR_T(C)                            fX100 = fR10*FCN_V(tgMH_DOT)(&psEL1->m_vMajor_Axis, &psEL0->m_vMajor_Axis);
+    VAR_T(C)                            fX101 = fR10*FCN_V(tgMH_DOT)(&psEL1->m_vMajor_Axis, &psEL0->m_vMinor_Axis);
+    VAR_T(C)                            fX110 = fR11*FCN_V(tgMH_DOT)(&psEL1->m_vMinor_Axis, &psEL0->m_vMajor_Axis);
+    VAR_T(C)                            fX111 = fR11*FCN_V(tgMH_DOT)(&psEL1->m_vMinor_Axis, &psEL0->m_vMinor_Axis);
+
+    /* ---- Create AABB for the Ellipses -- */
+
+    VAR_T(C)                            fE00 = fR00*FCN_F(tgPM_ABS)(fX000);
+    VAR_T(C)                            fE01 = fR01*FCN_F(tgPM_ABS)(fX011);
+    VAR_T(C)                            fE10 = fR10*FCN_F(tgPM_ABS)(fX100) + fR11*FCN_F(tgPM_ABS)(fX110);
+    VAR_T(C)                            fE11 = fR10*FCN_F(tgPM_ABS)(fX101) + fR11*FCN_F(tgPM_ABS)(fX111);
+
+    VAR_T(C)                            fMin00 = fC00 - fE00;
+    VAR_T(C)                            fMin01 = fC01 - fE01;
+    VAR_T(C)                            fMin10 = fC10 - fE10;
+    VAR_T(C)                            fMin11 = fC11 - fE11;
+
+    VAR_T(C)                            fMax00 = fC00 + fE00;
+    VAR_T(C)                            fMax01 = fC01 + fE01;
+    VAR_T(C)                            fMax10 = fC10 + fE10;
+    VAR_T(C)                            fMax11 = fC11 + fE11;
+
+    VAR_T(C)                            fMin = FCN_F(tgCM_MIN)(fMin00, FCN_F(tgCM_MIN)(fMin01, FCN_F(tgCM_MIN)(fMin10, fMin11)));
+    VAR_T(C)                            fMax = FCN_F(tgCM_MAX)(fMax00, FCN_F(tgCM_MAX)(fMax01, FCN_F(tgCM_MAX)(fMax10, fMax11)));
+
+    VAR_T(C)                            fRNG = TYPE_K(0,5)*(fMax - fMin);
+    VAR_T(C)                            fAVG = TYPE_K(0,5)*(fMax + fMin);
+    VAR_T(C)                            fInvRNG = TYPE_K(1) / fRNG;
+
+    /* ---- Create Ellipse Quadratics -- */
+
+    /* Ellipse 0 */                     /* Offset and Scale the Ellipse ( reduce floating point error ) */
+    VAR_T(C)                            fSC00 = fInvRNG*(fC00 - fAVG);
+    VAR_T(C)                            fSC01 = fInvRNG*(fC01 - fAVG);
+    VAR_T(C)                            fSR00 = fInvRNG*fR00;
+    VAR_T(C)                            fSR01 = fInvRNG*fR01;
+
+                                        /* Scale the Ellipse axes */
+    VAR_T(C)                            fInvSR00 = TYPE_K(1) / fSR00;
+    VAR_T(C)                            fInvSR01 = TYPE_K(1) / fSR01;
+    VAR_T(C)                            fSX000 = fX000 * fInvSR00;
+    VAR_T(C)                            fSX011 = fX011 * fInvSR01;
+
+                                        /* Create the Tensors to formulate the quadratic */
+    VAR_T(C)                            fT000 = fSX000*fSX000;
+    VAR_T(C)                            fT013 = fSX011*fSX011;
+    VAR_T(C)                            fA000 = fT000;
+    VAR_T(C)                            fA011 = fT013;
+
+                                        /* Construct the quadratic form */
+    VAR_T(C)                            fA0C00 = fA000*fSC00;
+    VAR_T(C)                            fA1C01 = fA011*fSC01;
+
+    VAR_T(C)                            fK44 = fA000;
+    VAR_T(C)                            fK45 = fA011;
+    VAR_T(C)                            fK46 = -fA0C00 - fA0C00;
+    VAR_T(C)                            fK47 = -fA1C01 - fA1C01;
+    VAR_T(C)                            fK48 = fA0C00*fSC00 + fA1C01*fSC01 - TYPE_K(1);
+
+                                        /* "Normalize" the Equation */
+    VAR_T(C)                            fK12 = FCN_F(tgCM_MAX)(FCN_F(tgPM_ABS)(fK44), TYPE_K(0));
+    VAR_T(C)                            fK13 = FCN_F(tgCM_MAX)(FCN_F(tgPM_ABS)(fK45), FCN_F(tgPM_ABS)(fK46));
+    VAR_T(C)                            fK14 = FCN_F(tgCM_MAX)(FCN_F(tgPM_ABS)(fK47), FCN_F(tgPM_ABS)(fK48));
+    VAR_T(C)                            fK15 = TYPE_K(1) / (FCN_F(tgCM_MAX)(fK12, FCN_F(tgCM_MAX)(fK13, fK14)));
+
+    VAR_T(C)                            afQP00 = fK44*fK15;
+    VAR_T(C)                            afQP02 = fK45*fK15;
+    VAR_T(C)                            afQP03 = fK46*fK15;
+    VAR_T(C)                            afQP04 = fK47*fK15;
+    VAR_T(C)                            afQP05 = fK48*fK15;
+
+
+    /* Ellipse 1 */                     /* Offset and Scale the Ellipse ( reduce floating point error ) */
+    VAR_T(C)                            fSC10 = fInvRNG*(fC10 - fAVG);
+    VAR_T(C)                            fSC11 = fInvRNG*(fC11 - fAVG);
+    VAR_T(C)                            fSR10 = fInvRNG*fR10;
+    VAR_T(C)                            fSR11 = fInvRNG*fR11;
+
+                                        /* Scale the Ellipse axes */
+    VAR_T(C)                            fInvSR10 = TYPE_K(1) / fSR10;
+    VAR_T(C)                            fInvSR11 = TYPE_K(1) / fSR11;
+    VAR_T(C)                            fSX100 = fX100 * fInvSR10;
+    VAR_T(C)                            fSX101 = fX101 * fInvSR10;
+    VAR_T(C)                            fSX110 = fX110 * fInvSR11;
+    VAR_T(C)                            fSX111 = fX111 * fInvSR11;
+
+                                        /* Create the Tensors to formulate the quadratic */
+    VAR_T(C)                            fT100 = fSX100*fSX100;
+    VAR_T(C)                            fT101 = fSX100*fSX101;
+    VAR_T(C)                            fT103 = fSX101*fSX101;
+    VAR_T(C)                            fT110 = fSX110*fSX110;
+    VAR_T(C)                            fT111 = fSX110*fSX111;
+    VAR_T(C)                            fT113 = fSX111*fSX111;
+    VAR_T(C)                            fA100 = fT100 + fT110;
+    VAR_T(C)                            fA101 = fT101 + fT111;
+    VAR_T(C)                            fA111 = fT103 + fT113;
+
+                                        /* Construct the quadratic form */
+    VAR_T(C)                            fA0C10 = fA000*fSC10;
+    VAR_T(C)                            fA1C11 = fA011*fSC11;
+
+    VAR_T(C)                            fK38 = fA100;
+    VAR_T(C)                            fK39 = fA101 + fA101;
+    VAR_T(C)                            fK40 = fA111;
+    VAR_T(C)                            fK41 = -fA0C10 - fA0C10;
+    VAR_T(C)                            fK42 = -fA1C11 - fA1C11;
+    VAR_T(C)                            fK43 = fA0C10*fSC10 + fA1C11*fSC11 - TYPE_K(1);
+
+                                        /* "Normalize" the Equation */
+    VAR_T(C)                            fK16 = FCN_F(tgCM_MAX)(FCN_F(tgPM_ABS)(fK38), FCN_F(tgPM_ABS)(fK39));
+    VAR_T(C)                            fK17 = FCN_F(tgCM_MAX)(FCN_F(tgPM_ABS)(fK40), FCN_F(tgPM_ABS)(fK41));
+    VAR_T(C)                            fK18 = FCN_F(tgCM_MAX)(FCN_F(tgPM_ABS)(fK42), FCN_F(tgPM_ABS)(fK43));
+    VAR_T(C)                            fK19 = TYPE_K(1) / (FCN_F(tgCM_MAX)(fK16, FCN_F(tgCM_MAX)(fK17, fK18)));
+
+    VAR_T(C)                            afQP10 = fK19*fK38;
+    VAR_T(C)                            afQP11 = fK19*fK39;
+    VAR_T(C)                            afQP12 = fK19*fK40;
+    VAR_T(C)                            afQP13 = fK19*fK41;
+    VAR_T(C)                            afQP14 = fK19*fK42;
+    VAR_T(C)                            afQP15 = fK19*fK43;
+
+    /* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    VAR_T(C)                            fDET00 = afQP00*afQP11;
+    VAR_T(C)                            fDET01 = afQP00*afQP12 - afQP10*afQP02;
+    VAR_T(C)                            fDET02 = afQP00*afQP13 - afQP10*afQP03;
+    VAR_T(C)                            fDET03 = afQP00*afQP14 - afQP10*afQP04;
+    VAR_T(C)                            fDET04 = afQP00*afQP15 - afQP10*afQP05;
+    VAR_T(C)                            fDET05 = afQP11*afQP02;
+    VAR_T(C)                            fDET06 = afQP11*afQP04;
+    VAR_T(C)                            fDET07 = afQP11*afQP05;
+    VAR_T(C)                            fDET08 = afQP02*afQP13 - afQP12*afQP03;
+    VAR_T(C)                            fDET09 = afQP03*afQP14 - afQP13*afQP04;
+    VAR_T(C)                            fDET10 = afQP03*afQP15 - afQP13*afQP05;
+
+    VAR_T(C)                            fK24 = fDET07 + fDET09;
+    VAR_T(C)                            fK25 = fDET06 - fDET08;
+
+    VAR_T(C)                            fK26 = fDET03*fDET04;
+    VAR_T(C)                            fK27 = fDET01*fDET04;
+    VAR_T(C)                            fK28 = fDET01*fDET03;
+
+    VAR_T(C)                            fK29 = fK26 + fK26;
+    VAR_T(C)                            fK30 = fK27 + fK27;
+    VAR_T(C)                            fK31 = fK28 + fK28;
+
+    VAR_T(C)                            fCoEff00 = fDET02*fDET10 - fDET04*fDET04;
+    VAR_T(C)                            fCoEff01 = fDET00*fDET10 + fDET02*fK24 - fK29;
+    VAR_T(C)                            fCoEff02 = fDET00*fK24 + fDET02*fK25 - fDET03*fDET03 - fK30;
+    VAR_T(C)                            fCoEff03 = fDET00*fK25 + fDET02*fDET05 - fK31;
+    VAR_T(C)                            fCoEff04 = fDET00*fDET05 - fDET01*fDET01;
+
+    /* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    TgSINT_F32_C                        niContact = psPacket->m_niContact;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+    TgSINT_F32                          iY;
+
+    /* Adjustment for quadratics to allow for relative error testing when eliminating extraneous roots. */
+    VAR_T(C)                            fNorm0 = afQP00*afQP00 + afQP02*afQP02;
+    VAR_T(C)                            fNorm1 = afQP11*afQP11 + afQP10*afQP10 + afQP12*afQP12;
+
+    VAR_T()                             afRootY[4];
+    TgSINT_F32                          iCountY;
+
+    TgPARAM_CHECK( FCN_F(tgCM_NR1)(FCN_V(tgMH_DOT)(&psEL0->m_vNormal, &psEL1->m_vNormal)) );
+
+    FCN_F(tgMH_Calc_Root_4)(afRootY, &iCountY, fCoEff00, fCoEff01, fCoEff02, fCoEff03, fCoEff04);
+
+    if (iCountY == 0)
+    {
+        return (KTgE_NO_INTERSECT);
+    }
+
+    /* Test roots to eliminate extraneous ones that occurred due to "squaring". */
+    for (iY = 0; iY < iCountY; ++iY)
+    {
+        VAR_T(C)                            fY = afRootY[iY];
+        VAR_T(C)                            fNum = -((fDET01*fY + fDET03)*fY + fDET04);
+        VAR_T(C)                            fDen = fDET00*fY + fDET02;
+        VAR_T(C)                            fX = fNum / fDen;
+
+        VAR_T(C)                            fK32 = afQP00*fX + afQP03;
+        VAR_T(C)                            fK33 = afQP02*fY + afQP04;
+        VAR_T(C)                            fK34 = fK32*fX + fK33*fY + afQP05;
+
+        VAR_T(C)                            fK35 = afQP10*fX + afQP11*fY + afQP13;
+        VAR_T(C)                            fK36 = afQP12*fY + afQP14;
+        VAR_T(C)                            fK37 = fK35*fX + fK36*fY + afQP15;
+
+        if ((FCN_F(tgPM_ABS)(fK34) >= TYPE_K(0,001)*fNorm0) || (FCN_F(tgPM_ABS)(fK37) >= TYPE_K(0,001)*fNorm1))
+        {
+            continue;
+        };
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        psContact->m_vS0.x = fRNG*(fX)+fAVG;
+        psContact->m_vS0.y = fRNG*(fY)+fAVG;
+        psContact->m_vN0 = VEC_K(KTgZERO);
+        psContact->m_fT0 = TYPE_K(0);
+        psContact->m_fDepth = TYPE_K(0);
+
+        ++psPacket->m_niContact;
+    }
+
+    return (niContact < psPacket->m_niContact ? KTgS_OK : KTgE_NO_INTERSECT);
+}
+
+
+/* ---- FCN_VO(tgCO_F_EL_Intersect2D_EL) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_EL_Intersect2D_EL)(VEC_T(1,PC) pvR0, VEC_T(1,PC) pvR1, VEC_OBJ_T(TgELLIPSE,CPC) psEL0, VEC_OBJ_T(TgELLIPSE,CPC) psEL1)
+{
+    VEC_OBJ_T(STg2_CO_Packet)           sPacket;
+    VEC_OBJ_T(STg2_CO_Contact)          asContact[8];
+    TgRESULT                            iResult;
+
+    sPacket.m_psContact = asContact;
+    sPacket.m_fSweepTol = TYPE_K(0);
+    sPacket.m_fSnapTol = VAR_K(KTgEPS);
+    sPacket.m_bReport_Penetration = false;
+    sPacket.m_niContact = 0;
+    sPacket.m_niMaxContact = 8;
+
+    iResult = FCN_VO(tgCO_F_EL_Intersect_EL)(&sPacket, psEL0, psEL1);
+
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(asContact[0].m_vS0.x, &psEL0->m_vMajor_Axis);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(asContact[0].m_vS0.y, &psEL0->m_vMinor_Axis);
+        VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(asContact[1].m_vS0.x, &psEL0->m_vMajor_Axis);
+        VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)(asContact[1].m_vS0.y, &psEL0->m_vMinor_Axis);
+        VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)(&vK0, &vK1);
+        VEC_T(1,C)                          vK5 = FCN_V(tgMH_ADD)(&vK2, &vK3);
+
+        *pvR0 = FCN_V(tgMH_ADD)(&psEL0->m_vOrigin, &vK4);
+        *pvR1 = FCN_V(tgMH_ADD)(&psEL1->m_vOrigin, &vK5);
+    }
+
+    return (iResult);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

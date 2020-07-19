@@ -1,0 +1,232 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Tube-Linear.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- VI2(tgCO_FI_TB,Intersect_LR) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT VI2(tgCO_FI_TB,Intersect_LR)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(C) fPad, VEC_OBJ_T(TgTUBE,CPC) psTB0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VAR_T()                             fLN0, fLN1;
+    VEC_T(1)                            vN0, vN1;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+    TgBOOL                              bIntersect = false;
+
+    TgRESULT_C iResult = VI2(tgCO_FI_TB,Param_LR)(&fLN0, &fLN1, &vN0, &vN1, fPad, psTB0, pvS0, pvD0);
+
+    if (TgFAILED( iResult ))
+    {
+        return (iResult);
+    };
+
+    /* Limit the variable to the cap regions */
+    if (LN_CAP_0 && fLN0 < TYPE_K(0))
+    {
+        if (fLN1 <= TYPE_K(0))
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+    }
+    else
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fLN0, pvD0);
+        VEC_T(1,C)                          vL0 = FCN_V(tgMH_ADD)(pvS0, &vK0);
+
+    #if TB_CAP_0
+        VAR_T(C)                            fLN0_UA = FCN_V(tgMH_DOT)(&vL0, &psTB0->m_vU_HAX);
+        #if TB_CAP_1
+            if ((fLN0_UA >= -psTB0->m_fExtent) && (fLN0_UA <= psTB0->m_fExtent))
+        #else
+            if (fLN0_UA >= -psTB0->m_fExtent)
+        #endif
+    #endif
+
+        {
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = vL0;
+            psContact->m_vN0 = vN0;
+            psContact->m_fT0 = fLN0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+            bIntersect = true;
+        };
+    };
+
+    if (LN_CAP_1 && fLN1 > TYPE_K(1))
+    {
+        if (fLN0 >= TYPE_K(1))
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+    }
+    else
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fLN1, pvD0);
+        VEC_T(1,C)                          vL1 = FCN_V(tgMH_ADD)(pvS0, &vK0);
+
+    #if TB_CAP_0
+        VAR_T(C)                            fLN1_UA = FCN_V(tgMH_DOT)(&vL1, &psTB0->m_vU_HAX);
+        #if TB_CAP_1
+            if ((fLN1_UA >= -psTB0->m_fExtent) && (fLN1_UA <= psTB0->m_fExtent))
+        #else
+            if (fLN1_UA >= -psTB0->m_fExtent)
+        #endif
+    #endif
+
+        {
+            if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+            {
+                return (KTgE_MAX_CONTACTS);
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = vL1;
+            psContact->m_vN0 = vN1;
+            psContact->m_fT0 = fLN1;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+            bIntersect = true;
+        };
+    };
+
+    return (bIntersect ? KTgS_OK : KTgE_NO_INTERSECT);
+}
+
+
+/* ---- VI2(tgCO_FI_TB, Param_LR) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT VI2(tgCO_FI_TB, Param_LR)(
+    VAR_T(P) pfLN0, VAR_T(P) pfLN1, VEC_T(1,PC) pvN0, VEC_T(1,PC) pvN1, VAR_T(C) fPad, VEC_OBJ_T(TgTUBE,CPC) psTB0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    /* Segment in the reference frame of the tube */
+
+    VAR_T(C)                            fD1_U0 = FCN_V(tgMH_DOT)(pvD0, &psTB0->m_vU_Basis0);
+    VAR_T(C)                            fD1_U1 = FCN_V(tgMH_DOT)(pvD0, &psTB0->m_vU_Basis1);
+    VAR_T(C)                            fD1_UA = FCN_V(tgMH_DOT)(pvD0, &psTB0->m_vU_HAX);
+
+    VAR_T(C)                            fA = fD1_U0*fD1_U0 + fD1_U1*fD1_U1;
+
+    /* Branch for the case where the segment is perpendicular to the tube's cross-sectional plane. */
+
+    TgERROR( FCN_VO(tgGM_TB_Is_Valid)(psTB0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) && FCN_V(tgMH_Is_Vector_Valid)(pvD0) );
+
+    if (FCN_F(tgCM_NR0)(fA))
+    {
+        return (KTgE_NO_INTERSECT);
+    }
+    else
+    {
+        /* Relative position of the origin inside of the tube's reference frame. */
+
+        VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(pvS0, &psTB0->m_vOrigin);
+
+        VAR_T(C)                            fDS_U0 = FCN_V(tgMH_DOT)(&vDS, &psTB0->m_vU_Basis0);
+        VAR_T(C)                            fDS_U1 = FCN_V(tgMH_DOT)(&vDS, &psTB0->m_vU_Basis1);
+        VAR_T(C)                            fDS_UA = FCN_V(tgMH_DOT)(&vDS, &psTB0->m_vU_HAX);
+
+        /* Relative distance of the origin on the cross-sectional plane of the tube. */
+
+        VAR_T(C)                            fRelSq = fDS_U0*fDS_U0 + fDS_U1*fDS_U1;
+
+        VAR_T(C)                            fRad = psTB0->m_fRadius + fPad;
+        VAR_T(C)                            fRadSq = fRad * fRad;
+
+        if (LN_CAP_0)
+        {
+            /* If the origin lies outside of the tube and only moves away - intersection can not take place. */
+
+            if (!((fDS_UA > TYPE_K(0)) ^ (fD1_UA > TYPE_K(0))))
+            {
+                if (TB_CAP_0 && fDS_UA < -psTB0->m_fExtent)
+                {
+                    return (KTgE_NO_INTERSECT);
+                };
+
+                if (TB_CAP_1 && fDS_UA > psTB0->m_fExtent)
+                {
+                    return (KTgE_NO_INTERSECT);
+                };
+            };
+
+            /* If the origin lies outside of the tube and only moves away - intersection can not take place. */
+            /*  In the radial case moving away is determined by projecting the direction vector onto the difference vector after both have been projected onto the */
+            /* cross-sectional plane. */
+
+            if (fRelSq > fRadSq && (fDS_U0*fD1_U0 + fDS_U1*fD1_U1) > TYPE_K(0))
+            {
+                return (KTgE_NO_INTERSECT);
+            };
+        }
+
+        {
+            /* R² = (DS_U0 + ζ•D0_U0)² + (DS_U1 + ζ•D0_U1)² */
+            /* R² = DS_U0•DS_U0 + 2•ζ•DS_U0•D0_U0 + ζ•ζ•D0_U0•D0_U0 + DS_U1•DS_U1 + 2•ζ•DS_U1•D0_U1 + ζ•ζ•D0_U1•D0_U1 */
+            /* 0  = ζ•ζ_(D0_U0•D0_U0 + D0_U1•D0_U1,DIM) + ζ_(2•DS_U0•D0_U0 + 2•DS_U1•D0_U1,DIM) + DS_U0•DS_U0 + DS_U1•DS_U1 - R² */
+
+            VAR_T(C)                            fHalfNegB = -TYPE_K(1) * (fDS_U0*fD1_U0 + fDS_U1*fD1_U1);
+            VAR_T(C)                            fC = fRelSq - fRadSq;
+            VAR_T(C)                            fDet = fHalfNegB*fHalfNegB - fC*fA;
+
+            if (fDet < TYPE_K(0))
+            {
+                return (KTgE_NO_INTERSECT);
+            }
+            else
+            {
+                VAR_T(C)                            fInvA = TYPE_K(1) / fA;
+                VAR_T(C)                            fDetSqrt = FCN_F(tgPM_SQRT)(fDet);
+                VAR_T(C)                            fT0 = (fHalfNegB - fDetSqrt) * fInvA;
+                VAR_T(C)                            fT1 = (fHalfNegB + fDetSqrt) * fInvA;
+                VAR_T(C)                            fK0 = fDS_UA + fT0 * fD1_UA;
+                VAR_T(C)                            fK1 = fDS_UA + fT1 * fD1_UA;
+
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fT0, pvD0);
+                VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fT1, pvD0);
+                VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(fK0, &psTB0->m_vU_HAX);
+                VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)(fK1, &psTB0->m_vU_HAX);
+                VEC_T(1,C)                          vK4 = FCN_V(tgMH_SUB)(&vK0, &vK2);
+                VEC_T(1,C)                          vK5 = FCN_V(tgMH_SUB)(&vK1, &vK3);
+                VEC_T(1,C)                          vK6 = FCN_V(tgMH_ADD)(&vDS, &vK4);
+                VEC_T(1,C)                          vK7 = FCN_V(tgMH_ADD)(&vDS, &vK5);
+
+                *pvN0 = FCN_V(tgMH_NORM_LEN)(pfLN0, &vK6);
+                *pvN1 = FCN_V(tgMH_NORM_LEN)(pfLN1, &vK7);
+
+                return (KTgS_OK);
+            };
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

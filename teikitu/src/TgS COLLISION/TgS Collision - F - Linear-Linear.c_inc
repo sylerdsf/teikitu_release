@@ -1,0 +1,303 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Linear-Linear.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+MSVC_WARN_DISABLE_PUSH( 6235 ) /* Analysis - (<non-zero constant> || <expression>) is always a non-zero constant. */
+MSVC_WARN_DISABLE_PUSH( 6239 ) /* Analysis - (<non-zero constant> && <expression>) always evaluates to the result of <expression>. */
+MSVC_WARN_DISABLE_PUSH( 6240 ) /* Analysis - (<expression> && <non-zero constant>) always evaluates to the result of <expression>. */
+
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- VPM(tgCO_F,ParamSq) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/** -- Internal Function -- bC0, bC1, bC2, bC3 : Indicate the termination condition of the linear {bc0,bC1}, {bC2,bC3}
+\b Input: vS0,vD0: Origin and Direction for Linear #1
+\b Input: vS1,vD1: Origin and Direction for Linear #2
+\b Output: _tyT0, _tyT1: Parametric parameter defining points of minimal distance on linear #1, and linear #2 respectively
+\b Return: Minimal distance between the two linears or negative type max if they intersect. */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+VAR_T() VPM(tgCO_F,ParamSq)( VAR_T(P) pfT0, VAR_T(P) pfT1, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0, VEC_T(1,CPC) pvS1, VEC_T(1,CPC) pvD1 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(pvS1, pvS0);
+
+    VAR_T(C)                            fD0_D0 = FCN_V(tgMH_LSQ)(pvD0);
+    VAR_T(C)                            fD1_D1 = FCN_V(tgMH_LSQ)(pvD1);
+    VAR_T(C)                            fD0_D1 = FCN_V(tgMH_DOT)(pvD0, pvD1);
+
+    VAR_T(C)                            fDS_D0 = FCN_V(tgMH_DOT)(&vDS, pvD0);
+    VAR_T(C)                            fDS_D1 = -FCN_V(tgMH_DOT)(&vDS, pvD1);
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)(&vDS);
+
+    VAR_T(C)                            fDet = fD0_D0*fD1_D1 - fD0_D1*fD0_D1;
+    VAR_T()                             fT0, fT1;
+
+    TgPARAM_CHECK( pvS0 != pvS1 && pvD0 != pvD1 && pvS0 != pvD0 && pvS0 != pvD1 );
+    TgPARAM_CHECK( FCN_V(tgMH_Is_Point_Valid)(pvS0) && FCN_V(tgMH_Is_Vector_Valid)(pvD0) );
+    TgPARAM_CHECK( FCN_V(tgMH_Is_Point_Valid)(pvS1) && FCN_V(tgMH_Is_Vector_Valid)(pvD1) );
+
+    if (fDet > VAR_K(KTgEPS)*fD0_D0*fD1_D1)
+    {
+        fT0 = fDS_D0*fD1_D1 + fDS_D1*fD0_D1;
+        fT1 = fDS_D0*fD0_D1 + fDS_D1*fD0_D0;
+
+        if (LN_CAP_0 && fT0 < TYPE_K(0))
+        {   /* == Negative region for Segment 0 == */
+            if (LN_CAP_2 && fT1 < TYPE_K(0))
+            {   /* -- Negative region for Segment 1 -- */
+                fT0 = FCN_F(tgCM_CLP)(fDS_D0 / fD0_D0, TYPE_K(0), TYPE_K(1));
+                fT1 = fDS_D0 > TYPE_K(0) ? TYPE_K(0) : FCN_F(tgCM_CLP)(fDS_D1 / fD1_D1, TYPE_K(0), TYPE_K(1));
+            }
+            else if (!LN_CAP_3 || fT1 <= fDet)
+            {   /* -- Interior region for Segment 1 -- */
+                fT0 = TYPE_K(0);
+                fT1 = FCN_F(tgCM_CLP)(fDS_D1 / fD1_D1, TYPE_K(0), TYPE_K(1));
+            }
+            else
+            {   /* -- Positive region for Segment 1 -- */
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_ADD)(&vDS, pvD1);
+                VAR_T(C)                            fDE_D0 = FCN_V(tgMH_DOT)(pvD0, &vK0);
+
+                fT0 = FCN_F(tgCM_CLP)(fDE_D0 / fD0_D0, TYPE_K(0), TYPE_K(1));
+                fT1 = fDE_D0 > TYPE_K(0) ? TYPE_K(1) : FCN_F(tgCM_CLP)(fDS_D1 / fD1_D1, TYPE_K(0), TYPE_K(1));
+            };
+        }
+        else if (!LN_CAP_1 || fT0 <= fDet)
+        {   /* == Interior region for Segment 0 == */
+            if (LN_CAP_2 && fT1 < TYPE_K(0))
+            {   /* -- Negative region for Segment 1 -- */
+                fT0 = FCN_F(tgCM_CLP)(fDS_D0 / fD0_D0, TYPE_K(0), TYPE_K(1));
+                fT1 = TYPE_K(0);
+            }
+            else if (!LN_CAP_3 || fT1 <= fDet)
+            {   /* -- Interior region for Segment 1 -- */
+                fT0 = fT0 / fDet;
+                fT1 = fT1 / fDet;
+            }
+            else
+            {   /* -- Positive region for Segment 1 -- */
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_ADD)(&vDS, pvD1);
+                VAR_T(C)                            fDE_D0 = FCN_V(tgMH_DOT)(pvD0, &vK0);
+
+                fT0 = FCN_F(tgCM_CLP)(fDE_D0 / fD0_D0, TYPE_K(0), TYPE_K(1));
+                fT1 = TYPE_K(1);
+            };
+        }
+        else
+        {   /* == Positive region for Segment 0 == */
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)(&vDS, pvD0);
+            VAR_T(C)                            fDF_D1 = -FCN_V(tgMH_DOT)(pvD1, &vK0);
+
+            if (LN_CAP_2 && fT1 < TYPE_K(0))
+            {   /* -- Negative region for Segment 1 -- */
+                fT0 = FCN_F(tgCM_CLP)(fDS_D0 / fD0_D0, TYPE_K(0), TYPE_K(1));
+                fT1 = fDS_D0 > fD0_D0 ? TYPE_K(0) : FCN_F(tgCM_CLP)(fDF_D1 / fD1_D1, TYPE_K(0), TYPE_K(1));
+            }
+            else if (!LN_CAP_3 || fT1 <= fDet)
+            {   /* -- Interior region for Segment 1 -- */
+                fT0 = TYPE_K(1);
+                fT1 = FCN_F(tgCM_CLP)(fDF_D1 / fD1_D1, TYPE_K(0), TYPE_K(1));
+            }
+            else
+            {   /* -- Positive region for Segment 1 -- */
+                VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vDS, pvD1);
+                VAR_T(C)                            fDE_D0 = FCN_V(tgMH_DOT)(pvD0, &vK1);
+
+                fT0 = FCN_F(tgCM_CLP)(fDE_D0 / fD0_D0, TYPE_K(0), TYPE_K(1));
+                fT1 = fDE_D0 <= fD0_D0 ? TYPE_K(1) : FCN_F(tgCM_CLP)(fDF_D1 / fD1_D1, TYPE_K(0), TYPE_K(1));
+            };
+        };
+    }
+    else
+    {
+        /* Linears are parallel */
+
+        VAR_T(C)                            fDE_D0 = fDS_D0 + fD0_D1;
+        VAR_T(C)                            fDF_D1 = fD0_D1 - fDS_D1;
+
+        VAR_T()                             fTest, fDSSQ = VAR_K(KTgMAX);
+
+        fT0 = VAR_K(KTgMAX);
+        fT1 = VAR_K(KTgMAX);
+
+        if (fD0_D1 >= TYPE_K(0))
+        {
+            /* Both segments have the same direction */
+
+            if (LN_CAP_0 && LN_CAP_3 && ((fDS_D0 < TYPE_K(0)) || (fDS_D1 > fD1_D1)))
+            {
+                /* First segment origin beyond second segment termination. */
+                /* Second segment termination lies behind the first segment. */
+
+                fTest = fDS_DS - TYPE_K(2,0)*fDS_D1 + fD1_D1;
+                if (fTest < fDSSQ)
+                {
+                    fDSSQ = fTest;
+                    fT0 = TYPE_K(0);
+                    fT1 = TYPE_K(1);
+                };
+            };
+
+            if (LN_CAP_1 && LN_CAP_2 && ((fDS_D0 > fD0_D0) || ((-fDS_D1) > fD0_D1)))
+            {
+                /* First segment termination behind the second segment. */
+                /* Second segment origin beyond the first segment. */
+
+                fTest = fDS_DS - TYPE_K(2,0)*fDS_D0 + fD0_D0;
+                if (fTest < fDSSQ)
+                {
+                    fDSSQ = fTest;
+                    fT0 = TYPE_K(1);
+                    fT1 = TYPE_K(0);
+                };
+            };
+        }
+        else
+        {
+            /* The segments have opposing direction. */
+
+            if (LN_CAP_1 && LN_CAP_3 && ((fDF_D1 > fD1_D1) || (fDE_D0 > fD0_D0)))
+            {
+                /*  First segment termination lies beyond the second segment termination. */
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)(&vDS, pvD0);
+                VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vK0, pvD1);
+
+                fTest = FCN_V(tgMH_LSQ)(&vK1);
+                if (fTest < fDSSQ)
+                {
+                    fDSSQ = fTest;
+                    fT0 = TYPE_K(1);
+                    fT1 = TYPE_K(1);
+                };
+            };
+
+            if (LN_CAP_0 && LN_CAP_2 && ((fDS_D0 < TYPE_K(0)) || (fDS_D1 < TYPE_K(0))))
+            {
+                /*  First segment origin lies behind the second segment origin. */
+
+                if (fDS_DS < fDSSQ)
+                {
+                    fDSSQ = fDS_DS;
+                    fT0 = TYPE_K(0);
+                    fT1 = TYPE_K(0);
+                };
+            };
+        };
+
+        if ((!LN_CAP_2 || TYPE_K(0) < fDS_D1) && (!LN_CAP_3 || fDS_D1 < fD1_D1))
+        {
+            /* First segment origin inside second segment. */
+
+            VAR_T(C)                            fK0 = fDS_D1 / fD1_D1;
+
+            fTest = fDS_DS - fDS_D1*fK0;
+            if (fTest < fDSSQ)
+            {
+                fDSSQ = fTest;
+                fT0 = TYPE_K(0);
+                fT1 = fK0;
+            };
+        };
+
+        if (LN_CAP_1 && (!LN_CAP_2 || TYPE_K(0) < fDF_D1) && (!LN_CAP_3 || fDF_D1 < fD1_D1))
+        {
+            /* First segment termination inside second segment. */
+            VAR_T(C)                            fK0 = fDF_D1 / fD1_D1;
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fK0, pvD1);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(pvD0, &vDS);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_SUB)(&vK1, &vK0);
+
+            fTest = FCN_V(tgMH_LSQ)(&vK2);
+            if (fTest < fDSSQ)
+            {
+                fDSSQ = fTest;
+                fT0 = TYPE_K(1);
+                fT1 = fK0;
+            };
+        };
+
+
+        if ((!LN_CAP_0 || TYPE_K(0) <= fDS_D0) && (!LN_CAP_1 || fDS_D0 <= fD0_D0))
+        {
+            /* Second segment origin inside first segment. */
+
+            VAR_T(C)                            fK0 = fDS_D0 / fD0_D0;
+
+            fTest = fDS_DS - fDS_D0*fK0;
+            if (fTest < fDSSQ)
+            {
+                fDSSQ = fTest;
+                fT0 = fK0;
+                fT1 = TYPE_K(0);
+            };
+        };
+
+        if (LN_CAP_3 && (!LN_CAP_0 || TYPE_K(0) < fDE_D0) && (!LN_CAP_1 || fDE_D0 <= fD0_D0))
+        {
+            /* Second segment termination inside first segment. */
+
+            VAR_T(C)                            fK0 = fDE_D0 / fD0_D0;
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fK0, pvD0);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vDS, pvD1);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_SUB)(&vK1, &vK0);
+
+            fTest = FCN_V(tgMH_LSQ)(&vK2);
+            if (fTest < fDSSQ)
+            {
+                fDSSQ = fTest;
+                fT0 = fK0;
+                fT1 = TYPE_K(1);
+            };
+        };
+
+        TgERROR( fT0 < VAR_K(KTgMAX) && fT1 < VAR_K(KTgMAX) );
+    };
+
+    *pfT0 = fT0;
+    *pfT1 = fT1;
+
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fT0, pvD0);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fT1, pvD1);
+        VEC_T(1,C)                          vK3 = FCN_V(tgMH_SUB)(&vDS, &vK0);
+        VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)(&vK3, &vK1);
+
+        return (FCN_V(tgMH_LSQ)(&vK4));
+    }
+}
+
+
+/* =============================================================================================================================================================================== */
+
+MSVC_WARN_DISABLE_POP( 6235 )
+MSVC_WARN_DISABLE_POP( 6239 )
+MSVC_WARN_DISABLE_POP( 6240 )
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,886 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle-Triangle.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  File Local Functions                                                                                                                                                           */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+static TgRESULT                             FCN_VO(tgCO_F_ST_Internal_CoP_ST)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(STg2_CO_Clip_List,PC), VAR_T(C), VEC_T(1,CPC) );
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_VO(tgCO_F_ST_ParamSq_ST) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psST0, psST1: Space triangle primitive                                                                                                                                  */
+/* Output: _fST00, _fST01: Parametric parameters to generate point of minimal distance on triangle #1                                                                              */
+/* Output: _fST10, _fST11: Parametric parameters to generate point of minimal distance on triangle #2                                                                              */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_ST_ParamSq_ST)(VAR_T(P) pfST00, VAR_T(P) pfST01, VAR_T(P) pfST10, VAR_T(P) pfST11, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgSTRI,CPC) psST1)
+{
+    VAR_T()                             fDistSq, fET00, fET01, fET10, fET11, fTest, fT0, fT1, fG1;
+
+    /* == Test Triangle 0 Edges against Triangle 1 == */
+
+    fDistSq = FCN_VO(tgCO_FI_ST_ParamSq_LR11)( &fET00, &fET01, &fET10, psST0, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 0, psST1->m_sCT.m_sET.m_avEdge + 0 );
+    fET11 = TYPE_K(0);
+
+    fTest = FCN_VO(tgCO_FI_ST_ParamSq_LR11)( &fT0, &fT1, &fG1, psST0, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 1, psST1->m_sCT.m_sET.m_avEdge + 1 );
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fET00 = fT0;
+        fET01 = fT1;
+        fET10 = TYPE_K(1) - fG1;
+        fET11 = fG1;
+    };
+
+    fTest = FCN_VO(tgCO_FI_ST_ParamSq_LR11)( &fT0, &fT1, &fG1, psST0, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 2, psST1->m_sCT.m_sET.m_avEdge + 2 );
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fET00 = fT0;
+        fET01 = fT1;
+        fET10 = TYPE_K(0);
+        fET11 = TYPE_K(1) - fG1;
+    };
+
+    /* == Test Triangle 1 Edges against Triangle 0 == */
+
+    fTest = FCN_VO(tgCO_FI_ST_ParamSq_LR11)( &fT0, &fT1, &fG1, psST1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 0, psST0->m_sCT.m_sET.m_avEdge + 0 );
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fET00 = fG1;
+        fET01 = TYPE_K(0);
+        fET10 = fT0;
+        fET11 = fT1;
+    };
+
+    fTest = FCN_VO(tgCO_FI_ST_ParamSq_LR11)( &fT0, &fT1, &fG1, psST1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 1, psST0->m_sCT.m_sET.m_avEdge + 1 );
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fET00 = TYPE_K(1) - fG1;
+        fET01 = fG1;
+        fET10 = fT0;
+        fET11 = fT1;
+    };
+
+    fTest = FCN_VO(tgCO_FI_ST_ParamSq_LR11)( &fT0, &fT1, &fG1, psST1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 2, psST0->m_sCT.m_sET.m_avEdge + 2 );
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fET00 = TYPE_K(0);
+        fET01 = TYPE_K(1) - fG1;
+        fET10 = fT0;
+        fET11 = fT1;
+    };
+
+    /* == Return Values == */
+
+    *pfST00 = fET00;
+    *pfST01 = fET01;
+    *pfST10 = fET10;
+    *pfST11 = fET11;
+
+    return (fDistSq);
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Test_ST) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* Input:  psST0, psST1: Space triangle primitive                                                                                                                                  */
+/* Return: True if the two triangles are in contact                                                                                                                                */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FCN_VO(tgCO_F_ST_Test_ST)( VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgSTRI,CPC) psST1 )
+{
+    VAR_T()                             fMin, fMax;
+
+    VAR_T(C) fTriD0 = FCN_V(tgMH_DOT)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal, psST0->m_sCT.m_sET.m_sPT.m_avPoint);
+    VAR_T(C) fTriD1 = FCN_V(tgMH_DOT)(&psST1->m_sCT.m_sET.m_sPT.m_vNormal, psST1->m_sCT.m_sET.m_sPT.m_avPoint);
+    VEC_T(1,C) vK0 = FCN_V(tgMH_CX)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+
+    /* == Triangle Normal == */
+
+    FCN_VO(tgGM_ST_Project)(&fMin, &fMax, psST1, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+    if (fMin > fTriD0 || fMax < fTriD0)
+    {
+        return (false);
+    };
+
+    FCN_VO(tgGM_ST_Project)(&fMin, &fMax, psST0, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+    if (fMin > fTriD1 || fMax < fTriD1)
+    {
+        return (false);
+    };
+
+    /* == Cross-Product Normal == */
+
+    if (!FCN_F(tgCM_NR0)(FCN_V(tgMH_LSQ)(&vK0)))
+    {
+        VEC_T(1)                            vNormal;
+        TgSINT_F32                          iE0;
+
+        for (iE0 = 0; iE0 < 9; ++iE0)
+        {
+            vNormal = FCN_V(tgMH_CX)(psST0->m_sCT.m_sET.m_avEdge + (iE0 & 3), psST1->m_sCT.m_sET.m_avEdge + (iE0 >> 3));
+
+            if (FCN_VO(tgCO_F_PT_Is_Seperating_Axis_PT)(&vNormal, &psST0->m_sCT.m_sET.m_sPT, &psST1->m_sCT.m_sET.m_sPT))
+            {
+                return (false);
+            };
+        };
+    }
+    else
+    {
+        /* Normal extruded space of triangle 0 */
+
+        if (
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 0, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 0) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 0, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 1) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 0, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 2) < TYPE_K(0)
+        )
+        {
+            return (false);
+        };
+
+        if (
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 1, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 0) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 1, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 1) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 1, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 2) < TYPE_K(0)
+        )
+        {
+            return (false);
+        };
+
+        if (
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 2, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 0) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 2, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 1) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST0->m_avPlane + 2, psST1->m_sCT.m_sET.m_sPT.m_avPoint + 2) < TYPE_K(0)
+        )
+        {
+            return (false);
+        };
+
+        /* Normal extruded space of triangle 1 */
+
+        if (
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 0, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 0) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 0, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 1) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 0, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 2) < TYPE_K(0)
+        )
+        {
+            return (false);
+        };
+
+        if (
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 0) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 1) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 2) < TYPE_K(0)
+        )
+        {
+            return (false);
+        };
+
+        if (
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 2, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 0) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 2, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 1) < TYPE_K(0) &&
+            FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psST1->m_avPlane + 2, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 2) < TYPE_K(0)
+        )
+        {
+            return (false);
+        };
+    };
+
+    return (true);
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Test_Sweep_ST) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* Input:  psST0, psST1: Space triangle primitive - Triangle #2 (psST1) is being swept.                                                                                            */
+/* Input:  psDT: A structure holding the swept primitive displacement for the entire duration of the test period.                                                                  */
+/* Return: True if the primitives contact anywhere in 4D space.                                                                                                                    */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FCN_VO(tgCO_F_ST_Test_Sweep_ST)( VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgSTRI,CPC) psST1, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    VEC_OBJ_T(STg2_CO_Axis_Test)        sAxTest; /* Parameter data output variable */
+
+    VAR_T(C) fS0_NM = FCN_V(tgMH_DOT)(psST0->m_sCT.m_sET.m_sPT.m_avPoint, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+
+    sAxTest.m_fLimitT = TYPE_K(1); /* The maximum t-value by which a contact must happen resulting in non-contact. */
+    sAxTest.m_fMinT = -VAR_K(KTgMAX);
+    sAxTest.m_fMaxT = VAR_K(KTgMAX);
+
+    /* -- Axis: Triangle 0 Normal -- */
+
+    sAxTest.m_fMin0 = fS0_NM;
+    sAxTest.m_fMax0 = fS0_NM;
+    FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin1, &sAxTest.m_fMax1, psST1, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+    sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+
+    if (0 >= FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest))
+    {
+        return (false);
+    }
+    else
+    {
+        /* Check to see if the triangle's are parallel. */
+        TgSINT_F32                          iE0;
+
+        VEC_T(1,C) vK0 = FCN_V(tgMH_CX)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+
+        if (FCN_V(tgMH_LSQ)(&vK0) > VAR_K(KTgEPS))
+        {
+            /* -- Axis: Triangle 1 Normal -- */
+
+            VAR_T(C) fS1_NM = FCN_V(tgMH_DOT)(psST1->m_sCT.m_sET.m_sPT.m_avPoint, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+
+            FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin0, &sAxTest.m_fMax0, psST0, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+            sAxTest.m_fMin1 = fS1_NM;
+            sAxTest.m_fMax1 = fS1_NM;
+            sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+
+            if (0 >= FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest))
+            {
+                return (false);
+            };
+
+            /* == Triangle Cross-Product == */
+
+            for (iE0 = 0; iE0 < 9; ++iE0)
+            {
+                VEC_T(1,C) vK1 = FCN_V(tgMH_CX)(psST0->m_sCT.m_sET.m_avEdge + (iE0 & 3), psST1->m_sCT.m_sET.m_avEdge + (iE0 >> 3));
+
+                FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin0, &sAxTest.m_fMax0, psST0, &vK1);
+                FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin1, &sAxTest.m_fMax1, psST1, &vK1);
+                sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &vK1);
+
+                if (0 >= FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest))
+                {
+                    return (false);
+                };
+            };
+        }
+        else
+        {
+            /* == Triangle 0 Space == */
+
+            for (iE0 = 0; iE0 < 3; ++iE0)
+            {
+                VEC_T(1,C) vK1 = FCN_V(tgMH_CX)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal, psST0->m_sCT.m_sET.m_avEdge + iE0);
+
+                FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin0, &sAxTest.m_fMax0, psST0, &vK1);
+                FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin1, &sAxTest.m_fMax1, psST1, &vK1);
+                sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &vK1);
+
+                if (0 >= FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest))
+                {
+                    return (false);
+                };
+            };
+
+            /* == Triangle 1 Space == */
+
+            for (iE0 = 0; iE0 < 3; ++iE0)
+            {
+                VEC_T(1,C) vK1 = FCN_V(tgMH_CX)(&psST1->m_sCT.m_sET.m_sPT.m_vNormal, psST1->m_sCT.m_sET.m_avEdge + iE0);
+
+                FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin0, &sAxTest.m_fMax0, psST0, &vK1);
+                FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin1, &sAxTest.m_fMax1, psST1, &vK1);
+                sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &vK1);
+
+                if (0 >= FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest))
+                {
+                    return (false);
+                };
+            };
+        };
+
+        return (true);
+    }
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Intersect_ST) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  psST0, psST1: Space triangle primitive                                                                                                                                  */
+/* Output: tgPacket: Points of intersection between the two primitives are added to it                                                                                             */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_ST_Intersect_ST)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgSTRI,CPC) psST1)
+{
+    if (!FCN_VO(tgCO_F_ST_Test_ST)(psST0, psST1))
+    {
+        return (KTgE_NO_INTERSECT);
+    }
+    else
+    {
+        VAR_T()                             fK0;
+        VEC_OBJ_T(STg2_CO_Clip_List,PU)             psCL;
+
+        VAR_T(C) fN0_N1 = FCN_V(tgMH_DOT)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+        VEC_T(1,C) vK0 = FCN_V(tgMH_CX)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+        VEC_T(1) vN0xN1 = FCN_V(tgMH_NORM_LEN)(&fK0, &vK0);
+        VAR_T(C) fDet = TYPE_K(1) - fN0_N1*fN0_N1;
+
+        psCL = TgMALLOC_POOL( sizeof( VEC_OBJ_T(STg2_CO_Clip_List) ) + 8 * sizeof( VEC_T(1) ) );
+        psCL->m_niPoint = 0;
+        psCL->m_niMax = 8;
+
+        if (FCN_F(tgCM_NR0)(fK0) || FCN_F(tgCM_NR0)(fDet)) /* Co-Planar Triangles */
+        {
+            FCN_VO(tgCO_F_ST_Clip_PT)(psCL, psST0, &psST1->m_sCT.m_sET.m_sPT);
+            return (FCN_VO(tgCO_F_ST_Internal_CoP_ST)(psPacket, psCL, TYPE_K(0), &psST0->m_sCT.m_sET.m_sPT.m_vNormal));
+        }
+        else
+        {
+            VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+            VAR_T(C) fD0 = FCN_V(tgMH_DOT)(psST0->m_sCT.m_sET.m_sPT.m_avPoint, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+            VAR_T(C) fD1 = FCN_V(tgMH_DOT)(psST1->m_sCT.m_sET.m_sPT.m_avPoint, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+            TgSINT_F32_C niPoint = tgCM_MIN_S32( psCL->m_niPoint, psPacket->m_niMaxContact - psPacket->m_niContact );
+
+            VAR_T(C) fT0 = (fD0 - fD1*fN0_N1) / fDet;
+            VAR_T(C) fT1 = (fD1 - fD0*fN0_N1) / fDet;
+            VEC_T(1,C) vK2 = FCN_V(tgMH_MUL_SV)(fT0, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+            VEC_T(1,C) vK1 = FCN_V(tgMH_MUL_SV)(fT1, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+            VEC_T(1,C) vS0 = FCN_V(tgMH_ADD)(&vK2, &vK1);
+
+            FCN_VO(tgCO_FI_ST_Clip_LR11)(psCL, psST0, &vS0, &vN0xN1);
+            FCN_VO(tgCO_F_Clip_ST)(psCL, psST1);
+
+            switch (niPoint)
+            {
+                case 2:
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+                    psContact->m_vS0 = psCL->m_avPoint[1];
+                    psContact->m_vN0 = vN0xN1;
+                    psContact->m_fT0 = TYPE_K(0);
+                    psContact->m_fDepth = TYPE_K(0);
+
+                    ++psPacket->m_niContact;
+
+                case 1:
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+                    psContact->m_vS0 = psCL->m_avPoint[0];
+                    psContact->m_vN0 = vN0xN1;
+                    psContact->m_fT0 = TYPE_K(0);
+                    psContact->m_fDepth = TYPE_K(0);
+
+                    ++psPacket->m_niContact;
+
+                case 0:
+                    return (niPoint < psCL->m_niPoint ? KTgE_MAX_CONTACTS : KTgS_OK);
+
+                default:
+                    TgS_NO_DEFAULT(break);
+            };
+            TgERROR(false);
+            return (KTgE_FAIL);
+        };
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Sweep_ST) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/*                                                                                                                                                                                 */
+/*  Axis Separation technique used to determine if two triangles are intersecting.                                                                                                 */
+/*                                                                                                                                                                                 */
+/* Input:  tgPacket:  Contact generation parameters                                                                                                                                */
+/* Input:  fPM: Current normalized time of first contact for the contact query set.                                                                                                */
+/* Input:  psST0, psST1: Space triangle primitive - Triangle #2 (psST1) is being swept.                                                                                            */
+/* Input:  psDT: A structure holding the swept primitive displacement for the entire duration of the test period.                                                                  */
+/* Output: tgPacket: Contact points are added or replace the current set depending on the time comparison and given parameters                                                     */
+/* Output: fPM: New normalized time of first contact                                                                                                                               */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_ST_Sweep_ST)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgSTRI,CPC) psST1, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    VEC_OBJ_T(STg2_CO_Axis_Project)     sP0, sP1;
+    VEC_OBJ_T(STg2_CO_Axis_Info)        sNFO;
+    TgRESULT                            iResult;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_ST_Is_Valid)(psST0) && FCN_VO(tgGM_ST_Is_Valid)(psST1) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    };
+
+    /*TgDEBUG_COLLISION_TRIANGLE_CREATEID(iDBG_TriID, psST1, ETgFEBUG_COLLISION_ENTERFCN); */
+
+    sNFO.m_enSide = ETgCO_AXIS_CONTACT_DIRECTION__UNKNOWN;
+    sNFO.m_fMinT = VAR_K(KTgMAX);
+
+    iResult = FCN_VO(tgCO_F_ST_Axis_Seperation_ST)(&sNFO, *pfPM + psPacket->m_fSweepTol, psST0, psST1, psDT);
+
+    if (TgFAILED( iResult ))
+    {
+        TgERROR( KTgE_NO_INTERSECT == iResult );
+        return (iResult);
+    };
+
+    /* == Contact Generation == */
+
+    TgERROR( (sNFO.m_enSide != ETgCO_AXIS_CONTACT_DIRECTION__UNKNOWN) );
+
+    if (sNFO.m_enSide == ETgCO_AXIS_CONTACT_DIRECTION__PENETRATED || sNFO.m_fMinT < TYPE_K(0))
+    {
+        psPacket->m_niContact = 0;
+        *pfPM = TYPE_K(0);
+        return (KTgE_PREPENETRATION);
+    };
+
+    /* Make sure this contact has not occurred more than tolerance later than the current sweep time. */
+
+    if (sNFO.m_fMinT > *pfPM + psPacket->m_fSweepTol)
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (sNFO.m_fMinT < *pfPM - psPacket->m_fSweepTol)
+    {
+        psPacket->m_niContact = 0;
+        *pfPM = sNFO.m_fMinT;
+    };
+
+    FCN_VO(tgCO_F_PT_Axis_ProjInfo)( &sP0, &sNFO.m_vNormal, &psST0->m_sCT.m_sET.m_sPT );
+    FCN_VO(tgCO_F_PT_Axis_ProjInfo)( &sP1, &sNFO.m_vNormal, &psST1->m_sCT.m_sET.m_sPT );
+
+    {
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+        VEC_OBJ_T(STg2_CO_Clip_List,PU)             psCL;
+        TgSINT_F32                          niPoint;
+
+        /* Contact generation - interpolate the position of the triangle's at the given time, and compute the contact points. */
+
+        TgBOOL_C                            bNegSide = sNFO.m_enSide == ETgCO_AXIS_CONTACT_DIRECTION__NEGATIVE;
+        VEC_T(1,C)                          vOffset = FCN_V(tgMH_MUL_SV)(sNFO.m_fMinT, &psDT->m_vDT);
+
+        /*  The two triangles are situated so that they are just touching each other.  Examine how the triangle vertices were projected onto the axis to determine the */
+        /* geometric relation of the contact - and then create the contact points. */
+
+        TgSINT_F32_C                        niVertD0 = bNegSide ? sP0.m_iMinID : sP0.m_iMaxID;
+        VEC_T(1,PC)                         avVert0 = bNegSide ? sP0.m_avMinVert : sP0.m_avMaxVert;
+        TgSINT_F32_C                        niVertD1 = bNegSide ? sP1.m_iMaxID : sP1.m_iMinID;
+        VEC_T(1,PC)                         avVert1 = bNegSide ? sP1.m_avMaxVert : sP1.m_avMinVert;
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_NEG)(&sNFO.m_vNormal);
+        VEC_T(1,C)                          vNormal = bNegSide ? vK0 : sNFO.m_vNormal;
+
+        psCL = TgMALLOC_POOL( sizeof( VEC_OBJ_T(STg2_CO_Clip_List) ) + 8 * sizeof( VEC_T(1) ) );
+        psCL->m_niPoint = 0;
+        psCL->m_niMax = 8;
+
+        if (1 == niVertD0) /* Triangle 0 vertex touching a feature of Triangle 1 */
+        {
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+            psContact->m_vS0 = avVert0[0];
+            psContact->m_vN0 = vNormal;
+            psContact->m_fT0 = sNFO.m_fMinT;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+            return (KTgS_OK);
+        };
+
+        if (1 == niVertD1) /* Triangle 1 vertex touching a feature of Triangle 0 */
+        {
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+            psContact->m_vS0 = FCN_V(tgMH_ADD)(&avVert1[0], &vOffset);
+            psContact->m_vN0 = vNormal;
+            psContact->m_fT0 = sNFO.m_fMinT;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+            return (KTgS_OK);
+        };
+
+        if (2 == niVertD0 && 2 == niVertD1) /* Edge-Edge Contact */
+        {
+            VEC_T(1)                            vS0, vS1;
+            TgSINT_F32                          niCode;
+
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(avVert0 + 1, avVert0);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_ADD)(&vOffset, avVert1);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_SUB)(avVert1 + 1, avVert1);
+
+            niCode = FCN_VO(tgCO_F_LN_Internal_Intersect_LN)(&vS0, &vS1, avVert0, &vK1, &vK2, &vK3);
+
+            niPoint = tgCM_MIN_S32( niCode, psPacket->m_niMaxContact - psPacket->m_niContact );
+
+            switch (niPoint)
+            {
+                case 2:
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+                    psContact->m_vS0 = vS1;
+                    psContact->m_vN0 = vNormal;
+                    psContact->m_fT0 = sNFO.m_fMinT;
+                    psContact->m_fDepth = TYPE_K(0);
+
+                    ++psPacket->m_niContact;
+
+                case 1:
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+                    psContact->m_vS0 = vS0;
+                    psContact->m_vN0 = vNormal;
+                    psContact->m_fT0 = sNFO.m_fMinT;
+                    psContact->m_fDepth = TYPE_K(0);
+
+                    ++psPacket->m_niContact;
+
+                    return (niCode != niPoint ? KTgE_MAX_CONTACTS : KTgS_OK);
+
+                default:
+                    return (KTgE_NO_INTERSECT);
+            };
+        };
+
+        if (2 == niVertD0 && 3 == niVertD1) /* Edge-Face Contact */
+        {
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(avVert0, &vOffset);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_SUB)(avVert0 + 1, avVert0);
+
+            FCN_VO(tgCO_FI_ST_Clip_LR11)(psCL, psST1, &vK1, &vK2);
+            niPoint = tgCM_MIN_S32( psCL->m_niPoint, psPacket->m_niMaxContact - psPacket->m_niContact );
+
+            switch (niPoint)
+            {
+                case 2:
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+                    psContact->m_vS0 = FCN_V(tgMH_ADD)(&psCL->m_avPoint[1], &vOffset);
+                    psContact->m_vN0 = vNormal;
+                    psContact->m_fT0 = sNFO.m_fMinT;
+                    psContact->m_fDepth = TYPE_K(0);
+
+                    ++psPacket->m_niContact;
+
+                case 1:
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+                    psContact->m_vS0 = FCN_V(tgMH_ADD)(&psCL->m_avPoint[0], &vOffset);
+                    psContact->m_vN0 = vNormal;
+                    psContact->m_fT0 = sNFO.m_fMinT;
+                    psContact->m_fDepth = TYPE_K(0);
+
+                    ++psPacket->m_niContact;
+
+                    return (psCL->m_niPoint != niPoint ? KTgE_MAX_CONTACTS : KTgS_OK);
+
+                default:
+                    return (KTgE_NO_INTERSECT);
+            };
+        };
+
+        if (3 == niVertD0 && 2 == niVertD1) /* Face-Edge Contact */
+        {
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&vOffset, avVert1);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_SUB)(avVert1 + 1, avVert1);
+
+            FCN_VO(tgCO_FI_ST_Clip_LR11)(psCL, psST0, &vK1, &vK2);
+            niPoint = tgCM_MIN_S32( psCL->m_niPoint, psPacket->m_niMaxContact - psPacket->m_niContact );
+
+            switch (niPoint)
+            {
+                case 2:
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+                    psContact->m_vS0 = psCL->m_avPoint[1];
+                    psContact->m_vN0 = vNormal;
+                    psContact->m_fT0 = sNFO.m_fMinT;
+                    psContact->m_fDepth = TYPE_K(0);
+
+                    ++psPacket->m_niContact;
+
+                case 1:
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+                    psContact->m_vS0 = psCL->m_avPoint[0];
+                    psContact->m_vN0 = vNormal;
+                    psContact->m_fT0 = sNFO.m_fMinT;
+                    psContact->m_fDepth = TYPE_K(0);
+
+                    ++psPacket->m_niContact;
+
+                    return (psCL->m_niPoint != niPoint ? KTgE_MAX_CONTACTS : KTgS_OK);
+
+                default:
+                    return (KTgE_NO_INTERSECT);
+            };
+        };
+
+        TgERROR( 3 == niVertD0 && 3 == niVertD1 );
+
+        FCN_VO(tgCO_F_ST_Clip_PT)(psCL, psST0, &psST1->m_sCT.m_sET.m_sPT);
+
+        return (FCN_VO(tgCO_F_ST_Internal_CoP_ST)(psPacket, psCL, sNFO.m_fMinT, &vNormal));
+    }
+}
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  File Local Functions                                                                                                                                                           */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_VO(tgCO_F_ST_Internal_CoP_ST) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* Transfer the point generated by a clipping operation to the contact list.                                                                                                       */
+/* Input:  tgCL: F_Clip list of points                                                                                                                                             */
+/* Input:  fT0: Time of contact                                                                                                                                                    */
+/* Input:  vNormal: The normal of contact                                                                                                                                          */
+/* Output: tgPacket: Contact points are added to it                                                                                                                                */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+static TgRESULT FCN_VO(tgCO_F_ST_Internal_CoP_ST)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VAR_T(C) fT0, VEC_T(1,CPC) pvNormal )
+{
+    TgSINT_F32_C                        niPoint = tgCM_MIN_S32( psCL->m_niPoint, psPacket->m_niMaxContact - psPacket->m_niContact );
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+    switch (niPoint)
+    {
+        case 6:
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+            psContact->m_vS0 = psCL->m_avPoint[5];
+            psContact->m_vN0 = *pvNormal;
+            psContact->m_fT0 = fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+        case 5:
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+            psContact->m_vS0 = psCL->m_avPoint[4];
+            psContact->m_vN0 = *pvNormal;
+            psContact->m_fT0 = fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+        case 4:
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+            psContact->m_vS0 = psCL->m_avPoint[3];
+            psContact->m_vN0 = *pvNormal;
+            psContact->m_fT0 = fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+        case 3:
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = psCL->m_avPoint[2];
+            psContact->m_vN0 = *pvNormal;
+            psContact->m_fT0 = fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+        case 2:
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+            psContact->m_vS0 = psCL->m_avPoint[1];
+            psContact->m_vN0 = *pvNormal;
+            psContact->m_fT0 = fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+        case 1:
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+            psContact->m_vS0 = psCL->m_avPoint[0];
+            psContact->m_vN0 = *pvNormal;
+            psContact->m_fT0 = fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+        case 0:
+            return (niPoint < psCL->m_niPoint ? KTgE_MAX_CONTACTS : KTgS_OK);
+
+        default:
+            TgS_NO_DEFAULT(return (KTgE_FAIL));
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Axis_Seperation_ST) ------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psST0, psST1: Space triangle primitive - Triangle #2 (psST1) is being swept.                                                                                            */
+/* Input:  fLimitT: Current normalized time of contact for the contact query set.                                                                                                  */
+/* Input:  psDT: A structure holding the swept primitive displacement for the entire duration of the test period.                                                                  */
+/* Output: sNFO: Structure holds the resulting axis separation information necessary to create a contact set.                                                                      */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_ST_Axis_Seperation_ST)( VEC_OBJ_T(STg2_CO_Axis_Info,PC) psNFO, VAR_T(C) fLimitT, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgSTRI,CPC) psST1, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    VEC_OBJ_T(STg2_CO_Axis_Test)        sAxTest; /* Parameter data output variable */
+    TgSINT_F32                          iResult;
+    TgSINT_F32                          iE0;
+
+    VAR_T(C) fS0_NM = FCN_V(tgMH_DOT)(psST0->m_sCT.m_sET.m_sPT.m_avPoint, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+    VEC_T(1,C) vK0 = FCN_V(tgMH_CX)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+
+    sAxTest.m_fLimitT = fLimitT; /* The maximum t-value by which a contact must happen resulting in non-contact. */
+    sAxTest.m_fMinT = -VAR_K(KTgMAX);
+    sAxTest.m_fMaxT = VAR_K(KTgMAX);
+
+    /* -- Axis: Triangle 0 Normal -- */
+
+    sAxTest.m_fMin0 = fS0_NM;
+    sAxTest.m_fMax0 = fS0_NM;
+    FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin1, &sAxTest.m_fMax1, psST1, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+    sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+
+    iResult = FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest);
+    switch (iResult)
+    {
+        case 1: /* Update has occurred */
+            psNFO->m_enSide = (sAxTest.m_fMax1 < sAxTest.m_fMin0) ?
+                ETgCO_AXIS_CONTACT_DIRECTION__NEGATIVE : ETgCO_AXIS_CONTACT_DIRECTION__POSITIVE;
+            psNFO->m_vNormal = psST0->m_sCT.m_sET.m_sPT.m_vNormal;
+            psNFO->m_fMinT = sAxTest.m_fMinT;
+        case 0: /* Contact occurred in valid interval, but earlier contact already recorded. */
+            break;
+        case -1: /* No contact occurred during valid interval, thus primitives are separated on this axis. */
+            return (KTgE_NO_INTERSECT);
+    };
+
+    /* Check to see if the triangle's are parallel. */
+
+    if (FCN_V(tgMH_LSQ)(&vK0) > VAR_K(KTgEPS))
+    {
+        /* -- Axis: Triangle 1 Normal -- */
+
+        VAR_T(C) fS1_NM = FCN_V(tgMH_DOT)(psST1->m_sCT.m_sET.m_sPT.m_avPoint, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+
+        FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin0, &sAxTest.m_fMax0, psST0, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+        sAxTest.m_fMin1 = fS1_NM;
+        sAxTest.m_fMax1 = fS1_NM;
+        sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &psST1->m_sCT.m_sET.m_sPT.m_vNormal);
+
+        iResult = FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest);
+        switch (iResult)
+        {
+            case 1: /* Update has occurred */
+                psNFO->m_enSide = (sAxTest.m_fMax1 < sAxTest.m_fMin0) ?
+                    ETgCO_AXIS_CONTACT_DIRECTION__NEGATIVE : ETgCO_AXIS_CONTACT_DIRECTION__POSITIVE;
+                psNFO->m_vNormal = psST1->m_sCT.m_sET.m_sPT.m_vNormal;
+                psNFO->m_fMinT = sAxTest.m_fMinT;
+            case 0: /* Contact occurred in valid interval, but earlier contact already recorded. */
+                break;
+            case -1: /* No contact occurred during valid interval, thus primitives are separated on this axis. */
+                return (KTgE_NO_INTERSECT);
+        };
+
+        /* == Triangle Cross-Product == */
+
+        for (iE0 = 0; iE0 < 9; ++iE0)
+        {
+            VEC_T(1,C) vK1 = FCN_V(tgMH_CX)(psST0->m_sCT.m_sET.m_avEdge + (iE0 & 3), psST1->m_sCT.m_sET.m_avEdge + (iE0 >> 3));
+
+            FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin0, &sAxTest.m_fMax0, psST0, &vK1);
+            FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin1, &sAxTest.m_fMax1, psST1, &vK1);
+            sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &vK1);
+
+            iResult = FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest);
+            switch (iResult)
+            {
+                case 1: /* Update has occurred */
+                    psNFO->m_enSide = (sAxTest.m_fMax1 < sAxTest.m_fMin0) ?
+                        ETgCO_AXIS_CONTACT_DIRECTION__NEGATIVE : ETgCO_AXIS_CONTACT_DIRECTION__POSITIVE;
+                    psNFO->m_vNormal = vK1;
+                    psNFO->m_fMinT = sAxTest.m_fMinT;
+                case 0: /* Contact occurred in valid interval, but earlier contact already recorded. */
+                    break;
+                case -1: /* No contact occurred during valid interval, thus primitives are separated on this axis. */
+                    return (KTgE_NO_INTERSECT);
+            };
+        };
+    }
+    else
+    {
+        /* == Triangle 0 Space == */
+
+        for (iE0 = 0; iE0 < 3; ++iE0)
+        {
+            VEC_T(1,C) vK1 = FCN_V(tgMH_CX)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal, psST0->m_sCT.m_sET.m_avEdge + iE0);
+
+            FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin0, &sAxTest.m_fMax0, psST0, &vK1);
+            FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin1, &sAxTest.m_fMax1, psST1, &vK1);
+            sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &vK1);
+
+            iResult = FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest);
+            switch (iResult)
+            {
+                case 1: /* Update has occurred */
+                    psNFO->m_enSide = (sAxTest.m_fMax1 < sAxTest.m_fMin0) ?
+                        ETgCO_AXIS_CONTACT_DIRECTION__NEGATIVE : ETgCO_AXIS_CONTACT_DIRECTION__POSITIVE;
+                    psNFO->m_vNormal = vK1;
+                    psNFO->m_fMinT = sAxTest.m_fMinT;
+                case 0: /* Contact occurred in valid interval, but earlier contact already recorded. */
+                    break;
+                case -1: /* No contact occurred during valid interval, thus primitives are separated on this axis. */
+                    return (KTgE_NO_INTERSECT);
+            };
+        };
+
+        /* == Triangle 1 Space == */
+
+        for (iE0 = 0; iE0 < 3; ++iE0)
+        {
+            VEC_T(1,C) vK1 = FCN_V(tgMH_CX)(&psST1->m_sCT.m_sET.m_sPT.m_vNormal, psST1->m_sCT.m_sET.m_avEdge + iE0);
+
+            FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin0, &sAxTest.m_fMax0, psST0, &vK1);
+            FCN_VO(tgGM_ST_Project)(&sAxTest.m_fMin1, &sAxTest.m_fMax1, psST1, &vK1);
+            sAxTest.m_fSpeed = FCN_V(tgMH_DOT)(&psDT->m_vDT, &vK1);
+
+            iResult = FCN_VO(tgCO_F_Test_Seperating_Axis)(&sAxTest);
+            switch (iResult)
+            {
+                case 1: /* Update has occurred */
+                    psNFO->m_enSide = (sAxTest.m_fMax1 < sAxTest.m_fMin0) ?
+                        ETgCO_AXIS_CONTACT_DIRECTION__NEGATIVE : ETgCO_AXIS_CONTACT_DIRECTION__POSITIVE;
+                    psNFO->m_vNormal = vK1;
+                    psNFO->m_fMinT = sAxTest.m_fMinT;
+                case 0: /* Contact occurred in valid interval, but earlier contact already recorded. */
+                    break;
+                case -1: /* No contact occurred during valid interval, thus primitives are separated on this axis. */
+                    return (KTgE_NO_INTERSECT);
+            };
+        };
+    };
+
+    return (KTgS_OK);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

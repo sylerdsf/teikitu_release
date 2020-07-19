@@ -1,0 +1,122 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box-Sphere.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_BX_DistSq_SP) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_DistSq_SP)( VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgSPHERE,CPC) psSP0 )
+{
+    VAR_T()                             fDist = FCN_VO(tgCO_F_BX_Dist_SP)( psBX0, psSP0 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_Dist_SP) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_Dist_SP)( VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgSPHERE,CPC) psSP0 )
+{
+    VAR_T()                             fSP0_Rad = psSP0->m_fRadius;
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_BX_DistSq_VT)( psBX0, &psSP0->m_vOrigin );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq - psSP0->m_fRadiusSq, FCN_F(tgPM_SQRT)( fDistSq ) - fSP0_Rad, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_ClosestSq_SP) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_ClosestSq_SP)( VEC_T(1,PC) pvBX0, VEC_T(1,PC) pvSP0, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgSPHERE,CPC) psSP0 )
+{
+    VAR_T()                             fDist = FCN_VO(tgCO_F_BX_Closest_SP)( pvBX0, pvSP0, psBX0, psSP0 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_Closest_SP) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_Closest_SP)( VEC_T(1,PC) pvBX0, VEC_T(1,PC) pvSP0, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgSPHERE,CPC) psSP0 )
+{
+    VAR_T()                             fSP0_RadSq = psSP0->m_fRadiusSq;
+    VAR_T()                             fSP0_Rad = psSP0->m_fRadius;
+
+    VAR_T()                             fTestSq = FCN_VO(tgCO_F_BX_ClosestSq_VT)( pvBX0, psBX0, &psSP0->m_vOrigin );
+
+    VAR_T()                             fDist = FCN_F(tgPM_FSEL)( fTestSq - fSP0_RadSq, FCN_F(tgPM_SQRT)( fTestSq ), -TYPE_K(1) );
+
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)( pvBX0, &psSP0->m_vOrigin );
+    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fSP0_Rad / fDist, &vK0 );
+
+    *pvSP0 = FCN_V(tgMH_ADD)( &psSP0->m_vOrigin, &vK1 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist - fSP0_Rad, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_ParamSq_SP) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_ParamSq_SP)( VAR_T(P) pfBX0, VAR_T(P) pfBX1, VAR_T(P) pfBX2, VEC_T(1,PC) pvSP0, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgSPHERE,CPC) psSP0)
+{
+    VAR_T()                             fDist = FCN_VO(tgCO_F_BX_Param_SP)( pfBX0, pfBX1, pfBX2, pvSP0, psBX0, psSP0 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_Param_SP) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_BX_Param_SP)( VAR_T(P) pfBX0, VAR_T(P) pfBX1, VAR_T(P) pfBX2, VEC_T(1,PC) pvSP0, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgSPHERE,CPC) psSP0)
+{
+    VAR_T()                             fSP0_RadSq = psSP0->m_fRadiusSq;
+    VAR_T()                             fSP0_Rad = psSP0->m_fRadius;
+
+    VAR_T()                             fTestSq = FCN_VO(tgCO_F_BX_ParamSq_VT)( pfBX0, pfBX1, pfBX2, psBX0, &psSP0->m_vOrigin );
+
+    VAR_T()                             fDist = FCN_F(tgPM_FSEL)( fTestSq - fSP0_RadSq, FCN_F(tgPM_SQRT)( fTestSq ), -TYPE_K(1) );
+
+    VEC_T(1,C)                          vK2 = FCN_VO(tgGM_BX_Calc_Point)( psBX0, *pfBX0, *pfBX1, *pfBX2 );
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)( &vK2, &psSP0->m_vOrigin );
+    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fSP0_Rad / fDist, &vK0 );
+
+    *pvSP0 = FCN_V(tgMH_ADD)( &psSP0->m_vOrigin, &vK1 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist - fSP0_Rad, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_Penetrate_SP) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_BX_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgSPHERE,CPC) psSP0 )
+{
+    TgSINT_F32_C                        niContact = psPacket->m_niContact;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;
+    VEC_T(1)                            vK0;
+    TgSINT_F32                          iIdx;
+
+    TgRESULT_C iResult = FCN_VO(tgCO_F_SP_Penetrate_BX)( psPacket, psSP0, psBX0 );
+
+    if (TgFAILED( iResult ))
+    {
+        return (iResult);
+    };
+
+    for (iIdx = niContact; iIdx < psPacket->m_niContact; ++iIdx)
+    {
+        psContact = psPacket->m_psContact + iIdx;
+        vK0 = FCN_V(tgMH_MUL_VS)( &psContact->m_vN0, psContact->m_fDepth );
+        psContact->m_vS0 = FCN_V(tgMH_ADD)( &psContact->m_vS0, &vK0 );
+        psContact->m_vN0 = FCN_V(tgMH_NEG)( &psContact->m_vN0 );
+    };
+
+    return (iResult);
+}

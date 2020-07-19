@@ -1,0 +1,168 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle-Line.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_ST_DistSq_LN) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_ST_DistSq_LN)( VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    VAR_T()                             fST0, fST1, fLN0;
+
+    return (FCN_VO(tgCO_F_ST_ParamSq_LN)( &fST0, &fST1, &fLN0, psST0, psLN0 ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Dist_LN) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_ST_Dist_LN)( VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_ST_DistSq_LN)( psST0, psLN0 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_ClosestSq_LN) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_ST_ClosestSq_LN)( VEC_T(1,PC) pvET0, VEC_T(1,PC) pvLN0, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    VAR_T()                             fST0, fST1, fLN0;
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_ST_ParamSq_LN)( &fST0, &fST1, &fLN0, psST0, psLN0 );
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fST0, psST0->m_sCT.m_sET.m_avEdge + 0 );
+    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fST1, psST0->m_sCT.m_sET.m_avEdge + 2 );
+    VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)( fLN0, &psLN0->m_vDirN );
+    VEC_T(1,C)                          vK3 = FCN_V(tgMH_ADD)( psST0->m_sCT.m_sET.m_sPT.m_avPoint, &vK0 );
+
+    *pvLN0 = FCN_V(tgMH_ADD)( &psLN0->m_vOrigin, &vK2 );
+    *pvET0 = FCN_V(tgMH_SUB)( &vK3, &vK1 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, fDistSq, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Closest_LN) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_ST_Closest_LN)( VEC_T(1,PC) pvET0, VEC_T(1,PC) pvLN0, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_ST_ClosestSq_LN)( pvET0, pvLN0, psST0, psLN0 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_ParamSq_LN) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_ST_ParamSq_LN)( VAR_T(P) pfST0, VAR_T(P) pfST1, VAR_T(P) pfLN0, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    return (FCN_VO(tgCO_FI_ST_ParamSq_LR00)( pfST0, pfST1, pfLN0, psST0, &psLN0->m_vOrigin, &psLN0->m_vDirN ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Param_LN) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_ST_Param_LN)( VAR_T(P) pfST0, VAR_T(P) pfST1, VAR_T(P) pfLN0, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_ST_ParamSq_LN)( pfST0, pfST1, pfLN0, psST0, psLN0 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ET_Test_LN) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_ET_Test_LN)( VEC_OBJ_T(TgETRI,CPC) psET0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    VAR_T()                             fST0, fST1, fLN0;
+
+    return (FCN_VO(tgCO_FI_ET_Intersect_Param_LR00)( &fST0, &fST1, &fLN0, psET0, &psLN0->m_vOrigin, &psLN0->m_vDirN ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ET_Intersect_LN) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_ET_Intersect_LN)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgETRI,CPC) psET0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    VAR_T()                             fST0, fST1, fLN0;
+    TgRESULT                            iResult;
+
+    if (TgFAILED( iResult = FCN_VO(tgCO_FI_ET_Intersect_Param_LR00)( &fST0, &fST1, &fLN0, psET0, &psLN0->m_vOrigin, &psLN0->m_vDirN ) ))
+    {
+        return (iResult);
+    }
+    else
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fLN0, &psLN0->m_vDirN );
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        psContact->m_vS0 = FCN_V(tgMH_ADD)( &psLN0->m_vOrigin, &vK0 );
+        psContact->m_vN0 = psET0->m_sPT.m_vNormal;
+        psContact->m_fT0 = fLN0;
+        psContact->m_fDepth = TYPE_K(0);
+
+        ++psPacket->m_niContact;
+
+        return (KTgS_OK);
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_ET_Intersect_Param_LN) ------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_ET_Intersect_Param_LN)( VAR_T(P) pfST0, VAR_T(P) pfST1, VAR_T(P) pfLN0, VEC_OBJ_T(TgETRI,CPC) psET0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    return (FCN_VO(tgCO_FI_ET_Intersect_Param_LR00)( pfST0, pfST1, pfLN0, psET0, &psLN0->m_vOrigin, &psLN0->m_vDirN ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Clip_LN) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_ST_Clip_LN)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    return (FCN_VO(tgCO_FI_ST_Clip_LR00)( psCL, psST0, &psLN0->m_vOrigin, &psLN0->m_vDirN ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Clip_F_LN) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_ST_Clip_F_LN)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, TgSINT_F32_PC piCode, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    return (FCN_VO(tgCO_FI_ST_Clip_F_LR00)( psCL, piCode, psST0, &psLN0->m_vOrigin, &psLN0->m_vDirN ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Clip_Param_LN) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_ST_Clip_Param_LN)( VAR_T(P) pfLN0, VAR_T(P) pfLN1, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    return (FCN_VO(tgCO_FI_ST_Clip_Param_LR00)( pfLN0, pfLN1, psST0, &psLN0->m_vOrigin, &psLN0->m_vDirN ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_ST_Clip_Param_F_LN) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_ST_Clip_Param_F_LN)( VAR_T(P) pfLN0, VAR_T(P) pfLN1, TgSINT_F32_PC piCode, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgLINE,CPC) psLN0 )
+{
+    return (FCN_VO(tgCO_FI_ST_Clip_Param_F_LR00)( pfLN0, pfLN1, piCode, psST0, &psLN0->m_vOrigin, &psLN0->m_vDirN ));
+}
+
+
+/* ---- FCN_VO(tgCO_FI_ST_Clip_Param_LR00) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_FI_ST_Clip_Param_LR00)( VAR_T(P) pfLN0, VAR_T(P) pfLN1, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    TgSINT_F32                          iCode;
+
+    return (FCN_VO(tgCO_FI_ST_Clip_Param_F_LR00)( pfLN0, pfLN1, &iCode, psST0, pvS0, pvD0 ));
+}

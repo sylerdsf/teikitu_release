@@ -1,0 +1,279 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box-Plane.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_BX_Param_PN) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgBX0: Box primitive                                                                                                                                                    */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Output: tyB0,tyB1,tyB2: Parametric parameters to generate the point of closest proximity on the box (one for each axis)                                                         */
+/* Output: vPN0: Point of closest proximity on the plane                                                                                                                           */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_BX_Param_PN)( VAR_T(P) pfBX0, VAR_T(P) pfBX1, VAR_T(P) pfBX2, VEC_T(1,PC) pvPN0, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgPLANE,CPC) psPN0 )
+{
+    VAR_T(C)                            fTest = FCN_VO(tgCO_F_PN_Dist_VT)(psPN0, &psBX0->m_vOrigin);
+    VAR_T(C)                            fX0_N = FCN_V(tgMH_DOT)(psBX0->m_avAxis + 0, &psPN0->m_vNormal);
+    VAR_T(C)                            fX1_N = FCN_V(tgMH_DOT)(psBX0->m_avAxis + 1, &psPN0->m_vNormal);
+    VAR_T(C)                            fX2_N = FCN_V(tgMH_DOT)(psBX0->m_avAxis + 2, &psPN0->m_vNormal);
+    VAR_T(C)                            fK0 = FCN_F(tgPM_FSEL)(fX0_N - VAR_K(KTgEPS), -psBX0->m_vExtent.x, TYPE_K(0));
+    VAR_T(C)                            fK1 = FCN_F(tgPM_FSEL)(fX1_N - VAR_K(KTgEPS), -psBX0->m_vExtent.y, TYPE_K(0));
+    VAR_T(C)                            fK2 = FCN_F(tgPM_FSEL)(fX2_N - VAR_K(KTgEPS), -psBX0->m_vExtent.z, TYPE_K(0));
+    VAR_T(C)                            fBX0 = FCN_F(tgPM_FSEL)(-VAR_K(KTgEPS) - fX0_N, psBX0->m_vExtent.x, (fK0));
+    VAR_T(C)                            fBX1 = FCN_F(tgPM_FSEL)(-VAR_K(KTgEPS) - fX1_N, psBX0->m_vExtent.y, (fK1));
+    VAR_T(C)                            fBX2 = FCN_F(tgPM_FSEL)(-VAR_K(KTgEPS) - fX2_N, psBX0->m_vExtent.z, (fK2));
+    VAR_T(C)                            fDist = fTest + fBX0*fX0_N + fBX1*fX1_N + fBX2*fX2_N;
+    VAR_T(C)                            fNX = fBX0 - fDist*psPN0->m_vNormal.x;
+    VAR_T(C)                            fNY = fBX1 - fDist*psPN0->m_vNormal.y;
+    VAR_T(C)                            fNZ = fBX2 - fDist*psPN0->m_vNormal.z;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_BX_Is_Valid)(psBX0) && FCN_VO(tgGM_PN_Is_Valid)(psPN0) );
+
+    *pfBX0 = fBX0;
+    *pfBX1 = fBX1;
+    *pfBX2 = fBX2;
+    *pvPN0 = FCN_V(tgMH_SETP_S)(fNX, fNY, fNZ);
+
+    return (FCN_F(tgPM_FSEL)(fDist, fDist, -VAR_K(KTgMAX)));
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Penetrate_BX) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Input:  tgBX0: Box primitive - contact points are generated on this primitive                                                                                                   */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/*                                                                                                                                                                                 */
+/*   This routine will create up to four contact points.  Collisions/Physics systems need the best(closest) approximation of the contact surface.  To represent the planananananan */
+/* of contact between one box face and the plane, its necessary to use all four points that define the box rectangle (face).                                                       */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_PN_Penetrate_BX)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgBOX,CPC) psBX0)
+{
+    TgPARAM_CHECK( FCN_VO(tgGM_BX_Is_Valid)(psBX0) && FCN_VO(tgGM_PN_Is_Valid)(psPN0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        VAR_T(C)                            fDist = FCN_VO(tgCO_F_PN_Dist_VT)(psPN0, &psBX0->m_vOrigin);
+
+        VEC_T(1,C)                          vE0 = FCN_V(tgMH_MUL_VS)(psBX0->m_avAxis + 0, psBX0->m_vExtent.x);
+        VEC_T(1,C)                          vE1 = FCN_V(tgMH_MUL_VS)(psBX0->m_avAxis + 1, psBX0->m_vExtent.y);
+        VEC_T(1,C)                          vE2 = FCN_V(tgMH_MUL_VS)(psBX0->m_avAxis + 2, psBX0->m_vExtent.z);
+
+        VAR_T(C)                            fX0_N = FCN_V(tgMH_DOT)(&psPN0->m_vNormal, &vE0);
+        VAR_T(C)                            fX1_N = FCN_V(tgMH_DOT)(&psPN0->m_vNormal, &vE1);
+        VAR_T(C)                            fX2_N = FCN_V(tgMH_DOT)(&psPN0->m_vNormal, &vE2);
+
+        VAR_T(C)                            fABS_X0_N = FCN_F(tgPM_FSEL)(fX0_N, fX0_N, -fX0_N);
+        VAR_T(C)                            fABS_X1_N = FCN_F(tgPM_FSEL)(fX1_N, fX1_N, -fX1_N);
+        VAR_T(C)                            fABS_X2_N = FCN_F(tgPM_FSEL)(fX2_N, fX2_N, -fX2_N);
+
+        VEC_T(1,C)                          vPlnN = psPN0->m_vNormal;
+
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContact;
+        VEC_T(1)                            vK0, vPnt;
+        VAR_T()                             fMin0, fMin1, fMin2, fDepth;
+        VEC_T(1)                            vMin0, vMin1, vMin2;
+
+        if (fABS_X0_N <= fABS_X1_N)
+        {
+            if (fABS_X1_N <= fABS_X2_N)
+            {
+                /* fABS_X0_N <= fABS_X1_N <= fABS_X2_N */
+
+                fMin0 = fABS_X0_N;
+                fMin1 = fABS_X1_N;
+                fMin2 = fABS_X2_N;
+
+                vMin0 = (fX0_N > TYPE_K(0) ? vE0 : FCN_V(tgMH_NEG)(&vE0));
+                vMin1 = (fX1_N > TYPE_K(0) ? vE1 : FCN_V(tgMH_NEG)(&vE1));
+                vMin2 = (fX2_N > TYPE_K(0) ? vE2 : FCN_V(tgMH_NEG)(&vE2));
+            }
+            else if (fABS_X0_N <= fABS_X2_N)
+            {
+                /* fABS_X0_N <= fABS_X2_N < fABS_X1_N */
+
+                fMin0 = fABS_X0_N;
+                fMin1 = fABS_X2_N;
+                fMin2 = fABS_X1_N;
+
+                vMin0 = (fX0_N > TYPE_K(0) ? vE0 : FCN_V(tgMH_NEG)(&vE0));
+                vMin1 = (fX2_N > TYPE_K(0) ? vE2 : FCN_V(tgMH_NEG)(&vE2));
+                vMin2 = (fX1_N > TYPE_K(0) ? vE1 : FCN_V(tgMH_NEG)(&vE1));
+            }
+            else
+            {
+                /* fABS_X2_N < fABS_X0_N <= fABS_X1_N */
+
+                fMin0 = fABS_X2_N;
+                fMin1 = fABS_X0_N;
+                fMin2 = fABS_X1_N;
+
+                vMin0 = (fX2_N > TYPE_K(0) ? vE2 : FCN_V(tgMH_NEG)(&vE2));
+                vMin1 = (fX0_N > TYPE_K(0) ? vE0 : FCN_V(tgMH_NEG)(&vE0));
+                vMin2 = (fX1_N > TYPE_K(0) ? vE1 : FCN_V(tgMH_NEG)(&vE1));
+            };
+        }
+        else
+        {
+            if (fABS_X2_N <= fABS_X1_N)
+            {
+                /* fABS_X2_N < = fABS_X1_N < fABS_X0_N */
+
+                fMin0 = fABS_X2_N;
+                fMin1 = fABS_X1_N;
+                fMin2 = fABS_X0_N;
+
+                vMin0 = (fX2_N > TYPE_K(0) ? vE2 : FCN_V(tgMH_NEG)(&vE2));
+                vMin1 = (fX1_N > TYPE_K(0) ? vE1 : FCN_V(tgMH_NEG)(&vE1));
+                vMin2 = (fX0_N > TYPE_K(0) ? vE0 : FCN_V(tgMH_NEG)(&vE0));
+            }
+            else if (fABS_X2_N <= fABS_X0_N)
+            {
+                /* fABS_X1_N < fABS_X2_N <= fABS_X0_N */
+
+                fMin0 = fABS_X1_N;
+                fMin1 = fABS_X2_N;
+                fMin2 = fABS_X0_N;
+
+                vMin0 = (fX1_N > TYPE_K(0) ? vE1 : FCN_V(tgMH_NEG)(&vE1));
+                vMin1 = (fX2_N > TYPE_K(0) ? vE2 : FCN_V(tgMH_NEG)(&vE2));
+                vMin2 = (fX0_N > TYPE_K(0) ? vE0 : FCN_V(tgMH_NEG)(&vE0));
+            }
+            else
+            {
+                /* fABS_X1_N < fABS_X0_N < fABS_X2_N */
+
+                fMin0 = fABS_X1_N;
+                fMin1 = fABS_X0_N;
+                fMin2 = fABS_X2_N;
+
+                vMin0 = (fX1_N > TYPE_K(0) ? vE1 : FCN_V(tgMH_NEG)(&vE1));
+                vMin1 = (fX0_N > TYPE_K(0) ? vE0 : FCN_V(tgMH_NEG)(&vE0));
+                vMin2 = (fX2_N > TYPE_K(0) ? vE2 : FCN_V(tgMH_NEG)(&vE2));
+            };
+        };
+
+        fDepth = fMin2 - fDist;
+
+        /* Point 1 - The point of deepest penetration */
+
+        if (fDepth + fMin0 + fMin1 > TYPE_K(0))
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+
+        vPnt = FCN_V(tgMH_SUB)(&psBX0->m_vOrigin, &vMin2);
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        vK0 = FCN_V(tgMH_SUB)(&vPnt, &vMin0);
+        psContact->m_vS0 = FCN_V(tgMH_SUB)(&vK0, &vMin1);
+        psContact->m_vN0 = vPlnN;
+        psContact->m_fT0 = TYPE_K(0);
+        psContact->m_fDepth = fDepth + fMin0 + fMin1;
+
+        ++psPacket->m_niContact;
+
+        /* Point 2 - The second point of penetration */
+
+        if (fDepth - fMin0 + fMin1 <= TYPE_K(0))
+        {
+            return (KTgS_OK);
+        };
+
+        if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+        {
+            return (KTgE_MAX_CONTACTS);
+        };
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        vK0 = FCN_V(tgMH_ADD)(&vPnt, &vMin0);
+        psContact->m_vS0 = FCN_V(tgMH_SUB)(&vK0, &vMin1);
+        psContact->m_vN0 = vPlnN;
+        psContact->m_fT0 = TYPE_K(0);
+        psContact->m_fDepth = fDepth - fMin0 + fMin1;
+
+        ++psPacket->m_niContact;
+
+        /* Point 3 - Next lowest point of penetration */
+
+        if (fDepth + fMin0 - fMin1 <= TYPE_K(0))
+        {
+            return (KTgS_OK);
+        };
+
+        if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+        {
+            return (KTgE_MAX_CONTACTS);
+        };
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        vK0 = FCN_V(tgMH_SUB)(&vPnt, &vMin0);
+        psContact->m_vS0 = FCN_V(tgMH_ADD)(&vK0, &vMin1);
+        psContact->m_vN0 = vPlnN;
+        psContact->m_fT0 = TYPE_K(0);
+        psContact->m_fDepth = fDepth + fMin0 - fMin1;
+
+        ++psPacket->m_niContact;
+
+        /* Point 4 - Point of closure - this completes the rectangle/face of the box of deepest penetration */
+
+        if (fDepth - fMin0 - fMin1 <= TYPE_K(0))
+        {
+            return (KTgS_OK);
+        };
+
+        if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+        {
+            return (KTgE_MAX_CONTACTS);
+        };
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        vK0 = FCN_V(tgMH_SUB)(&vPnt, &vMin0);
+        psContact->m_vS0 = FCN_V(tgMH_SUB)(&vK0, &vMin1);
+        psContact->m_vN0 = vPlnN;
+        psContact->m_fT0 = TYPE_K(0);
+        psContact->m_fDepth = fDepth + fMin0 + fMin1;
+
+        ++psPacket->m_niContact;
+
+        return (KTgS_OK);
+    }
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

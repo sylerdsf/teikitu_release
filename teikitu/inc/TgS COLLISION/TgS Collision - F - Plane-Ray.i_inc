@@ -1,0 +1,216 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Plane-Ray.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+#define VI(A) FCN_VO(A##10)
+#define LR_CAP_0 1
+#define LR_CAP_1 0
+#include "TgS Collision - F - Plane-Linear.i_inc"
+#undef LR_CAP_1
+#undef LR_CAP_0
+#undef VI
+
+/* ---- FCN_VO(tgCO_F_PN_DistSq_RY) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_PN_DistSq_RY)( VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    if (FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN ) ))
+    {
+        VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)( psPN0, &psRY0->m_vOrigin );
+
+        return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+    };
+
+    return (-VAR_K(KTgMAX));
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Dist_RY) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_PN_Dist_RY)( VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    if (FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN ) ))
+    {
+        VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)( psPN0, &psRY0->m_vOrigin );
+
+        return (FCN_F(tgPM_FSEL)( fDist, fDist, -VAR_K(KTgMAX) ));
+    };
+
+    return (-VAR_K(KTgMAX));
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_ClosestSq_RY) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_PN_ClosestSq_RY)( VEC_T(1,PC) pvPN0, VEC_T(1,PC) pvRY0, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    if (!FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN ) ))
+    {
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)( psPN0, &psRY0->m_vOrigin );
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fDist, &psPN0->m_vNormal );
+
+        *pvPN0 = FCN_V(tgMH_SUB)( &psRY0->m_vOrigin, &vK0 );
+        *pvRY0 = psRY0->m_vOrigin;
+
+        return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Closest_RY) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_PN_Closest_RY)( VEC_T(1,PC) pvPN0, VEC_T(1,PC) pvRY0, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    if (FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN ) ))
+    {
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)( psPN0, &psRY0->m_vOrigin );
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fDist, &psPN0->m_vNormal );
+
+        *pvPN0 = FCN_V(tgMH_SUB)( &psRY0->m_vOrigin, &vK0 );
+        *pvRY0 = psRY0->m_vOrigin;
+
+        return (FCN_F(tgPM_FSEL)( fDist, fDist, -VAR_K(KTgMAX) ));
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_ParamSq_RY) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_PN_ParamSq_RY)( VEC_T(1,PC) pvPN0, VAR_T(P) pfRY0, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    if (FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN ) ))
+    {
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)( psPN0, &psRY0->m_vOrigin );
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fDist, &psPN0->m_vNormal );
+
+        *pvPN0 = FCN_V(tgMH_SUB)( &psRY0->m_vOrigin, &vK0 );
+        *pfRY0 = TYPE_K(0);
+
+        return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Param_RY) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_PN_Param_RY)( VEC_T(1,PC) pvPN0, VAR_T(P) pfRY0, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    if (FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN ) ))
+    {
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)( psPN0, &psRY0->m_vOrigin );
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fDist, &psPN0->m_vNormal );
+
+        *pvPN0 = FCN_V(tgMH_SUB)( &psRY0->m_vOrigin, &vK0 );
+        *pfRY0 = TYPE_K(0);
+
+        return (FCN_F(tgPM_FSEL)( fDist, fDist, -VAR_K(KTgMAX) ));
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Test_RY) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_PN_Test_RY)(VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0)
+{
+    return (!FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN ) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Intersect_Param_RY) ------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_PN_Intersect_Param_RY)( VAR_T(P) pfRY0, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    VAR_T()                             fD1_N = FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN );
+
+    if (FCN_F(tgCM_NR0)(fD1_N))
+    {
+        return (KTgE_NO_INTERSECT);
+    }
+    else
+    {
+        VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)( psPN0, &psRY0->m_vOrigin );
+
+        *pfRY0 = -fDist / fD1_N;
+
+        return (KTgS_OK);
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Intersect_RY) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_PN_Intersect_RY)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    VAR_T()                             fD1_N = FCN_V(tgMH_DOT)( &psPN0->m_vNormal, &psRY0->m_vDirN );
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_PN_Is_Valid)( psPN0 ) && FCN_VO(tgGM_RY_Is_Valid)( psRY0 ) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else if (FCN_F(tgCM_NR0)(fD1_N))
+    {
+        return (KTgE_NO_INTERSECT);
+    }
+    else
+    {
+        VAR_T()                             fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)( psPN0, &psRY0->m_vOrigin );
+        VAR_T()                             fT0 = -fDist / fD1_N;
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, &psRY0->m_vDirN );
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        psContact->m_vS0 = FCN_V(tgMH_ADD)( &psRY0->m_vOrigin, &vK0 );
+        psContact->m_vN0 = FCN_V(tgMH_MUL_SV)( FCN_F(tgPM_FSEL)( fDist, TYPE_K(1), -TYPE_K(1) ), &psPN0->m_vNormal );
+        psContact->m_fT0 = fT0;
+        psContact->m_fDepth = TYPE_K(0);
+
+        ++psPacket->m_niContact;
+
+        return (KTgS_OK);
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Clip_Param_RY) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_PN_Clip_Param_RY)( VAR_T(P) pfRY0, VAR_T(P) pfRY1, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    return (FCN_VO(tgCO_FI_PN_Clip_Param_LR10)( pfRY0, pfRY1, psPN0, &psRY0->m_vOrigin, &psRY0->m_vDirN ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Clip_RY) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_PN_Clip_RY)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgRAY,CPC) psRY0 )
+{
+    return (FCN_VO(tgCO_FI_PN_Clip_LR10)( psCL, psPN0, &psRY0->m_vOrigin, &psRY0->m_vDirN ));
+}

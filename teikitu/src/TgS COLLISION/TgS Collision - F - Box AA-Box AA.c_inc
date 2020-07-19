@@ -1,0 +1,392 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box AA-Box AA.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_BA_DistSq_BA) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgBA0, tgBA1: Box, Axis-Aligned primitive                                                                                                                               */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_BA_DistSq_BA)(VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_OBJ_T(TgBOXAA,CPC) psBA1)
+{
+    VAR_T()                             fDistSq = TYPE_K(0);
+
+    if (psBA1->m_vMax.x < psBA0->m_vMin.x)
+    {
+        fDistSq += (psBA0->m_vMin.x - psBA1->m_vMax.x)*(psBA0->m_vMin.x - psBA1->m_vMax.x);
+    }
+    else if (psBA0->m_vMax.x < psBA1->m_vMin.x)
+    {
+        fDistSq += (psBA1->m_vMin.x - psBA0->m_vMax.x)*(psBA1->m_vMin.x - psBA0->m_vMax.x);
+    };
+
+    if (psBA1->m_vMax.y < psBA0->m_vMin.y)
+    {
+        fDistSq += (psBA0->m_vMin.y - psBA1->m_vMax.y)*(psBA0->m_vMin.y - psBA1->m_vMax.y);
+    }
+    else if (psBA0->m_vMax.y < psBA1->m_vMin.y)
+    {
+        fDistSq += (psBA1->m_vMin.y - psBA0->m_vMax.y)*(psBA1->m_vMin.y - psBA0->m_vMax.y);
+    };
+
+    if (psBA1->m_vMax.z < psBA0->m_vMin.z)
+    {
+        fDistSq += (psBA0->m_vMin.z - psBA1->m_vMax.z)*(psBA0->m_vMin.z - psBA1->m_vMax.z);
+    }
+    else if (psBA0->m_vMax.z < psBA1->m_vMin.z)
+    {
+        fDistSq += (psBA1->m_vMin.z - psBA0->m_vMax.z)*(psBA1->m_vMin.z - psBA0->m_vMax.z);
+    };
+
+    return (fDistSq <= TYPE_K(0) ? -VAR_K(KTgMAX) : fDistSq);
+}
+
+
+/* ---- FCN_VO(tgCO_F_BA_ClosestSq_BA) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgBA0, tgBA1: Box, Axis-Aligned primitive                                                                                                                               */
+/* Output: vBA0, vBA1: Point of closest proximity on the box, axis-aligned #1 and #2 respectively                                                                                  */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T()FCN_VO(tgCO_F_BA_ClosestSq_BA)(VEC_T(1,PC) pvBA0, VEC_T(1,PC) pvBA1, VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_OBJ_T(TgBOXAA,CPC) psBA1)
+{
+    VAR_T()                             fX0, fX1, fY0, fY1, fZ0, fZ1;
+    VAR_T()                             fDistSq = TYPE_K(0);
+
+    /* First (X) co-ordinate value. */
+
+    if (psBA1->m_vMax.x < psBA0->m_vMin.x)
+    {
+        fDistSq += (psBA0->m_vMin.x - psBA1->m_vMax.x)*(psBA0->m_vMin.x - psBA1->m_vMax.x);
+
+        fX0 = psBA0->m_vMin.x;
+        fX1 = psBA1->m_vMax.x;
+    }
+    else if (psBA0->m_vMax.x < psBA1->m_vMin.x)
+    {
+        fDistSq += (psBA1->m_vMin.x - psBA0->m_vMax.x)*(psBA1->m_vMin.x - psBA0->m_vMax.x);
+
+        fX0 = psBA0->m_vMax.x;
+        fX1 = psBA1->m_vMin.x;
+    }
+    else
+    {
+        VAR_T()                             fT;
+
+        fT = FCN_F(tgPM_FSEL)(psBA0->m_vMin.x - psBA1->m_vMin.x, psBA0->m_vMin.x, psBA1->m_vMin.x);
+        fT += FCN_F(tgPM_FSEL)(psBA1->m_vMax.x - psBA0->m_vMax.x, psBA0->m_vMax.x, psBA1->m_vMax.x);
+        fT *= TYPE_K(0,5);
+
+        fX0 = fT; fX1 = fT;
+    };
+
+
+    /* Second (Y) co-ordinate value. */
+
+    if (psBA1->m_vMax.y < psBA0->m_vMin.y)
+    {
+        fDistSq += (psBA0->m_vMin.y - psBA1->m_vMax.y)*(psBA0->m_vMin.y - psBA1->m_vMax.y);
+
+        fY0 = psBA0->m_vMin.y;
+        fY1 = psBA1->m_vMax.y;
+    }
+    else if (psBA0->m_vMax.y < psBA1->m_vMin.y)
+    {
+        fDistSq += (psBA1->m_vMin.y - psBA0->m_vMax.y)*(psBA1->m_vMin.y - psBA0->m_vMax.y);
+
+        fY0 = psBA0->m_vMax.y;
+        fY1 = psBA1->m_vMin.y;
+    }
+    else
+    {
+        VAR_T()                             fT;
+
+        fT = FCN_F(tgPM_FSEL)(psBA0->m_vMin.y - psBA1->m_vMin.y, psBA0->m_vMin.y, psBA1->m_vMin.y);
+        fT += FCN_F(tgPM_FSEL)(psBA1->m_vMax.y - psBA0->m_vMax.y, psBA0->m_vMax.y, psBA1->m_vMax.y);
+        fT *= TYPE_K(0,5);
+
+        fY0 = fT; fY1 = fT;
+    };
+
+
+    /* Third (Z) co-ordinate value. */
+
+    if (psBA1->m_vMax.z < psBA0->m_vMin.z)
+    {
+        fDistSq += (psBA0->m_vMin.z - psBA1->m_vMax.z)*(psBA0->m_vMin.z - psBA1->m_vMax.z);
+
+        fZ0 = psBA0->m_vMin.z;
+        fZ1 = psBA1->m_vMax.z;
+    }
+    else if (psBA0->m_vMax.z < psBA1->m_vMin.z)
+    {
+        fDistSq += (psBA1->m_vMin.z - psBA0->m_vMax.z)*(psBA1->m_vMin.z - psBA0->m_vMax.z);
+
+        fZ0 = psBA0->m_vMax.z;
+        fZ1 = psBA1->m_vMin.z;
+    }
+    else
+    {
+        VAR_T()                             fT;
+
+        fT = FCN_F(tgPM_FSEL)(psBA0->m_vMin.z - psBA1->m_vMin.z, psBA0->m_vMin.z, psBA1->m_vMin.z);
+        fT += FCN_F(tgPM_FSEL)(psBA1->m_vMax.z - psBA0->m_vMax.z, psBA0->m_vMax.z, psBA1->m_vMax.z);
+        fT *= TYPE_K(0,5);
+
+        fZ0 = fT; fZ1 = fT;
+    };
+
+    *pvBA0 = FCN_V(tgMH_SETP_S)(fX0, fY0, fZ0);
+    *pvBA1 = FCN_V(tgMH_SETP_S)(fX1, fY1, fZ1);
+
+    return (fDistSq <= TYPE_K(0) ? -VAR_K(KTgMAX) : fDistSq);
+}
+
+
+/* ---- FCN_VO(tgCO_F_BA_Penetrate_BA) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  tgBA0: Box, Axis-Aligned primitive                                                                                                                                      */
+/* Input:  tgBA1: Box, Axis-Aligned primitive - contact points are generated on this primitive                                                                                     */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_BA_Penetrate_BA)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_OBJ_T(TgBOXAA,CPC) psBA1)
+{
+    TgSINT_F32                          iAxis = -1;
+    VAR_T()                             fT, fDepth = -VAR_K(KTgMAX);
+    VEC_T(1)                            vK0, vD0, vD1, vP0, vNM;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_BA_Is_Valid)(psBA1) && FCN_VO(tgGM_BA_Is_Valid)(psBA0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    };
+
+    /* First (X) co-ordinate value. */
+
+    fT = psBA1->m_vMin.x - psBA0->m_vMax.x;
+    if (fT > TYPE_K(0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (fT > fDepth)
+    {
+        fDepth = fT;
+        iAxis = 0;
+    };
+
+    fT = psBA0->m_vMin.x - psBA1->m_vMax.x;
+    if (fT > TYPE_K(0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (fT > fDepth)
+    {
+        fDepth = fT;
+        iAxis = 1;
+    };
+
+
+    /* First (Y) co-ordinate value. */
+
+    fT = psBA1->m_vMin.y - psBA0->m_vMax.y;
+    if (fT > TYPE_K(0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (fT > fDepth)
+    {
+        fDepth = fT;
+        iAxis = 2;
+    };
+
+    fT = psBA0->m_vMin.y - psBA1->m_vMax.y;
+    if (fT > TYPE_K(0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (fT > fDepth)
+    {
+        fDepth = fT;
+        iAxis = 3;
+    };
+
+
+    /* First (Z) co-ordinate value. */
+
+    fT = psBA1->m_vMin.z - psBA0->m_vMax.z;
+    if (fT > TYPE_K(0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (fT > fDepth)
+    {
+        fDepth = fT;
+        iAxis = 4;
+    };
+
+    fT = psBA0->m_vMin.z - psBA1->m_vMax.z;
+    if (fT > TYPE_K(0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (fT > fDepth)
+    {
+        fDepth = fT;
+        iAxis = 5;
+    };
+
+
+    switch (iAxis)
+    {
+        case 0:
+        case 1:
+        {
+            VAR_T(C) fY0 = FCN_F(tgPM_FSEL)(psBA1->m_vMin.y - psBA0->m_vMin.y, psBA1->m_vMin.y, psBA0->m_vMin.y);
+            VAR_T(C) fZ0 = FCN_F(tgPM_FSEL)(psBA1->m_vMin.z - psBA0->m_vMin.z, psBA1->m_vMin.z, psBA0->m_vMin.z);
+            VAR_T(C) fY1 = FCN_F(tgPM_FSEL)(psBA0->m_vMax.y - psBA1->m_vMax.y, psBA1->m_vMax.y, psBA0->m_vMax.y);
+            VAR_T(C) fZ1 = FCN_F(tgPM_FSEL)(psBA0->m_vMax.z - psBA1->m_vMax.z, psBA1->m_vMax.z, psBA0->m_vMax.z);
+
+            vD0 = FCN_V(tgMH_SETV_S)(TYPE_K(0), fY1 - fY0, TYPE_K(0));
+            vD1 = FCN_V(tgMH_SETV_S)(TYPE_K(0), TYPE_K(0), fZ1 - fZ0);
+            vP0 = FCN_V(tgMH_SETP_S)(0 == iAxis ? psBA1->m_vMin.x : psBA1->m_vMax.x, fY0, fZ0);
+            vNM = FCN_V(tgMH_SETV_S)(0 == iAxis ? TYPE_K(1) : -TYPE_K(1), TYPE_K(0), TYPE_K(0));
+
+            break;
+        };
+
+        case 2:
+        case 3:
+        {
+            VAR_T(C) fX0 = FCN_F(tgPM_FSEL)(psBA1->m_vMin.x - psBA0->m_vMin.x, psBA1->m_vMin.x, psBA0->m_vMin.x);
+            VAR_T(C) fZ0 = FCN_F(tgPM_FSEL)(psBA1->m_vMin.z - psBA0->m_vMin.z, psBA1->m_vMin.z, psBA0->m_vMin.z);
+            VAR_T(C) fX1 = FCN_F(tgPM_FSEL)(psBA0->m_vMax.x - psBA1->m_vMax.x, psBA1->m_vMax.x, psBA0->m_vMax.x);
+            VAR_T(C) fZ1 = FCN_F(tgPM_FSEL)(psBA0->m_vMax.z - psBA1->m_vMax.z, psBA1->m_vMax.z, psBA0->m_vMax.z);
+
+            vD0 = FCN_V(tgMH_SETV_S)(fX1 - fX0, TYPE_K(0), TYPE_K(0));
+            vD1 = FCN_V(tgMH_SETV_S)(TYPE_K(0), TYPE_K(0), fZ1 - fZ0);
+            vP0 = FCN_V(tgMH_SETP_S)(fX0, 2 == iAxis ? psBA1->m_vMin.y : psBA1->m_vMax.y, fZ0);
+            vNM = FCN_V(tgMH_SETV_S)(TYPE_K(0), 2 == iAxis ? TYPE_K(1) : -TYPE_K(1), TYPE_K(0));
+
+            break;
+        };
+
+        case 4:
+        case 5:
+        {
+            VAR_T(C) fX0 = FCN_F(tgPM_FSEL)(psBA1->m_vMin.x - psBA0->m_vMin.x, psBA1->m_vMin.x, psBA0->m_vMin.x);
+            VAR_T(C) fY0 = FCN_F(tgPM_FSEL)(psBA1->m_vMin.y - psBA0->m_vMin.y, psBA1->m_vMin.y, psBA0->m_vMin.y);
+            VAR_T(C) fX1 = FCN_F(tgPM_FSEL)(psBA0->m_vMax.x - psBA1->m_vMax.x, psBA1->m_vMax.x, psBA0->m_vMax.x);
+            VAR_T(C) fY1 = FCN_F(tgPM_FSEL)(psBA0->m_vMax.y - psBA1->m_vMax.y, psBA1->m_vMax.y, psBA0->m_vMax.y);
+
+            vD0 = FCN_V(tgMH_SETV_S)(fX1 - fX0, TYPE_K(0), TYPE_K(0));
+            vD1 = FCN_V(tgMH_SETV_S)(TYPE_K(0), fY1 - fY0, TYPE_K(0));
+            vP0 = FCN_V(tgMH_SETP_S)(fX0, fY0, 4 == iAxis ? psBA1->m_vMin.z : psBA1->m_vMax.z);
+            vNM = FCN_V(tgMH_SETV_S)(TYPE_K(0), TYPE_K(0), 4 == iAxis ? TYPE_K(1) : -TYPE_K(1));
+
+            break;
+        };
+
+        default:
+            TgERROR_CO( "[BA][BA] Algorithm - Illegal separation axis id.\n" );
+            TgS_NO_DEFAULT( return (KTgE_FAIL) );
+    };
+
+    /* Point 1 */
+
+    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+    psContact->m_vS0 = vP0;
+    psContact->m_vN0 = vNM;
+    psContact->m_fT0 = TYPE_K(0);
+    psContact->m_fDepth = -fDepth;
+
+    ++psPacket->m_niContact;
+
+    /* Point 2 */
+
+    if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+    {
+        return (KTgE_MAX_CONTACTS);
+    };
+
+    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+    psContact->m_vS0 = FCN_V(tgMH_ADD)(&vP0, &vD0);
+    psContact->m_vN0 = vNM;
+    psContact->m_fT0 = TYPE_K(0);
+    psContact->m_fDepth = -fDepth;
+
+    ++psPacket->m_niContact;
+
+    /* Point 3 */
+
+    if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+    {
+        return (KTgE_MAX_CONTACTS);
+    };
+
+    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+    psContact->m_vS0 = FCN_V(tgMH_ADD)(&vP0, &vD1);
+    psContact->m_vN0 = vNM;
+    psContact->m_fT0 = TYPE_K(0);
+    psContact->m_fDepth = -fDepth;
+
+    ++psPacket->m_niContact;
+
+    /* Point 4 */
+
+    if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+    {
+        return (KTgE_MAX_CONTACTS);
+    };
+
+    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+    vK0 = FCN_V(tgMH_ADD)(&vP0, &vD0);
+    psContact->m_vS0 = FCN_V(tgMH_ADD)(&vK0, &vD1);
+    psContact->m_vN0 = vNM;
+    psContact->m_fT0 = TYPE_K(0);
+    psContact->m_fDepth = -fDepth;
+
+    ++psPacket->m_niContact;
+
+    return (KTgS_OK);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,198 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Tube-Tube.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+/*                                                                                                                                                                                 */
+/* ---- F_Internal_Sweep --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/*                                                                                                                                                                                 */
+/*  INTERNAL FUNCTION:                                                                                                                                                             */
+/*   Used by the cylinder and capsule routines to capture tube-tube contacts. The end-caps are expected to capture most of the contacts, and thus, this routine activelylylylylyly */
+/*  responds with false-negatives when it expects the other routines to have already found the correct contacts.                                                                   */
+/*                                                                                                                                                                                 */
+/*  Let α,β represent any two arbitrary tubes, and W.O.L.O.G.let β be the tube undergoing linear translation Φ.                                                                    */
+/*  Let Sα, Sβ be the origin of the tube axes.                                                                                                                                     */
+/*  Let Dα, Dβ be the direction of the tube axes.                                                                                                                                  */
+/*                                                                                                                                                                                 */
+/*  Let N = Dα x Dβ, and n = N/|N| <-- Invariant under translation.                                                                                                                */
+/*                                                                                                                                                                                 */
+/*  Let ξ = Sα - Sβ                                                                                                                                                                */
+/*  Let γ(t) = ξ - Φ*t | t ε [ 0, 1]                                                                                                                                               */
+/*                                                                                                                                                                                 */
+/*  Minimal distance between the two lines is |(γ(t)•n)|                                                                                                                           */
+/*                                                                                                                                                                                 */
+/*  Solve for when distance is equal to the sum of the radii                                                                                                                       */
+/*                                                                                                                                                                                 */
+/*  Let RS be the some of the radii of the two tubes.                                                                                                                              */
+/*                                                                                                                                                                                 */
+/*  RS*RS   = (γ(t)•n)*(γ(t)•n)                                                                                                                                                    */
+/*          = ((ξ - Φ*t)•n)*((ξ - Φ*t)•n)                                                                                                                                          */
+/*          = (ξ•n - Φ•n*t)*(ξ•n - Φ•n*t)                                                                                                                                          */
+/*          = (ξ•n)*(ξ•n) - 2*(ξ•n)*(Φ•n)*t + (Φ•n)*(Φ•n)*t*t                                                                                                                      */
+/*                                                                                                                                                                                 */
+/*  Solve the quadratic equation,                                                                                                                                                  */
+/*   (Φ•n)*(Φ•n)*t*t - 2*(ξ•n)*(Φ•n)*t + (ξ•n)*(ξ•n) - RS*RS = 0                                                                                                                   */
+/*                                                                                                                                                                                 */
+/*  t = (-(-2*(ξ•n)*(Φ•n)) ± √((-2*(ξ•n)*(Φ•n))*(-2*(ξ•n)*(Φ•n)) - 4*(Φ•n)*(Φ•n)*((ξ•n)*(ξ•n) - RS*RS))) / 2*(Φ•n)*(Φ•n)                                                           */
+/*    = (2*(ξ•n)*(Φ•n) ± √(4*(ξ•n)*(ξ•n)*(Φ•n)*(Φ•n) - 4*(Φ•n)*(Φ•n)*(ξ•n)*(ξ•n) + 4*(Φ•n)*(Φ•n)*RS*RS)) / 2*(Φ•n)*(Φ•n)                                                           */
+/*    = (2*(ξ•n)*(Φ•n) ± 2*(Φ•n)*√((ξ•n)*(ξ•n) - (ξ•n)*(ξ•n) + RS*RS)) / 2*(Φ•n)*(Φ•n)                                                                                             */
+/*    = ((ξ•n) ± √(RS*RS))) / (Φ•n)                                                                                                                                                */
+/*    = ((ξ•n) ± RS) / (Φ•n)                                                                                                                                                       */
+/*                                                                                                                                                                                 */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_TB_Sweep_TB) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_TB_Sweep_TB)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_OBJ_T(TgTUBE,CPC) psTB0, VEC_OBJ_T(TgTUBE,CPC) psTB1, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    VAR_T()                             fTest;
+    VEC_T(1)                            vN0;
+    VEC_T(1,C)                          vK5 = FCN_V(tgMH_CX)(&psTB0->m_vU_HAX, &psTB1->m_vU_HAX);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_TB_Is_Valid)(psTB0) && FCN_VO(tgGM_TB_Is_Valid)(psTB1) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    };
+
+    vN0 = FCN_V(tgMH_NORM_LEN)(&fTest, &vK5);
+
+    if (FCN_F(tgCM_NR0)(fTest))
+    {
+        return (KTgE_NO_INTERSECT); /* Lines are near parallel */
+    }
+    else
+    {
+        VAR_T(C)                            fSumRad = psTB0->m_fRadius + psTB1->m_fRadius;
+        VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(&psTB0->m_vOrigin, &psTB1->m_vOrigin);
+        VAR_T(C)                            fDS_N0 = FCN_V(tgMH_DOT)(&vDS, &vN0);
+
+        if (FCN_F(tgPM_ABS)(fDS_N0) < fSumRad)
+        {
+            VEC_T(1,C)                          vTA = FCN_V(tgMH_CX)(&vN0, &vDS);
+            VAR_T(C)                            fS0 = FCN_V(tgMH_DOT)(&psTB1->m_vU_HAX, &vTA);
+            VAR_T(C)                            fS1 = FCN_V(tgMH_DOT)(&psTB0->m_vU_HAX, &vTA);
+
+            if (FCN_F(tgPM_ABS)(fS0) >= psTB0->m_fExtent || FCN_F(tgPM_ABS)(fS1) >= psTB1->m_fExtent)
+            {
+                return (KTgE_NO_INTERSECT); /* Proximity point lies outside of the tube's extents. */
+            };
+
+            if (*pfPM > psPacket->m_fSweepTol)
+            {
+                psPacket->m_niContact = 0;
+            };
+
+            *pfPM = TYPE_K(0);
+
+            if (psPacket->m_bReport_Penetration)
+            {
+                vN0 = FCN_V(tgMH_MUL_VS)(&vN0, FCN_F(tgPM_FSEL)(fDS_N0, -TYPE_K(1), TYPE_K(1))); /* Direct the normal from TB0 to TB1 */
+
+                if (FCN_F(tgCM_NR0)(fDS_N0)) /* Arbitrarily choose an orthonormal direction if penetrated distance to axis. */
+                {
+                    vN0 = FCN_V(tgMH_Set_Ortho)(&psTB1->m_vU_HAX);
+                    vN0 = FCN_V(tgMH_NORM)(&vN0);
+                };
+
+                {
+                    VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fS1, &psTB1->m_vU_HAX);
+                    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_VS)(&vN0, psTB1->m_fRadius);
+                    VEC_T(1,C)                          vK2 = FCN_V(tgMH_SUB)(&vK0, &vK1);
+                    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+                    psContact->m_vS0 = FCN_V(tgMH_ADD)(&psTB1->m_vOrigin, &vK2);
+                    psContact->m_vN0 = vN0;
+                    psContact->m_fT0 = TYPE_K(0);
+                    psContact->m_fDepth = fSumRad - FCN_F(tgPM_ABS)(fDS_N0);
+
+                    ++psPacket->m_niContact;
+                };
+            };
+
+            return (KTgE_PREPENETRATION);
+        }
+        else
+        {
+            VAR_T(C)                            fDT_N0 = FCN_V(tgMH_DOT)(&psDT->m_vDT, &vN0);
+            VAR_T(C)                            fT = (FCN_F(tgPM_ABS)(fDS_N0) - fSumRad) / FCN_F(tgPM_ABS)(fDT_N0);
+
+            if (FCN_F(tgCM_NR0)(fDT_N0) || !((fDS_N0 < TYPE_K(0)) ^ (fDT_N0 < TYPE_K(0))))
+            {
+                return (KTgE_NO_INTERSECT); /* Displacement is either near zero, tangential to or directed along the distance vector. */
+            };
+
+            if (fT > *pfPM + psPacket->m_fSweepTol)
+            {
+                return (KTgE_NO_INTERSECT); /* Earlier intersection already recorded. */
+            }
+            else
+            {
+                VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_VS)(&psDT->m_vDT, fT);
+                VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(&vDS, &vK0);
+                VEC_T(1,C)                          vTA = FCN_V(tgMH_CX)(&vN0, &vK1);
+                VAR_T(C)                            fS0 = FCN_V(tgMH_DOT)(&psTB1->m_vU_HAX, &vTA);
+                VAR_T(C)                            fS1 = FCN_V(tgMH_DOT)(&psTB0->m_vU_HAX, &vTA);
+                VEC_T(1,C)                          vKN = FCN_V(tgMH_MUL_VS)(&vN0, FCN_F(tgPM_FSEL)(fDS_N0, -TYPE_K(1), TYPE_K(1)));
+                VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(fS1, &psTB1->m_vU_HAX);
+                VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_VS)(&vKN, psTB1->m_fRadius);
+                VEC_T(1,C)                          vK4 = FCN_V(tgMH_SUB)(&vK2, &vK3);
+
+                if (FCN_F(tgPM_ABS)(fS0) >= psTB0->m_fExtent || FCN_F(tgPM_ABS)(fS1) >= psTB1->m_fExtent)
+                {
+                    return (KTgE_NO_INTERSECT); /* Proximity point lies outside of the tube's extents. */
+                };
+
+                if (fT < *pfPM - psPacket->m_fSweepTol)
+                {
+                    psPacket->m_niContact = 0;
+                    *pfPM = fT;
+                };
+
+                psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+                psContact->m_vS0 = FCN_V(tgMH_ADD)(&psTB1->m_vOrigin, &vK4);
+                psContact->m_vN0 = vKN;
+                psContact->m_fT0 = fT;
+                psContact->m_fDepth = TYPE_K(0);
+
+                ++psPacket->m_niContact;
+
+                return (KTgS_OK);
+            };
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

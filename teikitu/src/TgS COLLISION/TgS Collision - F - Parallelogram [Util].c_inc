@@ -1,0 +1,77 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Parallelogram [Util].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_Clip_PE) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psPE0: Parallelogram primitive - F_Clip-space is the region defined by the infinite extrusion along the normal.                                                         */
+/* Input:  tgCL: Contains a segment list that is to be clipped in-place.                                                                                                           */
+/* Output: tgCL: The resulting segment list.                                                                                                                                       */
+/* Return: Result Code.                                                                                                                                                            */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_Clip_PE)(VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgPARALLELOGRAM,CPC) psPE0)
+{
+    VEC_OBJ_T(TgPLANE)                       sPlane;
+
+    FCN_VO(tgGM_PN_Init_NP)(&sPlane, psPE0->m_avEdgeNormal + 0, &psPE0->m_vOrigin);
+
+    if (TgFAILED( FCN_VO(tgCO_F_PN_Clip)(psCL, &sPlane) ))
+    {
+        return (KTgE_FAIL);
+    };
+
+    if (0 == psCL->m_niPoint) return (KTgS_OK);
+
+    FCN_VO(tgGM_PN_Set_Constant)(&sPlane, FCN_VO(tgGM_PN_Query_Constant)(&sPlane) + FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, psPE0->m_avEdge + 1));
+    FCN_VO(tgGM_PN_Negate)(&sPlane);
+
+    if (TgFAILED( FCN_VO(tgCO_F_PN_Clip)(psCL, &sPlane) ))
+    {
+        return (KTgE_FAIL);
+    };
+
+    if (0 == psCL->m_niPoint) return (KTgS_OK);
+
+    FCN_VO(tgGM_PN_Init_NP)(&sPlane, psPE0->m_avEdgeNormal + 1, &psPE0->m_vOrigin);
+
+    if (TgFAILED( FCN_VO(tgCO_F_PN_Clip)(psCL, &sPlane) ))
+    {
+        return (KTgE_FAIL);
+    };
+
+    if (0 == psCL->m_niPoint) return (KTgS_OK);
+
+    FCN_VO(tgGM_PN_Set_Constant)(&sPlane, FCN_VO(tgGM_PN_Query_Constant)(&sPlane) + FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, psPE0->m_avEdge + 0));
+    FCN_VO(tgGM_PN_Negate)(&sPlane);
+
+    return (FCN_VO(tgCO_F_PN_Clip)(psCL, &sPlane));
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

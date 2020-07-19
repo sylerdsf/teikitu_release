@@ -1,0 +1,136 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Rectangle-Rectangle.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_RT_ParamSq_RT) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psRT0, psRT1: Rectangle primitives                                                                                                                                      */
+/* Output: _fRT00, _fRT01: Parametric parameters to generate point of minimal distance on rectangle #1                                                                             */
+/* Output: _fRT10, _fRT11: Parametric parameters to generate point of minimal distance on rectangle #2                                                                             */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_RT_ParamSq_RT)(VAR_T(P) pfRT00, VAR_T(P) pfRT01, VAR_T(P) pfRT10, VAR_T(P) pfRT11, VEC_OBJ_T(TgRECTANGLE,CPC) psRT0, VEC_OBJ_T(TgRECTANGLE,CPC) psRT1)
+{
+    VAR_T()                             fRT00 = TYPE_K(0), fRT10 = TYPE_K(0), fRT11 = TYPE_K(0);
+    VAR_T()                             fDistSq, fTest, fT0, fT1, fG1, fRT01;
+    VEC_T(1)                            vT0;
+
+    /* == Test Rectangle 0 Edges against Rectangle 1 == */
+
+    fDistSq = FCN_VO(tgCO_FI_RT_ParamSq_LR11)(&fRT10, &fRT11, &fRT00, psRT1, &psRT0->m_vOrigin, psRT0->m_avEdge + 0);
+    fRT01 = TYPE_K(0);
+
+    vT0 = FCN_VO(tgGM_RT_Query_Point_2)(psRT0);
+    fTest = FCN_VO(tgCO_FI_RT_ParamSq_LR11)(&fT0, &fT1, &fG1, psRT1, &vT0, psRT0->m_avEdge + 0);
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fRT00 = fG1;
+        fRT01 = TYPE_K(1);
+        fRT10 = fT0;
+        fRT11 = fT1;
+    };
+
+    fTest = FCN_VO(tgCO_FI_RT_ParamSq_LR11)(&fT0, &fT1, &fG1, psRT1, &psRT0->m_vOrigin, psRT0->m_avEdge + 1);
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fRT00 = TYPE_K(0);
+        fRT01 = fG1;
+        fRT10 = fT0;
+        fRT11 = fT1;
+    };
+
+    vT0 = FCN_VO(tgGM_RT_Query_Point_1)(psRT0);
+    fTest = FCN_VO(tgCO_FI_RT_ParamSq_LR11)(&fT0, &fT1, &fG1, psRT1, &vT0, psRT0->m_avEdge + 1);
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fRT00 = TYPE_K(1);
+        fRT01 = fG1;
+        fRT10 = fT0;
+        fRT11 = fT1;
+    };
+
+    /* == Test Rectangle 1 Edges against Rectangle 0 =========== */
+
+    fTest = FCN_VO(tgCO_FI_RT_ParamSq_LR11)(&fT0, &fT1, &fG1, psRT0, &psRT1->m_vOrigin, psRT1->m_avEdge + 0);
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fRT00 = fT0;
+        fRT01 = fT1;
+        fRT10 = fG1;
+        fRT11 = TYPE_K(0);
+    };
+
+    vT0 = FCN_VO(tgGM_RT_Query_Point_2)(psRT1);
+    fTest = FCN_VO(tgCO_FI_RT_ParamSq_LR11)(&fT0, &fT1, &fG1, psRT0, &vT0, psRT1->m_avEdge + 0);
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fRT00 = fT0;
+        fRT01 = fT1;
+        fRT10 = fG1;
+        fRT11 = TYPE_K(1);
+    };
+
+    fTest = FCN_VO(tgCO_FI_RT_ParamSq_LR11)(&fT0, &fT1, &fG1, psRT0, &psRT1->m_vOrigin, psRT1->m_avEdge + 1);
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fRT00 = fT0;
+        fRT01 = fT1;
+        fRT10 = TYPE_K(0);
+        fRT11 = fG1;
+    };
+
+    vT0 = FCN_VO(tgGM_RT_Query_Point_1)(psRT1);
+    fTest = FCN_VO(tgCO_FI_RT_ParamSq_LR11)(&fT0, &fT1, &fG1, psRT0, &vT0, psRT1->m_avEdge + 1);
+    if (fTest < fDistSq)
+    {
+        fDistSq = fTest;
+        fRT00 = fT0;
+        fRT01 = fT1;
+        fRT10 = TYPE_K(1);
+        fRT11 = fG1;
+    };
+
+    /* == Return Values == */
+
+    *pfRT00 = fRT00;
+    *pfRT01 = fRT01;
+    *pfRT10 = fRT10;
+    *pfRT11 = fRT11;
+
+    return (fDistSq);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

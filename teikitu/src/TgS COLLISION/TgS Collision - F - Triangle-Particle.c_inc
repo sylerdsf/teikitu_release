@@ -1,0 +1,270 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle-Particle.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  File Local Functions                                                                                                                                                           */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+static TgRESULT                             FCN_VO(tgCO_F_PC_Internal_Sweep_ET)( VEC_OBJ_T(STg2_CO_Contact,PC), VEC_OBJ_T(TgPARTICLE,CPC), VEC_T(1,CPC), VEC_OBJ_T(TgETRI,CPC) );
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_VO(tgCO_F_PC_Sweep_ET) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket:  Contact generation parameters                                                                                                                                */
+/* Input:  tyPM: Current normalized time of first contact for the contact query set.                                                                                               */
+/* Input:  psET0: Edge triangle primitive - also undergoing a linear translation                                                                                                   */
+/* Input:  psPC0: Particle - this primitive is undergoing the sweep/translation.                                                                                                   */
+/* Input:  psDT: A structure holding the swept primitive displacement for the entire duration of the test period.                                                                  */
+/* Output: tgPacket: Contact points are added or replace the current set depending on the time comparison and given parameters                                                     */
+/* Output: tyPM: New normalized time of first contact                                                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_PC_Sweep_ET)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_OBJ_T(TgPARTICLE,CPC) psPC0, VEC_OBJ_T(TgETRI,CPC) psET0, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    VEC_OBJ_T(STg2_CO_Contact)          sContact;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+    TgRESULT                            iResult;
+
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)(&psPC0->m_vVel, &psDT->m_vDT);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_ET_Is_Valid)(psET0) && FCN_VO(tgGM_PC_Is_Valid)(psPC0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    };
+
+    iResult = FCN_VO(tgCO_F_PC_Internal_Sweep_ET)(&sContact, psPC0, &vK0, psET0);
+
+    if (TgFAILED( iResult ))
+    {
+        return (iResult);
+    };
+
+    if (sContact.m_fT0 > *pfPM + psPacket->m_fSweepTol || !FCN_VO(tgGM_ET_Is_Contained)(psET0, &sContact.m_vS0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (sContact.m_fT0 < *pfPM - psPacket->m_fSweepTol)
+    {
+        psPacket->m_niContact = 0;
+        *pfPM = sContact.m_fT0;
+    };
+
+    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+    psContact->m_vS0 = sContact.m_vS0;
+    psContact->m_vN0 = sContact.m_vN0;
+    psContact->m_fT0 = sContact.m_fT0;
+    psContact->m_fDepth = sContact.m_fDepth;
+
+    ++psPacket->m_niContact;
+
+    return (KTgS_OK);
+}
+
+
+/* ---- FCN_VO(tgCO_F_ET_Sweep_PC) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket:  Contact generation parameters                                                                                                                                */
+/* Input:  tyPM: Current normalized time of first contact for the contact query set.                                                                                               */
+/* Input:  psET0: Edge triangle primitive                                                                                                                                          */
+/* Input:  psPC0: Particle - this primitive is undergoing the sweep/translation.                                                                                                   */
+/* Output: tgPacket: Contact points are added or replace the current set depending on the time comparison and given parameters                                                     */
+/* Output: tyPM: New normalized time of first contact                                                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_ET_Sweep_PC)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_OBJ_T(TgETRI,CPC) psET0, VEC_OBJ_T(TgPARTICLE,CPC) psPC0, VEC_OBJ_T(TgDELTA,CPC) UNUSED_PARAM psDT )
+{
+    VEC_OBJ_T(STg2_CO_Contact)          sContact;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+    TgRESULT                            iResult;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_ET_Is_Valid)(psET0) && FCN_VO(tgGM_PC_Is_Valid)(psPC0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    };
+
+    iResult = FCN_VO(tgCO_F_PC_Internal_Sweep_ET)(&sContact, psPC0, &psPC0->m_vVel, psET0);
+
+    if (TgFAILED( iResult ))
+    {
+        return (iResult);
+    };
+
+    if (sContact.m_fT0 > *pfPM + psPacket->m_fSweepTol || !FCN_VO(tgGM_ET_Is_Contained)(psET0, &sContact.m_vS0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (sContact.m_fT0 < *pfPM - psPacket->m_fSweepTol)
+    {
+        psPacket->m_niContact = 0;
+        *pfPM = sContact.m_fT0;
+    };
+
+    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+    psContact->m_vS0 = sContact.m_vS0;
+    psContact->m_vN0 = sContact.m_vN0;
+    psContact->m_fT0 = sContact.m_fT0;
+    psContact->m_fDepth = sContact.m_fDepth;
+
+    ++psPacket->m_niContact;
+
+    return (KTgS_OK);
+}
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  File Local Functions                                                                                                                                                           */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_VO(tgCO_F_PC_Internal_Sweep_ET) -------------------------------------------------------------------------------------------------------------------------------------- */
+/*                                                                                                                                                                                 */
+/*   The culling situation for a particle is complicated by its parabolic path of motion.  Back face culling is done on a point by                                                 */
+/*  point basis.  Thus, it is possible for a particle to ignore a triangle as it comes up through the back face and then collide                                                   */
+/*  with it as it descends through the front face.                                                                                                                                 */
+/*                                                                                                                                                                                 */
+/* Input:  psET0: Edge triangle primitive - also undergoing a linear translation                                                                                                   */
+/* Input:  psPC0: Particle - this primitive is undergoing the sweep/translation.                                                                                                   */
+/* Input:  vRV:  Relative velocity of the particle                                                                                                                                 */
+/* Output: sContact: Contact point if one is registered for the time period.                                                                                                       */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+static TgRESULT FCN_VO(tgCO_F_PC_Internal_Sweep_ET)( VEC_OBJ_T(STg2_CO_Contact,PC) psContact, VEC_OBJ_T(TgPARTICLE,CPC) psPC0, VEC_T(1,CPC) pvRV, VEC_OBJ_T(TgETRI,CPC) psET0 )
+{
+    VAR_T()                             fT0;
+
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)(&psPC0->m_vPos, psET0->m_sPT.m_avPoint);
+    VAR_T(C)                            fDist = FCN_V(tgMH_DOT)(&psET0->m_sPT.m_vNormal, &vK0);
+    VAR_T(C)                            fA_N = FCN_V(tgMH_DOT)(&psET0->m_sPT.m_vNormal, &psPC0->m_vAccel);
+    VAR_T(C)                            fRV_N = FCN_V(tgMH_DOT) (&psET0->m_sPT.m_vNormal, pvRV);
+
+    /* Check to see if the particle is moving away from the triangle plane. */
+
+    if (fDist > TYPE_K(0) && fRV_N >= TYPE_K(0) && fA_N >= TYPE_K(0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (fDist < TYPE_K(0) && fRV_N <= TYPE_K(0) && fA_N <= TYPE_K(0))
+    {
+        return (KTgE_NO_INTERSECT);
+    };
+
+    if (FCN_F(tgCM_NR0)(fA_N))
+    {
+        /*  The particle's acceleration is completely parallel to the triangle plane.  In this case, intersection can only exist if there is a velocity component towards */
+        /* the triangle. In that case, the equation is only first order (linear). If the velocity's projection onto the triangle normal is positive then the particle can */
+        /* only intersect with the back face of the triangle - a case which is ignored. */
+
+        if (fRV_N >= TYPE_K(0) || FCN_F(tgCM_NR0)(fRV_N))
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+
+        fT0 = -fDist / fRV_N;
+
+        if (fT0 < TYPE_K(0))
+        {
+            /* Sanity check - this can occur because floating point error and epsilon testing. */
+
+            return (KTgE_NO_INTERSECT);
+        };
+    }
+    else
+    {
+        /*  The particle has an acceleration component towards the triangle plane.  The equation of motion is a quadratic and thus, will have two solutions.  The desired */
+        /* answer will be the first positive root. */
+
+        VAR_T(C)                            fDSC = fRV_N*fRV_N - TYPE_K(2,0)*fA_N*fDist;
+
+        if (fDSC < TYPE_K(0))
+        {
+            /*  There is no real result for the given discriminant.  This should never occur given the other logic before this point.  Register an error and return a */
+            /* non-intersection. */
+
+            TgWARN_CO("[PA][ET] Unexpected invalid discriminant in calculation.\n");
+            return (KTgE_NO_INTERSECT);
+        };
+
+        /*  The math dictates that only one solution can possibly satisfy the constraints on the solution.  Specifically, the requirement that the velocity of the */
+        /* particle at the time of intersection have a negative projection on the triangle's normal eliminates the second root of the solution set. */
+        /*  N_(r + t•a,DIM) < 0.0, t = (-(r•N) ± β) / (a•N) */
+        /*  N•r + t_(N•a,DIM) < 0.0 */
+        /*  N•r + ((-(r•N) ± β) / (a•N))T_(N•a,DIM) < 0.0 */
+        /*  N•r + (-(r•N) ± β) < 0.0 */
+        /*  ± β < 0.0 */
+        /*  β is known to always be positive since the solution space is restricted to the real plane.  The root constructed with the positive square root value can */
+        /* never satisfy the velocity requirement, and thus, can always be ignored. */
+
+        {
+            VAR_T(C)                            fSQRT_DSC = FCN_F(tgPM_SQRT)(fDSC);
+
+            /* Check to see if the derived value for T0 would be negative, and if so, return with no intersection. */
+
+            if ((fA_N > TYPE_K(0) && -fRV_N < fSQRT_DSC) || (fA_N < TYPE_K(0) && -fRV_N > fSQRT_DSC))
+            {
+                return (KTgE_NO_INTERSECT);
+            };
+
+            fT0 = (-fRV_N - fSQRT_DSC) / fA_N;
+        };
+    };
+
+    /* Compute the point on the triangle plane and then test to see if its contained within the triangle itself. */
+
+    {
+        VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_VS)(pvRV, fT0);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&psPC0->m_vPos, &vK2);
+        VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_VS)(&psPC0->m_vAccel, fT0*fT0);
+
+        psContact->m_vS0 = FCN_V(tgMH_ADD)(&vK1, &vK3);
+        psContact->m_vN0 = psET0->m_sPT.m_vNormal;
+        psContact->m_fT0 = fT0;
+        psContact->m_fDepth = TYPE_K(0);
+
+        return (KTgS_OK);
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

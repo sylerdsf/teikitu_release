@@ -1,0 +1,112 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Convex-Plane.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_PN_Sweep_MA) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Input:  tgMH0: Mesh(Convex) primitive - contact points are generated on this primitive                                                                                          */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_PN_Sweep_MA)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgSTRI,CPC) apsST, VEC_OBJ_T(TgBOXAA,CPC) apsBA, TgSINT_F32_C niTri )
+{
+    TgSINT_F32_C                        niContact = psPacket->m_niContact;
+    TgSINT_F32                          iIdx;
+
+    TgPARAM_CHECK( nullptr != psPacket );
+    TgPARAM_CHECK( nullptr != psPN0 );
+    TgPARAM_CHECK( nullptr != apsST && nullptr != apsBA && 0 < niTri );
+
+    for (iIdx = 0; iIdx < niTri; ++iIdx)
+    {
+        VAR_T(C)                            fDist0 = FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psPN0, apsST[iIdx].m_sCT.m_sET.m_sPT.m_avPoint + 0);
+        VAR_T(C)                            fDist1 = FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psPN0, apsST[iIdx].m_sCT.m_sET.m_sPT.m_avPoint + 1);
+        VAR_T(C)                            fDist2 = FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psPN0, apsST[iIdx].m_sCT.m_sET.m_sPT.m_avPoint + 2);
+
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+        if (FCN_VO(tgGM_ST_Test_Point_0)(apsST + iIdx) && fDist0 < TYPE_K(0))
+        {
+            if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+            {
+                return (KTgE_MAX_CONTACTS);
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = apsST[iIdx].m_sCT.m_sET.m_sPT.m_avPoint[0];
+            psContact->m_vN0 = psPN0->m_vNormal;
+            psContact->m_fT0 = TYPE_K(0);
+            psContact->m_fDepth = -fDist0;
+
+            ++psPacket->m_niContact;
+        };
+
+        if (FCN_VO(tgGM_ST_Test_Point_1)(apsST + iIdx) && fDist1 < TYPE_K(0))
+        {
+            if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+            {
+                return (KTgE_MAX_CONTACTS);
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = apsST[iIdx].m_sCT.m_sET.m_sPT.m_avPoint[1];
+            psContact->m_vN0 = psPN0->m_vNormal;
+            psContact->m_fT0 = TYPE_K(0);
+            psContact->m_fDepth = -fDist1;
+
+            ++psPacket->m_niContact;
+        };
+
+        if (FCN_VO(tgGM_ST_Test_Point_2)(apsST + iIdx) && fDist2 < TYPE_K(0))
+        {
+            if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+            {
+                return (KTgE_MAX_CONTACTS);
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = apsST[iIdx].m_sCT.m_sET.m_sPT.m_avPoint[2];
+            psContact->m_vN0 = psPN0->m_vNormal;
+            psContact->m_fT0 = TYPE_K(0);
+            psContact->m_fDepth = -fDist2;
+
+            ++psPacket->m_niContact;
+        };
+    };
+
+    return (niContact != psPacket->m_niContact ? KTgS_OK : KTgE_NO_INTERSECT);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

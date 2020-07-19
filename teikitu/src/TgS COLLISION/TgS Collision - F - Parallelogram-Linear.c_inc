@@ -1,0 +1,379 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Parallelogram-Linear.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+MSVC_WARN_DISABLE_PUSH( 6235 ) /* Analysis - (<non-zero constant> || <expression>) is always a non-zero constant. */
+MSVC_WARN_DISABLE_PUSH( 6240 ) /* Analysis - (<expression> && <non-zero constant>) always evaluates to the result of <expression>. */
+
+
+/*  Let E0 and E1 be the two defining edges for the parallelogram                                                                                                                  */
+/*                                                                                                                                                                                 */
+/*  The normal N = E0 x E1                                                                                                                                                         */
+/*  It follows that,                                                                                                                                                               */
+/*      E1_(N × E0,DIM) = N_(E0 × E1,DIM) = N•N = |N|^2 ≥ 0                                                                                                                        */
+/*           - The second edge always has a non-negative projection onto the first edge's clip plane.                                                                              */
+/*      E0_(E1 × N,DIM) = -E0_(N × E1,DIM) = -N_(E1 × E0,DIM) = N_(E0 × E1,DIM) = N•N = |N|^2 ≥ 0                                                                                  */
+/*           - The first edge always has a non-negative projection onto the second edge's clip plane.                                                                              */
+
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- VI(tgCO_F_PE_ParamSq_LR) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/*  -- Internal Function -- LN_CAP_0, LN_CAP_1 : Indicate the termination condition of the linear {bc0,LN_CAP_1}                                                                   */
+/* Input:  psPE0: Parallelogram primitive                                                                                                                                          */
+/* Input:  vS0,vD0: Origin and Direction for the Linear                                                                                                                            */
+/* Output: _tyPE0, _tyPE1: Parametric parameters to generate point of minimal distance on the parallelogram                                                                        */
+/* Output: _tyLN0: Parametric parameter to generate point of minimal distance on the linear                                                                                        */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() VI(tgCO_F_PE_ParamSq_LR)( VAR_T(P) pfPE0, VAR_T(P) pfPE1, VAR_T(P) pfLN0, VEC_OBJ_T(TgPARALLELOGRAM,CPC) psPE0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VEC_T(1,C)                          vX0 = FCN_V(tgMH_SUB)(pvS0, &psPE0->m_vOrigin);
+    VAR_T(C)                            fX0_X0 = FCN_V(tgMH_LSQ)(&vX0);
+    VAR_T(C)                            fE1_EN0 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, psPE0->m_avEdge + 1);
+    VAR_T(C)                            fE0_EN1 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, psPE0->m_avEdge + 0);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_PE_Is_Valid)(psPE0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) && FCN_V(tgMH_Is_Vector_Valid)(pvD0) );
+
+    if (TgEXPECT_FALSE( fX0_X0 <= VAR_K(KTgEPS) || fE1_EN0 <= VAR_K(KTgEPS) || fE0_EN1 <= VAR_K(KTgEPS) ))
+    {
+        /* Degenerate parallelogram - One or both of the edges has a near-zero length */
+        /* Quick Out - the point is within tolerance of rectangle origin. */
+
+        *pfPE0 = TYPE_K(0);
+        *pfPE1 = TYPE_K(0);
+        *pfLN0 = TYPE_K(0);
+
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T(C)                            fD1_N = FCN_V(tgMH_DOT)(pvD0, &psPE0->m_vNormal);
+        VAR_T(C)                            fX0_N = FCN_V(tgMH_DOT)(&vX0, &psPE0->m_vNormal);
+
+        if (FCN_F(tgPM_ABS)(fD1_N) > VAR_K(KTgEPS))
+        {
+            /* Non-trivial plane normal-component in the linear direction.  Check the intersection of the two primitives. */
+
+            VAR_T(C)                            fInt = -(fX0_N / fD1_N);
+
+            if ((!LN_CAP_0 || fInt >= TYPE_K(0)) && (!LN_CAP_1 || fInt <= TYPE_K(1)))
+            {
+                VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fInt, pvD0);
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_ADD)(&vX0, &vK1);
+                VAR_T(C)                            fINT_EN0 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, &vK0);
+                VAR_T(C)                            fINT_EN1 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, &vK0);
+
+                if (fINT_EN0 >= TYPE_K(0) && fINT_EN0 <= fE1_EN0 && fINT_EN1 >= TYPE_K(0) && fINT_EN1 <= fE0_EN1)
+                {
+                    *pfPE0 = fINT_EN1 / fE0_EN1;
+                    *pfPE1 = fINT_EN0 / fE1_EN0;
+                    *pfLN0 = fInt;
+
+                    return (-VAR_K(KTgMAX));
+                };
+            };
+        };
+
+        {
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_SUB)(pvS0, &psPE0->m_vOrigin);
+            VEC_T(1,C)                          vX1 = FCN_V(tgMH_ADD)(&vK2, pvD0);
+            VAR_T(C)                            fNegE = -VAR_K(KTgEPS);
+
+            VAR_T(C)                            f00 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, &vX0);
+            VAR_T(C)                            f01 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, &vX0);
+            VAR_T(C)                            f10 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, LN_CAP_1 ? &vX1 : pvD0);
+            VAR_T(C)                            f11 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, LN_CAP_1 ? &vX1 : pvD0);
+
+            TgBOOL_C                            bK0 = LN_CAP_0 ? (f00 < VAR_K(KTgEPS)) : (f10 > VAR_K(KTgEPS));
+            TgBOOL_C                            bK1 = LN_CAP_1 ? (f10 < VAR_K(KTgEPS)) : (f10 < fNegE);
+            TgBOOL_C                            bK2 = LN_CAP_0 ? (f01 < VAR_K(KTgEPS)) : (f11 > VAR_K(KTgEPS));
+            TgBOOL_C                            bK3 = LN_CAP_1 ? (f11 < VAR_K(KTgEPS)) : (f11 < fNegE);
+            TgBOOL_C                            bK4 = LN_CAP_0 ? (fE1_EN0 - f00 < VAR_K(KTgEPS)) : (f10 < fNegE);
+            TgBOOL_C                            bK5 = LN_CAP_1 ? (fE1_EN0 - f10 < VAR_K(KTgEPS)) : (f10 > VAR_K(KTgEPS));
+            TgBOOL_C                            bK6 = LN_CAP_0 ? (fE0_EN1 - f01 < VAR_K(KTgEPS)) : (f11 < fNegE);
+            TgBOOL_C                            bK7 = LN_CAP_1 ? (fE0_EN1 - f11 < VAR_K(KTgEPS)) : (f11 > VAR_K(KTgEPS));
+
+            VAR_T()                             fPE0 = VAR_K(KTgMAX), fPE1 = VAR_K(KTgMAX), fG1 = VAR_K(KTgMAX);
+            VAR_T()                             fT0, fT1, fTest, fDistSq = VAR_K(KTgMAX);
+            TgSINT_F32                          iTest = 0;
+
+            (void)fNegE;
+
+            iTest |= (LN_CAP_0 && f00 >= TYPE_K(0) && f01 >= TYPE_K(0) && fE1_EN0 >= f00 && fE0_EN1 >= f01) ? (1 << 4) : 0;
+            iTest |= (LN_CAP_1 && f10 >= TYPE_K(0) && f11 >= TYPE_K(0) && fE1_EN0 >= f10 && fE0_EN1 >= f11) ? (1 << 5) : 0;
+
+            /* If the linear is a segment, and both termination points are contained inside of the normal extruded triangle then find the closest point to the plane - */
+            /* and terminate processing. */
+
+            if (iTest & (3 << 4))
+            {
+                VAR_T(C)                            fX1_N = FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&vX1, &psPE0->m_vNormal));
+
+                if (FCN_F(tgPM_ABS)(fX0_N) < fX1_N)
+                {
+                    *pfPE0 = f01 / fE0_EN1;
+                    *pfPE1 = f00 / fE1_EN0;
+                    *pfLN0 = TYPE_K(0);
+
+                    return (fX0_N*fX0_N);
+                }
+                else
+                {
+                    *pfPE0 = f11 / fE0_EN1;
+                    *pfPE1 = f10 / fE1_EN0;
+                    *pfLN0 = TYPE_K(1);
+
+                    return (fX1_N*fX1_N);
+                };
+            };
+
+            /* Distance calculation for the linear's origin if its capped and within the parallelogram's normal-extruded space. */
+
+            if (iTest & (1 << 4))
+            {
+                fDistSq = fX0_N * fX0_N;
+                fPE0 = f01 / fE0_EN1;
+                fPE1 = f00 / fE1_EN0;
+                fG1 = TYPE_K(0);
+            };
+
+            /* Distance calculation for the linear's termination if its capped and within the parallelogram's normal-extruded space. */
+
+            if (iTest & (1 << 5))
+            {
+                VAR_T(C)                            fX1_N = FCN_V(tgMH_DOT)(&vX1, &psPE0->m_vNormal);
+
+                fTest = fX1_N * fX1_N;
+
+                if (fTest < fDistSq)
+                {
+                    fDistSq = fTest;
+                    fPE0 = f11 / fE0_EN1;
+                    fPE1 = f10 / fE1_EN0;
+                    fG1 = TYPE_K(1);
+                };
+            };
+
+            /* Compare the segment against the four parallelogram edges. */
+
+            iTest |= bK0 ? (1 << 0) : 0;
+            iTest |= bK1 ? (1 << 0) : 0;
+            iTest |= bK2 ? (1 << 1) : 0;
+            iTest |= bK3 ? (1 << 1) : 0;
+            iTest |= bK4 ? (1 << 2) : 0;
+            iTest |= bK5 ? (1 << 2) : 0;
+            iTest |= bK6 ? (1 << 3) : 0;
+            iTest |= bK7 ? (1 << 3) : 0;
+
+            if (iTest & (1 << 0))
+            {
+                fTest = FCN_VO(tgCO_F_LR11_ParamSq_LR11)(&fT0, &fT1, &psPE0->m_vOrigin, psPE0->m_avEdge + 0, pvS0, pvD0);
+
+                if (fTest < fDistSq)
+                {
+                    fDistSq = fTest;
+                    fPE0 = fT0;
+                    fPE1 = TYPE_K(0);
+                    fG1 = fT1;
+                };
+            };
+
+            if (iTest & (1 << 1))
+            {
+                fTest = FCN_VO(tgCO_F_LR11_ParamSq_LR11)(&fT0, &fT1, &psPE0->m_vOrigin, psPE0->m_avEdge + 1, pvS0, pvD0);
+
+                if (fTest < fDistSq)
+                {
+                    fDistSq = fTest;
+                    fPE0 = TYPE_K(0);
+                    fPE1 = fT0;
+                    fG1 = fT1;
+                };
+            };
+
+            if (iTest & (1 << 2))
+            {
+                VEC_T(1,C)                          vK3 = FCN_VO(tgGM_PE_Query_Point_2)(psPE0);
+
+                fTest = FCN_VO(tgCO_F_LR11_ParamSq_LR11)(&fT0, &fT1, &vK3, psPE0->m_avEdge + 0, pvS0, pvD0);
+
+                if (fTest < fDistSq)
+                {
+                    fDistSq = fTest;
+                    fPE0 = fT0;
+                    fPE1 = TYPE_K(1);
+                    fG1 = fT1;
+                };
+            };
+
+            if (iTest & (1 << 3))
+            {
+                VEC_T(1,C)                          vK4 = FCN_VO(tgGM_PE_Query_Point_1)(psPE0);
+
+                fTest = FCN_VO(tgCO_F_LR11_ParamSq_LR11)(&fT0, &fT1, &vK4, psPE0->m_avEdge + 1, pvS0, pvD0);
+
+                if (fTest < fDistSq)
+                {
+                    fDistSq = fTest;
+                    fPE0 = TYPE_K(1);
+                    fPE1 = fT0;
+                    fG1 = fT1;
+                };
+            };
+
+            *pfPE0 = fPE0;
+            *pfPE1 = fPE1;
+            *pfLN0 = fG1;
+
+            return (fDistSq);
+        };
+    };
+}
+
+
+/* ---- VI(tgCO_FI_PE_Clip_Param_LR) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/*  -- Internal Function -- LN_CAP_0, LN_CAP_1 : Indicate the termination condition of the linear {bc0,LN_CAP_1}                                                                   */
+/* Input:  psPE0: Parallelogram primitive - F_Clip-space is the region defined by the infinite extrusion along the normal.                                                         */
+/* Input:  vS0,vD0: Origin and Direction for the Linear                                                                                                                            */
+/* Output: fLN0,fLN1: Parametric parameter to generate the two points of the linear contained inside the clip space.                                                               */
+/* Return: Result Code.                                                                                                                                                            */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT VI(tgCO_FI_PE_Clip_Param_LR)( VAR_T(P) pfLN0, VAR_T(P) pfLN1, VEC_OBJ_T(TgPARALLELOGRAM,CPC) psPE0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VAR_T(C)                            fE1_EN0 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, psPE0->m_avEdge + 1);
+    VAR_T(C)                            fE0_EN1 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, psPE0->m_avEdge + 0);
+    VEC_T(1)                            vDS;
+    VAR_T()                             fDS_N, fD1_N;
+    VAR_T()                             fMin;
+    VAR_T()                             fMax;
+
+    if (fE1_EN0 <= VAR_K(KTgEPS) || fE0_EN1 <= VAR_K(KTgEPS))
+    {
+        /* Degenerate rectangle - One or both of the edges has a near-zero length */
+        return (KTgE_FAIL);
+    }
+
+    vDS = FCN_V(tgMH_SUB)(pvS0, &psPE0->m_vOrigin);
+    fMin = -VAR_K(KTgMAX);
+    fMax = VAR_K(KTgMAX);
+
+    /* Quick out - Does the linear exist outside of the clip region. */
+
+    fDS_N = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, &vDS);
+    fD1_N = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, pvD0);
+
+    if (LN_CAP_0 && fDS_N < TYPE_K(0))
+    {
+        if (fD1_N < TYPE_K(0) || (LN_CAP_1 && (fDS_N + fD1_N < TYPE_K(0))))
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+    }
+    else if (LN_CAP_0 && fDS_N > fE1_EN0)
+    {
+        if (fD1_N > TYPE_K(0) || (LN_CAP_1 && (fDS_N + fD1_N > fE1_EN0)))
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+    };
+
+    /* Find the non-capped intersections of this linear with the two enclosing planes. */
+
+    if (fD1_N < -VAR_K(KTgEPS))
+    {
+        fMin = FCN_F(tgPM_FSEL)(fDS_N + fD1_N*fMin - fE1_EN0, (fE1_EN0 - fDS_N) / fD1_N, fMin);
+        fMax = FCN_F(tgPM_FSEL)(fDS_N + fD1_N*fMax, fMax, -fDS_N / fD1_N);
+    }
+    else if (fD1_N > VAR_K(KTgEPS))
+    {
+        fMin = FCN_F(tgPM_FSEL)(fD1_N*fMin + fDS_N, fMin, -fDS_N / fD1_N);
+        fMax = FCN_F(tgPM_FSEL)(fDS_N + fD1_N*fMax - fE1_EN0, (fE1_EN0 - fDS_N) / fD1_N, fMax);
+    };
+
+    /* Quick out - Does the linear exist outside of the clip region. */
+
+    fDS_N = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, &vDS);
+    fD1_N = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, pvD0);
+
+    if (LN_CAP_0 && fDS_N < TYPE_K(0))
+    {
+        if (fD1_N < TYPE_K(0) || (LN_CAP_1 && (fDS_N + fD1_N < TYPE_K(0))))
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+    }
+    else if (LN_CAP_0 && fDS_N > fE0_EN1)
+    {
+        if (fD1_N > TYPE_K(0) || (LN_CAP_1 && (fDS_N + fD1_N > fE0_EN1)))
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+    };
+
+    /* Find the non-capped intersections of this linear with the two enclosing planes. */
+
+    if (fD1_N < -VAR_K(KTgEPS))
+    {
+        fMin = FCN_F(tgPM_FSEL)(fDS_N + fD1_N*fMin - fE0_EN1, (fE0_EN1 - fDS_N) / fD1_N, fMin);
+        fMax = FCN_F(tgPM_FSEL)(fDS_N + fD1_N*fMax, fMax, -fDS_N / fD1_N);
+    }
+    else if (fD1_N > VAR_K(KTgEPS))
+    {
+        fMin = FCN_F(tgPM_FSEL)(fD1_N*fMin + fDS_N, fMin, -fDS_N / fD1_N);
+        fMax = FCN_F(tgPM_FSEL)(fDS_N + fD1_N*fMax - fE0_EN1, (fE0_EN1 - fDS_N) / fD1_N, fMax);
+    };
+
+    /* Return the results - capped to the linear legal region. */
+
+    if (fMin > fMax || fMin <= -VAR_K(KTgMAX) || fMax >= VAR_K(KTgMAX))
+    {
+        return (KTgE_FAIL);
+    };
+
+    if (LN_CAP_0)
+    {
+        *pfLN0 = FCN_F(tgPM_FSEL)(*pfLN0, *pfLN0, TYPE_K(0));
+        *pfLN1 = FCN_F(tgPM_FSEL)(*pfLN1, *pfLN1, TYPE_K(0));
+    };
+
+    if (LN_CAP_1)
+    {
+        *pfLN0 = FCN_F(tgPM_FSEL)(*pfLN0 - TYPE_K(1), *pfLN0, TYPE_K(1));
+        *pfLN1 = FCN_F(tgPM_FSEL)(*pfLN1 - TYPE_K(1), *pfLN1, TYPE_K(1));
+    };
+
+    return (KTgS_OK);
+}
+
+
+MSVC_WARN_DISABLE_POP( 6235 )
+MSVC_WARN_DISABLE_POP( 6240 )
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

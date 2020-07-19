@@ -1,0 +1,67 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Circle.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions - Scalar Functions                                                                                                                                            */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* Circle - Point                                                                                                                                                                  */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_DistSq_VT)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Dist_VT)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_ClosestSq_VT)( VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Closest_VT)( VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_T(1,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_CI_DistSq_VT)( VEC_T(1,CPC), VEC_T(1,CPC), VAR_T(C), VEC_T(1,CPC) );
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_CI_ClosestSq_VT)( VEC_T(1,PC), VEC_T(1,CPC), VEC_T(1,CPC), VAR_T(C), VEC_T(1,CPC) );
+
+/* Circle - Line                                                                                                                                                                   */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_DistSq_LN)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Dist_LN)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_ClosestSq_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Closest_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_ParamSq_LN)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Param_LN)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_CI_ParamSq_LR00)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Circle - Ray                                                                                                                                                                    */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_DistSq_RY)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Dist_RY)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_ClosestSq_RY)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Closest_RY)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_ParamSq_RY)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Param_RY)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_CI_ParamSq_LR10)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Circle - Segment                                                                                                                                                                */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_DistSq_SG)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Dist_SG)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_ClosestSq_SG)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Closest_SG)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_ParamSq_SG)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Param_SG)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_FI_CI_ParamSq_LR11)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+/* Circle - Circle                                                                                                                                                                 */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_DistSq_CI)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgCIRCLE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Dist_CI)( VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgCIRCLE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_ClosestSq_CI)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgCIRCLE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_CI_Closest_CI)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgCIRCLE,CPC) );
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_CI_ParamSq_CI)( VAR_T(P) , VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgCIRCLE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_CI_Intersect2D_CI)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgCIRCLE,CPC), VEC_OBJ_T(TgCIRCLE,CPC) );
+
+/* Circle - Triangle                                                                                                                                                               */
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ST_Penetrate_CI)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgCIRCLE,CPC) );

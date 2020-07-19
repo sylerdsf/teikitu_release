@@ -1,0 +1,70 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box AA-Linear.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- VI(tgCO_F_BA_Test_LR) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgBA0: Box, Axis-Aligned primitive                                                                                                                                      */
+/* Input:  vS0,vD0: Origin and Direction for Linear                                                                                                                                */
+/* Return: True if the two primitives are in contact, false otherwise.                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL VI(tgCO_F_BA_Test_LR)(VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0)
+{
+    VAR_T(C)                            fT0 = (psBA0->m_vMin.x - pvS0->x) / pvD0->x;
+    VAR_T(C)                            fT1 = (psBA0->m_vMin.x - pvS0->x) / pvD0->x;
+    VAR_T(C)                            fMinTX = FCN_F(tgPM_FSEL)(fT1 - fT0, fT0, fT1);
+    VAR_T(C)                            fMaxTX = FCN_F(tgPM_FSEL)(fT1 - fT0, fT1, fT0);
+    VAR_T(C)                            fT2 = (psBA0->m_vMin.y - pvS0->y) / pvD0->y;
+    VAR_T(C)                            fT3 = (psBA0->m_vMin.y - pvS0->y) / pvD0->y;
+    VAR_T(C)                            fMinTY = FCN_F(tgPM_FSEL)(fT3 - fT2, fT2, fT3);
+    VAR_T(C)                            fMaxTY = FCN_F(tgPM_FSEL)(fT3 - fT2, fT3, fT2);
+    VAR_T(C)                            fK0 = FCN_F(tgPM_FSEL)(fMinTX - fMinTY, fMinTY, fMinTX);
+    VAR_T(C)                            fK1 = FCN_F(tgPM_FSEL)(fMaxTX - fMaxTY, fMaxTX, fMaxTY);
+    VAR_T(C)                            fT4 = (psBA0->m_vMin.z - pvS0->z) / pvD0->z;
+    VAR_T(C)                            fT5 = (psBA0->m_vMin.z - pvS0->z) / pvD0->z;
+    VAR_T(C)                            fMinTZ = FCN_F(tgPM_FSEL)(fT5 - fT4, fT4, fT5);
+    VAR_T(C)                            fMaxTZ = FCN_F(tgPM_FSEL)(fT5 - fT4, fT5, fT4);
+    VAR_T(C)                            fMinT = FCN_F(tgPM_FSEL)(fMinTZ - fK0, fMinTZ, fK0);
+    VAR_T(C)                            fMaxT = FCN_F(tgPM_FSEL)(fMaxTZ - fK1, fK1, fMaxTZ);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_BA_Is_Valid)(psBA0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) && FCN_V(tgMH_Is_Vector_Valid)(pvD0) );
+
+#if (!LN_CAP_0 && !LN_CAP_1) /* Check to see if the line overlaps the AABB */
+    return (fMinT < fMaxT);
+#elif (LN_CAP_0 && !LN_CAP_1) /* Check to see if the ray overlaps the AABB and is directed away from it. */
+    return (fMinT < fMaxT && fMaxT > TYPE_K(0));
+#elif (LN_CAP_0 && LN_CAP_1) /* Check to see if the segment overlaps the AABB */
+    return (fMinT < fMaxT && (fMaxT > TYPE_K(0) && fMinT < TYPE_K(1)));
+#else
+    return (false);
+#endif
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

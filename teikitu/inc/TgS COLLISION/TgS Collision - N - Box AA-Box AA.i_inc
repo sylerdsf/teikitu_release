@@ -1,0 +1,28 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - N - Box AA-Box AA.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_N_BA_Test_BA) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_N_BA_Test_BA)( VEC_OBJ_T(TgBOXAA_N,CPC) psBA0, VEC_OBJ_T(TgBOXAA_N,CPC) psBA1 )
+{
+    return (FCN_VO(tgCO_N_BA_Test_Elem_BA)( psBA0->m_vMin, psBA0->m_vMax, psBA1->m_vMin, psBA1->m_vMax ));
+}
+
+
+/* ---- FCN_VO(tgCO_N_BA_Test_Elem_BA) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_N_BA_Test_Elem_BA)( VEC_N_T(1,C) vMin_BA0, VEC_N_T(1,C) vMax_BA0, VEC_N_T(1,C) vMin_BA1, VEC_N_T(1,C) vMax_BA1 )
+{
+    return (FCN_V(tgMH_CMP_TO_BOOL_N)( FCN_V(tgMH_AND_N)( FCN_V(tgMH_CMP_LE_N)( vMin_BA0, vMax_BA1 ), FCN_V(tgMH_CMP_GE_N)( vMax_BA0, vMin_BA1 ) ) ));
+}

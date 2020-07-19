@@ -1,0 +1,133 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Circle-Point.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_FI_CI_DistSq_VT) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  vCIS0: Origin of the circle (and the point on the plane).                                                                                                               */
+/* Input:  vCIN0: Normal to the plane containing the circle.                                                                                                                       */
+/* Input:  fRadius: Radius of the circle                                                                                                                                           */
+/* Input:  vS0: Point, not necessarily in the plane.                                                                                                                               */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_FI_CI_DistSq_VT)( VEC_T(1,CPC) pvCI_S0, VEC_T(1,CPC) pvCI_N0, VAR_T(C) fRadius, VEC_T(1,CPC) pvS0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(pvS0, pvCI_S0);
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)(&vDS);
+
+    TgERROR( FCN_V(tgMH_Is_Point_Valid)(pvCI_S0) && FCN_V(tgMH_Is_Vector_Valid)(pvCI_N0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+    TgERROR( !FCN_F(tgPM_NAN)(fRadius) && fRadius > TYPE_K(0) );
+
+    if (fDS_DS <= VAR_K(KTgEPS))
+    {   /* Quick Out - the point is within tolerance of circle origin. */
+        return (fRadius*fRadius);
+    }
+    else
+    {
+        VAR_T(C)                            fDS_N = FCN_V(tgMH_DOT)(&vDS, pvCI_N0);
+        VAR_T()                             fLenPDS;
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fDS_N, pvCI_N0);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(&vDS, &vK0);
+        VEC_T(1,C)                          vPDS = FCN_V(tgMH_NORM_LEN)(&fLenPDS, &vK1);
+
+        if (fLenPDS <= VAR_K(KTgEPS))
+        {   /* Quick Out - the point is directly above the origin */
+            return (fRadius*fRadius + fDS_N*fDS_N);
+        }
+        else
+        {
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(fRadius, &vPDS);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_SUB)(&vDS, &vK2);
+
+            return (FCN_V(tgMH_LSQ)(&vK3));
+        };
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_FI_CI_ClosestSq_VT) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* Input:  vCIS0: Origin of the circle (and the point on the plane).                                                                                                               */
+/* Input:  vCIN0: Normal to the plane containing the circle.                                                                                                                       */
+/* Input:  fRadius: Radius of the circle                                                                                                                                           */
+/* Input:  vS0: Point, not necessarily in the plane.                                                                                                                               */
+/* Output: vCI0: Point of closest proximity on the circle.                                                                                                                         */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_FI_CI_ClosestSq_VT)( VEC_T(1,PC) pvCI0, VEC_T(1,CPC) pvCI_S0, VEC_T(1,CPC) pvCI_N0, VAR_T(C) fRadius, VEC_T(1,CPC) pvS0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(pvS0, pvCI_S0);
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)(&vDS);
+
+    TgERROR( FCN_V(tgMH_Is_Point_Valid)(pvCI_S0) && FCN_V(tgMH_Is_Vector_Valid)(pvCI_N0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+    TgERROR( !FCN_F(tgPM_NAN)(fRadius) && fRadius > TYPE_K(0) );
+
+    if (fDS_DS <= VAR_K(KTgEPS))
+    {   /* Quick Out - the point is within tolerance of circle origin. */
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_Set_Ortho)(pvCI_N0);
+        VEC_T(1,C)                          vDirN = FCN_V(tgMH_NORM)(&vK0);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fRadius, &vDirN);
+
+        *pvCI0 = FCN_V(tgMH_ADD)(pvCI_S0, &vK1);
+
+        return (fRadius*fRadius);
+    }
+    else
+    {
+        VAR_T(C)                            fDS_N = FCN_V(tgMH_DOT)(&vDS, pvCI_N0);
+        VAR_T()                             fLenPDS;
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fDS_N, pvCI_N0);
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_SUB)(&vDS, &vK0);
+        VEC_T(1,C)                          vPDS = FCN_V(tgMH_NORM_LEN)(&fLenPDS, &vK1);
+
+        if (fLenPDS <= VAR_K(KTgEPS))
+        {
+            /* The point is directly above the origin. Thus, every point on the circle is equidistant - make an arbitrary choice. */
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_Set_Ortho)(pvCI_N0);
+            VEC_T(1,C)                          vDirN = FCN_V(tgMH_NORM)(&vK2);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)(fRadius, &vDirN);
+
+            *pvCI0 = FCN_V(tgMH_ADD)(pvCI_S0, &vK3);
+
+            return (fRadius*fRadius + fDS_N*fDS_N);
+        }
+        else
+        {
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(fRadius, &vPDS);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_ADD)(pvCI_S0, &vK2);
+            VEC_T(1,C)                          vK4 = FCN_V(tgMH_SUB)(pvS0, &vK3);
+
+            *pvCI0 = vK3;
+
+            return (FCN_V(tgMH_LSQ)(&vK4));
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

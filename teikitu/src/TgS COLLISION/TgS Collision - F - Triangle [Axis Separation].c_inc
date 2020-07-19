@@ -1,0 +1,121 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle [Axis Separation].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_PT_Axis_ProjInfo) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* Input:  vAx: Axis of separation being tested                                                                                                                                    */
+/* Input:  tgPT0: Point triangle primitive                                                                                                                                         */
+/* Output: tgConfig: Holds the resulting information for the axis separation tests for this primitive                                                                              */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgCO_F_PT_Axis_ProjInfo)( VEC_OBJ_T(STg2_CO_Axis_Project,PC) psConfig, VEC_T(1,CPC) pvAx, VEC_OBJ_T(TgPTRI,CPC) psPT0 )
+{
+    /* Feature ID: 0,1,2 = Points 0,1,2; 4,5,6 = Edge 0,1,2 [0->1, 0->2, 1->2] */
+
+    VAR_T(C)                            fP0_AX = FCN_V(tgMH_DOT)(pvAx, psPT0->m_avPoint + 0);
+    VAR_T(C)                            fP1_AX = FCN_V(tgMH_DOT)(pvAx, psPT0->m_avPoint + 1);
+    VAR_T(C)                            fP2_AX = FCN_V(tgMH_DOT)(pvAx, psPT0->m_avPoint + 2);
+
+    TgBOOL_C                            bEq01 = FCN_F(tgCM_NR0)(fP0_AX - fP1_AX);
+    TgBOOL_C                            bEq02 = FCN_F(tgCM_NR0)(fP0_AX - fP2_AX);
+    TgBOOL_C                            bEq12 = FCN_F(tgCM_NR0)(fP1_AX - fP2_AX);
+
+    /* Explicit sort of vertices to construct a ContactConfig. */
+
+    if (fP0_AX <= fP1_AX)
+    {
+        if (fP1_AX <= fP2_AX) /* fP0_AX <= fP1_AX <= fP2_AX */
+        {
+            psConfig->m_avMinVert[0] = psPT0->m_avPoint[0];
+            psConfig->m_avMinVert[1] = psPT0->m_avPoint[1];
+            psConfig->m_avMinVert[2] = psPT0->m_avPoint[2];
+            psConfig->m_avMaxVert[0] = psPT0->m_avPoint[2];
+            psConfig->m_avMaxVert[1] = psPT0->m_avPoint[1];
+            psConfig->m_iMinID = bEq02 ? 8 : (bEq01 ? 4 : 0);
+            psConfig->m_iMaxID = bEq02 ? 0 : (bEq12 ? 6 : 2);
+            psConfig->m_nuiMinDepth = bEq02 ? 3 : (bEq01 ? 2 : 1);
+            psConfig->m_nuiMaxDepth = bEq02 ? 0 : (bEq12 ? 2 : 1);
+        }
+        else if (fP0_AX <= fP2_AX) /* fP0_AX <= fP2_AX < fP1_AX */
+        {
+            psConfig->m_avMinVert[0] = psPT0->m_avPoint[0];
+            psConfig->m_avMinVert[1] = psPT0->m_avPoint[2];
+            psConfig->m_avMaxVert[0] = psPT0->m_avPoint[1];
+            psConfig->m_iMinID = bEq02 ? 5 : 0;
+            psConfig->m_iMaxID = 1;
+            psConfig->m_nuiMinDepth = bEq02 ? 2 : 1;
+            psConfig->m_nuiMaxDepth = 1;
+        }
+        else /* fP2_AX < fP0_AX <= fP1_AX */
+        {
+            psConfig->m_avMinVert[0] = psPT0->m_avPoint[2];
+            psConfig->m_avMaxVert[0] = psPT0->m_avPoint[1];
+            psConfig->m_avMaxVert[1] = psPT0->m_avPoint[0];
+            psConfig->m_iMinID = 2;
+            psConfig->m_iMaxID = bEq01 ? 4 : 1;
+            psConfig->m_nuiMinDepth = 1;
+            psConfig->m_nuiMaxDepth = bEq01 ? 2 : 1;
+        };
+    }
+    else
+    {
+        if (fP2_AX <= fP1_AX) /* fP2_AX < = fP1_AX < fP0_AX */
+        {
+            psConfig->m_avMinVert[0] = psPT0->m_avPoint[2];
+            psConfig->m_avMinVert[1] = psPT0->m_avPoint[1];
+            psConfig->m_avMaxVert[0] = psPT0->m_avPoint[0];
+            psConfig->m_iMinID = bEq12 ? 6 : 2;
+            psConfig->m_iMaxID = 0;
+            psConfig->m_nuiMinDepth = bEq12 ? 2 : 1;
+            psConfig->m_nuiMaxDepth = 1;
+        }
+        else if (fP2_AX <= fP0_AX) /* fP1_AX < fP2_AX <= fP0_AX */
+        {
+            psConfig->m_avMinVert[0] = psPT0->m_avPoint[1];
+            psConfig->m_avMaxVert[0] = psPT0->m_avPoint[0];
+            psConfig->m_avMaxVert[1] = psPT0->m_avPoint[2];
+            psConfig->m_iMinID = 1;
+            psConfig->m_iMaxID = bEq02 ? 5 : 0;
+            psConfig->m_nuiMinDepth = 1;
+            psConfig->m_nuiMaxDepth = bEq02 ? 2 : 1;
+        }
+        else /* fP1_AX < fP0_AX < fP2_AX */
+        {
+            psConfig->m_avMinVert[0] = psPT0->m_avPoint[1];
+            psConfig->m_avMaxVert[0] = psPT0->m_avPoint[2];
+            psConfig->m_iMinID = 1;
+            psConfig->m_iMaxID = 2;
+            psConfig->m_nuiMinDepth = 1;
+            psConfig->m_nuiMaxDepth = 1;
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

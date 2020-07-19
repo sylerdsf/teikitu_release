@@ -1,0 +1,213 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box-Box.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  File Local Functions                                                                                                                                                           */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+static TgBOOL                               FCN_VO(tgCO_F_BX_Penetrate_Axis_Seperation_BX)( VEC_OBJ_T(STg2_CO_Axis_Result,PC), VEC_OBJ_T(TgBOX,CPC), VEC_OBJ_T(TgBOX,CPC) );
+static TgRESULT                             FCN_VO(tgCO_F_BX_Penetrate_Box_Axis_BX)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(STg2_CO_Axis_Result,PC), VEC_OBJ_T(TgBOX,CPC), VEC_OBJ_T(TgBOX,CPC) );
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  File Local Functions                                                                                                                                                           */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_VO(tgCO_F_BX_Penetrate_Axis_Seperation_BX) --------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  sBX0, sBX1: Box primitives                                                                                                                                              */
+/* Output: sAxS: Structure holds the resulting axis separation information necessary to create a contact set.                                                                      */
+/* Return: False if a separating axis exists, true otherwise                                                                                                                       */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+static TgBOOL FCN_VO(tgCO_F_BX_Penetrate_Axis_Seperation_BX)( VEC_OBJ_T(STg2_CO_Axis_Result,PC) psAxS, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgBOX,CPC) psBX1 )
+{
+    VAR_T()                             fMinBox0, fMaxBox0, fMinBox1, fMaxBox1;
+    TgBOOL                              bUseAxis[3] = { true, true, true };
+    TgSINT_F32                          iIndex;
+    TgUINT_F32                          iBox0, iBox1;
+
+    /* -- Axis: Box Face/Plane Normals -- */
+
+    for (iIndex = 0; iIndex < 3; ++iIndex)
+    {
+        /* Determine the extents of the primitives along the chosen axis. */
+
+        VEC_T(1,C)                          vAxisUnit0 = psBX0->m_avAxis[iIndex];
+        VAR_T(C)                            fB0_AU = FCN_V(tgMH_DOT)(&psBX0->m_vOrigin, &vAxisUnit0);
+
+        fMinBox0 = fB0_AU - psBX0->m_vExtent.m_aData[iIndex];
+        fMaxBox0 = fB0_AU + psBX0->m_vExtent.m_aData[iIndex];
+        FCN_VO(tgGM_BX_Project)(&fMinBox1, &fMaxBox1, psBX1, &vAxisUnit0);
+
+        if (fMaxBox1 < fMinBox0 || fMinBox1 > fMaxBox0) /* Separation Test. */
+        {
+            return (false);
+        };
+
+        {   /* Selection of the best (minimal depth) axis. */
+            VAR_T(C)                            fMinDepth = fMaxBox1 - fMinBox0;
+            VAR_T(C)                            fMaxDepth = fMaxBox0 - fMinBox1;
+            TgBOOL_C                            bNegAxis = fMinDepth > fMaxDepth;
+
+            if ((bNegAxis ? fMaxDepth : fMinDepth) < psAxS->m_fDepth)
+            {
+                psAxS->m_vNormal = bNegAxis ? vAxisUnit0 : FCN_V(tgMH_NEG)(&vAxisUnit0);
+                psAxS->m_fDepth = bNegAxis ? fMaxDepth : fMinDepth;
+                psAxS->m_iAxis = bNegAxis ? iIndex + 3 : iIndex;
+            };
+        };
+
+        /*  Check this unit axis of box 0 against the three axis of box 1.  If there is a match then we mark this axis to be ignored during the cross product phase. */
+
+        if (
+            FCN_F(tgCM_NR1)(FCN_V(tgMH_DOT)(psBX1->m_avAxis + 0, &vAxisUnit0)) ||
+            FCN_F(tgCM_NR1)(FCN_V(tgMH_DOT)(psBX1->m_avAxis + 1, &vAxisUnit0)) ||
+            FCN_F(tgCM_NR1)(FCN_V(tgMH_DOT)(psBX1->m_avAxis + 2, &vAxisUnit0))
+        )
+        {
+            bUseAxis[iIndex] = false;
+        };
+
+        /* Determine the extents of the primitives along the chosen axis. */
+
+        {
+            VEC_T(1,C)                          vAxisUnit1 = psBX1->m_avAxis[iIndex];
+            VAR_T(C)                            fB1_AU = FCN_V(tgMH_DOT)(&psBX1->m_vOrigin, &vAxisUnit1);
+
+            FCN_VO(tgGM_BX_Project)(&fMinBox0, &fMaxBox0, psBX0, &vAxisUnit1);
+            fMinBox1 = fB1_AU - psBX1->m_vExtent.m_aData[iIndex];
+            fMaxBox1 = fB1_AU + psBX1->m_vExtent.m_aData[iIndex];
+
+            if (fMaxBox1 < fMinBox0 || fMinBox1 > fMaxBox0) /* Separation Test. */
+            {
+                return (false);
+            }
+            else
+            {   /* Selection of the best (minimal depth) axis. */
+                VAR_T(C)                            fMinDepth = fMaxBox1 - fMinBox0;
+                VAR_T(C)                            fMaxDepth = fMaxBox0 - fMinBox1;
+                TgBOOL_C                            bNegAxis = fMinDepth > fMaxDepth;
+
+                if ((bNegAxis ? fMaxDepth : fMinDepth) < psAxS->m_fDepth)
+                {
+                    psAxS->m_vNormal = bNegAxis ? vAxisUnit1 : FCN_V(tgMH_NEG)(&vAxisUnit1);
+                    psAxS->m_fDepth = bNegAxis ? fMaxDepth : fMinDepth;
+                    psAxS->m_iAxis = bNegAxis ? iIndex + 9 : iIndex + 6;
+                };
+            };
+        };
+    };
+
+    /* -- Axis: Axis-Box Cross Product -- */
+
+    for (iBox0 = 0; iBox0 < 3; ++iBox0)
+    {
+        if (!bUseAxis[iBox0])
+        {
+            continue;
+        };
+
+        for (iBox1 = 0; iBox1 < 3; ++iBox1)
+        {
+            /* Axis is created by taking the cross product of the triangle edge and a box axis. */
+            VAR_T()                             fAxis;
+            VEC_T(1,C)                          vAxis = FCN_V(tgMH_UCX_LEN)(&fAxis, psBX1->m_avAxis + iBox1, psBX0->m_avAxis + iBox0);
+
+            if (FCN_F(tgCM_NR0)(fAxis)) /* Sanity/Parallel check for the resulting vector. */
+            {
+                continue;
+            };
+
+            FCN_VO(tgGM_BX_Project)(&fMinBox0, &fMaxBox0, psBX0, &vAxis);
+            FCN_VO(tgGM_BX_Project)(&fMinBox1, &fMaxBox1, psBX1, &vAxis);
+
+            if (fMaxBox1 < fMinBox0 || fMinBox1 > fMaxBox0) /* Separation Test. */
+            {
+                return (false);
+            }
+            else
+            {   /* Selection of the best (minimal depth) axis. */
+                VAR_T(C)                            fMinDepth = fMaxBox1 - fMinBox0;
+                VAR_T(C)                            fMaxDepth = fMaxBox0 - fMinBox1;
+                TgBOOL_C                            bNegAxis = fMinDepth > fMaxDepth;
+
+                if ((bNegAxis ? fMaxDepth : fMinDepth) < psAxS->m_fDepth)
+                {
+                    psAxS->m_vNormal = bNegAxis ? vAxis : FCN_V(tgMH_NEG)(&vAxis);
+                    psAxS->m_fDepth = bNegAxis ? fMaxDepth : fMinDepth;
+                    psAxS->m_iAxis = iBox0 * 3 + iBox1 + (bNegAxis ? 21 : 12);
+                };
+            };
+        };
+    };
+
+    return (true);
+}
+
+
+/* ---- FCN_VO(tgCO_F_BX_Penetrate_Box_Axis_BX) ---------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+static TgRESULT FCN_VO(tgCO_F_BX_Penetrate_Box_Axis_BX)(
+    VEC_OBJ_T(STg2_CO_Packet,PC) UNUSED_PARAM psPacket, VEC_OBJ_T(STg2_CO_Axis_Result,PC) psAxS, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgBOX,CPC) UNUSED_PARAM psBX1)
+{
+    VEC_OBJ_T(STg2_CO_Axis_Project)     sConfig;
+
+    FCN_VO(tgCO_F_BX_Axis_ProjInfo)(&sConfig, &psAxS->m_vNormal, psBX0);
+
+    switch (sConfig.m_iMinID)
+    {
+        case 1:
+        { /* Vertex-Face Contact */
+
+            return (KTgS_OK);
+        };
+        case 2:
+        { /* Edge-Face Contact */
+
+            return (KTgS_OK);
+        };
+        case 4:
+        { /* Face-Face Contact */
+
+            return (KTgS_OK);
+        };
+        default:
+            TgS_NO_DEFAULT( return (KTgE_FAIL) );
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,68 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle [Util].i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_Clip_ST) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_Clip_ST)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgSTRI,CPC) psST0 )
+{
+    if (TgFAILED( FCN_VO(tgCO_F_PN_Clip)( psCL, psST0->m_avPlane + 0 ) ) || 0 != psCL->m_niPoint)
+    {
+        return (KTgE_FAIL);
+    };
+
+    if (TgFAILED( FCN_VO(tgCO_F_PN_Clip)( psCL, psST0->m_avPlane + 1 ) ) || 0 != psCL->m_niPoint)
+    {
+        return (KTgE_FAIL);
+    };
+
+    if (TgFAILED( FCN_VO(tgCO_F_PN_Clip)( psCL, psST0->m_avPlane + 2 ) ) || 0 != psCL->m_niPoint)
+    {
+        return (KTgE_FAIL);
+    };
+
+    return (KTgS_OK);
+}
+
+
+/* ---- FCN_VO(tgCO_F_Clip_ET) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_Clip_ET)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgETRI,CPC) psET0 )
+{
+    VEC_OBJ_T(TgPLANE)                      sPN0;
+    VEC_T(1)                                vK0;
+
+    vK0 = FCN_V(tgMH_CX)( &psET0->m_sPT.m_vNormal, psET0->m_avEdge + 0 );
+    FCN_VO(tgGM_PN_Init_NP)( &sPN0, &vK0, psET0->m_sPT.m_avPoint + 0 );
+    if (TgFAILED(FCN_VO(tgCO_F_PN_Clip)( psCL, &sPN0 )))
+    {
+        return (KTgE_FAIL);
+    };
+    if (0 == psCL->m_niPoint) return (KTgS_OK);
+
+    vK0 = FCN_V(tgMH_CX)( &psET0->m_sPT.m_vNormal, psET0->m_avEdge + 1 );
+    FCN_VO(tgGM_PN_Init_NP)( &sPN0, &vK0, psET0->m_sPT.m_avPoint + 1 );
+    if (TgFAILED(FCN_VO(tgCO_F_PN_Clip)( psCL, &sPN0 )))
+    {
+        return (KTgE_FAIL);
+    };
+    if (0 == psCL->m_niPoint) return (KTgS_OK);
+
+    vK0 = FCN_V(tgMH_CX)( &psET0->m_sPT.m_vNormal, psET0->m_avEdge + 2 );
+    FCN_VO(tgGM_PN_Init_NP)( &sPN0, &vK0, psET0->m_sPT.m_avPoint + 2 );
+    if (TgFAILED(FCN_VO(tgCO_F_PN_Clip)( psCL, &sPN0 )))
+    {
+        return (KTgE_FAIL);
+    };
+    return (KTgS_OK);
+}

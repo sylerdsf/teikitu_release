@@ -1,0 +1,196 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - Type.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if defined(TGS_COLLISION_TYPE_HINC)
+    #error This file should be included by TGS_COLLISION_H
+#endif
+
+#if defined(TEMPLATE__ENABLE_INTEGER)
+
+    #error Geometry is assumed to be floating point
+
+#else
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #if !defined(TEMPLATE__TYPE_SIZE)
+            #define TEMPLATE__TYPE_SIZE 32
+            #include __FILE__
+            #undef TEMPLATE__TYPE_SIZE
+            #define TEMPLATE__TYPE_SIZE 64
+        #endif
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Types                                                                                                                                                                   */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Clip_List), )
+{
+    TgSINT_E32                                  m_niPoint;
+    TgSINT_E32                                  m_niMax;
+    TgSINT_E32                                  m_iPad[2];
+    VEC_T(1)                                    m_avPoint[]; /* Variable sized clip array */
+};
+
+/* ---- Separating Axis ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Axis_Project), )
+{
+    VEC_T(1)                                    m_avMinVert[4], m_avMaxVert[4]; /**< Index of points coincident at min/max */
+    TgSINT_E32                                  m_iMinID, m_iMaxID; /**< Bitfield representing the triangle feature at min/max */
+    TgUINT_E32                                  m_nuiMinDepth, m_nuiMaxDepth; /**< Count of vertices coincident at min/max */
+};
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Axis_Test), )
+{
+    VAR_T()                                     m_fLimitT; /**< Maximal limit on the time value. */
+    VAR_T()                                     m_fMin0, m_fMax0; /**< The extremities of the primitive projected onto the axis. */
+    VAR_T()                                     m_fMin1, m_fMax1; /**< The extremities of the primitive projected onto the axis. */
+    VAR_T()                                     m_fSpeed; /**< The relative speed of primitive 1 to primitive 0 along the axis. */
+    VAR_T()                                     m_fMinT, m_fMaxT; /**< First and last time of contact. */
+};
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Axis_Info), )
+{
+    VEC_T(1)                                    m_vNormal;
+    VAR_T()                                     m_fMinT;
+    ETgCO_AXIS_CONTACT_DIRECTION                m_enSide;
+#if 0 != STRUCT_PAD(8,4)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(8,4)];
+#endif
+};
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Axis_Result), )
+{
+    VEC_T(1)                                    m_vNormal;
+    VEC_T(1)                                    m_vPoint;
+    VAR_T()                                     m_fDepth;
+    TgSINT_E32                                  m_iAxis;
+#if 0 != STRUCT_PAD(8,4)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(8,4)];
+#endif
+};
+
+/* ---- Result ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Context), )
+{
+    TgSINT_E32                                  m_iTriIdx;
+};
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Contact), )
+{
+    VEC_T(1)                                    m_vS0; /**< Contact position */
+    VEC_T(1)                                    m_vN0; /**< Contact normal */
+    VAR_T()                                     m_fT0; /**< Normalized time of contact (first for a range)f */
+    VAR_T()                                     m_fDepth; /**< Penetration depth */
+#if 0 != STRUCT_PAD(8,0)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(8,0)];
+#endif
+};
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Packet), )
+{
+    VEC_OBJ_T(STg2_CO_Contact,P)                m_psContact;
+    VAR_T()                                     m_fSweepTol;
+    VAR_T()                                     m_fSnapTol;
+    TgSINT_E32                                  m_niContact;
+    TgSINT_E32                                  m_niMaxContact;
+    TgBOOL                                      m_bReport_Penetration;
+#if 0 != STRUCT_PAD(7,7)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(7,7)];
+#endif
+};
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Result), )
+{
+    VEC_OBJ_T(STg2_CO_Contact)                  m_sContact; /**< Result contact */
+    VEC_OBJ_T(TgPTRI)                           m_sPT; /**< Minimal target triangle representation */
+    VEC_OBJ_T(STg2_CO_Context)                  m_sContext; /**< Context of the result */
+    TgFLOAT32                                   m_fT1; /**< Normalized last time of contact */
+    TgBOOL                                      m_bValid; /**< Allows for easy post-processing of collision results */
+    TgBOOL                                      m_bTri; /**< Indicates if the contained triangle is valid */
+#if 0 != STRUCT_PAD(6,6)
+    TgUINT_E08                                  m_iPad[STRUCT_PAD(6,6)];
+#endif
+};
+
+
+/* ---- Request ------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+
+TgTYPE_STRUCT( VEC_OBJ_T(STg2_CO_Request), )
+{
+    VEC_OBJ_T(STg2_CO_Context) TgALIGN(TgCCL)   m_sContext; /**< Context of the current collision state. */
+
+    ETgPRIMITIVE                                m_enPrimitive; /**< (ETgPRIMITIVE) Active primitive for the structure. */
+    ETgCO_TEST                                  m_enTest; /**< (ETgSWEEP_TYPE) Test is intersection, penetration and/or sweep. */
+    ETgCO_PURPOSE                               m_enPurpose; /**< Bitfield describing the purpose of the collision call. */
+    TgUINT_E32                                  m_uiFilter_Objects; /**< Category of objects included in collision call. */
+    TgUINT_E32                                  m_bfFlags; /**< General bitfield for collision flags. */
+
+    TgSINT_E32                                  m_niConnection_Graph_Ignored; /**< Inclusively ignore all descendants. */
+    TgSINT_E32                                  m_niConnection_Ignored; /**< Ignore only the object. */
+    STg2_Connection_P                           m_apsConnection_Graph_Ignored[KTgCO_REQUEST__MAX_IGNORE];
+    STg2_Connection_P                           m_apsConnection_Ignored[KTgCO_REQUEST__MAX_IGNORE];
+
+    VEC_OBJ_T(TgDELTA)                          m_sDT;
+
+    TgSINT_E32                                  m_aiNative_String[KTgCO_REQUEST__MAX_IGNORE];
+    TgSINT_E32                                  m_niNative_String; /**< Ignore a specific literal (eg class name) */
+#if 0 != STRUCT_PAD(0,4)
+    TgUINT_E08                                  m_iPad0[STRUCT_PAD(0,4)];
+#endif
+
+    VAR_T()                                     m_fToI; /**< The closest point of intersection during the sweep test [0..1] */
+    VAR_T()                                     m_fDist;
+    VAR_T()                                     m_fNudge;
+
+                                                /* Result list filtered by selectors (greatest depth etc.) */
+    VEC_OBJ_T(STg2_CO_Result)                   m_asInternal_Result[KTgCO_REQUEST__INTERNAL_RESULTS];
+    VEC_OBJ_T(STg2_CO_Result,P)                 m_psResult;
+    TgSINT_E32                                  m_niResult_End; /* Terminates the memory region */
+    TgSINT_E32                                  m_niResult_Last; /* Terminates the array of valid results */
+
+                                                /* Used on a per query basis to be merged into results (temporary data) */
+    VEC_OBJ_T(STg2_CO_Packet)                   m_sPacket;
+    VEC_OBJ_T(STg2_CO_Contact)                  m_asContact[8];
+
+                                                /* Collect List */
+    VEC_OBJ_T(TgPTRI,P)                         m_psCollect;
+    TgSINT_E32                                  m_niCollect_End;
+    TgSINT_E32                                  m_niCollect_Last;
+
+    union
+    {
+        VEC_OBJ_T(TgSEGMENT)                        m_sSG;
+        VEC_OBJ_T(TgSPHERE)                         m_sSP;
+    }                                           m_sPrimitive;
+
+#if 0 != STRUCT_PAD(0,32)
+    TgUINT_E08                                  m_iPad1[STRUCT_PAD(0,32)];
+#endif
+};
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

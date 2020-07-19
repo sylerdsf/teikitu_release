@@ -1,0 +1,429 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - System.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/*   Large switch statements are known to be particularly bad on the in-order CPUs in the current consoles.  However, all other methods would be equivalent.  Possible             */
+/* solutions that were debated (not tested): (1) Function pointers - this would require the retrieval of the pointer and then a jump to the function.  Since jumps are             */
+/* near-equivalent to a branch, nothing is gained.  (2) Virtual tables - at a compiler/machine level this is the same as (1).                                                      */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  File Local Functions and Data                                                                                                                                                  */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+static TgVOID                               FCN_VO(tgCO_REQ_Copy_Common)( VEC_OBJ_T(STg2_CO_Request,PC), VEC_OBJ_T(STg2_CO_Request,CPC) );
+TgINLINE TgVOID                             FCN_VO(tgCO_REQ_Set_Owns_Data)( VEC_OBJ_T(STg2_CO_Request,PC), TgBOOL_C );
+TgINLINE TgBOOL                             FCN_VO(tgCO_REQ_Query_Owns_Data)( VEC_OBJ_T(STg2_CO_Request,PC) );
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_VO(tgCO_REQ_Ignore_Connection) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_REQ_Ignore_Connection)( VEC_OBJ_T(STg2_CO_Request,PC) psRequest, STg2_Connection_PC psConnection, TgBOOL_C bFlag )
+{
+    TgSINT_F32_C                        niMax = psRequest->m_niConnection_Ignored;
+    TgSINT_F32                          iIndex;
+
+    TgPARAM_CHECK( nullptr != psRequest && nullptr != psConnection );
+
+    /* Check to see if the object is in the ignore list. */
+    for (iIndex = 0; iIndex < niMax; ++iIndex)
+    {
+        if (psRequest->m_apsConnection_Ignored[iIndex] != psConnection)
+        {
+            continue;
+        };
+
+        if (!bFlag)
+        {
+            if (iIndex + 1 != niMax)
+            {
+                psRequest->m_apsConnection_Ignored[iIndex] = psRequest->m_apsConnection_Ignored[niMax - 1];
+            };
+
+            --psRequest->m_niConnection_Ignored;
+        };
+
+        return (KTgS_OK);
+    };
+
+    if (niMax >= KTgCO_REQUEST__MAX_IGNORE || !bFlag)
+    {
+        return (KTgE_FAIL);
+    };
+
+    psRequest->m_apsConnection_Ignored[psRequest->m_niConnection_Ignored++] = psConnection;
+    return (KTgS_OK);
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_Ignore_Connection_Graph) --------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_REQ_Ignore_Connection_Graph)( VEC_OBJ_T(STg2_CO_Request,PC) psRequest, STg2_Connection_PC psConnection, TgBOOL_C bFlag )
+{
+    TgSINT_F32_C                        niMax = psRequest->m_niConnection_Graph_Ignored;
+    TgSINT_F32                          iIndex;
+
+    TgPARAM_CHECK( nullptr != psRequest && nullptr != psConnection );
+
+    /* Check to see if the object is in the ignore list. */
+    for (iIndex = 0; iIndex < niMax; ++iIndex)
+    {
+        if (psRequest->m_apsConnection_Graph_Ignored[iIndex] != psConnection)
+        {
+            continue;
+        };
+
+        if (!bFlag)
+        {
+            if (iIndex + 1 != niMax)
+            {
+                psRequest->m_apsConnection_Graph_Ignored[iIndex] = psRequest->m_apsConnection_Graph_Ignored[niMax - 1];
+            };
+
+            --psRequest->m_niConnection_Graph_Ignored;
+        };
+
+        return (KTgS_OK);
+    };
+
+    if (niMax >= KTgCO_REQUEST__MAX_IGNORE || !bFlag)
+    {
+        return (KTgE_FAIL);
+    };
+
+    psRequest->m_apsConnection_Graph_Ignored[psRequest->m_niConnection_Graph_Ignored++] = psConnection;
+    return (KTgS_OK);
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_Ignore_Native_String) ------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_REQ_Ignore_Native_String)( VEC_OBJ_T(STg2_CO_Request,PC) psRequest, TgSINT_F32_C nsVal, TgBOOL_C bFlag )
+{
+    TgSINT_F32_C                        niMax = psRequest->m_niNative_String;
+    TgSINT_F32                          iIndex;
+
+    if (KTgUID_NONE == nsVal)
+    {
+        return (KTgE_FAIL);
+    };
+
+    /* Check to see if the object is in the ignore list. */
+    for (iIndex = 0; iIndex < niMax; ++iIndex)
+    {
+        if (psRequest->m_aiNative_String[iIndex] != nsVal)
+        {
+            continue;
+        };
+
+        if (!bFlag)
+        {
+            if (iIndex + 1 != niMax)
+            {
+                psRequest->m_aiNative_String[iIndex] = psRequest->m_aiNative_String[niMax - 1];
+            };
+
+            --psRequest->m_niNative_String;
+        };
+
+        return (KTgS_OK);
+    };
+
+    if (niMax >= KTgCO_REQUEST__MAX_IGNORE || !bFlag)
+    {
+        return (KTgE_FAIL);
+    };
+
+    psRequest->m_aiNative_String[psRequest->m_niNative_String++] = nsVal;
+    return (KTgS_OK);
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_Is_Ignored_Connection) ----------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FCN_VO(tgCO_REQ_Is_Ignored_Connection)(VEC_OBJ_T(STg2_CO_Request,CPC) psRequest, STg2_Connection_CPC psConnection)
+{
+    TgSINT_F32                          iIndex;
+
+    TgPARAM_CHECK( nullptr != psRequest && nullptr != psConnection );
+
+    /* Check to see if all objects are being ignored. */
+    if (FCN_VO(tgCO_REQ_Is_Ignored_All)(psRequest))
+    {
+        return (true);
+    };
+
+    /* Check to see if the object is in the ignore list. */
+    for (iIndex = 0; iIndex < psRequest->m_niConnection_Ignored; ++iIndex)
+    {
+        if (psRequest->m_apsConnection_Ignored[iIndex] == psConnection)
+        {
+            return (true);
+        };
+    };
+
+    /* Not ignored. */
+    return (false);
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_Is_Ignored_Native_String) -------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FCN_VO(tgCO_REQ_Is_Ignored_Native_String)(VEC_OBJ_T(STg2_CO_Request,CPC) psRequest, TgSINT_F32_C nsVal)
+{
+    TgSINT_F32                          iIndex;
+
+    TgPARAM_CHECK( nullptr != psRequest && KTgUID_NONE != nsVal );
+
+    /* Check to see if all objects are being ignored. */
+    if (FCN_VO(tgCO_REQ_Is_Ignored_All)(psRequest))
+    {
+        return (true);
+    };
+
+    /* Check to see if the object is in the ignore list. */
+    for (iIndex = 0; iIndex < psRequest->m_niNative_String; ++iIndex)
+    {
+        if (psRequest->m_aiNative_String[iIndex] == nsVal)
+        {
+            return (true);
+        };
+    };
+
+    /* Not ignored. */
+    return (false);
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_Reset) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgCO_REQ_Reset)(VEC_OBJ_T(STg2_CO_Request,PC) psRequest)
+{
+    if (FCN_VO(tgCO_REQ_Query_Owns_Data)(psRequest))
+    {
+        TgFREE_POOL( psRequest->m_psResult );
+    };
+
+    tgMM_Set_U08_0x00( psRequest, sizeof( VEC_OBJ_T(STg2_CO_Request) ) );
+
+    psRequest->m_sPacket.m_psContact = psRequest->m_asContact;
+    psRequest->m_sPacket.m_fSweepTol = VAR_K(KTgROOT_EPS);
+    psRequest->m_sPacket.m_fSnapTol = VAR_K(KTgEPS);
+    psRequest->m_sPacket.m_niMaxContact = 8;
+
+    psRequest->m_psResult = psRequest->m_asInternal_Result;
+    psRequest->m_niResult_End = KTgCO_REQUEST__INTERNAL_RESULTS;
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_F_TX) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgCO_REQ_F_TX)( VEC_OBJ_T(STg2_CO_Request,PC) psRequest, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgSINT_F32                          iIndex;
+
+    FCN_VO(tgGM_DT_TX)( &psRequest->m_sDT, pxM0 );
+
+    for (iIndex = 0; iIndex < psRequest->m_niResult_Last; ++iIndex)
+    {
+        psRequest->m_psResult[iIndex].m_sContact.m_vS0 = FCN_04_3_V(tgMH_TX_P)( pxM0, &psRequest->m_psResult[iIndex].m_sContact.m_vS0 );
+        psRequest->m_psResult[iIndex].m_sContact.m_vN0 = FCN_04_3_V(tgMH_TX_V)( pxM0, &psRequest->m_psResult[iIndex].m_sContact.m_vN0 );
+        FCN_VO(tgGM_PT_TX)( &psRequest->m_psResult[iIndex].m_sPT, pxM0 );
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_F_Copy_TX) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID FCN_VO(tgCO_REQ_F_Copy_TX)( VEC_OBJ_T(STg2_CO_Request,PC) psDest, VEC_OBJ_T(STg2_CO_Request,CPC) psSrc, VEC_04_3_T(CPCU) pxM0 )
+{
+    TgSINT_F32                          iIndex;
+
+    FCN_VO(tgCO_REQ_Reset)( psDest );
+    FCN_VO(tgCO_REQ_Copy_Common)( psDest, psSrc );
+
+    FCN_VO(tgGM_DT_Copy_TX)( &psDest->m_sDT, &psSrc->m_sDT, pxM0 );
+
+    for (iIndex = 0; iIndex < psSrc->m_niResult_Last; ++iIndex)
+    {
+        psDest->m_psResult[iIndex].m_sContact.m_vS0 = FCN_04_3_V(tgMH_TX_P)( pxM0, &psSrc->m_psResult[iIndex].m_sContact.m_vS0 );
+        psDest->m_psResult[iIndex].m_sContact.m_vN0 = FCN_04_3_V(tgMH_TX_V)( pxM0, &psSrc->m_psResult[iIndex].m_sContact.m_vN0 );
+        FCN_VO(tgGM_PT_Copy_TX)( &psDest->m_psResult[iIndex].m_sPT, &psSrc->m_psResult[iIndex].m_sPT, pxM0 );
+    };
+}
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Private Functions                                                                                                                                                              */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_VO(tgCO_REQ_Next_Result) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VEC_OBJ_T(STg2_CO_Result,P) FCN_VO(tgCO_REQ_Next_Result)( VEC_OBJ_T(STg2_CO_Request,PC) psRequest, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvNormal, VAR_T(C) fValue )
+{
+    TgSINT_F32                          niCount;
+    VEC_T(1)                            vK0;
+
+    for (niCount = 0; niCount < psRequest->m_niResult_Last; ++niCount)
+    {
+        vK0 = FCN_V(tgMH_SUB)( pvS0, &psRequest->m_psResult[niCount].m_sContact.m_vS0 );
+        if (FCN_V(tgMH_LSQ)( &vK0 ) > VAR_K(KTgROOT_EPS))
+        {
+            continue;
+        };
+
+        vK0 = FCN_V(tgMH_SUB)( pvNormal, &psRequest->m_psResult[niCount].m_sContact.m_vN0 );
+        if (FCN_V(tgMH_LSQ)( &vK0 ) > VAR_K(KTgROOT_EPS))
+        {
+            continue;
+        };
+
+        return (psRequest->m_psResult + niCount);
+    };
+
+    if (psRequest->m_niResult_Last < psRequest->m_niResult_End)
+    {
+        return (psRequest->m_psResult + psRequest->m_niResult_Last++);
+    };
+
+    if (tgBF_Test_Flag_U32( &psRequest->m_bfFlags, ETgCO_FLAGS_NO_SORT ))
+    {
+        return (nullptr);
+    };
+
+    if (tgBF_Test_Flag_U32( &psRequest->m_bfFlags, ETgCO_FLAGS_ORDER_PARAMETER ))
+    {
+        /* When sorting on depth, find the value closest to zero, and replace that entry. */
+
+        VAR_T()                             fTMP = psRequest->m_psResult[0].m_sContact.m_fDepth;
+        TgSINT_F32                          niCurrent = 0;
+
+        for (niCount = 1; niCount < psRequest->m_niResult_End; ++niCount)
+        {
+            if (fTMP > psRequest->m_psResult[niCount].m_sContact.m_fDepth)
+            {
+                fTMP = psRequest->m_psResult[niCount].m_sContact.m_fDepth;
+                niCurrent = niCount;
+            };
+        };
+
+        return (fTMP > fValue ? nullptr : psRequest->m_psResult + niCurrent);
+    }
+    else
+    {
+        /* When sorting on time, find the value furthest from zero, and replace that entry. */
+
+        VAR_T()                             fTMP = psRequest->m_psResult[0].m_sContact.m_fT0;
+        TgSINT_F32                          niCurrent = 0;
+
+        for (niCount = 1; niCount < psRequest->m_niResult_End; ++niCount)
+        {
+            if (fTMP < psRequest->m_psResult[niCount].m_sContact.m_fT0)
+            {
+                fTMP = psRequest->m_psResult[niCount].m_sContact.m_fT0;
+                niCurrent = niCount;
+            };
+        };
+
+        return (fTMP < fValue ? nullptr : psRequest->m_psResult + niCurrent);
+    };
+}
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  File Local Functions and Data                                                                                                                                                  */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* ---- FCN_VO(tgCO_REQ_Copy_Common) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+static TgVOID FCN_VO(tgCO_REQ_Copy_Common)( VEC_OBJ_T(STg2_CO_Request,PC) psDest, VEC_OBJ_T(STg2_CO_Request,CPC) psSrc )
+{
+    VEC_OBJ_T(STg2_CO_Result,P)         psResult;
+    TgSINT_F32                          niResult_End;
+    TgBOOL                              bOwnsData = FCN_VO(tgCO_REQ_Query_Owns_Data)(psDest);
+
+    /* If there is a result size mismatch, free the current buffer and create a new buffer */
+    if (psDest->m_niResult_End < psSrc->m_niResult_End)
+    {
+        if (bOwnsData)
+        {
+            TgFREE_POOL( psDest->m_psResult );
+        };
+
+        psResult = TgMALLOC_POOL( (TgRSIZE)psSrc->m_niResult_End * sizeof( VEC_OBJ_T(STg2_CO_Result) ) );
+        niResult_End = psSrc->m_niResult_End;
+        bOwnsData = true;
+    }
+    else
+    {
+        psResult = psDest->m_psResult;
+        niResult_End = psDest->m_niResult_End;
+    }
+
+    /* Copy the data */
+    tgMM_Copy( psDest, sizeof( VEC_OBJ_T(STg2_CO_Request) ), psSrc, sizeof( VEC_OBJ_T(STg2_CO_Request) ) );
+
+    /* Reassign the buffer */
+    psDest->m_psResult = psResult;
+    psDest->m_niResult_End = niResult_End;
+    FCN_VO(tgCO_REQ_Set_Owns_Data)(psDest, bOwnsData);
+
+    /* Copy the results */
+    tgMM_Copy( psResult, KTgMAX_RSIZE, psSrc->m_psResult, (TgRSIZE)psSrc->m_niResult_Last*sizeof( VEC_OBJ_T(STg2_CO_Result,P) ) );
+    psDest->m_niResult_Last = psSrc->m_niResult_Last;
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_Set_Owns_Data) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgVOID FCN_VO(tgCO_REQ_Set_Owns_Data)( VEC_OBJ_T(STg2_CO_Request,PC) psRequest, TgBOOL_C bFlag )
+{
+    tgBF_Set_Flag_U32( &psRequest->m_bfFlags, ETgCO_FLAGS_OWNS_DATA, bFlag );
+}
+
+
+/* ---- FCN_VO(tgCO_REQ_Query_Owns_Data) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_REQ_Query_Owns_Data)( VEC_OBJ_T(STg2_CO_Request,PC) psRequest )
+{
+    return (tgBF_Test_Flag_U32( &psRequest->m_bfFlags, ETgCO_FLAGS_OWNS_DATA ));
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

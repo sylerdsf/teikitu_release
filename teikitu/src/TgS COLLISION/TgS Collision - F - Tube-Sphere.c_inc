@@ -1,0 +1,165 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Tube-Sphere.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_Sweep_TB_SP) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_TB_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_OBJ_T(TgTUBE,CPC) psTB0, VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    TgERROR( FCN_VO(tgGM_SP_Is_Valid)(psSP0) && FCN_VO(tgGM_TB_Is_Valid)(psTB0) );
+
+    TgERROR(!psPacket->m_bReport_Penetration); /* Penetration not implemented for tube-sphere. */
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        VAR_T(C)                            fRS = psTB0->m_fRadius + psSP0->m_fRadius;
+        VAR_T(C)                            fR0 = psSP0->m_fRadius;
+        VEC_OBJ_T(STg2_CO_Packet)           sPacketSG;
+        VEC_OBJ_T(STg2_CO_Contact)          asContactSG[2];
+        TgRESULT                            iResult;
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContactSG;
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContact;
+
+        if (!((fRS > VAR_K(KTgEPS)) && (psTB0->m_fExtent > VAR_K(KTgEPS))))
+        {
+            return (KTgE_FAIL);
+        };
+
+        sPacketSG.m_psContact = asContactSG;
+        sPacketSG.m_fSweepTol = VAR_K(KTgEPS);
+        sPacketSG.m_niContact = 0;
+        sPacketSG.m_niMaxContact = 2;
+
+        iResult = FCN_VO(tgCO_FI_TB11_Intersect_LR11)(&sPacketSG, fR0, psTB0, &psSP0->m_vOrigin, &psDT->m_vDT);
+
+        if (TgFAILED( iResult ))
+        {
+            return (iResult);
+        };
+
+        TgERROR( sPacketSG.m_niContact >= 1 );
+
+        psContactSG = asContactSG[0].m_fT0 <= asContactSG[(1 % sPacketSG.m_niContact)].m_fT0 ? asContactSG : asContactSG + 1;
+
+        if (psContactSG->m_fT0 > *pfPM + psPacket->m_fSweepTol)
+        {
+            return (KTgE_NO_INTERSECT);
+        }
+        else
+        {
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(psSP0->m_fRadius, &psContactSG->m_vN0);
+
+            if (psContactSG->m_fT0 < *pfPM - psPacket->m_fSweepTol)
+            {
+                psPacket->m_niContact = 0;
+                *pfPM = psContactSG->m_fT0;
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = FCN_V(tgMH_SUB)(&psContactSG->m_vS0, &vK0);
+            psContact->m_vN0 = psContactSG->m_vN0;
+            psContact->m_fT0 = psContactSG->m_fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+            return (KTgS_OK);
+        };
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_Sweep_SP_TB) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_SP_Sweep_TB)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgTUBE,CPC) psTB0, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    const TgSINT_F32                    niContact = psPacket->m_niContact;
+    VAR_T(C)                            fT = *pfPM;
+    VEC_OBJ_T(TgDELTA)                  sNegDT;
+    TgRESULT                            iResult;
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+    TgSINT_F32                          iIdx;
+
+    sNegDT.m_vUDT = FCN_V(tgMH_NEG)(&psDT->m_vUDT);
+    sNegDT.m_vDT = FCN_V(tgMH_NEG)(&psDT->m_vDT);
+    sNegDT.m_fDT = psDT->m_fDT;;
+    sNegDT.m_fDT_DT = psDT->m_fDT_DT;
+    sNegDT.m_fInv_DT = psDT->m_fInv_DT;
+
+    iResult = FCN_VO(tgCO_F_TB_Sweep_SP)(psPacket, pfPM, psTB0, psSP0, &sNegDT);
+
+    if (iResult == KTgE_PREPENETRATION)
+    {
+        for (iIdx = niContact; iIdx < psPacket->m_niContact; ++iIdx)
+        {
+            psContact = psPacket->m_psContact + iIdx;
+
+            {
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_VS)(&psContact->m_vN0, psContact->m_fDepth);
+
+                psContact->m_vS0 = FCN_V(tgMH_ADD)(&psContact->m_vS0, &vK0);
+                psContact->m_vN0 = FCN_V(tgMH_NEG)(&psContact->m_vN0);
+            };
+        };
+
+        return (iResult);
+    }
+
+    if (TgFAILED( iResult ))
+    {
+        return (iResult);
+    };
+
+    iIdx = (*pfPM < fT - psPacket->m_fSweepTol ? 0 : niContact);
+
+    TgERROR( iIdx < psPacket->m_niContact );
+
+    for (; iIdx < psPacket->m_niContact; ++iIdx)
+    {
+        psContact = psPacket->m_psContact + iIdx;
+
+        {
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_VS)(&psDT->m_vDT, psContact->m_fT0);
+
+            psContact->m_vS0 = FCN_V(tgMH_ADD)(&psContact->m_vS0, &vK0);
+            psContact->m_vN0 = FCN_V(tgMH_NEG)(&psContact->m_vN0);
+        };
+    };
+
+    return (iResult);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

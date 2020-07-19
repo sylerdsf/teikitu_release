@@ -1,0 +1,144 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box AA-Sphere.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_SP_Penetrate_BA) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  psSP0: Sphere primitive                                                                                                                                                 */
+/* Input:  tgBA0: Box, Axis-Aligned primitive - contact points are generated on this primitive                                                                                     */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_SP_Penetrate_BA)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgBOXAA,CPC) psBA0 )
+{
+    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_BA_Is_Valid)(psBA0) && FCN_VO(tgGM_SP_Is_Valid)(psSP0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        /* Find the point of closest proximity on the box to the sphere's origin and create a normalized direction vector of the difference between the two points. */
+        /* These are the potential contact points and normal. */
+
+        VAR_T(C)                            fX00 = psSP0->m_vOrigin.x - psBA0->m_vMin.x;
+        VAR_T(C)                            fX10 = psSP0->m_vOrigin.y - psBA0->m_vMin.y;
+        VAR_T(C)                            fX20 = psSP0->m_vOrigin.z - psBA0->m_vMin.z;
+        VAR_T(C)                            fX01 = psBA0->m_vMax.x - psSP0->m_vOrigin.x;
+        VAR_T(C)                            fX11 = psBA0->m_vMax.y - psSP0->m_vOrigin.y;
+        VAR_T(C)                            fX21 = psBA0->m_vMax.z - psSP0->m_vOrigin.z;
+        VAR_T(C)                            fK3 = FCN_F(tgPM_FSEL)(fX01, psSP0->m_vOrigin.x, psBA0->m_vMax.x);
+        VAR_T(C)                            fK4 = FCN_F(tgPM_FSEL)(fX11, psSP0->m_vOrigin.y, psBA0->m_vMax.y);
+        VAR_T(C)                            fK5 = FCN_F(tgPM_FSEL)(fX21, psSP0->m_vOrigin.z, psBA0->m_vMax.z);
+        VAR_T(C)                            fX = FCN_F(tgPM_FSEL)(fX00, fK3, psBA0->m_vMin.x);
+        VAR_T(C)                            fY = FCN_F(tgPM_FSEL)(fX10, fK4, psBA0->m_vMin.y);
+        VAR_T(C)                            fZ = FCN_F(tgPM_FSEL)(fX20, fK5, psBA0->m_vMin.z);
+        VEC_T(1,C)                          vP1 = FCN_V(tgMH_SETP_S)(fX, fY, fZ);
+        VEC_T(1)                            vNormal = FCN_V(tgMH_SUB)(&vP1, &psSP0->m_vOrigin);
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        if (FCN_V(tgMH_LSQ)(&vNormal) > VAR_K(KTgEPS))
+        {
+            VAR_T()                             fNM;
+
+            vNormal = FCN_V(tgMH_NORM_LEN)(&fNM, &vNormal);
+
+            if (fNM > VAR_K(KTgEPS))
+            {
+                /* Sphere origin is not contained inside of the box, and therefore the potential contact values are correct. */
+
+                psContact->m_vS0 = vP1;
+                psContact->m_vN0 = vNormal;
+                psContact->m_fT0 = TYPE_K(0);
+                psContact->m_fDepth = psSP0->m_fRadius - fNM;
+
+                ++psPacket->m_niContact;
+
+                return (KTgS_OK);
+            };
+        };
+
+        {
+            /* Sphere origin is contained within the box itself - find the axis of minimum penetration. */
+
+            VAR_T(C)                            fX0 = FCN_F(tgPM_FSEL)(fX01 - fX00, fX00, fX01);
+            VAR_T(C)                            fX1 = FCN_F(tgPM_FSEL)(fX11 - fX10, fX10, fX11);
+            VAR_T(C)                            fX2 = FCN_F(tgPM_FSEL)(fX21 - fX20, fX20, fX21);
+
+            VAR_T(C)                            fK0 = fX1 - fX0;
+            VAR_T(C)                            fK1 = fX2 - fX0;
+            VAR_T(C)                            fK2 = fX2 - fX1;
+
+            VAR_T(C)                            fTX = FCN_F(tgPM_FSEL)(fX01 - fX00, psBA0->m_vMin.x, psBA0->m_vMax.x);
+            VAR_T(C)                            fTY = FCN_F(tgPM_FSEL)(fX11 - fX10, psBA0->m_vMin.y, psBA0->m_vMax.y);
+            VAR_T(C)                            fTZ = FCN_F(tgPM_FSEL)(fX21 - fX20, psBA0->m_vMin.z, psBA0->m_vMax.z);
+
+            VAR_T(C)                            fK6 = FCN_F(tgPM_FSEL)(fK1, fTX, psSP0->m_vOrigin.x);
+            VAR_T(C)                            fK7 = FCN_F(tgPM_FSEL)(fK2, fTY, psSP0->m_vOrigin.y);
+            VAR_T(C)                            fK8 = FCN_F(tgPM_FSEL)(fK1, psSP0->m_vOrigin.x, fTZ);
+            VAR_T(C)                            fK9 = FCN_F(tgPM_FSEL)(fK2, psSP0->m_vOrigin.z, fTZ);
+
+            VAR_T(C)                            fKTX = FCN_F(tgPM_FSEL)(fK0, fK6, psSP0->m_vOrigin.x);
+            VAR_T(C)                            fKTY = FCN_F(tgPM_FSEL)(fK0, psSP0->m_vOrigin.y, fK7);
+            VAR_T(C)                            fKTZ = FCN_F(tgPM_FSEL)(fK0, fK8, fK9);
+
+            VAR_T(C)                            fNX = FCN_F(tgPM_FSEL)(fX01 - fX00, TYPE_K(1), -TYPE_K(1));
+            VAR_T(C)                            fNY = FCN_F(tgPM_FSEL)(fX11 - fX10, TYPE_K(1), -TYPE_K(1));
+            VAR_T(C)                            fNZ = FCN_F(tgPM_FSEL)(fX21 - fX20, TYPE_K(1), -TYPE_K(1));
+
+            VAR_T(C)                            fKA = FCN_F(tgPM_FSEL)(fK1, fNX, TYPE_K(0));
+            VAR_T(C)                            fKB = FCN_F(tgPM_FSEL)(fK2, fNY, TYPE_K(0));
+            VAR_T(C)                            fKC = FCN_F(tgPM_FSEL)(fK1, TYPE_K(0), fNZ);
+            VAR_T(C)                            fKD = FCN_F(tgPM_FSEL)(fK2, TYPE_K(0), fNZ);
+
+            VAR_T(C)                            fKNX = FCN_F(tgPM_FSEL)(fK0, fKA, TYPE_K(0));
+            VAR_T(C)                            fKNY = FCN_F(tgPM_FSEL)(fK0, TYPE_K(0), fKB);
+            VAR_T(C)                            fKNZ = FCN_F(tgPM_FSEL)(fK0, fKC, fKD);
+
+            VAR_T(C)                            fKE = FCN_F(tgPM_FSEL)(fK1, fX0, fX2);
+            VAR_T(C)                            fKF = FCN_F(tgPM_FSEL)(fK2, fX1, fX2);
+
+            psContact->m_vS0 = FCN_V(tgMH_SETP_S)(fKTX, fKTY, fKTZ);
+            psContact->m_vN0 = FCN_V(tgMH_SETV_S)(fKNX, fKNY, fKNZ);
+            psContact->m_fT0 = TYPE_K(0);
+            psContact->m_fDepth = psSP0->m_fRadius + FCN_F(tgPM_FSEL)(fK0, fKE, fKF);
+
+            ++psPacket->m_niContact;
+            return (KTgS_OK);
+        }
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

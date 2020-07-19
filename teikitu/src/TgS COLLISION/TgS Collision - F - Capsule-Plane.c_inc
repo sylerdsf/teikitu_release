@@ -1,0 +1,240 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Capsule-Plane.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_CP_Closest_PN) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psCP0: Capsule primitive                                                                                                                                                */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Output: vCP0,vPN0: Point of closest proximity on the capsule and plane respectively                                                                                             */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_CP_Closest_PN)(VEC_T(1,PC) pfCP0, VEC_T(1,PC) pvPN0, VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgPLANE,CPC) psPN0)
+{
+    VAR_T(C)                            fTest = FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psPN0, &psCP0->m_vOrigin);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_TB_Is_Valid)(psCP0) && FCN_VO(tgGM_PN_Is_Valid)(psPN0) );
+
+    if (fTest < psCP0->m_fRadius)
+    {
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T(C)                            fUAX_N = FCN_V(tgMH_DOT)(&psPN0->m_vNormal, &psCP0->m_vU_HAX);
+        VAR_T(C)                            fE2 = psCP0->m_fExtent*FCN_F(tgPM_ABS)(fUAX_N);
+
+        if (fE2 + psCP0->m_fRadius >= fTest)
+        {
+            /* The capsule is penetrating this plane, return back the error state. */
+            return (-VAR_K(KTgMAX));
+        }
+        else
+        {
+            VEC_T(1,C)                          vPN = psPN0->m_vNormal;
+            VAR_T(C)                            fK0 = fUAX_N < -VAR_K(KTgEPS) ? TYPE_K(1) : TYPE_K(0);
+            VAR_T(C)                            fAx = fUAX_N > VAR_K(KTgEPS) ? -TYPE_K(1) : fK0;
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(psCP0->m_fRadius, &vPN);
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)(&psCP0->m_vOrigin, &vK2);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fAx, &psCP0->m_vHAX);
+            VEC_T(1,C)                          vPnt = FCN_V(tgMH_ADD)(&vK0, &vK1);
+            VAR_T(C)                            fDist = fTest - (fE2 + psCP0->m_fRadius);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)(fDist, &vPN);
+
+            *pfCP0 = vPnt;
+            *pvPN0 = FCN_V(tgMH_SUB)(&vPnt, &vK3);
+
+            return (fDist);
+        }
+    }
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Penetrate_CP) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Input:  psCP0: Capsule primitive - contact points are generated on this primitive                                                                                               */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_PN_Penetrate_CP)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgTUBE,CPC) psCP0)
+{
+    TgPARAM_CHECK( FCN_VO(tgGM_TB_Is_Valid)(psCP0) && FCN_VO(tgGM_PN_Is_Valid)(psPN0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        /* Project the capsule onto the plane normal and verify that some portion lies below the plane. */
+
+        VAR_T(C)                            fUAX_N = FCN_V(tgMH_DOT)(&psPN0->m_vNormal, &psCP0->m_vU_HAX);
+        VAR_T(C)                            fDist = FCN_VO(tgCO_F_PN_Sign_Dist_VT)(psPN0, &psCP0->m_vOrigin);
+        VAR_T(C)                            fE2 = psCP0->m_fExtent*FCN_F(tgPM_ABS)(fUAX_N);
+        VEC_T(1,C)                          vPN = psPN0->m_vNormal;
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+        VEC_T(1,C)                          vK0 = fUAX_N > TYPE_K(0) ? FCN_V(tgMH_NEG)(&psCP0->m_vHAX) : psCP0->m_vHAX;
+        VEC_T(1,C)                          vK5 = FCN_V(tgMH_MUL_SV)(psCP0->m_fRadius, &vPN);
+        VEC_T(1,C)                          vK6 = FCN_V(tgMH_ADD)(&psCP0->m_vOrigin, &vK0);
+
+        if (fDist >= fE2 + psCP0->m_fRadius)
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        psContact->m_vS0 = FCN_V(tgMH_SUB)(&vK6, &vK5);
+        psContact->m_vN0 = vPN;
+        psContact->m_fT0 = TYPE_K(0);
+        psContact->m_fDepth = fE2 + psCP0->m_fRadius - fDist;
+
+        ++psPacket->m_niContact;
+
+        /* If the capsule is at a 45 degree angle or less to the plane, create contact points at both extreme points of the capsule. */
+
+        if (FCN_F(tgPM_ABS)(fUAX_N) < VAR_K(KTgSQRT1_2))
+        {
+            VAR_T(C)                            fE3 = psCP0->m_fRadius*FCN_F(tgPM_SQRT)(FCN_F(tgPM_ABS)(TYPE_K(1) - fUAX_N*fUAX_N));
+            VAR_T(C)                            fDepth = fE3 - fE2 - fDist;
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(fUAX_N, &psCP0->m_vU_HAX);
+            VEC_T(1,C)                          vK4 = FCN_V(tgMH_SUB)(&vK2, &vPN);
+            VEC_T(1,C)                          vX0 = FCN_V(tgMH_NORM)(&vK4);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_NEG)(&vK0);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)(&psCP0->m_vOrigin, &vK3);
+            VEC_T(1,C)                          vK7 = FCN_V(tgMH_MUL_VS)(&vX0, psCP0->m_fRadius);
+
+            if (fDepth < TYPE_K(0))
+            {
+                return (KTgS_OK);
+            };
+
+            if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+            {
+                return (KTgE_MAX_CONTACTS);
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = FCN_V(tgMH_ADD)(&vK1, &vK7);
+            psContact->m_vN0 = vPN;
+            psContact->m_fT0 = TYPE_K(0);
+            psContact->m_fDepth = fDepth;
+
+            ++psPacket->m_niContact;
+        };
+
+        return (KTgS_OK);
+    }
+}
+
+
+/* ---- FCN_VO(tgCO_F_PN_Sweep_CP) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  fPM: Current normalized time of first contact.                                                                                                                          */
+/* Input:  bPenetrate: If the swept primitives are in penetration, if true the function will return points of penetration.                                                         */
+/* Input:  psPN0: Plane primitive                                                                                                                                                  */
+/* Input:  psCP0: Capsule primitive                                                                                                                                                */
+/* Input:  psDT: A structure holding the swept primitive displacement for the entire duration of the test period                                                                   */
+/* Output: tgPacket: Contact points are added or replace the current set depending on the time comparison and given parameters                                                     */
+/* Output: fPM: New normalized time of first contact                                                                                                                               */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_PN_Sweep_CP)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VAR_T(P) pfPM, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgDELTA,CPC) psDT )
+{
+    TgPARAM_CHECK( FCN_VO(tgGM_TB_Is_Valid)(psCP0) && FCN_VO(tgGM_PN_Is_Valid)(psPN0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        VEC_T(1)                            vCP0, vPN0;
+        VAR_T(C)                            fDist = FCN_VO(tgCO_F_PN_Closest_SG)(&vPN0, &vCP0, psPN0, &psCP0->m_sAX);
+
+        if (fDist <= psCP0->m_fRadius)
+        {
+            if (*pfPM > psPacket->m_fSweepTol)
+            {
+                psPacket->m_niContact = 0;
+            };
+
+            *pfPM = TYPE_K(0);
+
+            if ((psPacket->m_bReport_Penetration) &&
+                KTgE_MAX_CONTACTS == FCN_VO(tgCO_F_PN_Penetrate_CP)(psPacket, psPN0, psCP0))
+            {
+                return (KTgE_MAX_CONTACTS);
+            };
+
+            return (KTgE_PREPENETRATION);
+        }
+        else
+        {
+            VAR_T(C)                            fDT_N = -FCN_V(tgMH_DOT)(&psDT->m_vDT, &psPN0->m_vNormal);
+            VAR_T(C)                            fT0 = (fDist - psCP0->m_fRadius) / fDT_N;
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(fT0, &psDT->m_vDT);
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_ADD)(&vCP0, &vK2);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(psCP0->m_fRadius, &psPN0->m_vNormal);
+            VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+            if (fDT_N <= TYPE_K(0))
+            {
+                return (KTgE_NO_INTERSECT);
+            };
+
+            if (fT0 > *pfPM + psPacket->m_fSweepTol)
+            {
+                return (KTgE_NO_INTERSECT);
+            };
+
+            if (fT0 < *pfPM - psPacket->m_fSweepTol)
+            {
+                psPacket->m_niContact = 0;
+                *pfPM = fT0;
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = FCN_V(tgMH_SUB)(&vK0, &vK1);
+            psContact->m_vN0 = psPN0->m_vNormal;
+            psContact->m_fT0 = fT0;
+            psContact->m_fDepth = TYPE_K(0);
+
+            ++psPacket->m_niContact;
+
+            return (KTgS_OK);
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,468 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle-Linear.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+MSVC_WARN_DISABLE_PUSH( 6285 ) /* Analysis - (<non-zero constant> || <non-zero constant>) is always a non-zero constant. */
+
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- VI(tgCO_FI_ST_ParamSq_LR) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* Input:  psST0: Space triangle primitive                                                                                                                                         */
+/* Input:  vS0,vD0: Origin and Direction for the Linear                                                                                                                            */
+/* Output: _fET0, _fET1: Parametric parameters to generate point of minimal distance on the triangle                                                                               */
+/* Output: _fLN0: Parametric parameter to generate point of minimal distance on the linear                                                                                         */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() VI(tgCO_FI_ST_ParamSq_LR)( VAR_T(P) pfET0, VAR_T(P) pfET1, VAR_T(P) pfLN0, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    TgERROR( FCN_VO(tgGM_ST_Is_Valid)( psST0 ) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ) && FCN_V(tgMH_Is_Vector_Valid)( pvD0 ) );
+
+    /* == Perform the requested primitive-primitive data function. == */
+
+    /* If the linear is not parallel to the triangle, check to see if the two geometries intersect each other. */
+
+    if (!FCN_F(tgCM_NR0)( FCN_V(tgMH_DOT)( pvD0, &psST0->m_sCT.m_sET.m_sPT.m_vNormal ) ))
+    {
+        TgRESULT_C iResult = VI(tgCO_FI_ET_Intersect_Param_LR)( pfET0, pfET1, pfLN0, &psST0->m_sCT.m_sET, pvS0, pvD0 );
+
+        if (TgSUCCEEDED(iResult) || (TgFAILED(iResult) && KTgE_NO_INTERSECT != iResult))
+        {
+            /* Some property of the triangle was illegal - return back an error state. */
+            /* The linear may have intersected the triangle. */
+
+            return (-VAR_K(KTgMAX));
+        };
+    }
+
+    {
+        VEC_T(1,C)                          vS2 = FCN_V(tgMH_ADD)( pvS0, pvD0 );
+        TgSINT_F32                          iTest = 0;
+        VAR_T()                             fET0 = VAR_K(KTgMAX), fET1 = VAR_K(KTgMAX), fL1 = VAR_K(KTgMAX);
+        VAR_T()                             fT0, fT1, fDistSq = VAR_K(KTgMAX);
+
+        /* Determine which feature tests need to be executed given the linear parameters. */
+
+    #if 1 == LN_CAP_0
+        VAR_T(C)                            f00 = FCN_VO(tgCO_F_PN_Dist_VT)( psST0->m_avPlane + 0, pvS0 );
+        VAR_T(C)                            f01 = FCN_VO(tgCO_F_PN_Dist_VT)( psST0->m_avPlane + 1, pvS0 );
+        VAR_T(C)                            f02 = FCN_VO(tgCO_F_PN_Dist_VT)( psST0->m_avPlane + 2, pvS0 );
+
+    #if 1 == LN_CAP_1
+        VAR_T(C)                            f10 = FCN_VO(tgCO_F_PN_Dist_VT)( psST0->m_avPlane + 0, &vS2 );
+        VAR_T(C)                            f11 = FCN_VO(tgCO_F_PN_Dist_VT)( psST0->m_avPlane + 1, &vS2 );
+        VAR_T(C)                            f12 = FCN_VO(tgCO_F_PN_Dist_VT)( psST0->m_avPlane + 2, &vS2 );
+
+        iTest |= (f10 > -VAR_K(KTgEPS) && f11 > -VAR_K(KTgEPS) && f12 > -VAR_K(KTgEPS)) ? (1 << 4) : 0;
+        iTest |= (f10 < VAR_K(KTgEPS)) ? (1 << 0) : 0;
+        iTest |= (f11 < VAR_K(KTgEPS)) ? (1 << 1) : 0;
+        iTest |= (f12 < VAR_K(KTgEPS)) ? (1 << 2) : 0;
+    #else
+        VAR_T(C)                            fK0 = FCN_V(tgMH_DOT)( &psST0->m_avPlane[0].m_vNormal, pvD0 );
+        VAR_T(C)                            fK1 = FCN_V(tgMH_DOT)( &psST0->m_avPlane[1].m_vNormal, pvD0 );
+        VAR_T(C)                            fK2 = FCN_V(tgMH_DOT)( &psST0->m_avPlane[2].m_vNormal, pvD0 );
+
+        iTest |= (fK0 < -VAR_K(KTgEPS)) ? (1 << 0) : 0;
+        iTest |= (fK1 < -VAR_K(KTgEPS)) ? (1 << 1) : 0;
+        iTest |= (fK2 < -VAR_K(KTgEPS)) ? (1 << 2) : 0;
+    #endif
+
+        iTest |= (f00 > -VAR_K(KTgEPS) && f01 > -VAR_K(KTgEPS) && f02 > -VAR_K(KTgEPS)) ? (1 << 3) : 0;
+        iTest |= (f00 < VAR_K(KTgEPS)) ? (1 << 0) : 0;
+        iTest |= (f01 < VAR_K(KTgEPS)) ? (1 << 1) : 0;
+        iTest |= (f02 < VAR_K(KTgEPS)) ? (1 << 2) : 0;
+
+    #else
+        VAR_T(C)                            fK0 = FCN_V(tgMH_DOT)( &psST0->m_avPlane[0].m_vNormal, pvD0 );
+        VAR_T(C)                            fK1 = FCN_V(tgMH_DOT)( &psST0->m_avPlane[1].m_vNormal, pvD0 );
+        VAR_T(C)                            fK2 = FCN_V(tgMH_DOT)( &psST0->m_avPlane[2].m_vNormal, pvD0 );
+
+        iTest |= (FCN_F(tgPM_ABS)(fK0) > VAR_K(KTgEPS)) ? (1 << 0) : 0;
+        iTest |= (FCN_F(tgPM_ABS)(fK1) > VAR_K(KTgEPS)) ? (1 << 1) : 0;
+        iTest |= (FCN_F(tgPM_ABS)(fK2) > VAR_K(KTgEPS)) ? (1 << 2) : 0;
+    #endif
+
+        /* Test the first capped point if it is contained within the triangle space. */
+
+        if (0 != (iTest & (1 << 3)))
+        {
+            VAR_T(C) fTest = FCN_VO(tgCO_F_ET_ParamSq_VT)( &fT0, &fT1, &psST0->m_sCT.m_sET, pvS0 );
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fL1 = TYPE_K(0);
+                fET0 = fT0;
+                fET1 = fT1;
+            };
+        };
+
+        /* Test the second capped point if it is contained within the triangle space. */
+
+        if (0 != (iTest & (1 << 4)))
+        {
+            VAR_T(C) fTest = FCN_VO(tgCO_F_ET_ParamSq_VT)( &fT0, &fT1, &psST0->m_sCT.m_sET, &vS2 );
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fL1 = TYPE_K(1);
+                fET0 = fT0;
+                fET1 = fT1;
+            };
+        };
+
+        if (0 != (iTest & (3 << 3)))
+        {
+            return (fDistSq);
+        };
+
+        TgERROR( 0 != iTest );
+
+        /* Check minimal distance between linear and edge 0, if any part crosses into the negative space of the edge plane. */
+
+        if (0 != (iTest & (1 << 0)))
+        {
+            VAR_T(C) fTest = VI(tgCO_F_LR11_ParamSq_LR)( &fT0, &fT1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 0, psST0->m_sCT.m_sET.m_avEdge + 0, pvS0, pvD0 );
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fL1 = fT1;
+                fET0 = fT0;
+                fET1 = TYPE_K(0);
+            };
+        };
+
+        /* Check minimal distance between linear and edge 1, if any part crosses into the negative space of the edge plane. */
+
+        if (0 != (iTest & (1 << 1)))
+        {
+            VAR_T(C) fTest = VI(tgCO_F_LR11_ParamSq_LR)( &fT0, &fT1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 1, psST0->m_sCT.m_sET.m_avEdge + 1, pvS0, pvD0 );
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fL1 = fT1;
+                fET0 = TYPE_K(1) - fT0;
+                fET1 = fT0;
+            };
+        };
+
+        /* Check minimal distance between linear and edge 2, if any part crosses into the negative space of the edge plane. */
+
+        if (0 != (iTest & (1 << 2)))
+        {
+            VAR_T(C) fTest = VI(tgCO_F_LR11_ParamSq_LR)( &fT0, &fT1, psST0->m_sCT.m_sET.m_sPT.m_avPoint + 2, psST0->m_sCT.m_sET.m_avEdge + 2, pvS0, pvD0 );
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fL1 = fT1;
+                fET0 = TYPE_K(0);
+                fET1 = TYPE_K(1) - fT0;
+            };
+        };
+
+        *pfET0 = fET0;
+        *pfET1 = fET1;
+        *pfLN0 = fL1;
+
+        return (fDistSq);
+    };
+}
+
+
+/* ---- VI(tgCO_FI_ET_Intersect_Param_LR) ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psET0: Edge triangle primitive                                                                                                                                          */
+/* Input:  vS0,vD0: Origin and Direction for the Linear                                                                                                                            */
+/* Output: _fET0, _fET1: Parametric parameters to generate point of contact on the triangle                                                                                        */
+/* Output: _fLN0: Parametric parameter to generate point of contact on the linear                                                                                                  */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT VI(tgCO_FI_ET_Intersect_Param_LR)( VAR_T(P) pfET0, VAR_T(P) pfET1, VAR_T(P) pfLN0, VEC_OBJ_T(TgETRI,CPC) psET0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( pvS0, psET0->m_sPT.m_avPoint );
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)( &vDS );
+
+    TgERROR( FCN_VO(tgGM_ET_Is_Valid)( psET0 ) && FCN_V(tgMH_Is_Point_Valid)( pvS0 ) && FCN_V(tgMH_Is_Vector_Valid)( pvD0 ) );
+
+    if (fDS_DS <= VAR_K(KTgEPS))
+    {
+        /* Quick Out - the segment origin is within tolerance of triangle origin. */
+
+        *pfET0 = TYPE_K(0);
+        *pfET1 = TYPE_K(0);
+        *pfLN0 = TYPE_K(0);
+
+        return (KTgS_OK);
+    }
+    else
+    {
+        VAR_T(C)                            fD1_N = FCN_V(tgMH_DOT)( pvD0, &psET0->m_sPT.m_vNormal );
+
+        if (FCN_F(tgPM_ABS)(fD1_N) <= VAR_K(KTgEPS))
+        {
+            /* Linear is parallel to the plane of the triangle. */
+            return (KTgE_NO_INTERSECT);
+        }
+        else
+        {
+            VAR_T(C)                            fK0 = TYPE_K(1) / fD1_N;
+            VAR_T(C)                            fT0 = fK0*FCN_V(tgMH_DOT)( &vDS, &psET0->m_sPT.m_vNormal );
+
+            if ((LN_CAP_0 && fT0 < TYPE_K(0)) || (LN_CAP_1 && fT0 > TYPE_K(1)))
+            {
+                return (KTgE_NO_INTERSECT);
+            }
+            else
+            {
+                VEC_T(1,C)                          vK0 = FCN_V(tgMH_CX)( psET0->m_avEdge + 1, &vDS );
+                VAR_T(C)                            fET0 = fK0*FCN_V(tgMH_DOT)( pvD0, &vK0 );
+
+                if (fET0 < TYPE_K(0) || fET0 > TYPE_K(1))
+                {
+                    return (KTgE_NO_INTERSECT);
+                }
+                else
+                {
+                    VEC_T(1,C)                          vK1 = FCN_V(tgMH_CX)( psET0->m_avEdge + 0, &vDS );
+                    VAR_T(C)                            fET1 = fK0*FCN_V(tgMH_DOT)( pvD0, &vK1 );
+
+                    if (fET1 < TYPE_K(0) || fET0 + fET1 > TYPE_K(1))
+                    {
+                        return (KTgE_NO_INTERSECT);
+                    };
+
+                    *pfLN0 = fT0;
+                    *pfET0 = fET0;
+                    *pfET1 = fET1;
+
+                    return (KTgS_OK);
+                };
+            };
+        };
+    };
+}
+
+
+/* ---- VI(tgCO_FI_ST_Clip_Param_F_LR) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psST0: Space triangle primitive - F_Clip-space is the region defined by the infinite extrusion along the normal.                                                        */
+/* Input:  vS0,vD0: Origin and Direction for the Linear                                                                                                                            */
+/* Output: _fLN0,_fLN1: Parametric parameter to generate point of contact on the linear                                                                                            */
+/* Output: _iCode: PT0 Valid | PT1 Valid | PT0 Not Reduced | PT1 Not Reduced                                                                                                       */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT VI(tgCO_FI_ST_Clip_Param_F_LR)( VAR_T(P) pfLN0, VAR_T(P) pfLN1, TgSINT_F32_PC  piCode, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VAR_T()                             fT0 = TYPE_K(0), fT1 = TYPE_K(0);
+    TgSINT_F32                          iCode = 0;
+
+    for (TgRSIZE uiEdge = 0; uiEdge < 3; ++uiEdge)
+    {
+        VAR_T(C)                            fD1_N = FCN_V(tgMH_DOT)( &psST0->m_avPlane[uiEdge].m_vNormal, pvD0 );
+        VAR_T(C)                            fDist = FCN_VO(tgCO_F_PN_Dist_VT)( psST0->m_avPlane + uiEdge, pvS0 );
+
+        if (fDist < TYPE_K(0))
+        {
+            /*  Check to see if its impossible for this linear to intersect the triangle space by seeing if it rests entirely in the exterior half-space of the */
+            /* triangle-edge normal space.  This can occur if the linear is near parallel to the resulting partitioning plane, if the linear is start-capped and directed */
+            /* away from the plane and if its end-capped and the end point is also behind the plane. */
+
+            if ((FCN_F(tgPM_ABS)(fD1_N) <= VAR_K(KTgEPS)) || (LN_CAP_0 && fD1_N < TYPE_K(0)) || (LN_CAP_1 && (fD1_N + fDist < TYPE_K(0))))
+            {
+                *piCode = 0;
+                return (KTgE_NO_INTERSECT);
+            };
+        };
+
+        if (fD1_N > VAR_K(KTgEPS))
+        {
+            VAR_T(C)                            fK0 = (LN_CAP_1 && fDist > fD1_N) ? TYPE_K(1) : fDist / fD1_N;
+            VAR_T(C)                            fTest = (LN_CAP_0 && fDist < TYPE_K(0)) ? TYPE_K(0) : fK0;
+
+            if (iCode & 1)
+            {
+                if (fT0 < fTest)
+                {
+                    fT0 = fTest;
+                    iCode &= FCN_VO(tgGM_ST_Test_Edge)( psST0, uiEdge ) ? ~0 : ~4;
+                };
+            }
+            else
+            {
+                fT0 = fTest;
+                iCode |= FCN_VO(tgGM_ST_Test_Edge)( psST0, uiEdge ) ? (1 + 4) : 1;
+            };
+        }
+        else if (fD1_N < -VAR_K(KTgEPS))
+        {
+            VAR_T(C)                            fK1 = (LN_CAP_1 && fDist < fD1_N) ? TYPE_K(1) : fDist / fD1_N;
+            VAR_T(C)                            fTest = (LN_CAP_0 && fDist > TYPE_K(0)) ? TYPE_K(0) : fK1;
+
+            if (iCode & 2)
+            {
+                if (fT1 > fTest)
+                {
+                    fT1 = fTest;
+                    iCode &= FCN_VO(tgGM_ST_Test_Edge)( psST0, uiEdge ) ? ~0 : ~8;
+                };
+            }
+            else
+            {
+                fT1 = fTest;
+                iCode |= FCN_VO(tgGM_ST_Test_Edge)( psST0, uiEdge ) ? (2 + 8) : 2;
+            };
+        };
+    };
+
+    TgERROR( iCode == 3 );
+
+    *pfLN0 = fT0;
+    *pfLN1 = fT1;
+    *piCode = iCode;
+
+    return (KTgS_OK);
+}
+
+
+/* ---- VI(tgCO_FI_ST_Clip_F_LR) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psST0: Space triangle primitive - F_Clip-space is the region defined by the infinite extrusion along the normal.                                                        */
+/* Input:  vS0,vD0: Origin and Direction for the Linear                                                                                                                            */
+/* Output: tgCL: The resulting point list - points created from clipping on a reduced edge are not added to the list.                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT VI(tgCO_FI_ST_Clip_F_LR)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, TgSINT_F32_PC  piCode, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VAR_T()                             fT0, fT1;
+    TgSINT_F32                          iCode;
+    TgRESULT                            iResult;
+
+    if (psCL->m_niMax < 2)
+    {
+        return (KTgE_FAIL);
+    };
+
+    iResult = VI(tgCO_FI_ST_Clip_Param_F_LR)( &fT0, &fT1, &iCode, psST0, pvS0, pvD0 );
+
+    *piCode = iCode;
+
+    if (TgFAILED( iResult ) || 0 == (iCode & 12))
+    {
+        psCL->m_niPoint = 0;
+        return (iResult);
+    };
+
+    if (12 != (iCode & 12))
+    {
+        if (FCN_F(tgPM_ABS)(fT0 - fT1) <= VAR_K(KTgEPS))
+        {
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+
+            psCL->m_avPoint[0] = FCN_V(tgMH_ADD)(pvS0, &vK0);
+            psCL->m_niPoint = 1;
+        }
+        else
+        {
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fT1, pvD0 );
+
+            psCL->m_avPoint[0] = FCN_V(tgMH_ADD)( pvS0, &vK0 );
+            psCL->m_avPoint[1] = FCN_V(tgMH_ADD)( pvS0, &vK1 );
+            psCL->m_niPoint = 2;
+        };
+    }
+    else if (4 != (iCode & 4))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+
+        psCL->m_avPoint[0] = FCN_V(tgMH_ADD)( pvS0, &vK0 );
+        psCL->m_niPoint = 1;
+    }
+    else if (8 != (iCode & 8))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT1, pvD0 );
+
+        psCL->m_avPoint[0] = FCN_V(tgMH_ADD)( pvS0, &vK0 );
+        psCL->m_niPoint = 1;
+    };
+
+    return (KTgS_OK);
+}
+
+
+/* ---- VI(tgCO_FI_ST_Clip_LR) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psST0: Space triangle primitive - F_Clip-space is the region defined by the infinite extrusion along the normal.                                                        */
+/* Input:  vS0,vD0: Origin and Direction for the Linear                                                                                                                            */
+/* Output: tgCL: The resulting segment list.                                                                                                                                       */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT VI(tgCO_FI_ST_Clip_LR)( VEC_OBJ_T(STg2_CO_Clip_List,PC) psCL, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_T(1,CPC) pvS0, VEC_T(1,CPC) pvD0 )
+{
+    VAR_T()                             fT0, fT1;
+    TgSINT_F32                          iCode;
+    TgRESULT                            iResult;
+
+    if (psCL->m_niMax < 2)
+    {
+        return (KTgE_FAIL);
+    };
+
+    iResult = VI(tgCO_FI_ST_Clip_Param_F_LR)( &fT0, &fT1, &iCode, psST0, pvS0, pvD0 );
+
+    if (TgFAILED( iResult ))
+    {
+        psCL->m_niPoint = 0;
+        return (iResult);
+    };
+
+    if (FCN_F(tgPM_ABS)(fT0 - fT1) <= VAR_K(KTgEPS))
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+
+        psCL->m_avPoint[0] = FCN_V(tgMH_ADD)( pvS0, &vK0 );
+        psCL->m_niPoint = 1;
+    }
+    else
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fT0, pvD0 );
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fT1, pvD0 );
+
+        psCL->m_avPoint[0] = FCN_V(tgMH_ADD)( pvS0, &vK0 );
+        psCL->m_avPoint[1] = FCN_V(tgMH_ADD)( pvS0, &vK1 );
+        psCL->m_niPoint = 2;
+    };
+
+    return (KTgS_OK);
+}
+
+
+MSVC_WARN_DISABLE_POP( 6285 )
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,147 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Tube.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions - Scalar Functions                                                                                                                                            */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* Tube - Line                                                                                                                                                                     */
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Intersect_LN)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Clip_Param_LN)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Clip_LN)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_TB_Clip_Param_LR00)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_TB_Clip_LR00)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB00_Intersect_LR00)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB10_Intersect_LR00)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB11_Intersect_LR00)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB00_Param_LR00)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB10_Param_LR00)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB11_Param_LR00)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+
+
+/* Tube - Ray                                                                                                                                                                      */
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Intersect_RY)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Clip_Param_RY)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Clip_RY)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_TB_Clip_Param_LR10)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_TB_Clip_LR10)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB00_Intersect_LR10)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB10_Intersect_LR10)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB11_Intersect_LR10)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB00_Param_LR10)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB10_Param_LR10)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB11_Param_LR10)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VAR_T(C), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+
+
+/* Tube - Segment                                                                                                                                                                  */
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Intersect_SG)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Clip_Param_SG)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_TB_Clip_SG)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_TB_Clip_Param_LR11)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_FI_TB_Clip_LR11)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgTUBE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+
+                                            /** @brief Collision of a swept tube versus a static tube
+                                                @param[in,out] OUT0 Pointer to a contact packet for collision testing (including the current time of first contact, and resulting
+                                                                    contact points. Contact points are added or replace teh current set depending on the time comparison and the
+                                                                    packet's parameters.Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.
+                                                @param[in] ARG1 Scalar value to pad (increase) the radius of the tube for intersection
+                                                @param[in] ARG2 Pointer to a tube primitive
+                                                @param[in] ARG3 Pointer to a vector that is the source of the linear
+                                                @param[in] ARG4 Pointer to a vector that is the direction of the linear (may not be normalized)
+                                                @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB00_Intersect_LR11)( VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VAR_T(C) ARG1, VEC_OBJ_T(TgTUBE,CPC) ARG2, VEC_T(1,CPC) ARG3,
+                                                                                 VEC_T(1,CPC) ARG4);
+
+                                            /** @copydoc FCN_VO(tgCO_FI_TB00_Intersect_LR11) */
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB10_Intersect_LR11)( VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VAR_T(C) ARG1, VEC_OBJ_T(TgTUBE,CPC) ARG2, VEC_T(1,CPC) ARG3,
+                                                                                 VEC_T(1,CPC) ARG4);
+
+                                            /** @copydoc FCN_VO(tgCO_FI_TB00_Intersect_LR11) */
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB11_Intersect_LR11)( VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VAR_T(C) ARG1, VEC_OBJ_T(TgTUBE,CPC) ARG2, VEC_T(1,CPC) ARG3,
+                                                                                 VEC_T(1,CPC) ARG4);
+
+                                            /** @brief Intersection of a tube and a linear
+                                                @internal Duplicated into F_Internal_Intersect to avoid doing some extraneous calculations.  Modifications have to be ported. The
+                                                          termination condition of the linear is only used in quick-rejection code - the corresponding parametric parameters are
+                                                          not guaranteed to obey their constraints.
+                                                @param[in,out] OUT0 Pointer to a parametric value to generate a point on the linear in contact with the extended tube surface
+                                                @param[in,out] OUT1 Pointer to a parametric value to generate a point on the linear in contact with the extended tube surface
+                                                @param[in,out] OUT2 Pointer to a vector to hold the surface normal at point OUT0
+                                                @param[in,out] OUT3 Pointer to a vector to hold the surface normal at point OUT1
+                                                @param[in] ARG4 Scalar value to pad (increase) the radius of the tube for intersection
+                                                @param[in] ARG5 Pointer to a tube primitive
+                                                @param[in] ARG6 Pointer to a vector that is the source of the linear
+                                                @param[in] ARG7 Pointer to a vector that is the direction of the linear (may not be normalized)
+                                                @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB00_Param_LR11)( VAR_T(P) OUT0 , VAR_T(P) OUT1, VEC_T(1,PC) OUT2, VEC_T(1,PC) OUT3,
+                                                                             VAR_T(C) ARG4, VEC_OBJ_T(TgTUBE,CPC) ARG5, VEC_T(1,CPC) ARG6, VEC_T(1,CPC) ARG7 );
+
+                                            /** @copydoc FCN_VO(tgCO_FI_TB00_Param_LR11) */
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB10_Param_LR11)( VAR_T(P) OUT0 , VAR_T(P) OUT1, VEC_T(1,PC) OUT2, VEC_T(1,PC) OUT3,
+                                                                             VAR_T(C) ARG4, VEC_OBJ_T(TgTUBE,CPC) ARG5, VEC_T(1,CPC) ARG6, VEC_T(1,CPC) ARG7 );
+
+                                            /** @copydoc FCN_VO(tgCO_FI_TB00_Param_LR11) */
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_TB11_Param_LR11)( VAR_T(P) OUT0 , VAR_T(P) OUT1, VEC_T(1,PC) OUT2, VEC_T(1,PC) OUT3,
+                                                                             VAR_T(C) ARG4, VEC_OBJ_T(TgTUBE,CPC) ARG5, VEC_T(1,CPC) ARG6, VEC_T(1,CPC) ARG7 );
+
+
+
+/* Tube - Sphere                                                                                                                                                                   */
+                                            /** @brief Collision of a swept tube versus a static tube.
+                                                @internal This is a highly inaccurate test, meant to be used mainly as a child function for the cylinder, and capsule routines.
+                                                          Problems will rest in its false negative responses at values beyond the tube's length.
+                                                @param[in,out] OUT0 Pointer to a contact packet for collision testing (including the current time of first contact, and resulting
+                                                                    contact points. Contact points are added or replace teh current set depending on the time comparison and the
+                                                                    packet's parameters.
+                                                @param[in,out] OUT1 Pointer to the normalized time of first contact
+                                                @param[in] ARG2 Pointer to a tube primitive
+                                                @param[in] ARG3 Pointer to a sphere primitive
+                                                @param[in] ARG4 A structure holding the swept primitive displacement for the entire duration of the test period
+                                                @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_TB_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VAR_T(P) OUT1, VEC_OBJ_T(TgTUBE,CPC) ARG2, VEC_OBJ_T(TgSPHERE,CPC) ARG3,
+                                                                        VEC_OBJ_T(TgDELTA,CPC) ARG4 );
+
+                                            /** @brief Collision of a swept tube versus a static tube
+                                                @param[in,out] OUT0 Pointer to a contact packet for collision testing (including the current time of first contact, and resulting
+                                                                    contact points. Contact points are added or replace teh current set depending on the time comparison and the
+                                                                    packet's parameters.
+                                                @param[in,out] OUT1 Pointer to the normalized time of first contact
+                                                @param[in] ARG2 Pointer to a sphere primitive
+                                                @param[in] ARG3 Pointer to a tube primitive
+                                                @param[in] ARG4 A structure holding the swept primitive displacement for the entire duration of the test period
+                                                @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_SP_Sweep_TB)( VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VAR_T(P) OUT1, VEC_OBJ_T(TgSPHERE,CPC) ARG2, VEC_OBJ_T(TgTUBE,CPC) ARG3,
+                                                                        VEC_OBJ_T(TgDELTA,CPC) ARG4 );
+
+
+
+/* Tube - Tube                                                                                                                                                                     */
+                                            /** @brief Collision of a swept tube versus a static tube
+                                                @param[in,out] OUT0 Pointer to a contact packet for collision testing (including the current time of first contact, and resulting
+                                                                    contact points. Contact points are added or replace teh current set depending on the time comparison and the
+                                                                    packet's parameters.
+                                                @param[in,out] OUT1 Pointer to the normalized time of first contact
+                                                @param[in] ARG2 Pointer to a tube primitive
+                                                @param[in] ARG3 Pointer to a tube primitive
+                                                @param[in] ARG4 A structure holding the swept primitive displacement for the entire duration of the test period
+                                                @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
+TgEXTN TgRESULT                             FCN_VO(tgCO_TB_Sweep_TB)( VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VAR_T(P) OUT1, VEC_OBJ_T(TgTUBE,CPC) ARG2, VEC_OBJ_T(TgTUBE,CPC) ARG3,
+                                                                      VEC_OBJ_T(TgDELTA,CPC) ARG4 );

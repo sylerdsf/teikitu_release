@@ -1,0 +1,86 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Rectangle-Point.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_RT_ParamSq_VT) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psRT0: Rectangle primitive                                                                                                                                              */
+/* Input:  vS0: Point                                                                                                                                                              */
+/* Output: fRT0, fRT1: Parametric parameters to generate point of minimal distance on the rectangle                                                                                */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_RT_ParamSq_VT)(VAR_T(P) pfRT0, VAR_T(P) pfRT1, VEC_OBJ_T(TgRECTANGLE,CPC) psRT0, VEC_T(1,CPC) pvS0)
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(pvS0, &psRT0->m_vOrigin);
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)(&vDS);
+
+    TgERROR( FCN_VO(tgGM_RT_Is_Valid)(psRT0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+
+    if (fDS_DS <= VAR_K(KTgEPS))
+    {
+        /* Quick Out - the point is within tolerance of rectangle origin. */
+        *pfRT0 = TYPE_K(0);
+        *pfRT1 = TYPE_K(0);
+
+        return (TYPE_K(0));
+    }
+    else
+    {
+        VAR_T(C)                            fE0_E0 = FCN_V(tgMH_LSQ)(psRT0->m_avEdge + 0);
+        VAR_T(C)                            fE1_E1 = FCN_V(tgMH_LSQ)(psRT0->m_avEdge + 1);
+
+        if (fE0_E0 <= VAR_K(KTgEPS) || fE1_E1 <= VAR_K(KTgEPS))
+        {
+            /* Degenerate rectangle - One or both of the edges has a near-zero length */
+
+            return (-VAR_K(KTgMAX));
+        }
+        else
+        {
+            VAR_T(C)                            fDS_E0 = FCN_V(tgMH_DOT)(&vDS, psRT0->m_avEdge + 0);
+            VAR_T(C)                            fDS_E1 = FCN_V(tgMH_DOT)(&vDS, psRT0->m_avEdge + 1);
+            VAR_T(C)                            fRT0 = FCN_F(tgCM_CLP)(fDS_E0 / fE0_E0, TYPE_K(0), TYPE_K(1));
+            VAR_T(C)                            fRT1 = FCN_F(tgCM_CLP)(fDS_E1 / fE1_E1, TYPE_K(0), TYPE_K(1));
+
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fRT0, psRT0->m_avEdge + 0);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fRT1, psRT0->m_avEdge + 1);
+            VEC_T(1,C)                          vK2 = FCN_V(tgMH_SUB)(pvS0, &psRT0->m_vOrigin);
+            VEC_T(1,C)                          vK3 = FCN_V(tgMH_SUB)(&vK2, &vK0);
+            VEC_T(1,C)                          vK4 = FCN_V(tgMH_SUB)(&vK3, &vK1);
+
+            *pfRT0 = fRT0;
+            *pfRT1 = fRT1;
+
+            return (FCN_V(tgMH_LSQ)(&vK4));
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

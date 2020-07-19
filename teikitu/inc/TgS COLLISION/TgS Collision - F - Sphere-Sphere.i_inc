@@ -1,0 +1,81 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Sphere-Sphere.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_SP_DistSq_SP) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_SP_DistSq_SP)( VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgSPHERE,CPC) psSP1 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( &psSP1->m_vOrigin, &psSP0->m_vOrigin );
+    VAR_T()                             fDist = FCN_V(tgMH_LEN)( &vDS ) - (psSP0->m_fRadius + psSP1->m_fRadius);
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX)));
+}
+
+
+/* ---- FCN_VO(tgCO_F_SP_Dist_SP) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_SP_Dist_SP)( VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgSPHERE,CPC) psSP1 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( &psSP1->m_vOrigin, &psSP0->m_vOrigin );
+    VAR_T()                             fDist = FCN_V(tgMH_LEN)( &vDS ) - (psSP0->m_fRadius + psSP1->m_fRadius);
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_SP_ClosestSq_SP) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_SP_ClosestSq_SP)( VEC_T(1,PC) pvSP0, VEC_T(1,PC) pvSP1, VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgSPHERE,CPC) psSP1 )
+{
+    VAR_T()                             fDist = FCN_VO(tgCO_F_SP_Closest_SP)( pvSP0, pvSP1, psSP0, psSP1 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_SP_Test_SP) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_SP_Test_SP)( VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgSPHERE,CPC) psSP1 )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( &psSP1->m_vOrigin, &psSP0->m_vOrigin );
+    VAR_T()                             fDS_DS = FCN_V(tgMH_LEN)( &vDS );
+    VAR_T()                             fSumRad = psSP0->m_fRadius + psSP1->m_fRadius;
+
+    TgPARAM_CHECK( FCN_VO(tgGM_SP_Is_Valid)( psSP0 ) && FCN_VO(tgGM_SP_Is_Valid)( psSP1 ) );
+
+    return (fDS_DS <= fSumRad*fSumRad);
+}
+
+
+/* ---- FCN_VO(tgCO_F_SP_Test_Sweep_SP) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_SP_Test_Sweep_SP)( VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgSPHERE,CPC) psSP1, VEC_T(1,CPC) pvUDT, VAR_T(C) fDT )
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( &psSP0->m_vOrigin, &psSP1->m_vOrigin );
+    VAR_T()                             fDS_DS = FCN_V(tgMH_LSQ)( &vDS );
+    VAR_T()                             fRS = psSP0->m_fRadius + psSP1->m_fRadius;
+    VAR_T()                             fRS2 = fRS*fRS;
+    VAR_T()                             fTMPC = fDT - VAR_K(KTgEPS);
+    VAR_T()                             fDS_UDT = FCN_V(tgMH_DOT)( &vDS, pvUDT );
+
+    TgPARAM_CHECK( FCN_VO(tgGM_SP_Is_Valid)(psSP0) && FCN_VO(tgGM_SP_Is_Valid)(psSP1) );
+
+    fTMPC = FCN_F(tgPM_FSEL)( fTMPC, fDS_UDT - VAR_K(KTgEPS), -TYPE_K(1) ); /* Negligible displacement */
+    fTMPC = FCN_F(tgPM_FSEL)( fTMPC, fRS + fDT - fDS_UDT, -TYPE_K(1) ); /* Negligible displacement towards each other. */
+    fTMPC = FCN_F(tgPM_FSEL)( fTMPC, fRS2 - fDS_DS + fDS_UDT*fDS_UDT, -TYPE_K(1) ); /* Separation along displacement is too large. */
+    fTMPC = FCN_F(tgPM_FSEL)( fTMPC, fDS_UDT - FCN_F(tgPM_SQRT)( fTMPC ), -TYPE_K(1) ); /* Orthogonal separation is too large. */
+    fTMPC = FCN_F(tgPM_FSEL)( fRS2 - fDS_DS, TYPE_K(0), fTMPC ); /* Spheres are pre-penetrated. */
+
+    return (fTMPC <= fDT); /* Time occurs after first time of contact. */
+}

@@ -1,0 +1,69 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Capsule-Point.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_CP_DistSq_VT) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CP_DistSq_VT)( VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fTest = FCN_VO(tgCO_F_SG_Dist_VT)( &psCP0->m_sAX, pvS0 );
+    VAR_T()                             fDist = fTest - psCP0->m_fRadius;
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_Dist_VT) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CP_Dist_VT)( VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fTest = FCN_VO(tgCO_F_SG_Dist_VT)( &psCP0->m_sAX, pvS0 );
+    VAR_T()                             fDist = fTest - psCP0->m_fRadius;
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_ClosestSq_VT) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CP_ClosestSq_VT)( VEC_T(1,PC) pfCP0, VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fDist = FCN_VO(tgCO_F_CP_Closest_VT)( pfCP0, psCP0, pvS0 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_Closest_VT) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CP_Closest_VT)( VEC_T(1,PC) pvCP0, VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_T(1,CPC) pvS0 )
+{
+    VEC_T(1)                            vCP0;
+
+    VAR_T()                             fTest = FCN_VO(tgCO_F_SG_Closest_VT)( &vCP0, &psCP0->m_sAX, pvS0 );
+    VAR_T()                             fDist = FCN_F(tgPM_FSEL)( fTest - psCP0->m_fRadius, fTest, -TYPE_K(1) );
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)( pvS0, &vCP0 );
+    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( psCP0->m_fRadius / fDist, &vK0 );
+
+    *pvCP0 = FCN_V(tgMH_ADD)( &vCP0, &vK1 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist - psCP0->m_fRadius, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_Test_VT) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_CP_Test_VT)( VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_T(1,CPC) pvS0 )
+{
+    return (FCN_VO(tgCO_F_SG_Dist_VT)( &psCP0->m_sAX, pvS0 ) <= psCP0->m_fRadius);
+}

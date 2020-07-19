@@ -1,0 +1,95 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Convex-Sphere.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_SP_Penetrate_CX) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  tgMH0: Mesh(Convex) primitive                                                                                                                                           */
+/* Input:  psSP0: Sphere primitive - contact points are generated on this primitive                                                                                                */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_SP_Penetrate_CX)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgSPHERE,CPC) psSP0, VEC_OBJ_T(TgSTRI,CPC) apsST, VEC_OBJ_T(TgBOXAA,CPC) apsBA, TgSINT_F32_C niTri )
+{
+    TgSINT_F32_C                        niContact = psPacket->m_niContact;
+    VEC_OBJ_T(STg2_CO_Packet)           sTriPacket;
+    VEC_OBJ_T(STg2_CO_Contact)          asContact[8];
+    TgSINT_F32                          iIdx;
+
+    TgPARAM_CHECK( nullptr != psPacket );
+    TgPARAM_CHECK( nullptr != psSP0 );
+    TgPARAM_CHECK( nullptr != apsST && nullptr != apsBA && 0 < niTri );
+
+    sTriPacket.m_psContact = asContact;
+    sTriPacket.m_fSweepTol = TYPE_K(0);
+    sTriPacket.m_fSnapTol = VAR_K(KTgEPS);
+    sTriPacket.m_niContact = 0;
+    sTriPacket.m_niMaxContact = 8;
+
+    for (iIdx = 0; iIdx < niTri; ++iIdx)
+    {
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+        TgSINT_F32                          iTriIndex;
+
+        /*if (!FCN_VO(tgCO_F_BA_Test_BX)( apsBA + iIdx, psBX0 )) */
+        /*{ */
+        /*    continue; */
+        /*}; */
+
+        if (FCN_VO(tgCO_F_ST_Penetrate_SP)(&sTriPacket, apsST + iIdx, psSP0) < 0)
+        {
+            continue;
+        };
+
+        for (iTriIndex = 0; iTriIndex < sTriPacket.m_niContact; ++iTriIndex)
+        {
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(asContact[iTriIndex].m_fDepth, &asContact[iTriIndex].m_vN0);
+
+            if (psPacket->m_niContact >= psPacket->m_niMaxContact)
+            {
+                return (KTgE_MAX_CONTACTS);
+            };
+
+            psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+            psContact->m_vS0 = FCN_V(tgMH_ADD)(&asContact[iTriIndex].m_vS0, &vK0);
+            psContact->m_vN0 = FCN_V(tgMH_NEG)(&asContact[iTriIndex].m_vN0);
+            psContact->m_fT0 = TYPE_K(0);
+            psContact->m_fDepth = asContact[iTriIndex].m_fDepth;
+
+            ++psPacket->m_niContact;
+        };
+    };
+
+    return (niContact != psPacket->m_niContact ? KTgS_OK : KTgE_NO_INTERSECT);
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,67 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Box AA-Point.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_BA_ClosestSq_VT) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgBA0: Box, Axis-Aligned primitive                                                                                                                                      */
+/* Input:  pvS0: Point                                                                                                                                                             */
+/* Output: vBA0: Point of closest proximity on the box, axis-aligned                                                                                                               */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_BA_ClosestSq_VT)( VEC_T(1,PC) pvBA0, VEC_OBJ_T(TgBOXAA,CPC) psBA0, VEC_T(1,CPC) pvS0 )
+{
+    VAR_T()                             fT0, fT1, fX, fY, fZ;
+    VAR_T()                             fDistSq = TYPE_K(0);
+
+    TgPARAM_CHECK(FCN_VO(tgGM_BA_Is_Valid)( psBA0 ));
+    TgPARAM_CHECK(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
+
+    fT0 = psBA0->m_vMin.x - pvS0->x;
+    fT1 = pvS0->x - psBA0->m_vMax.x;
+    fX = FCN_F(tgPM_FSEL)(fT0, psBA0->m_vMin.x, FCN_F(tgPM_FSEL)(fT1, psBA0->m_vMax.x, pvS0->x));
+    fDistSq += FCN_F(tgPM_FSEL)(fT0, fT0*fT0, FCN_F(tgPM_FSEL)(fT1, fT1*fT1, TYPE_K(0)));
+
+    fT0 = psBA0->m_vMin.y - pvS0->y;
+    fT1 = pvS0->y - psBA0->m_vMax.y;
+    fY = FCN_F(tgPM_FSEL)(fT0, psBA0->m_vMin.y, FCN_F(tgPM_FSEL)(fT1, psBA0->m_vMax.y, pvS0->y));
+    fDistSq += FCN_F(tgPM_FSEL)(fT0, fT0*fT0, FCN_F(tgPM_FSEL)(fT1, fT1*fT1, TYPE_K(0)));
+
+    fT0 = psBA0->m_vMin.z - pvS0->z;
+    fT1 = pvS0->z - psBA0->m_vMax.z;
+    fZ = FCN_F(tgPM_FSEL)(fT0, psBA0->m_vMin.z, FCN_F(tgPM_FSEL)(fT1, psBA0->m_vMax.z, pvS0->z));
+    fDistSq += FCN_F(tgPM_FSEL)(fT0, fT0*fT0, FCN_F(tgPM_FSEL)(fT1, fT1*fT1, TYPE_K(0)));
+
+    *pvBA0 = FCN_V(tgMH_SETP_S)(fX, fY, fZ);
+
+    return (FCN_F(tgPM_FSEL)(fDistSq, fDistSq, -VAR_K(KTgMAX)));
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

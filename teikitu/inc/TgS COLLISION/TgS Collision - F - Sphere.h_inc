@@ -1,0 +1,126 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Sphere.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+/* Sphere - Point                                                                                                                                                                  */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_DistSq_VT)( VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Dist_VT)( VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ClosestSq_VT)( VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Closest_VT)( VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_SP_Test_VT)( VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_VT_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_T(1,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_SP_Sweep_VT)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_VT_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_T(1,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Sphere - Line                                                                                                                                                                   */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_DistSq_LN)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Dist_LN)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ClosestSq_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Closest_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ParamSq_LN)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Param_LN)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_SP_Test_LN)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Intersect_LN)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_LN_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgLINE,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_LN_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgLINE,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Clip_Param_LN)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Clip_LN)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgLINE,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Intersect_LR00)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Param_LR00)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Penetrate_LR00)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_T(1,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VAR_T(C) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Sweep_LR00)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_T(1,CPC), VEC_T(1,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Sphere - Ray                                                                                                                                                                    */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_DistSq_RY)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Dist_RY)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ClosestSq_RY)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Closest_RY)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ParamSq_RY)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Param_RY)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_SP_Test_RY)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Intersect_RY)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RY_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgRAY,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_RY_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgRAY,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Clip_Param_RY)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Clip_RY)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgRAY,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Intersect_LR10)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Param_LR10)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Penetrate_LR10)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_T(1,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VAR_T(C) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Sweep_LR10)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_T(1,CPC), VEC_T(1,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Sphere - Segment                                                                                                                                                                */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_DistSq_SG)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Dist_SG)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ClosestSq_SG)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Closest_SG)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ParamSq_SG)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Param_SG)( VEC_T(1,PC), VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_SP_Test_SG)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Intersect_SG)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SG_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSEGMENT,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SG_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgSEGMENT,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Clip_Param_SG)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Clip_SG)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSEGMENT,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Intersect_LR11)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Param_LR11)( VAR_T(P) , VAR_T(P) , VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Penetrate_LR11)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_T(1,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VAR_T(C) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_SP_Sweep_LR11)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_T(1,CPC), VEC_T(1,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Sphere - Plane                                                                                                                                                                  */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_DistSq_PN)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Dist_PN)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ClosestSq_PN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Closest_PN)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_SP_Test_PN)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_SP_Penetrate_PN)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgPLANE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_PN_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgPLANE,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_PN_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgPLANE,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Sphere - Triangle                                                                                                                                                               */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_DistSq_ET)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgETRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Dist_ET)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgETRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ClosestSq_ET)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgETRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Closest_ET)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgETRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ParamSq_ET)( VEC_T(1,PC), VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgETRI,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Param_ET)( VEC_T(1,PC), VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgETRI,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_SP_Test_ET)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgETRI,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Penetrate_ST)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSTRI,CPC) );
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_ST_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ST_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_FI_ST_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+
+/* Sphere - Sphere                                                                                                                                                                 */
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_DistSq_SP)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_Dist_SP)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE VAR_T()                            FCN_VO(tgCO_F_SP_ClosestSq_SP)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_SP_Test_SP)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgINLINE TgBOOL                             FCN_VO(tgCO_F_SP_Test_Sweep_SP)( VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VAR_T(C) );
+
+TgEXTN VAR_T()                              FCN_VO(tgCO_F_SP_Closest_SP)( VEC_T(1,PC), VEC_T(1,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_SP_Penetrate_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSPHERE,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_SP_Sweep_SP)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgSPHERE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+/* Sphere - Utility                                                                                                                                                                */
+TgINLINE TgRESULT                           FCN_VO(tgCO_F_SP_Clip_Points)( VAR_T(P) , VAR_T(P) , VEC_OBJ_T(TgSPHERE,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_SP_Clip)( VEC_OBJ_T(STg2_CO_Clip_List,PC), VEC_OBJ_T(TgSPHERE,CPC) );

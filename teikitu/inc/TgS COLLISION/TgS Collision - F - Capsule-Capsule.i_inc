@@ -1,0 +1,118 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Capsule-Capsule.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_CP_DistSq_CP) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CP_DistSq_CP)( VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgTUBE,CPC) psCP1 )
+{
+    VAR_T()                             fCP0_Rad = psCP0->m_fRadius;
+    VAR_T()                             fCP1_Rad = psCP1->m_fRadius;
+
+    VAR_T()                             fDist = FCN_VO(tgCO_F_SG_Dist_SG)( &psCP0->m_sAX, &psCP1->m_sAX ) - (fCP0_Rad + fCP1_Rad);
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_Dist_CP) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CP_Dist_CP)( VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgTUBE,CPC) psCP1 )
+{
+    VAR_T()                             fCP0_Rad = psCP0->m_fRadius;
+    VAR_T()                             fCP1_Rad = psCP1->m_fRadius;
+
+    VAR_T()                             fDist = FCN_VO(tgCO_F_SG_Dist_SG)( &psCP0->m_sAX, &psCP1->m_sAX ) - (fCP0_Rad + fCP1_Rad);
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_ClosestSq_CP) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CP_ClosestSq_CP)( VEC_T(1,PC) pvCP0, VEC_T(1,PC) pvCP1, VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgTUBE,CPC) psCP1 )
+{
+    VAR_T()                             fDist = FCN_VO(tgCO_F_CP_Closest_CP)( pvCP0, pvCP1, psCP0, psCP1 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist*fDist, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_Closest_CP) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CP_Closest_CP)( VEC_T(1,PC) pvCP0, VEC_T(1,PC) pvCP1, VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgTUBE,CPC) psCP1 )
+{
+    VEC_T(1)                            vCP0, vCP1;
+
+    VAR_T()                             fCP0_Rad = psCP0->m_fRadius;
+    VAR_T()                             fCP1_Rad = psCP1->m_fRadius;
+    VAR_T()                             fRadSum = fCP0_Rad + fCP1_Rad;
+    VAR_T()                             fTest = FCN_VO(tgCO_F_SG_Closest_SG)( &vCP0, &vCP1, &psCP0->m_sAX, &psCP1->m_sAX );
+    VAR_T()                             fDist = FCN_F(tgPM_FSEL)( fTest - fRadSum, fTest, -TYPE_K(1) );
+    VEC_T(1,C)                          vNormal = FCN_V(tgMH_SUB)( &vCP1, &vCP0 );
+    VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fCP0_Rad / fDist, &vNormal );
+    VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fCP1_Rad / fDist, &vNormal );
+
+    *pvCP0 = FCN_V(tgMH_ADD)( &vCP0, &vK0 );
+    *pvCP1 = FCN_V(tgMH_SUB)( &vCP1, &vK1 );
+
+    return (FCN_F(tgPM_FSEL)( fDist, fDist - fRadSum, -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_Test_CP) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_VO(tgCO_F_CP_Test_CP)( VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgTUBE,CPC) psCP1 )
+{
+    VAR_T()                             fCP0_Rad = psCP0->m_fRadius;
+    VAR_T()                             fCP1_Rad = psCP1->m_fRadius;
+    VAR_T()                             fTest = FCN_VO(tgCO_F_SG_Dist_SG)( &psCP0->m_sAX, &psCP1->m_sAX );
+
+    return (fTest <= (fCP0_Rad + fCP1_Rad));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CP_Penetrate_CP) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT FCN_VO(tgCO_F_CP_Penetrate_CP)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgTUBE,CPC) psCP1 )
+{
+    TgPARAM_CHECK( FCN_VO(tgGM_TB_Is_Valid)( psCP0 ) && FCN_VO(tgGM_TB_Is_Valid)( psCP1 ) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        VEC_T(1,C)                          vNxN = FCN_V(tgMH_UCX)( &psCP0->m_vU_HAX, &psCP1->m_vU_HAX );
+
+        if (FCN_V(tgMH_LSQ)(&vNxN) <= VAR_K(KTgEPS))
+        {
+            /* Since the capsules are near parallel, contact points will be created at the extreme points of the overlap space of both of the primary axes. */
+
+            VAR_T()                             fX1_O0 = FCN_V(tgMH_DOT)( &psCP1->m_vU_HAX, &psCP0->m_vOrigin );
+            VAR_T()                             fX1_O1 = FCN_V(tgMH_DOT)( &psCP1->m_vU_HAX, &psCP1->m_vOrigin );
+            VAR_T()                             fCP0_Ext = psCP0->m_fExtent;
+            VAR_T()                             fCP1_Ext = psCP1->m_fExtent;
+
+            if (FCN_F(tgPM_ABS)( fX1_O1 - fX1_O0 ) < fCP0_Ext + fCP1_Ext)
+            {
+                return (FCN_VO(tgCO_FI_Penetrate_Parallel)( psPacket, psCP0, psCP1, fX1_O0, fX1_O1 ));
+            };
+
+            /* Axes did not overlap - use the standard non-parallel algorit */
+        };
+
+        return (FCN_VO(tgCO_FI_Penetrate_NonParallel)( psPacket, psCP0, psCP1, &vNxN ));
+    };
+}

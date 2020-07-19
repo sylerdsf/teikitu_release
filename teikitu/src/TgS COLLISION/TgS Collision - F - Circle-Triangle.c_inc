@@ -1,0 +1,121 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Circle-Triangle.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_ST_Penetrate_CI) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  psST0: Space Triangle.                                                                                                                                                  */
+/* Input:  psCI0: Circle - this is the primitive upon which the points of contact are generated.                                                                                   */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result code.                                                                                                                                                            */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_ST_Penetrate_CI)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgSTRI,CPC) psST0, VEC_OBJ_T(TgCIRCLE,CPC) psCI0 )
+{
+    TgERROR( FCN_VO(tgGM_ST_Is_Valid)(psST0) && FCN_VO(tgGM_CI_Is_Valid)(psCI0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        /* Find the line of intersection between the two planes (defined by the circle and the triangle) */
+
+        VAR_T(C)                            fN1_N2 = FCN_V(tgMH_DOT)(&psCI0->m_vNormal, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+        VAR_T(C)                            fA = TYPE_K(1) - fN1_N2*fN1_N2;
+
+        if (fA <= VAR_K(KTgROOT_EPS))
+        {
+            return (KTgE_NO_INTERSECT); /* Make sure the two planes are not co-planar. */
+        }
+        else
+        {
+            VAR_T(C)                            fInvA = TYPE_K(1) / fA;
+            VAR_T(C)                            fCID = FCN_V(tgMH_DOT)(&psCI0->m_vNormal, &psCI0->m_vOrigin);
+            VAR_T(C)                            fSTD = FCN_V(tgMH_DOT)(&psST0->m_sCT.m_sET.m_sPT.m_vNormal,
+                                                                      psST0->m_sCT.m_sET.m_sPT.m_avPoint);
+            VAR_T(C)                            fL0 = (fCID - fSTD*fN1_N2) * fInvA;
+            VAR_T(C)                            fL1 = (fSTD - fCID*fN1_N2) * fInvA;
+
+            VEC_T(1,C)                          vD0 = FCN_V(tgMH_UCX)(&psCI0->m_vNormal, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)(fL0, &psCI0->m_vNormal);
+            VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)(fL1, &psST0->m_sCT.m_sET.m_sPT.m_vNormal);
+            VEC_T(1,C)                          vS0 = FCN_V(tgMH_ADD)(&vK0, &vK1);
+
+            VAR_T()                             fT0, fT1, fT2;
+            TgRESULT                            iResult;
+
+            /* F_Clip the common line of intersection to the interior of the triangle */
+            if (TgFAILED( iResult = FCN_VO(tgCO_FI_ST_Clip_Param_LR00)(&fT0, &fT1, psST0, &vS0, &vD0) ))
+            {
+                return (iResult);
+            }
+            else
+            {
+                VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)(fT0, &vD0);
+                VEC_T(1,C)                          vK3 = FCN_V(tgMH_MUL_SV)(fT1, &vD0);
+                VEC_T(1,C)                          vK4 = FCN_V(tgMH_ADD)(&vS0, &vK2);
+                VEC_T(1,C)                          vK5 = FCN_V(tgMH_ADD)(&vS0, &vK3);
+
+                VAR_T(C)                            fDistSq = FCN_VO(tgCO_F_LR11_ParamSq_VT)(&fT2, &vK4, &vK5, &psCI0->m_vOrigin);
+
+                if (fDistSq > psCI0->m_fRadiusSq)
+                {
+                    return (KTgE_NO_INTERSECT);
+                }
+                else
+                {
+                    VAR_T()                             fK0;
+                    VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+                    VEC_T(1,C)                          vK6 = FCN_V(tgMH_MUL_SV)(fT0 + fT2*fT1 + fT2*fT0, &vD0);
+                    VEC_T(1,C)                          vK7 = FCN_V(tgMH_ADD)(&vS0, &vK6);
+                    VEC_T(1,C)                          vK8 = FCN_V(tgMH_SUB)(&psCI0->m_vOrigin, &vK7);
+                    VEC_T(1,C)                          vK9 = FCN_V(tgMH_NORM_LEN)(&fK0, &vK8);
+                    VEC_T(1,C)                          vKA = FCN_V(tgMH_MUL_SV)(psCI0->m_fRadius, &vK9);
+
+                    psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+                    psContact->m_vN0 = vK9;
+                    psContact->m_fT0 = TYPE_K(0);
+                    psContact->m_fDepth = psCI0->m_fRadius - fK0;
+                    psContact->m_vS0 = FCN_V(tgMH_SUB)(&psCI0->m_vOrigin, &vKA);
+
+                    ++psPacket->m_niContact;
+
+                    return (KTgS_OK);
+                };
+            };
+        };
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

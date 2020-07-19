@@ -1,0 +1,74 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Circle-Circle.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_CI_DistSq_CI) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CI_DistSq_CI)( VEC_OBJ_T(TgCIRCLE,CPC) psCI0, VEC_OBJ_T(TgCIRCLE,CPC) psCI1 )
+{
+    VAR_T()                             fTB;
+
+    return (FCN_VO(tgCO_F_CI_ParamSq_CI)( &fTB, psCI0, psCI1 ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CI_Dist_CI) ------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CI_Dist_CI)( VEC_OBJ_T(TgCIRCLE,CPC) psCI0, VEC_OBJ_T(TgCIRCLE,CPC) psCI1 )
+{
+    VAR_T()                             fTB;
+
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_CI_ParamSq_CI)( &fTB, psCI0, psCI1 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+}
+
+
+/* ---- FCN_VO(tgCO_F_CI_ClosestSq_CI) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CI_ClosestSq_CI)( VEC_T(1,PC) pvCI0, VEC_T(1,PC) pvCI1, VEC_OBJ_T(TgCIRCLE,CPC) psCI0, VEC_OBJ_T(TgCIRCLE,CPC) psCI1 )
+{
+    VAR_T()                             fTH, fCos, fSin;
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_CI_ParamSq_CI)( &fTH, psCI0, psCI1 );
+
+    FCN_F(tgPM_SINCOS)(&fCos, &fSin, fTH);
+
+    {
+        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL_SV)( fCos, &psCI1->m_vU );
+        VEC_T(1,C)                          vK1 = FCN_V(tgMH_MUL_SV)( fSin, &psCI1->m_vV );
+        VEC_T(1,C)                          vK3 = FCN_V(tgMH_ADD)( &vK0, &vK1 );
+        VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL_SV)( psCI1->m_fRadius, &vK3 );
+        VEC_T(1,C)                          vP1 = FCN_V(tgMH_ADD)( &psCI1->m_vOrigin, &vK2 );
+        VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( &vP1, &psCI0->m_vOrigin );
+        VAR_T()                             fDT_N = FCN_V(tgMH_DOT)( &vDS, &psCI0->m_vNormal );
+        VEC_T(1,C)                          vK4 = FCN_V(tgMH_MUL_SV)( fDT_N, &psCI0->m_vNormal );
+        VEC_T(1,C)                          vK5 = FCN_V(tgMH_SUB)( &vDS, &vK4 );
+        VEC_T(1,C)                          vRS = FCN_V(tgMH_NORM)( &vK5 );
+        VEC_T(1,C)                          vK6 = FCN_V(tgMH_MUL_SV)( psCI0->m_fRadius, &vRS );
+
+        *pvCI0 = FCN_V(tgMH_ADD)( &psCI0->m_vOrigin, &vK6 );
+        *pvCI1 = vP1;
+
+        return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX) ));
+    };
+}
+
+
+/* ---- FCN_VO(tgCO_F_CI_Closest_CI) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VAR_T() FCN_VO(tgCO_F_CI_Closest_CI)( VEC_T(1,PC) pvCI0, VEC_T(1,PC) pvCI1, VEC_OBJ_T(TgCIRCLE,CPC) psCI0, VEC_OBJ_T(TgCIRCLE,CPC) psCI1 )
+{
+    VAR_T()                             fDistSq = FCN_VO(tgCO_F_CI_ClosestSq_CI)( pvCI0, pvCI1, psCI0, psCI1 );
+
+    return (FCN_F(tgPM_FSEL)( fDistSq, FCN_F(tgPM_SQRT)( fDistSq ), -VAR_K(KTgMAX)));
+}

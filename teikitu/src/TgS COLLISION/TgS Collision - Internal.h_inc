@@ -1,0 +1,56 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - Internal.h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if defined(TGS_COLLISION_INTERNAL_HINC)
+    #error This file should be included by TGS_COLLISION_INTERNAL_H
+#endif
+
+#if defined(TEMPLATE__ENABLE_INTEGER)
+
+    #error Collision is assumed to be floating point
+
+#else
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #if !defined(TEMPLATE__TYPE_SIZE)
+            #define TEMPLATE__TYPE_SIZE 32
+            #include __FILE__
+            #undef TEMPLATE__TYPE_SIZE
+            #define TEMPLATE__TYPE_SIZE 64
+        #endif
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Private Functions                                                                                                                                                              */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_TB_Internal_Sweep_TB)( VEC_OBJ_T(STg2_CO_Packet,PC), VAR_T(P) , VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgTUBE,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+TgEXTN VEC_OBJ_T(STg2_CO_Result,P)          FCN_VO(tgCO_REQ_Next_Result)( VEC_OBJ_T(STg2_CO_Request,PC), VEC_T(1,CPC), VEC_T(1,CPC), VAR_T(C) );
+TgEXTN TgSINT_F32                           FCN_VO(tgCO_F_LN_Internal_Intersect_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_T(1,CPC), VEC_T(1,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgSINT_F32                           FCN_VO(tgCO_F_LN_Internal_Parallel_LN)( VEC_T(1,PC), VEC_T(1,PC), VEC_T(1,CPC), VEC_T(1,CPC), VEC_T(1,CPC), VEC_T(1,CPC) );
+TgEXTN TgSINT_F32                           FCN_VO(tgCO_F_Test_Seperating_Axis)( VEC_OBJ_T(STg2_CO_Axis_Test,PC) );
+TgEXTN TgRESULT                             FCN_VO(tgCO_F_ST_Axis_Seperation_ST)( VEC_OBJ_T(STg2_CO_Axis_Info,PC), VAR_T(C), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgSTRI,CPC), VEC_OBJ_T(TgDELTA,CPC) );
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

@@ -1,0 +1,66 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Triangle [Util].c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_PT_Is_Seperating_Axis_PT) ---------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPT0, tgPT1: Point Triangle primitives                                                                                                                                 */
+/* Input:  vAxis: Axis of Separation being tested                                                                                                                                  */
+/* Return: True of the two triangles are separated, false otherwise.                                                                                                               */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgBOOL FCN_VO(tgCO_F_PT_Is_Seperating_Axis_PT)(VEC_T(1,PC) pvAxis, VEC_OBJ_T(TgPTRI,CPC) psPT0, VEC_OBJ_T(TgPTRI,CPC) psPT1)
+{
+    VAR_T()                             fMin0, fMax0, fMin1, fMax1, fTMP;
+
+    TgERROR( FCN_V(tgMH_LSQ)(pvAxis) > VAR_K(KTgEPS) );
+
+    fMin0 = fMax0 = FCN_V(tgMH_DOT)(pvAxis, psPT0->m_avPoint + 0);
+    fMin1 = fMax1 = FCN_V(tgMH_DOT)(pvAxis, psPT1->m_avPoint + 0);
+
+    fTMP = FCN_V(tgMH_DOT)(pvAxis, psPT0->m_avPoint + 1);
+    fMin0 = FCN_F(tgPM_FSEL)(fMin0 - fTMP, fTMP, fMin0);
+    fMax0 = FCN_F(tgPM_FSEL)(fTMP - fMax0, fTMP, fMax0);
+
+    fTMP = FCN_V(tgMH_DOT)(pvAxis, psPT0->m_avPoint + 2);
+    fMin0 = FCN_F(tgPM_FSEL)(fMin0 - fTMP, fTMP, fMin0);
+    fMax0 = FCN_F(tgPM_FSEL)(fTMP - fMax0, fTMP, fMax0);
+
+    fTMP = FCN_V(tgMH_DOT)(pvAxis, psPT1->m_avPoint + 1);
+    fMin1 = FCN_F(tgPM_FSEL)(fMin1 - fTMP, fTMP, fMin1);
+    fMax1 = FCN_F(tgPM_FSEL)(fTMP - fMax1, fTMP, fMax1);
+
+    fTMP = FCN_V(tgMH_DOT)(pvAxis, psPT1->m_avPoint + 2);
+    fMin1 = FCN_F(tgPM_FSEL)(fMin1 - fTMP, fTMP, fMin1);
+    fMax1 = FCN_F(tgPM_FSEL)(fTMP - fMax1, fTMP, fMax1);
+
+    return ((fMin0 >= fMax1) || (fMin1 >= fMax0));
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

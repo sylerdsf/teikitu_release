@@ -1,0 +1,96 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Capsule-Point.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_VT_Penetrate_CP) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
+/* Input:  vS0: Point                                                                                                                                                              */
+/* Input:  psCP0: Capsule primitive - contact points are generated on this primitive                                                                                               */
+/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
+/* Return: Result Code                                                                                                                                                             */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_F_VT_Penetrate_CP)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_T(1,CPC) pvS0, VEC_OBJ_T(TgTUBE,CPC) psCP0)
+{
+    TgPARAM_CHECK( FCN_VO(tgGM_TB_Is_Valid)(psCP0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+
+    if (0 == psPacket->m_niMaxContact || psPacket->m_niContact >= psPacket->m_niMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    }
+    else
+    {
+        VEC_T(1)                            vK1, vCP0, vNormal;
+        VAR_T()                             fNM;
+        VEC_OBJ_T(STg2_CO_Contact,P)        psContact;;
+
+        VAR_T(C)                            fDistSq = FCN_VO(tgCO_F_SG_ClosestSq_VT)(&vCP0, &psCP0->m_sAX, pvS0);
+
+        if (fDistSq > psCP0->m_fRadiusSq)
+        {
+            return (KTgE_NO_INTERSECT);
+        };
+
+        if (fDistSq <= VAR_K(KTgEPS))
+        {
+            if (FCN_F(tgCM_NR0)(psCP0->m_vU_HAX.z))
+            {
+                vNormal = FCN_V(tgMH_SETV_S)(-psCP0->m_vU_HAX.y, psCP0->m_vU_HAX.x, TYPE_K(0));
+            }
+            else
+            {
+                vNormal = FCN_V(tgMH_SETV_S)(TYPE_K(0), psCP0->m_vU_HAX.z, -psCP0->m_vU_HAX.y);
+            };
+
+            vNormal = FCN_V(tgMH_NORM)(&vNormal);
+            fNM = TYPE_K(0);
+        }
+        else
+        {
+            VEC_T(1,C)                          vK0 = FCN_V(tgMH_SUB)(&vCP0, pvS0);
+
+            vNormal = FCN_V(tgMH_NORM_LEN)(&fNM, &vK0);
+        };
+
+        psContact = psPacket->m_psContact + psPacket->m_niContact;
+
+        vK1 = FCN_V(tgMH_MUL_SV)(psCP0->m_fRadius, &vNormal);
+        psContact->m_vS0 = FCN_V(tgMH_SUB)(&vCP0, &vK1);
+        psContact->m_vN0 = vNormal;
+        psContact->m_fT0 = TYPE_K(0);
+        psContact->m_fDepth = psCP0->m_fRadius - fNM;
+
+        ++psPacket->m_niContact;
+
+        return (KTgS_OK);
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

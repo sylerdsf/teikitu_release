@@ -1,0 +1,131 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision.i_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if defined(TGS_COLLISION_IINC)
+    #error This file should be include by TGS_COLLISION_H
+#endif
+
+#if defined(TEMPLATE__ENABLE_INTEGER)
+
+    #error Geometry is assumed to be floating point
+
+#else
+
+    #if !defined (ENABLE_RELOAD_GUARD)
+        #define ENABLE_RELOAD_GUARD
+        #if !defined(TEMPLATE__TYPE_SIZE)
+            #define TEMPLATE__TYPE_SIZE 32
+            #include __FILE__
+            #undef TEMPLATE__TYPE_SIZE
+            #define TEMPLATE__TYPE_SIZE 64
+        #endif
+        #undef ENABLE_RELOAD_GUARD
+    #endif
+
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Collision - Pair Functions                                                                                                                                                     */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+#include "TgS COLLISION/TgS Collision - F - System.i_inc"
+
+#include "TgS COLLISION/TgS Collision - F - Box AA-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box AA-Plane.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box AA-Box AA.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box AA-Sphere.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box AA-Triangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box [Util].i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box-Plane.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box-Triangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Box-Sphere.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule [Util].i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule-Plane.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule-Triangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule-Sphere.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Capsule-Capsule.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Circle-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Circle-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Circle-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Circle-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Circle-Circle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Cylinder-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Cylinder-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Cylinder-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Cylinder-Plane.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Disk-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Parallelogram-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Parallelogram-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Parallelogram-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Parallelogram-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Parallelogram-Parallelogram.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Parallelogram-Rectangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Parallelogram-Triangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Plane-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Plane-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Plane-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Plane-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Rectangle-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Rectangle-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Rectangle-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Rectangle-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Rectangle-Rectangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Rectangle-Triangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Sphere-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Sphere-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Sphere-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Sphere-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Sphere-Plane.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Sphere-Triangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Sphere-Sphere.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Triangle [Util].i_inc"
+#include "TgS COLLISION/TgS Collision - F - Triangle-Point.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Triangle-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Triangle-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Triangle-Segment.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Triangle-Triangle.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Tube-Line.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Tube-Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - F - Tube-Segment.i_inc"
+
+
+#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
+
+#include "TgS COLLISION/TgS Collision - N - Box AA-Box AA.i_inc"
+#include "TgS COLLISION/TgS Collision - N - Line.i_inc"
+#include "TgS COLLISION/TgS Collision - N - Ray.i_inc"
+#include "TgS COLLISION/TgS Collision - N - Segment.i_inc"
+
+/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
+#endif
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

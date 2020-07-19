@@ -1,0 +1,140 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Collision - F - Parallelogram-Point.c_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#if !defined (ENABLE_RELOAD_GUARD)
+    #define ENABLE_RELOAD_GUARD
+    #if !defined(TEMPLATE__TYPE_SIZE)
+        #define TEMPLATE__TYPE_SIZE 32
+        #include __FILE__
+        #undef TEMPLATE__TYPE_SIZE
+        #define TEMPLATE__TYPE_SIZE 64
+    #endif
+    #undef ENABLE_RELOAD_GUARD
+#endif
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
+
+
+/* == Collision ================================================================================================================================================================== */
+
+/* ---- FCN_VO(tgCO_F_PE_ParamSq_VT) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* Input:  psPE0: Parallelogram primitive                                                                                                                                          */
+/* Input:  pvS0: Point                                                                                                                                                             */
+/* Output: _tyPE0, _tyPE1: Parametric parameters to generate point of minimal distance on the parallelogram                                                                        */
+/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+VAR_T() FCN_VO(tgCO_F_PE_ParamSq_VT)(VAR_T(P) pfPE0, VAR_T(P) pfPE1, VEC_OBJ_T(TgPARALLELOGRAM,CPC) psPE0, VEC_T(1,CPC) pvS0)
+{
+    VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)(pvS0, &psPE0->m_vOrigin);
+    VAR_T(C)                            fDS_DS = FCN_V(tgMH_LSQ)(&vDS);
+    VAR_T(C)                            fE1_EN0 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 0, psPE0->m_avEdge + 1);
+    VAR_T(C)                            fE0_EN1 = FCN_V(tgMH_DOT)(psPE0->m_avEdgeNormal + 1, psPE0->m_avEdge + 0);
+
+    TgPARAM_CHECK( FCN_VO(tgGM_PE_Is_Valid)(psPE0) && FCN_V(tgMH_Is_Point_Valid)(pvS0) );
+
+    if (TgEXPECT_FALSE( fDS_DS <= VAR_K(KTgEPS) ))
+    {
+        /* Quick Out - the point is within tolerance of rectangle origin. */
+        *pfPE0 = TYPE_K(0);
+        *pfPE1 = TYPE_K(0);
+        return (TYPE_K(0));
+    };
+
+    if (TgEXPECT_FALSE( fE1_EN0 <= VAR_K(KTgEPS) || fE0_EN1 <= VAR_K(KTgEPS) ))
+    {
+        /* Degenerate parallelogram - One or both of the edges has a near-zero length */
+        return (-VAR_K(KTgMAX));
+    }
+    else
+    {
+        VAR_T(C)                            f00 = FCN_V(tgMH_DOT)(&vDS, psPE0->m_avEdgeNormal + 0);
+        VAR_T(C)                            f01 = FCN_V(tgMH_DOT)(&vDS, psPE0->m_avEdgeNormal + 1);
+        VAR_T(C)                            f02 = fE1_EN0 - f00;
+        VAR_T(C)                            f03 = fE0_EN1 - f01;
+
+        VAR_T(C)                            fDS_N = FCN_V(tgMH_DOT)(&vDS, &psPE0->m_vNormal);
+
+        VAR_T()                             fPE0 = VAR_K(KTgMAX), fPE1 = VAR_K(KTgMAX), fDistSq = VAR_K(KTgMAX);
+        VAR_T()                             fT0, fTest;
+
+        if (f00 >= TYPE_K(0) && f01 >= TYPE_K(0) && f02 >= TYPE_K(0) && f03 >= TYPE_K(0))
+        {
+            *pfPE0 = f01 / fE0_EN1;
+            *pfPE1 = f00 / fE1_EN0;
+
+            return (fDS_N*fDS_N);
+        };
+
+        if (f00 < VAR_K(KTgEPS))
+        {
+            fTest = FCN_VO(tgCO_F_LR11_ParamSq_VT)(&fT0, &psPE0->m_vOrigin, psPE0->m_avEdge + 0, pvS0);
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fPE0 = fT0;
+                fPE1 = TYPE_K(0);
+            };
+        };
+
+        if (f01 < VAR_K(KTgEPS))
+        {
+            fTest = FCN_VO(tgCO_F_LR11_ParamSq_VT)(&fT0, &psPE0->m_vOrigin, psPE0->m_avEdge + 1, pvS0);
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fPE0 = TYPE_K(0);
+                fPE1 = fT0;
+            };
+        };
+
+        if (f02 < VAR_K(KTgEPS))
+        {
+            VEC_T(1,C)                          vK0 = FCN_VO(tgGM_PE_Query_Point_2)(psPE0);
+
+            fTest = FCN_VO(tgCO_F_LR11_ParamSq_VT)(&fT0, &vK0, psPE0->m_avEdge + 0, pvS0);
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fPE0 = fT0;
+                fPE1 = TYPE_K(1);
+            };
+        };
+
+        if (f03 < VAR_K(KTgEPS))
+        {
+            VEC_T(1,C)                          vK0 = FCN_VO(tgGM_PE_Query_Point_1)(psPE0);
+
+            fTest = FCN_VO(tgCO_F_LR11_ParamSq_VT)(&fT0, &vK0, psPE0->m_avEdge + 1, pvS0);
+
+            if (fTest < fDistSq)
+            {
+                fDistSq = fTest;
+                fPE0 = TYPE_K(1);
+                fPE1 = fT0;
+            };
+        };
+
+        *pfPE0 = fPE0;
+        *pfPE1 = fPE1;
+
+        return (fDistSq);
+    };
+}
+
+
+/* =============================================================================================================================================================================== */
+
+#include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
