@@ -29,27 +29,21 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Project) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Is_Contained) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_TX) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Copy_TX) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Init_3D) );
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Init) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Copy) );
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Reference_Frame) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Origin) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axes_Unit_List) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_Index) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_0) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_1) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_2) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_3D) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_List) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_Index) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_0) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_1) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_2) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Origin) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit_0) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit_1) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit_2) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_List) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent) );
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_Index) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_0) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_1) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_2) );
@@ -87,27 +81,21 @@ TEST_METHOD_DEFINE( FCN_V(UNIT_TEST__TEST__GEOM_BX) )
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Is_Contained)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_TX)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Copy_TX)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Init_3D)());
+    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Init)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Copy)());
+    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Reference_Frame)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Origin)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axes_Unit_List)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_Index)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_0)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_1)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_2)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_3D)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_List)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_Index)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_0)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_1)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_2)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Origin)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit_0)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit_1)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit_2)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_List)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent)());
+    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_Index)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_0)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_1)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_2)());
@@ -127,10 +115,12 @@ TEST_METHOD_DEFINE( FCN_V(UNIT_TEST__TEST__GEOM_BX) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Calc_Point) )
 {
     VEC_OBJ_T(TgBOX)                    sBX0;
+    VEC_T(1)                            vOne;
 
+    vOne = FCN_V(tgMH_SET1)( TYPE_K(1) );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
 
-    FCN_VO(tgGM_BX_Calc_Point)( &sBX0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
+    FCN_VO(tgGM_BX_Calc_Point)( &sBX0, vOne, vOne, vOne );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -183,16 +173,16 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Support_Point) )
 {
     VEC_OBJ_T(TgBOX)                    sBX0;
     VEC_T(1)                            vV0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Init_3D)( &sBX0, &xM0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
+    FCN_VO(tgGM_BX_Init)( &sBX0, &xM0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
 
-    FCN_VO(tgGM_BX_Support_Point)( &sBX0, &vV0 );
+    FCN_VO(tgGM_BX_Support_Point)( &sBX0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -246,10 +236,10 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Sweep_BA) )
     VEC_OBJ_T(TgBOXAA)                  sBA0;
     VEC_T(1)                            vV0;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Sweep_BA)( &sBA0, &sBX0, &vV0 );
+    FCN_VO(tgGM_BX_Sweep_BA)( &sBA0, &sBX0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -260,13 +250,12 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Sweep_BA) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Project) )
 {
     VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_T(1)                            vV0;
-    VAR_T()                             fVal;
+    VEC_T(1)                            vV0, vVal;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Project)( &fVal, &fVal, &sBX0, &vV0 );
+    FCN_VO(tgGM_BX_Project)( &vVal, &vVal, &sBX0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -279,9 +268,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Is_Contained) )
     VEC_OBJ_T(TgBOX)                    sBX0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Is_Contained)( &sBX0, &vS0 );
+    FCN_VO(tgGM_BX_Is_Contained)( &sBX0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -292,9 +281,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Is_Contained) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_TX) )
 {
     VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
     FCN_VO(tgGM_BX_TX)( &sBX0, &xM0 );
 
@@ -307,9 +296,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_TX) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Copy_TX) )
 {
     VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
     FCN_VO(tgGM_BX_Copy_TX)( &sBX0, &sBX0, &xM0 );
 
@@ -317,16 +306,16 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Copy_TX) )
 }
 
 
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Init_3D) ------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Init) --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Init_3D) )
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Init) )
 {
     VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Init_3D)( &sBX0, &xM0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
+    FCN_VO(tgGM_BX_Init)( &sBX0, &xM0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -345,6 +334,21 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Copy) )
 }
 
 
+/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Set_Reference_Frame) ------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Reference_Frame) )
+{
+    VEC_OBJ_T(TgBOX)                    sBX0;
+    VEC_T(3)                            xM0;
+
+    FCN_V(tgMH_CLI,3)( &xM0 );
+    FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
+    FCN_VO(tgGM_BX_Set_Reference_Frame)( &sBX0, &xM0 );
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
 /* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Set_Origin) --------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Origin) )
@@ -352,103 +356,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Origin) )
     VEC_OBJ_T(TgBOX)                    sBX0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Set_Origin)( &sBX0, &vS0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axes_Unit_List) ------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axes_Unit_List) )
-{
-    VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_04_3_T()                        xM0;
-
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Set_Axes_Unit_List)( &sBX0, &xM0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_Index) ------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_Index) )
-{
-    VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Set_Axis_Unit_Index)( &sBX0, 0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_0) ---------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_0) )
-{
-    VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Set_Axis_Unit_0)( &sBX0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_1) ---------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_1) )
-{
-    VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Set_Axis_Unit_1)( &sBX0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_2) ---------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Axis_Unit_2) )
-{
-    VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Set_Axis_Unit_2)( &sBX0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Set_3D) ------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_3D) )
-{
-    VEC_OBJ_T(TgBOX)                    sBX0;
-    VEC_04_3_T()                        xM0;
-
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Set_3D)( &sBX0, &xM0 );
+    FCN_VO(tgGM_BX_Set_Origin)( &sBX0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -460,17 +370,17 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Set_Extent_List) )
 {
     VEC_OBJ_T(TgBOX)                    sBX0;
     VEC_T(1)                            vV0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Init_3D)( &sBX0, &xM0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
+    FCN_VO(tgGM_BX_Init)( &sBX0, &xM0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    vV0 = FCN_V(tgMH_ABS)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
+    vV0 = FCN_V(tgMH_ABS)( vV0 );
 
-    FCN_VO(tgGM_BX_Set_Extent_List)( &sBX0, &vV0 );
+    FCN_VO(tgGM_BX_Set_Extent_List)( &sBX0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -541,19 +451,6 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Origin) )
 }
 
 
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit) ---------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit) )
-{
-    VEC_OBJ_T(TgBOX)                    sBX0;
-
-    FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Query_Axis_Unit)( &sBX0, 0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
 /* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit_0) -------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Axis_Unit_0) )
@@ -606,14 +503,14 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_List) )
 }
 
 
-/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent) ------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_Index) ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent) )
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_Index) )
 {
     VEC_OBJ_T(TgBOX)                    sBX0;
 
     FCN_V(UNIT_TEST__SETUP__BX)( &sBX0 );
-    FCN_VO(tgGM_BX_Query_Extent)( &sBX0, 0 );
+    FCN_VO(tgGM_BX_Query_Extent_Index)( &sBX0, 0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -666,9 +563,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_BX_Query_Extent_2) )
 
 static TgVOID FCN_V(UNIT_TEST__SETUP__BX)( VEC_OBJ_T(TgBOX,PCU) psBX )
 {
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
 
-    FCN_VO(tgGM_BX_Init_3D)( psBX, &xM0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
+    FCN_VO(tgGM_BX_Init)( psBX, &xM0, TYPE_K(1), TYPE_K(1), TYPE_K(1) );
 }

@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Base - Defines [Template] [Math].h_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -46,13 +46,13 @@
     #if defined(UTYPE_K)
         #error macro should not be defined
     #endif
-    #if defined(VEC_T)
+    #if defined(VEC_S_T)
+           #error macro should not be defined
+    #endif
+    #if defined(VEC_S_T_1)
         #error macro should not be defined
     #endif
-    #if defined(VEC_T_1)
-        #error macro should not be defined
-    #endif
-    #if defined(VEC_T_2)
+    #if defined(VEC_S_T_2)
         #error macro should not be defined
     #endif
     #if defined(VEC_K)
@@ -73,43 +73,25 @@
     #if defined(FCN_V_2)
         #error macro should not be defined
     #endif
-    #if defined(VEC_N_T)
+    #if defined(VEC_T)
         #error macro should not be defined
     #endif
-    #if defined(VEC_N_T_1)
+    #if defined(VEC_T_1)
         #error macro should not be defined
     #endif
-    #if defined(VEC_N_T_2)
+    #if defined(VEC_T_2)
         #error macro should not be defined
     #endif
-    #if defined(VEC_04_4_T)
+    #if defined(VEC_DEC_T)
         #error macro should not be defined
     #endif
-    #if defined(VEC_04_4_T_0)
+    #if defined(VEC_DEC_T_1)
         #error macro should not be defined
     #endif
-    #if defined(VEC_04_4_T_1)
+    #if defined(VEC_DEC_T_2)
         #error macro should not be defined
     #endif
-    #if defined(VEC_04_4_K)
-        #error macro should not be defined
-    #endif
-    #if defined(FCN_04_4_V)
-        #error macro should not be defined
-    #endif
-    #if defined(VEC_04_3_T)
-        #error macro should not be defined
-    #endif
-    #if defined(VEC_04_3_T_0)
-        #error macro should not be defined
-    #endif
-    #if defined(VEC_04_3_T_1)
-        #error macro should not be defined
-    #endif
-    #if defined(VEC_04_3_K)
-        #error macro should not be defined
-    #endif
-    #if defined(FCN_04_3_V)
+    #if defined(VEC_DEC_T_3)
         #error macro should not be defined
     #endif
     #if defined(VEC_OBJ_T)
@@ -121,19 +103,10 @@
     #if defined(VEC_OBJ_T_2)
         #error macro should not be defined
     #endif
+    #if defined(VEC_OBJ_T_3)
+        #error macro should not be defined
+    #endif
     #if defined(GENERATE__UNLOAD_TEMPLATE_MACROS)
-        #error macro should not be defined
-    #endif
-    #if defined(GENERATE__DECROATE_VEC__)
-        #error macro should not be defined
-    #endif
-    #if defined(GENERATE__DECROATE_VEC_)
-        #error macro should not be defined
-    #endif
-    #if defined(GENERATE__DECROATE_VEC_LZ)
-        #error macro should not be defined
-    #endif
-    #if defined(GENERATE__DECROATE_VEC)
         #error macro should not be defined
     #endif
     #if defined(GENERATE__TYPE_SIZE_TEXT)
@@ -146,6 +119,12 @@
         #error macro should not be defined
     #endif
     #if defined(GENERATE__VECTOR_DIM_BREAK_LZ)
+        #error macro should not be defined
+    #endif
+    #if defined(GENERATE__VEC_DESC)
+        #error macro should not be defined
+    #endif
+    #if defined(GENERATE__MAT_ASSIGN)
         #error macro should not be defined
     #endif
 
@@ -173,7 +152,7 @@
 
     @def TEMPLATE__OVERRIDE_INT_TYPE (Cleared, Optional) - specifies the integer type to use (instead of fast or exact) [e.g., MAX for INT_MAX]
     @def TEMPLATE__VECTOR_DIM (Cleared, Optional) - Specifies the vector dimension to be used for the chosen type for code generation
-    @def TEMPLATE__VECTOR_ROW (Cleared, Optional) - Specifies the number of vectors to be used for the chosen type for code generation
+    @def TEMPLATE__VECTOR_COL (Cleared, Optional) - Specifies the number of vectors to be used for the chosen type for code generation
 */
 
 
@@ -186,11 +165,6 @@
 
 #if !defined(GENERATE__UNLOAD_TEMPLATE_MACROS)
 
-    #define GENERATE__DECROATE_VEC__(A,B,C,D,E,F,G,H,I)       A##_##B##C##D##E##F##G##H##I
-    #define GENERATE__DECROATE_VEC_(A,B,C,D,E,F,G,H,I)        GENERATE__DECROATE_VEC__(A,B,C,D,E,F,G,H,I)
-    #define GENERATE__DECROATE_VEC_LZ(A,B,C,D,E,F,G,H,...)    GENERATE__DECROATE_VEC_(A,B,C,GENERATE__VECTOR_DIM_BREAK_LZ,D,E,F,G,H)
-    #define GENERATE__DECROATE_VEC(A,B,C,D,E,F,G,H,...)       GENERATE__DECROATE_VEC_(A,B,C,_,D,E,F,G,H)
-
     #define GENERATE__UNLOAD_TEMPLATE_MACROS
 
     #if defined(TEMPLATE__ENABLE_INTEGER)
@@ -200,7 +174,7 @@
             #define VAR_T_1(A)                      TgMACRO_CONCAT6( Tg, GENERATE__TYPE_SYMBOL, INT_, TEMPLATE__OVERRIDE_INT_TYPE, _, A )
             #define UVAR_T_0(A)                     TgMACRO_CONCAT4( Tg, U, INT_, TEMPLATE__OVERRIDE_INT_TYPE )
             #define UVAR_T_1(A)                     TgMACRO_CONCAT6( Tg, U, INT_, TEMPLATE__OVERRIDE_INT_TYPE, _, A )
-            #define TEMPLATE__TYPE_SIZE             TgCOMPILE__WORDSIZE
+            #define TEMPLATE__TYPE_SIZE             TgBUILD_HARDWARE__WORDSIZE
             #define UVAR_MASK                       TgMACRO_CONCAT4( KTgMASK_TRUE.m_var, GENERATE__TYPE_SYMBOL, INT_, TEMPLATE__OVERRIDE_INT_TYPE )
         #elif defined(TEMPLATE__ENABLE_INT_FAST)
             #define VAR_T_0(A)                      TgMACRO_CONCAT4( Tg, GENERATE__TYPE_SYMBOL, INT_F, GENERATE__TYPE_SIZE_TEXT )
@@ -257,6 +231,9 @@
         #define GENERATE__TYPE_SIZE_TEXT        TEMPLATE__TYPE_SIZE
         #define GENERATE__TYPE_SYMBOL           F
 
+        #define UVAR_T_0(A)                     TgMACRO_CONCAT4( Tg, U, INT_E, GENERATE__TYPE_SIZE_TEXT )
+        #define UVAR_T_1(A)                     TgMACRO_CONCAT6( Tg, U, INT_E, GENERATE__TYPE_SIZE_TEXT, _, A )
+
         #if TEMPLATE__TYPE_SIZE == 32
             #define FCN_C(A)                        A##f
             #define TYPE_K_1(A)                     A##.0F
@@ -287,76 +264,128 @@
         #define GENERATE__VECTOR_DIM_BREAK_LZ       _
     #endif
 
-    #define GENERATE__MAT_ASSIGN                TgMACRO_CONCAT3(MAT_0,TEMPLATE__VECTOR_ROW,_ASSIGN_EQN)
+    #define GENERATE__MAT_ASSIGN                TgMACRO_CONCAT3(MAT_0,TEMPLATE__VECTOR_COL,_ASSIGN_EQN)
+
+    #define GENERATE__VEC_DESC                  TgMACRO_CONCAT4( GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, GENERATE__VECTOR_DIM_BREAK_LZ, TEMPLATE__VECTOR_DIM )
 
     #define VAR_T(...)                          MULTI_MACRO(VAR_T, __VA_ARGS__)
     #define UVAR_T(...)                         MULTI_MACRO(UVAR_T, __VA_ARGS__)
-    #define VAR_K(A)                            TgMACRO_CONCAT4( A, _, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT )
     #define TYPE_K(...)                         MULTI_MACRO(TYPE_K, __VA_ARGS__)
+    #define VAR_K(A)                            TgMACRO_CONCAT4( A, _, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT )
     #define FCN_F(A)                            TgMACRO_CONCAT4( A, _, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT )
 
 
 
-    #define VAR_UN_M_MEMBER(A)                  TgMACRO_CONCAT7( A, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, GENERATE__VECTOR_DIM_BREAK_LZ, TEMPLATE__VECTOR_DIM, _, TEMPLATE__VECTOR_ROW )
-    #define VAR_UN_1_MEMBER(A)                  TgMACRO_CONCAT7( A, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, GENERATE__VECTOR_DIM_BREAK_LZ, TEMPLATE__VECTOR_DIM, _, 1 )
-    #define VAR_UN_2_MEMBER(A)                  TgMACRO_CONCAT7( A, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, GENERATE__VECTOR_DIM_BREAK_LZ, TEMPLATE__VECTOR_DIM, _, 2 )
-    #define VAR_UN_3_MEMBER(A)                  TgMACRO_CONCAT7( A, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, GENERATE__VECTOR_DIM_BREAK_LZ, TEMPLATE__VECTOR_DIM, _, 3 )
-    #define VAR_UN_4_MEMBER(A)                  TgMACRO_CONCAT7( A, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, GENERATE__VECTOR_DIM_BREAK_LZ, TEMPLATE__VECTOR_DIM, _, 4 )
+    #define VEC_UN_M_MEMBER(A)                  TgMACRO_CONCAT4( A.m_m, GENERATE__VEC_DESC, _, TEMPLATE__VECTOR_COL )
+    #define VEC_UN_1_MEMBER(A)                  TgMACRO_CONCAT3( A.m_v, GENERATE__VEC_DESC, _1 )
+    #define VEC_UN_2_MEMBER(A)                  TgMACRO_CONCAT3( A.m_m, GENERATE__VEC_DESC, _2 )
+    #define VEC_UN_3_MEMBER(A)                  TgMACRO_CONCAT3( A.m_m, GENERATE__VEC_DESC, _3 )
+    #define VEC_UN_4_MEMBER(A)                  TgMACRO_CONCAT3( A.m_m, GENERATE__VEC_DESC, _4 )
 
-    #define VEC_T(...)                          MULTI_MACRO(VEC_T, __VA_ARGS__)
-    #define VEC_T_1(ROW)                        VEC_OBJ_T_2(TgVEC,ROW)
-    #define VEC_T_2(ROW,MOD)                    VEC_OBJ_T_3(TgVEC,ROW,MOD)
+    #define VEC_S_UN_M_MEMBER(A)                TgMACRO_CONCAT4( A.m_mS_, GENERATE__VEC_DESC, _, TEMPLATE__VECTOR_COL )
+    #define VEC_S_UN_1_MEMBER(A)                TgMACRO_CONCAT3( A.m_vS_, GENERATE__VEC_DESC, _1 )
+    #define VEC_S_UN_2_MEMBER(A)                TgMACRO_CONCAT3( A.m_mS_, GENERATE__VEC_DESC, _2 )
+    #define VEC_S_UN_3_MEMBER(A)                TgMACRO_CONCAT3( A.m_mS_, GENERATE__VEC_DESC, _3 )
+    #define VEC_S_UN_4_MEMBER(A)                TgMACRO_CONCAT3( A.m_mS_, GENERATE__VEC_DESC, _4 )
 
-    #define VEC_K(...)                          MULTI_MACRO(VEC_K, __VA_ARGS__)
-    #define VEC_K_1(K)                          VEC_OBJ_T_2(K,1)
-    #define VEC_K_2(K,ROW)                      VEC_OBJ_T_2(K,ROW)
+    #define VEC_UN_PTR_M_MEMBER(A)              TgMACRO_CONCAT4( A.m_pm, GENERATE__VEC_DESC, _, TEMPLATE__VECTOR_COL )
+    #define VEC_UN_PTR_1_MEMBER(A)              TgMACRO_CONCAT3( A.m_pv, GENERATE__VEC_DESC, _1 )
+    #define VEC_UN_PTR_2_MEMBER(A)              TgMACRO_CONCAT3( A.m_pm, GENERATE__VEC_DESC, _2 )
+    #define VEC_UN_PTR_3_MEMBER(A)              TgMACRO_CONCAT3( A.m_pm, GENERATE__VEC_DESC, _3 )
+    #define VEC_UN_PTR_4_MEMBER(A)              TgMACRO_CONCAT3( A.m_pm, GENERATE__VEC_DESC, _4 )
 
-    #define FCN_V(...)                          MULTI_MACRO(FCN_V, __VA_ARGS__)
-    #define FCN_V_1(F)                          GENERATE__DECROATE_VEC_LZ( F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM, _, 1,,, )
-    #define FCN_V_2(F, ROW)                     GENERATE__DECROATE_VEC_LZ( F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM, _, ROW ,,,)
+    #define VEC_S_UN_PTR_M_MEMBER(A)            TgMACRO_CONCAT4( A.m_pmS_, GENERATE__VEC_DESC, _, TEMPLATE__VECTOR_COL )
+    #define VEC_S_UN_PTR_1_MEMBER(A)            TgMACRO_CONCAT3( A.m_pvS_, GENERATE__VEC_DESC, _1 )
+    #define VEC_S_UN_PTR_2_MEMBER(A)            TgMACRO_CONCAT3( A.m_pmS_, GENERATE__VEC_DESC, _2 )
+    #define VEC_S_UN_PTR_3_MEMBER(A)            TgMACRO_CONCAT3( A.m_pmS_, GENERATE__VEC_DESC, _3 )
+    #define VEC_S_UN_PTR_4_MEMBER(A)            TgMACRO_CONCAT3( A.m_pmS_, GENERATE__VEC_DESC, _4 )
 
 
 
-    #define VEC_OBJ_T(...)                      MULTI_MACRO(VEC_OBJ_T, __VA_ARGS__)
-    #define VEC_OBJ_T_1(T)                      GENERATE__DECROATE_VEC_LZ( T, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM,,,,, )
-    #define VEC_OBJ_T_2(T,ROW)                  GENERATE__DECROATE_VEC_LZ( T, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM,_,ROW,,, )
-    #define VEC_OBJ_T_3(T,ROW,MOD)              GENERATE__DECROATE_VEC_LZ( T, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM,_,ROW,_,MOD, )
-
-    #define FCN_VO(...)                         MULTI_MACRO(FCN_VO, __VA_ARGS__)
-    #define FCN_VO_1(F)                         GENERATE__DECROATE_VEC_LZ( F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM,,,,, )
+    #define VEC_DEC_T(...)                      MULTI_MACRO(VEC_DEC_T, __VA_ARGS__)
+    #define VEC_DEC_T_1(T)                      TgMACRO_CONCAT3( T, _, GENERATE__VEC_DESC )
+    #define VEC_DEC_T_2(T,COL)                  TgMACRO_CONCAT5( T, _, GENERATE__VEC_DESC,_,COL )
+    #define VEC_DEC_T_3(T,COL,MOD)              TgMACRO_CONCAT7( T, _, GENERATE__VEC_DESC,_,COL,_,MOD )
 
 
 
     #define VEC_IS_NATIVE                       ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
-    #define VEC_N_T(...)                        MULTI_MACRO(VEC_N_T, __VA_ARGS__)
-    #define VEC_N_T_1(ROW)                      VEC_OBJ_T_2(TgVEC_N,ROW)
-    #define VEC_N_T_2(ROW,MOD)                  VEC_OBJ_T_3(TgVEC_N,ROW,MOD)
+    #define VEC_T(...)                          MULTI_MACRO(VEC_T, __VA_ARGS__)
+    #define VEC_T_1(COL)                        VEC_DEC_T_2(TgVEC,COL)
+    #define VEC_T_2(COL,MOD)                    VEC_DEC_T_3(TgVEC,COL,MOD)
+
+    #define VEC_K(...)                          MULTI_MACRO(VEC_K, __VA_ARGS__)
+    #define VEC_K_1(K)                          VEC_DEC_T_2(K,1)
+    #define VEC_K_2(K,COL)                      VEC_DEC_T_2(K,COL)
+
+    #define FCN_V(...)                          MULTI_MACRO(FCN_V, __VA_ARGS__)
+    #define FCN_V_1(F)                          TgMACRO_CONCAT5( F, _, GENERATE__VEC_DESC, _, 1 )
+    #define FCN_V_2(F, COL)                     TgMACRO_CONCAT5( F, _, GENERATE__VEC_DESC, _, COL )
 
 
 
-    #define VEC_04_3_T(...)                     MULTI_MACRO(VEC_04_3_T, __VA_ARGS__)
-    #define VEC_04_3_T_0()                      GENERATE__DECROATE_VEC( TgVEC, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, 04,_,3,,, )
-    #define VEC_04_3_T_1(MOD)                   GENERATE__DECROATE_VEC( TgVEC, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, 04,_,3,_,MOD, )
-    #define VEC_04_3_K(K)                       GENERATE__DECROATE_VEC( K, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, 04,_,3,,, )
-    #define FCN_04_3_V(F)                       GENERATE__DECROATE_VEC( F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, 04,_,3,,, )
+    #define VEC_S_T(...)                        MULTI_MACRO(VEC_S_T, __VA_ARGS__)
+    #define VEC_S_T_1(COL)                      VEC_DEC_T_2(TgVEC_S,COL)
+    #define VEC_S_T_2(COL,MOD)                  VEC_DEC_T_3(TgVEC_S,COL,MOD)
 
-    #define VEC_04_4_T(...)                     MULTI_MACRO(VEC_04_4_T, __VA_ARGS__)
-    #define VEC_04_4_T_0()                      GENERATE__DECROATE_VEC( TgVEC, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, 04,_,4,,, )
-    #define VEC_04_4_T_1(MOD)                   GENERATE__DECROATE_VEC( TgVEC, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, 04,_,4,_,MOD, )
-    #define VEC_04_4_K(K)                       GENERATE__DECROATE_VEC( K, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, 04,_,4,,, )
-    #define FCN_04_4_V(F)                       GENERATE__DECROATE_VEC( F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, 04,_,4,,, )
+    #define VEC_UN_T(...)                       MULTI_MACRO(VEC_UN_T, __VA_ARGS__)
+    #define VEC_UN_T_1(COL)                     VEC_DEC_T_2(TgVEC_UN,COL)
+    #define VEC_UN_T_2(COL,MOD)                 VEC_DEC_T_3(TgVEC_UN,COL,MOD)
+
+    #define VEC_UN_PTR_T(...)                   MULTI_MACRO(VEC_UN_PTR_T, __VA_ARGS__)
+    #define VEC_UN_PTR_T_1(COL)                 VEC_DEC_T_2(TgVEC_UN_PTR,COL)
+    #define VEC_UN_PTR_T_2(COL,MOD)             VEC_DEC_T_3(TgVEC_UN_PTR,COL,MOD)
+
+    #define VEC_UN_CONST_PTR_T(...)             MULTI_MACRO(VEC_UN_CONST_PTR_T, __VA_ARGS__)
+    #define VEC_UN_CONST_PTR_T_1(COL)           VEC_DEC_T_2(TgVEC_UN_CONST_PTR,COL)
+    #define VEC_UN_CONST_PTR_T_2(COL,MOD)       VEC_DEC_T_3(TgVEC_UN_CONST_PTR,COL,MOD)
 
 
 
-    #define MAT_N_T(...)                        MULTI_MACRO(MAT_N_T, __VA_ARGS__)
-    #define MAT_N_T_0()                         VEC_OBJ_T_2(TgVEC_N,TEMPLATE__VECTOR_ROW)
-    #define MAT_N_T_1(MOD)                      VEC_OBJ_T_3(TgVEC_N,TEMPLATE__VECTOR_ROW,MOD)
+    #define VEC_OBJ_T(...)                      MULTI_MACRO(VEC_OBJ_T, __VA_ARGS__)
+    #define VEC_OBJ_T_1(T)                      TgMACRO_CONCAT3( T, _, GENERATE__VEC_DESC )
+    #define VEC_OBJ_T_2(T,MOD)                  TgMACRO_CONCAT5( T, _, GENERATE__VEC_DESC,_,MOD )
+
+    #define FCN_VO(...)                         MULTI_MACRO(FCN_VO, __VA_ARGS__)
+    #define FCN_VO_1(F)                         TgMACRO_CONCAT3( F, _, GENERATE__VEC_DESC )
+
+
 
     #define MAT_T(...)                          MULTI_MACRO(MAT_T, __VA_ARGS__)
-    #define MAT_T_0()                           VEC_OBJ_T_2(TgVEC,TEMPLATE__VECTOR_ROW)
-    #define MAT_T_1(MOD)                        VEC_OBJ_T_3(TgVEC,TEMPLATE__VECTOR_ROW,MOD)
+    #define MAT_T_0()                           VEC_DEC_T_2(TgVEC,TEMPLATE__VECTOR_COL)
+    #define MAT_T_1(MOD)                        VEC_DEC_T_3(TgVEC,TEMPLATE__VECTOR_COL,MOD)
 
-    #define FCN_M(A)                            FCN_V(A,TEMPLATE__VECTOR_ROW)
+    #define MAT_S_T(...)                        MULTI_MACRO(MAT_S_T, __VA_ARGS__)
+    #define MAT_S_T_0()                         VEC_DEC_T_2(TgVEC_S,TEMPLATE__VECTOR_COL)
+    #define MAT_S_T_1(MOD)                      VEC_DEC_T_3(TgVEC_S,TEMPLATE__VECTOR_COL,MOD)
+
+    #define MAT_UN_T(...)                       MULTI_MACRO(MAT_UN_T, __VA_ARGS__)
+    #define MAT_UN_T_0()                        VEC_DEC_T_2(TgVEC_UN,TEMPLATE__VECTOR_COL)
+    #define MAT_UN_T_1(MOD)                     VEC_DEC_T_3(TgVEC_UN,TEMPLATE__VECTOR_COL,MOD)
+
+    #define MAT_UN_PTR_T(...)                   MULTI_MACRO(MAT_UN_PTR_T, __VA_ARGS__)
+    #define MAT_UN_PTR_T_0()                    VEC_DEC_T_2(TgVEC_UN_PTR,TEMPLATE__VECTOR_COL)
+    #define MAT_UN_PTR_T_1(MOD)                 VEC_DEC_T_3(TgVEC_UN_PTR,TEMPLATE__VECTOR_COL,MOD)
+
+    #define MAT_UN_CONST_PTR_T(...)             MULTI_MACRO(MAT_UN_CONST_PTR_T, __VA_ARGS__)
+    #define MAT_UN_CONST_PTR_T_0()              VEC_DEC_T_2(TgVEC_UN_CONST_PTR,TEMPLATE__VECTOR_COL)
+    #define MAT_UN_CONST_PTR_T_1(MOD)           VEC_DEC_T_3(TgVEC_UN_CONST_PTR,TEMPLATE__VECTOR_COL,MOD)
+
+    #define FCN_M(A)                            FCN_V(A,TEMPLATE__VECTOR_COL)
+
+
+
+    #define FCNI_PRIM_0                         TgMACRO_CONCAT4( TEMPLATE__PRIM_0, TEMPLATE__PRIM_0_CAP_0, TEMPLATE__PRIM_0_CAP_1, _ )
+#if defined(TEMPLATE__PRIM_1)
+    #define FCNI_PRIM_1                         TgMACRO_CONCAT5( _, TEMPLATE__PRIM_1, TEMPLATE__PRIM_1_CAP_0, TEMPLATE__PRIM_1_CAP_1, _ )
+#else
+    #define FCNI_PRIM_1                         _
+#endif
+    #define FCNI_VO(...)                        MULTI_MACRO(FCNI_VO, __VA_ARGS__)
+    #define FCNI_VO_1(FCN_A)                    TgMACRO_CONCAT4( FCN_A, _, FCNI_PRIM_0, GENERATE__VEC_DESC )
+    #define FCNI_VO_2(FCN_A,FCN_B)              TgMACRO_CONCAT6( FCN_A, _, FCNI_PRIM_0, FCN_B, FCNI_PRIM_1, GENERATE__VEC_DESC )
+
+
 
 #else
 
@@ -388,9 +417,44 @@
     #undef UVAR_MASK                            /**< Unsigned maximum value (all bits set) matching the size of the generation type  */
 
 
+
+    /* Union Accessors*/
+
+    #undef VEC_UN_M_MEMBER
+    #undef VEC_UN_1_MEMBER
+    #undef VEC_UN_2_MEMBER
+    #undef VEC_UN_3_MEMBER
+    #undef VEC_UN_4_MEMBER
+
+    #undef VEC_S_UN_M_MEMBER
+    #undef VEC_S_UN_1_MEMBER
+    #undef VEC_S_UN_2_MEMBER
+    #undef VEC_S_UN_3_MEMBER
+    #undef VEC_S_UN_4_MEMBER
+
+    #undef VEC_UN_PTR_M_MEMBER
+    #undef VEC_UN_PTR_1_MEMBER
+    #undef VEC_UN_PTR_2_MEMBER
+    #undef VEC_UN_PTR_3_MEMBER
+    #undef VEC_UN_PTR_4_MEMBER
+
+    #undef VEC_S_UN_PTR_M_MEMBER
+    #undef VEC_S_UN_PTR_1_MEMBER
+    #undef VEC_S_UN_PTR_2_MEMBER
+    #undef VEC_S_UN_PTR_3_MEMBER
+    #undef VEC_S_UN_PTR_4_MEMBER
+
+
+
     /* Vector (single row) */
 
-    #undef VEC_T                                /**< Used to instantiate a scalar vector - must have one or two parameters */
+    #undef VEC_DEC_T                            /**< Used to instantiate types that use vectors - must have one or two parameters */
+    #undef VEC_DEC_T_1                          /**< First parameter - The object type */
+    #undef VEC_DEC_T_2                          /**< Second parameter - Number of columns (default is none) */
+    #undef VEC_DEC_T_3                          /**< Third parameter - Type Modifiers (default is none) */
+
+    #undef VEC_IS_NATIVE                        /**< Used to indicate if the current default vector type is native for the hardware */
+    #undef VEC_T                                /**< Used to instantiate a native vector - must have one or two parameters */
     #undef VEC_T_1                              /**< First parameter - Number of rows (vectors) */
     #undef VEC_T_2                              /**< Second parameter - Type Modifiers (default is none) */
 
@@ -402,65 +466,81 @@
     #undef FCN_V_1                              /**< First parameter - Name of the function */
     #undef FCN_V_2                              /**< Second parameter - Number of vector rows */
 
+    #undef VEC_S_T                              /**< Used to instantiate a scalar vector - must have one or two parameters */
+    #undef VEC_S_T_1                            /**< First parameter - Number of rows (vectors) */
+    #undef VEC_S_T_2                            /**< Second parameter - Type Modifiers (default is none) */
+
+    #undef VEC_UN_T                             /**< Used to instantiate a vector union - must have one or two parameters */
+    #undef VEC_UN_T_1                           /**< First parameter - Number of rows (vectors) */
+    #undef VEC_UN_T_2                           /**< Second parameter - Type Modifiers (default is none) */
+
+    #undef VEC_UN_PTR_T                         /**< Used to instantiate a vector union - must have one or two parameters */
+    #undef VEC_UN_PTR_T_0                       /**< First parameter - Number of rows (vectors) */
+    #undef VEC_UN_PTR_T_1                       /**< Second parameter - Type Modifiers (default is none) */
+
+    #undef VEC_UN_CONST_PTR_T                   /**< Used to instantiate a vector union - must have one or two parameters */
+    #undef VEC_UN_CONST_PTR_T_0                 /**< First parameter - Number of rows (vectors) */
+    #undef VEC_UN_CONST_PTR_T_1                 /**< Second parameter - Type Modifiers (default is none) */
+
+
 
     /* Generic Objects using Vectors */
 
     #undef VEC_OBJ_T                            /**< Used to instantiate types that use vectors - must have one or two parameters */
     #undef VEC_OBJ_T_1                          /**< First parameter - The object type */
-    #undef VEC_OBJ_T_2                          /**< Second parameter - Type Modifiers (default is none) */
+    #undef VEC_OBJ_T_2                          /**< Second parameter - Number of columns (default is none) */
+    #undef VEC_OBJ_T_3                          /**< Third parameter - Type Modifiers (default is none) */
 
     #undef FCN_VO                               /**< Function decorator for functions matching the generator type and vector dimension using the coding standard */
     #undef FCN_VO_1                             /**< First parameter - Name of the function */
 
 
-    /* Vector (native SIMD) */
-
-    #undef VEC_IS_NATIVE                        /**< Used to indicate if the current default vector type is native for the hardware */
-    #undef VEC_N_T                              /**< Used to instantiate a native vector - must have one or two parameters */
-    #undef VEC_N_T_1                            /**< First parameter - Number of rows (vectors) */
-    #undef VEC_N_T_2                            /**< Second parameter - Type Modifiers (default is none) */
-
-
-    /* Vector (multiple rows) aka Matrix*/
-
-    #undef VEC_04_4_T                           /**< Used to instantiate a 4x4 matrix of the generator type */
-    #undef VEC_04_4_T_0                         /**< Zero parameters - No modifiers */
-    #undef VEC_04_4_T_1                         /**< First parameter - Type Modifiers (default is none) */
-    #undef VEC_04_4_K                           /**< Used to reference an existing constant value who name matches the code standard */
-    #undef FCN_04_4_V                           /**< Function decorator for functions matching the generator type, vector dimension 4, and 4 rows using the coding standard */
-
-    #undef VEC_04_3_T                           /**< Used to instantiate a 3x4 matrix of the generator type */
-    #undef VEC_04_3_T_0                         /**< Zero parameters - No modifiers */
-    #undef VEC_04_3_T_1                         /**< First parameter - Type Modifiers (default is none) */
-    #undef VEC_04_3_K                           /**< Used to reference an existing constant value who name matches the code standard */
-    #undef FCN_04_3_V                           /**< Function decorator for functions matching the generator type, vector dimension 4, and 3 rows using the coding standard */
-
 
     /* Matrices (multi-row vectors) */
 
+    #undef MAT_T                                /**< Used to instantiate a native matrix - must have one or two parameters */
+    #undef MAT_T_0                              /**< No parameter - Default number of rows for the generator used */
+    #undef MAT_T_1                              /**< First parameter - Type modifiers */
+
+    #undef MAT_S_T                              /**< Used to instantiate a scalar matrix - must have one or two parameters */
+    #undef MAT_S_T_0                            /**< No parameter - Default number of rows for the generator used */
+    #undef MAT_S_T_1                            /**< First parameter - Type modifiers */
+
+    #undef MAT_UN_T                             /**< Used to instantiate a matrix union - must have one or two parameters */
+    #undef MAT_UN_T_0                           /**< No parameter - Default number of rows for the generator used */
+    #undef MAT_UN_T_1                           /**< First parameter - Type modifiers */
+
+    #undef MAT_UN_PTR_T                         /**< Used to instantiate a matrix union - must have one or two parameters */
+    #undef MAT_UN_PTR_T_0                       /**< No parameter - Default number of rows for the generator used */
+    #undef MAT_UN_PTR_T_1                       /**< First parameter - Type modifiers */
+
+    #undef MAT_UN_CONST_PTR_T                   /**< Used to instantiate a matrix union - must have one or two parameters */
+    #undef MAT_UN_CONST_PTR_T_0                 /**< No parameter - Default number of rows for the generator used */
+    #undef MAT_UN_CONST_PTR_T_1                 /**< First parameter - Type modifiers */
+
     #undef FCN_M
 
-    #undef MAT_T_1
-    #undef MAT_T_0
-    #undef MAT_T
 
-    #undef MAT_N_T_1
-    #undef MAT_N_T_0
-    #undef MAT_N_T
+
+    /* Linear function expanders */
+
+    #undef FCNI_PRIM_0
+    #undef FCNI_PRIM_1
+    #undef FCNI_VO
+    #undef FCNI_VO_1
+    #undef FCNI_VO_2
 
 
 
     /* Macros used in the process of creating the generation macros */
 
     #undef GENERATE__UNLOAD_TEMPLATE_MACROS
-    #undef GENERATE__DECROATE_VEC__
-    #undef GENERATE__DECROATE_VEC_
-    #undef GENERATE__DECROATE_VEC_LZ
-    #undef GENERATE__DECROATE_VEC
     #undef GENERATE__TYPE_SIZE_TEXT             /* number of bits in the generator type, with a leading zero attached for a minimum size of 2 characters */
     #undef GENERATE__TYPE_SYMBOL                /* coding standard symbol for the type - S for signed integer, U for unsigned integer, F for floating point */
     #undef GENERATE__VEC_ASSIGN_EQN
     #undef GENERATE__VECTOR_DIM_BREAK_LZ
+    #undef GENERATE__MAT_ASSIGN
+    #undef GENERATE__VEC_DESC
 
 
     /* MACROS defined in including file (inputs) */
@@ -469,7 +549,14 @@
         #undef TEMPLATE__TYPE_SIZE
         #undef TEMPLATE__OVERRIDE_INT_TYPE
         #undef TEMPLATE__VECTOR_DIM
-        #undef TEMPLATE__VECTOR_ROW
+        #undef TEMPLATE__VECTOR_COL
+
+        #undef TEMPLATE__PRIM_0_CAP_0
+        #undef TEMPLATE__PRIM_0_CAP_1
+        #undef TEMPLATE__PRIM_0
+        #undef TEMPLATE__PRIM_1_CAP_0
+        #undef TEMPLATE__PRIM_1_CAP_1
+        #undef TEMPLATE__PRIM_1
     #endif
 
 #endif

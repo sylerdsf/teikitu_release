@@ -53,16 +53,16 @@ TgINLINE TgFLOAT32 tgCM_RAND_F32( TgVOID )
     TgUINT_E32_C                            uiMantissa = tgCM_RAND_MT_U32(); /* 24 bits - 1 sign bit, and 23 bits for mantissa */
     TgUINT_E32_C                            uiExponent = tgCM_RAND_MT_U32(); /* 8 bits for the exponent */
 
-    TgSINT_F32_C                            iMantissa_Numerator = *(TgSINT_E32_CP)&uiMantissa;
+    TgSINT_F32_C    iMantissa_Numerator = *(TgSINT_E32_CP)&uiMantissa;
     TgFLOAT32_C                             fMantissa_Numerator = (TgFLOAT32)iMantissa_Numerator;
-    TgUINT_F32_C                            uiMantissa_Denominator = (TgUINT_F32)KTgMAX_S32 + 1;
+    TgUINT_F32_C    uiMantissa_Denominator = (TgUINT_F32)KTgMAX_S32 + 1;
     TgFLOAT32_C                             fMantissa_Denominator = (TgFLOAT32)uiMantissa_Denominator;
 
     TgFLOAT32_C                             fMantissa = fMantissa_Numerator / fMantissa_Denominator;
 
-    TgSINT_F32_C                            iExponent_Numerator = *(TgSINT_E32_CP)&uiExponent;
+    TgSINT_F32_C    iExponent_Numerator = *(TgSINT_E32_CP)&uiExponent;
     TgFLOAT32_C                             fExponent_Numerator = (TgFLOAT32)iExponent_Numerator;
-    TgUINT_F32_C                            uiExponent_Denominator = (KTgMAX_S32 >> 4) + 1;
+    TgUINT_F32_C    uiExponent_Denominator = (KTgMAX_S32 >> 4) + 1;
     TgFLOAT32_C                             fExponent_Denominator = (TgFLOAT32)uiExponent_Denominator;
 
     TgFLOAT32_C                             fExponent = fExponent_Numerator / fExponent_Denominator;

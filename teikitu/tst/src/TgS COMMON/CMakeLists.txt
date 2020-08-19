@@ -41,27 +41,27 @@ TGS_ADD_SOURCE_FILE( exe_source_files exe_header_files "-" "-" "Base"       "${P
 # MATH
 
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [API].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [S] [F] [34].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [S] [F] [44].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [S] [F].c_inc")
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [F] [34].c_inc")
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [F] [44].c_inc")
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [F].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [N] [F] [34].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [N] [F] [44].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [N] [F].c_inc")
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix] [N].c_inc")
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Matrix" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Matrix].c_inc")
 
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [API].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [FXX_04].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [S] [FXX_04].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [S] [F].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [S] [I].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [F32_04].c_inc")
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [F].c_inc")
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [I].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [N] [F32_04].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [N] [F].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [N] [I].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [N].c_inc")
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Vector" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Vector] [S].c_inc")
 
     TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Scalar" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Constants].c_inc")
-    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Scalar" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Scalar] [F].c_inc")
+    TGS_ADD_INCSRC_FILE( exe_source_files exe_header_files "-" "-" "Math/Tests/Scalar" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Test] - Math [Scalar] [S] [F].c_inc")
 
 TGS_ADD_SOURCE_FILE( exe_source_files exe_header_files "-" "-" "Math" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Case] - Math [Matrix].c")
 TGS_ADD_SOURCE_FILE( exe_source_files exe_header_files "-" "-" "Math" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS Common [Unit Test] [Case] - Math [Vector].c")
@@ -140,7 +140,7 @@ TGS_ADD_SOURCE_FILE( exe_source_files exe_header_files "-" "-" "Common" "${PROJE
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ #
 #library platform specific files
 
-TGS_ADD_SOURCE_FILE( exe_source_files exe_header_files "UWP" ${MK_PLATFORM_NAME} "~Unit Test" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS (UWP) Common [Unit Test].cpp" )
+TGS_ADD_SOURCE_FILE( exe_source_files exe_header_files "UWP" ${MK_BUILD__UNIVERSAL_NAME} "~Unit Test" "${PROJECT_SOURCE_DIR}/../tst/src/TgS COMMON/TgS (UWP) Common [Unit Test].cpp" )
 
 
 

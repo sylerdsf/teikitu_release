@@ -1,4 +1,4 @@
-
+# 015482FC-A4BD-4E1C-AE49-A30E5728D73A
 # ========================================================================================================================================================================================================
 #  Utility Functions
 # ========================================================================================================================================================================================================
@@ -36,10 +36,6 @@ MACRO(TGS_ADD_PRECOMPILED_HEADER target ext pch_file)
     IF (MK_COMPILER_FLAVOUR__MSVC_MSVC)
         TGS_ADD_COMPILER_FLAGS( ${target} " /Fp\"$(IntDir)$(TargetName)_${ext}.pch\" /Yc\"${pch_file}\" /FI\"${pch_file}\" ")
 
-    ELSEIF (MK_COMPILER__CLANG)
-        TGS_ADD_COMPILER_FLAGS(${target} " -x c-header ")
-        TGS_ADD_COMPILER_FLAGS(${target} " -include \"${pch_file}\" ")
-
     ENDIF ()
 ENDMACRO() 
 
@@ -51,9 +47,6 @@ MACRO(TGS_ADD_CXX_PRECOMPILED_HEADER target ext pch_file)
     IF (MK_COMPILER_FLAVOUR__MSVC_MSVC)
         TGS_ADD_COMPILER_FLAGS( ${target} " /Fp\"$(IntDir)$(TargetName)_${ext}.pch\" /Yc\"${pch_file}\" /FI\"${pch_file}\" ")
 
-    ELSEIF (MK_COMPILER__CLANG)
-        TGS_ADD_COMPILER_FLAGS(${target} " -x c++-header ")
-        TGS_ADD_COMPILER_FLAGS(${target} " -include \"${pch_file}\" ")
     ENDIF ()
 ENDMACRO() 
 
@@ -64,9 +57,6 @@ ENDMACRO()
 MACRO(TGS_USE_PRECOMPILED_HEADER target ext pch_file)
     IF (MK_COMPILER_FLAVOUR__MSVC_MSVC)
         TGS_ADD_COMPILER_FLAGS( ${target} " /Fp\"$(IntDir)$(TargetName)_${ext}.pch\" /Yu\"${pch_file}\" /FI\"${pch_file}\" ")
-
-    ELSEIF (MK_COMPILER__CLANG)
-        TGS_ADD_COMPILER_FLAGS(${target} " -include \"${pch_file}\" ")
 
     ENDIF ()
 ENDMACRO() 
@@ -142,45 +132,59 @@ ENDMACRO()
 ##########################################################################################################################################################################################################
 # add a source file to the given list
 MACRO(TGS_ADD_SOURCE_FILE source_files header_files test_assigned test_current ide_path file)
-    TGS_ADD_FILE_TO_IDE(${source_files} ${header_files} ${test_assigned} ${test_current} ${file} IDE_PATH ${ide_path})
-    IF ((${test_current} STREQUAL ${test_assigned}))
-        SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_EXPLICIT_FILE_TYPE sourcecode.c.c)
-        SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_LAST_KNOWN_FILE_TYPE sourcecode.c.c)
+    IF (EXISTS ${file})
+        TGS_ADD_FILE_TO_IDE(${source_files} ${header_files} ${test_assigned} ${test_current} ${file} IDE_PATH ${ide_path})
+        IF ((${test_current} STREQUAL ${test_assigned}))
+            SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_EXPLICIT_FILE_TYPE sourcecode.c.c)
+            SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_LAST_KNOWN_FILE_TYPE sourcecode.c.c)
+        ELSE ()
+            SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_EXPLICIT_FILE_TYPE sourcecode.c.h)
+            SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_LAST_KNOWN_FILE_TYPE sourcecode.c.h)
+        ENDIF ()
     ELSE ()
-        SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_EXPLICIT_FILE_TYPE sourcecode.c.h)
-        SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_LAST_KNOWN_FILE_TYPE sourcecode.c.h)
+        MESSAGE("FILE DOES NOT EXIST: " ${file})
     ENDIF ()
 ENDMACRO()
 
 ##########################################################################################################################################################################################################
 # add a source file to the given list
 MACRO(TGS_ADD_INCSRC_FILE source_files header_files test_assigned test_current ide_path file)
-    IF (MK_IDE__INCLUDE_NON_SOURCE_FILES)
-        TGS_ADD_FILE_TO_IDE(${header_files} ${header_files} ${test_assigned} ${test_current} ${file} IDE_PATH ${ide_path})
-        SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_EXPLICIT_FILE_TYPE sourcecode.c.h)
-        SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_LAST_KNOWN_FILE_TYPE sourcecode.c.h)
-        SET_PROPERTY(SOURCE ${file} PROPERTY  HEADER_FILE_ONLY TRUE)
-
+    IF(MK_IDE__INCLUDE_NON_SOURCE_FILES)
+        IF (EXISTS ${file})
+            TGS_ADD_FILE_TO_IDE(${header_files} ${header_files} ${test_assigned} ${test_current} ${file} IDE_PATH ${ide_path})
+            SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_EXPLICIT_FILE_TYPE sourcecode.c.h)
+            SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_LAST_KNOWN_FILE_TYPE sourcecode.c.h)
+            SET_PROPERTY(SOURCE ${file} PROPERTY  HEADER_FILE_ONLY TRUE)
+        ELSE ()
+            MESSAGE("FILE DOES NOT EXIST: " ${file})
+        ENDIF ()
     ENDIF ()
 ENDMACRO()
 
 ##########################################################################################################################################################################################################
 # add a source file to the given list
 MACRO(TGS_ADD_HEADER_FILE source_files header_files test_assigned test_current ide_path file)
-    IF (MK_IDE__INCLUDE_NON_SOURCE_FILES)
-        TGS_ADD_FILE_TO_IDE(${header_files} ${header_files} ${test_assigned} ${test_current} ${file} IDE_PATH ${ide_path})
-        SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_EXPLICIT_FILE_TYPE sourcecode.c.h)
-        SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_LAST_KNOWN_FILE_TYPE sourcecode.c.h)
-        SET_PROPERTY(SOURCE ${file} PROPERTY  HEADER_FILE_ONLY TRUE)
-
+    IF(MK_IDE__INCLUDE_NON_SOURCE_FILES)
+        IF (EXISTS ${file})
+            TGS_ADD_FILE_TO_IDE(${header_files} ${header_files} ${test_assigned} ${test_current} ${file} IDE_PATH ${ide_path})
+            SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_EXPLICIT_FILE_TYPE sourcecode.c.h)
+            SET_PROPERTY(SOURCE ${file} PROPERTY XCODE_LAST_KNOWN_FILE_TYPE sourcecode.c.h)
+            SET_PROPERTY(SOURCE ${file} PROPERTY  HEADER_FILE_ONLY TRUE)
+        ELSE ()
+            MESSAGE("FILE DOES NOT EXIST: " ${file})
+        ENDIF ()
     ENDIF ()
 ENDMACRO()
 
 ##########################################################################################################################################################################################################
 # add a source file to the given list
 MACRO(TGS_ADD_CMAKE_FILE source_files header_files test_assigned test_current ide_path file)
-    IF (MK_IDE__INCLUDE_NON_SOURCE_FILES)
-        TGS_ADD_FILE_TO_IDE(${header_files} ${header_files} ${test_assigned} ${test_current} ${file} IDE_PATH ${ide_path})
+    IF(MK_IDE__INCLUDE_NON_SOURCE_FILES)
+        IF (EXISTS ${file})
+            TGS_ADD_FILE_TO_IDE(${header_files} ${header_files} ${test_assigned} ${test_current} ${file} IDE_PATH ${ide_path})
+        ELSE ()
+            MESSAGE("FILE DOES NOT EXIST: " ${file})
+        ENDIF ()
     ENDIF ()
 ENDMACRO()
 
@@ -194,35 +198,49 @@ ENDMACRO()
 
 SET (MK_CMAKE_BUILD_VERSION                     1.0.0.0) # major[.minor[.patch[.tweak]]]
 
-SET (MK_IDE__UNIX_MAKEFILES                     0 )
-SET (MK_IDE__MSVC                               0 )
-SET (MK_IDE__XCODE                              0 )
+SET (MK_IDE__UNIX_MAKEFILES                     0)
+SET (MK_IDE__MSVC                               0)
+SET (MK_IDE__XCODE                              0)
 
 SET (MK_COMPILER__CLANG                         0)
 SET (MK_COMPILER__MSVC                          0)
 SET (MK_COMPILER__ICL                           0)
 SET (MK_COMPILER__GCC                           0)
 
-SET (MK_COMPILE_HW__X86_64                      1 )
-SET (MK_COMPILE_HW__X86_32                      0 CACHE BOOL "")
-SET (MK_COMPILE_HW__PPC                         0 CACHE BOOL "")
-SET (MK_COMPILE_HW__ARM                         0 CACHE BOOL "")
+SET (MK_COMPILE_CONFIGURATION__RELEASE          0)
+SET (MK_COMPILE_CONFIGURATION__FINAL            0)
+SET (MK_COMPILE_CONFIGURATION__TOOLS            0)
+SET (MK_COMPILE_CONFIGURATION__DEBUG            0)
 
-SET (MK_PLATFORM__POSIX                         1)
-SET (MK_PLATFORM__WIN                           0 CACHE BOOL "")
-SET (MK_PLATFORM__WIN_UWP                       0 CACHE BOOL "")
-SET (MK_PLATFORM__XB2                           0 CACHE BOOL "")
-SET (MK_PLATFORM__XB3                           0 CACHE BOOL "")
-SET (MK_PLATFORM__XB4                           0 CACHE BOOL "")
-SET (MK_PLATFORM__PS3                           0 CACHE BOOL "")
-SET (MK_PLATFORM__PS4                           0 CACHE BOOL "")
-SET (MK_PLATFORM__PS5                           0 CACHE BOOL "")
-SET (MK_PLATFORM__IPHONE                        0 CACHE BOOL "")
-SET (MK_PLATFORM__IPAD                          0 CACHE BOOL "")
-SET (MK_PLATFORM__APPLE_TV                      0 CACHE BOOL "")
-SET (MK_PLATFORM__IWATCH                        0 CACHE BOOL "")
-SET (MK_PLATFORM__MAC                           0 CACHE BOOL "")
-SET (MK_PLATFORM__LINUX                         0 CACHE BOOL "")
+SET (MK_COMPILE_HW__X86_64                      0 CACHE BOOL "")
+SET (MK_COMPILE_HW__X86_32                      0 CACHE BOOL "")
+SET (MK_COMPILE_HW__ARM_32                      0 CACHE BOOL "")
+SET (MK_COMPILE_HW__C11_32                      0 CACHE BOOL "")
+SET (MK_COMPILE_HW__ARM_64                      0 CACHE BOOL "")
+SET (MK_COMPILE_HW__PPC_64                      0 CACHE BOOL "")
+SET (MK_COMPILE_HW__C11_64                      1)
+
+SET (MK_BUILD__THREAD__POSIX                    1)
+SET (MK_BUILD__THREAD__DISPATCH                 0 CACHE BOOL "")
+SET (MK_BUILD__THREAD__WIN                      0 CACHE BOOL "")
+
+SET (MK_BUILD__UNIVERSAL__UWP                   0 CACHE BOOL "")
+SET (MK_BUILD__UNIVERSAL__APPLE                 1 CACHE BOOL "")
+
+SET (MK_BUILD__OS__WIN                          0 CACHE BOOL "")
+SET (MK_BUILD__OS__APPLE_MAC                    0 CACHE BOOL "")
+SET (MK_BUILD__OS__APPLE_IOS                    0 CACHE BOOL "")
+SET (MK_BUILD__OS__APPLE_TVOS                   0 CACHE BOOL "")
+SET (MK_BUILD__OS__APPLE_WATCHOS                0 CACHE BOOL "")
+
+SET (MK_BUILD__DEVICE__APPLE_IPHONE             0 CACHE BOOL "")
+SET (MK_BUILD__DEVICE__APPLE_IPAD               0 CACHE BOOL "")
+SET (MK_BUILD__DEVICE__XB2                      0 CACHE BOOL "")
+SET (MK_BUILD__DEVICE__XB3                      0 CACHE BOOL "")
+SET (MK_BUILD__DEVICE__XB4                      0 CACHE BOOL "")
+SET (MK_BUILD__DEVICE__PS3                      0 CACHE BOOL "")
+SET (MK_BUILD__DEVICE__PS4                      0 CACHE BOOL "")
+SET (MK_BUILD__DEVICE__PS5                      0 CACHE BOOL "")
 
 SET (MK_COMPILE_PLATFORM_TEXT__ANSI             1)
 SET (MK_COMPILE_PLATFORM_TEXT__WIDE             0 CACHE BOOL "")
@@ -236,6 +254,37 @@ SET (MK_FEATURE_GPU__VULKAN                     0 CACHE BOOL "")
 
 SET (MK_FEATURE_AUDIO__NONE                     1)
 SET (MK_FEATURE_AUDIO__XAUDIO2                  0 CACHE BOOL "")
+
+
+
+
+# ========================================================================================================================================================================================================
+#  Configuration Types
+# ========================================================================================================================================================================================================
+
+SET (MK_COMPILE_CONFIGURATION                   "")
+
+IF (CMAKE_BUILD_TYPE MATCHES RELEASE)
+    SET (MK_COMPILE_CONFIGURATION                   "RELEASE")
+    SET (MK_COMPILE_CONFIGURATION__RELEASE          1)
+
+ELSEIF (CMAKE_BUILD_TYPE MATCHES FINAL)
+    SET (MK_COMPILE_CONFIGURATION                   "FINAL")
+    SET (MK_COMPILE_CONFIGURATION__FINAL            1)
+
+ELSEIF (CMAKE_BUILD_TYPE MATCHES TOOLS)
+    SET (MK_COMPILE_CONFIGURATION                   "TOOLS")
+    SET (MK_COMPILE_CONFIGURATION__TOOLS            1)
+
+ELSEIF (CMAKE_BUILD_TYPE MATCHES DEBUG)
+    SET (MK_COMPILE_CONFIGURATION                   "DEBUG")
+    SET (MK_COMPILE_CONFIGURATION__DEBUG            1)
+
+ELSE ()
+
+    MESSAGE(FATAL_ERROR "UNKNOWN BUILD TYPE: " ${CMAKE_BUILD_TYPE})
+
+ENDIF ()
 
 
 
@@ -409,25 +458,46 @@ ENDIF ()
 # ========================================================================================================================================================================================================
 
 SET (MK_HARDWARE_NAME                           "")
+SET (MK_HARDWARE__IMPLEMENTATION                0)
 SET (MK_HARDWARE__POINTER_SIZE                  0)
-SET (MK_HARDWARE__VECTOR_PASS_IN_REGISTER       0)
+SET (MK_HARDWARE__WORDSIZE                      0)
+SET (MK_HARDWARE__CPU_CACHE_LINE_SIZE           0)
 
 IF (MK_COMPILE_HW__X86_32)
     SET (MK_HARDWARE_NAME                           "X86_32")
     SET (MK_HARDWARE__POINTER_SIZE                  4)
-    SET (MK_HARDWARE__VECTOR_PASS_IN_REGISTER       0)
-ELSEIF (MK_COMPILE_HW__ARM)
-    SET (MK_HARDWARE_NAME                           "ARM")
+    SET (MK_HARDWARE__WORDSIZE                      4)
+    SET (MK_HARDWARE__CPU_CACHE_LINE_SIZE           32)
+ELSEIF (MK_COMPILE_HW__ARM_32)
+    SET (MK_HARDWARE_NAME                           "ARM_32")
     SET (MK_HARDWARE__POINTER_SIZE                  8)
-    SET (MK_HARDWARE__VECTOR_PASS_IN_REGISTER       0)
-ELSEIF (MK_COMPILE_HW__PPC)
-    SET (MK_HARDWARE_NAME                           "PPC")
+    SET (MK_HARDWARE__WORDSIZE                      4)
+    SET (MK_HARDWARE__CPU_CACHE_LINE_SIZE           32)
+ELSEIF (MK_COMPILE_HW__C11_32)
+    SET (MK_HARDWARE_NAME                           "C11_32")
     SET (MK_HARDWARE__POINTER_SIZE                  4)
-    SET (MK_HARDWARE__VECTOR_PASS_IN_REGISTER       1)
+    SET (MK_HARDWARE__WORDSIZE                      4)
+    SET (MK_HARDWARE__CPU_CACHE_LINE_SIZE           32)
+ELSEIF (MK_COMPILE_HW__ARM_64)
+    SET (MK_HARDWARE_NAME                           "ARM_64")
+    SET (MK_HARDWARE__POINTER_SIZE                  8)
+    SET (MK_HARDWARE__WORDSIZE                      8)
+    SET (MK_HARDWARE__CPU_CACHE_LINE_SIZE           64)
+ELSEIF (MK_COMPILE_HW__PPC_64)
+    SET (MK_HARDWARE_NAME                           "PPC_64")
+    SET (MK_HARDWARE__POINTER_SIZE                  4)
+    SET (MK_HARDWARE__WORDSIZE                      8)
+    SET (MK_HARDWARE__CPU_CACHE_LINE_SIZE           64)
 ELSEIF (MK_COMPILE_HW__X86_64)
     SET (MK_HARDWARE_NAME                           "X86_64")
     SET (MK_HARDWARE__POINTER_SIZE                  8)
-    SET (MK_HARDWARE__VECTOR_PASS_IN_REGISTER       1)
+    SET (MK_HARDWARE__WORDSIZE                      8)
+    SET (MK_HARDWARE__CPU_CACHE_LINE_SIZE           64)
+ELSEIF (MK_COMPILE_HW__C11_64)
+    SET (MK_HARDWARE_NAME                           "C11_64")
+    SET (MK_HARDWARE__POINTER_SIZE                  8)
+    SET (MK_HARDWARE__WORDSIZE                      8)
+    SET (MK_HARDWARE__CPU_CACHE_LINE_SIZE           64)
 ENDIF ()
 
 IF ("${MK_HARDWARE_NAME}" STREQUAL "")
@@ -436,76 +506,154 @@ ENDIF ()
 
 SET (MK_PROJECT_NAME                            "${MK_PROJECT_NAME} [${MK_HARDWARE_NAME}]")
 
-SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgCOMPILE_HARDWARE__${MK_HARDWARE_NAME}")
-SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgCOMPILE_HARDWARE=${MK_HARDWARE_NAME}")
-SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgTARGET_HARDWARE__POINTER_SIZE=${MK_HARDWARE__POINTER_SIZE}")
-SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgCOMPILE_HARDWARE__${MK_HARDWARE_NAME}")
-SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgCOMPILE_HARDWARE=${MK_HARDWARE_NAME}")
-SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgTARGET_HARDWARE__POINTER_SIZE=${MK_HARDWARE__POINTER_SIZE}")
+SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_HARDWARE__${MK_HARDWARE_NAME}")
+SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_HARDWARE=${MK_HARDWARE_NAME}")
+SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_HARDWARE__POINTER_SIZE=${MK_HARDWARE__POINTER_SIZE}")
+SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_HARDWARE__WORDSIZE=${MK_HARDWARE__WORDSIZE}")
+SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE=${MK_HARDWARE__CPU_CACHE_LINE_SIZE}")
 
-IF (MK_HARDWARE__VECTOR_PASS_IN_REGISTER)
-    SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgTARGET_HARDWARE__VECTOR_PASS_IN_REGISTER")
-    SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgTARGET_HARDWARE__VECTOR_PASS_IN_REGISTER")
+SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_HARDWARE__${MK_HARDWARE_NAME}")
+SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_HARDWARE=${MK_HARDWARE_NAME}")
+SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_HARDWARE__POINTER_SIZE=${MK_HARDWARE__POINTER_SIZE}")
+SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_HARDWARE__WORDSIZE=${MK_HARDWARE__WORDSIZE}")
+SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE=${MK_HARDWARE__CPU_CACHE_LINE_SIZE}")
+
+
+
+
+# ========================================================================================================================================================================================================
+#  Configuration for Platform, OS, Device, Package
+# ========================================================================================================================================================================================================
+
+SET (MK_BUILD__THREAD_NAME                      "" )
+SET (MK_BUILD__UNIVERSAL_NAME                   "NONE" )
+SET (MK_BUILD__OS_NAME                          "NONE" )
+SET (MK_BUILD__DEVICE_NAME                      "NONE" )
+
+# Threading Library
+IF (MK_BUILD__THREAD__POSIX)
+    SET (MK_BUILD__THREAD_NAME                      "POSIX" )
+
+ELSEIF (MK_BUILD__THREAD__DISPATCH)
+    SET (MK_BUILD__THREAD_NAME                      "DISPATCH" )
+
+ELSEIF (MK_BUILD__THREAD__WIN)
+    SET (MK_BUILD__THREAD_NAME                      "WIN")
+
 ENDIF ()
 
+IF ("${MK_BUILD__THREAD_NAME}" STREQUAL "")
+    MESSAGE(FATAL_ERROR "MUST HAVE A BUILD THREADING LIBRARY")
+ENDIF ()
+
+SET (MK_PROJECT_NAME                            "${MK_PROJECT_NAME} [${MK_BUILD__THREAD_NAME}")
+
+SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgCOMPILE_THREAD_SUPPORT__${MK_BUILD__THREAD_NAME}")
+SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgCOMPILE_THREAD_SUPPORT=${MK_BUILD__THREAD_NAME}")
+SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgCOMPILE_THREAD_SUPPORT__${MK_BUILD__THREAD_NAME}")
+SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgCOMPILE_THREAD_SUPPORT=${MK_BUILD__THREAD_NAME}")
+
+STRING( TOLOWER ${MK_BUILD__THREAD_NAME}        MK_BUILD__THREAD_PATH )
+SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY             ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}${MK_BUILD__THREAD_PATH}/)
+SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${MK_BUILD__THREAD_PATH}/)
+SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}${MK_BUILD__THREAD_PATH}/)
+SET (CMAKE_OBJECT_OUTPUT_DIRECTORY              ${CMAKE_OBJECT_OUTPUT_DIRECTORY}${MK_BUILD__THREAD_PATH}/)
 
 
-
-# ========================================================================================================================================================================================================
-#  Configuration for Platform
-# ========================================================================================================================================================================================================
-
-SET (MK_PLATFORM_NAME                           "")
-
-IF (MK_PLATFORM__POSIX)
-    SET (MK_PLATFORM_NAME                           "POSIX")
-
-ELSEIF (MK_PLATFORM__WIN)
-    SET (MK_PLATFORM_NAME                           "WIN")
-
-ELSEIF (MK_PLATFORM__WIN_UWP)
+# Universal Package
+IF (MK_BUILD__UNIVERSAL__UWP)
     IF (NOT WINDOWS_STORE)
         MESSAGE(FATAL_ERROR "PLATFORM UWP SELECTED BUT WINDOWS_STORE NOT ENABLED")
     ENDIF ()
     SET (MK_COMPILE_PLATFORM_TEXT__WIDE             1)
-    SET (MK_PLATFORM_NAME                           "UWP")
+    SET (MK_BUILD__UNIVERSAL_NAME                   "UWP")
 
-ELSEIF (MK_PLATFORM__IPHONE)
-    SET (MK_PLATFORM_NAME                           "IPHONE")
+ELSEIF (MK_BUILD__UNIVERSAL__APPLE)
+    SET (MK_BUILD__UNIVERSAL_NAME                   "APPLE")
 
-ELSEIF (MK_PLATFORM__IPAD)
-    SET (MK_PLATFORM_NAME                           "IPAD")
-
-ELSEIF (MK_PLATFORM__APPLE_TV)
-    SET (MK_PLATFORM_NAME                           "APPLE_TV")
-
-ELSEIF (MK_PLATFORM__IWATCH)
-    SET (MK_PLATFORM_NAME                           "IWATCH")
-
-ELSEIF (MK_PLATFORM__MAC)
-    SET (MK_PLATFORM_NAME                           "MAC")
-
-ELSEIF (MK_PLATFORM__LINUX)
-    SET (MK_PLATFORM_NAME                           "LINUX")
+    #IF (NOT MK_IDE__XCODE)
+    #    MESSAGE(FATAL_ERROR "XCODE MUST BE USED FOR APPLE UNIVERSAL BUILDS")
+    #ENDIF ()
 
 ENDIF ()
 
-IF ("${MK_PLATFORM_NAME}" STREQUAL "")
-    MESSAGE(FATAL_ERROR "MUST HAVE A TARGET PLATFORM")
+IF (NOT "${MK_BUILD__UNIVERSAL_NAME}" STREQUAL "NONE")
+    SET (MK_PROJECT_NAME                            "${MK_PROJECT_NAME} ${MK_BUILD__UNIVERSAL_NAME}")
+
+    SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_UNIVERSAL__${MK_BUILD__UNIVERSAL_NAME}")
+    SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_UNIVERSAL=${MK_BUILD__UNIVERSAL_NAME}")
+    SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_UNIVERSAL__${MK_BUILD__UNIVERSAL_NAME}")
+    SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_UNIVERSAL=${MK_BUILD__UNIVERSAL_NAME}")
+
+    STRING( TOLOWER ${MK_BUILD__UNIVERSAL_NAME}     MK_BUILD__UNIVERSAL_PATH )
+    SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY             ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}${MK_BUILD__UNIVERSAL_PATH}/)
+    SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${MK_BUILD__UNIVERSAL_PATH}/)
+    SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}${MK_BUILD__UNIVERSAL_PATH}/)
+    SET (CMAKE_OBJECT_OUTPUT_DIRECTORY              ${CMAKE_OBJECT_OUTPUT_DIRECTORY}${MK_BUILD__UNIVERSAL_PATH}/)
 ENDIF ()
 
-SET (MK_PROJECT_NAME                            "${MK_PROJECT_NAME} [${MK_PLATFORM_NAME}]")
 
-SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgCOMPILE_PLATFORM__${MK_PLATFORM_NAME}")
-SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgCOMPILE_PLATFORM=${MK_PLATFORM_NAME}")
-SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgCOMPILE_PLATFORM__${MK_PLATFORM_NAME}")
-SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgCOMPILE_PLATFORM=${MK_PLATFORM_NAME}")
+# Operating System
+IF (MK_BUILD__OS__WIN)
+    SET (MK_BUILD__OS_NAME                          "WIN")
 
-STRING( TOLOWER ${MK_PLATFORM_NAME}             MK_PLATFORM_PATH )
-SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY             ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}${MK_PLATFORM_PATH}/)
-SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${MK_PLATFORM_PATH}/)
-SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}${MK_PLATFORM_PATH}/)
-SET (CMAKE_OBJECT_OUTPUT_DIRECTORY              ${CMAKE_OBJECT_OUTPUT_DIRECTORY}${MK_PLATFORM_PATH}/)
+ELSEIF (MK_BUILD__OS__APPLE_MAC)
+    SET (MK_BUILD__OS_NAME                          "APPLE_MAC")
+
+ELSEIF (MK_BUILD__OS__APPLE_IOS)
+    SET (MK_BUILD__OS_NAME                          "APPLE_IOS")
+
+ELSEIF (MK_BUILD__OS__APPLE_TVOS)
+    SET (MK_BUILD__OS_NAME                          "APPLE_TV")
+
+ELSEIF (MK_BUILD__OS__APPLE_WATCHOS)
+    SET (MK_BUILD__OS_NAME                          "APPLE_IWATCH")
+
+ENDIF ()
+
+IF (NOT "${MK_BUILD__OS_NAME}" STREQUAL "NONE")
+    SET (MK_PROJECT_NAME                            "${MK_PROJECT_NAME} ${MK_BUILD__OS_NAME}")
+
+    SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_OS__${MK_BUILD__OS_NAME}")
+    SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_OS=${MK_BUILD__OS_NAME}")
+    SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_OS__${MK_BUILD__OS_NAME}")
+    SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_OS=${MK_BUILD__OS_NAME}")
+
+    STRING( TOLOWER ${MK_BUILD__OS_NAME}            MK_BUILD__OS_PATH )
+    SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY             ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}${MK_BUILD__OS_PATH}/)
+    SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${MK_BUILD__OS_PATH}/)
+    SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}${MK_BUILD__OS_PATH}/)
+    SET (CMAKE_OBJECT_OUTPUT_DIRECTORY              ${CMAKE_OBJECT_OUTPUT_DIRECTORY}${MK_BUILD__OS_PATH}/)
+ENDIF ()
+
+
+# Target Device
+IF (MK_BUILD__DEVICE__APPLE_IPHONE)
+    SET (MK_BUILD__DEVICE_NAME                      "APPLE_IPHONE")
+
+ELSEIF (MK_BUILD__DEVICE__APPLE_IPAD)
+    SET (MK_BUILD__DEVICE_NAME                      "APPLE_IPAD")
+
+ENDIF ()
+
+IF (NOT "${MK_BUILD__DEVICE_NAME}" STREQUAL "NONE")
+    SET (MK_PROJECT_NAME                            "${MK_PROJECT_NAME} ${MK_BUILD__DEVICE_NAME}")
+
+    SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_DEVICE__${MK_BUILD__DEVICE_NAME}")
+    SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgBUILD_DEVICE=${MK_BUILD__DEVICE_NAME}")
+    SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_DEVICE__${MK_BUILD__DEVICE_NAME}")
+    SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgBUILD_DEVICE=${MK_BUILD__DEVICE_NAME}")
+
+    STRING( TOLOWER ${MK_BUILD__DEVICE_NAME}        MK_BUILD__DEVICE_PATH )
+    SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY             ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}${MK_BUILD__DEVICE_PATH}/)
+    SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${MK_BUILD__DEVICE_PATH}/)
+    SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}${MK_BUILD__DEVICE_PATH}/)
+    SET (CMAKE_OBJECT_OUTPUT_DIRECTORY              ${CMAKE_OBJECT_OUTPUT_DIRECTORY}${MK_BUILD__DEVICE_PATH}/)
+ENDIF ()
+
+SET (MK_PROJECT_NAME                            "${MK_PROJECT_NAME}]")
+
+
 
 
 # Platform Flavors - Specifically for Windows
@@ -596,17 +744,17 @@ ENDIF ()
 SET (MK_FEATURE_GPU_NAME                        "")
 
 IF (MK_FEATURE_GPU__DX12)
-    SET (MK_FEATURE_GPU_NAME                        DX12)
+    SET (MK_FEATURE_GPU_NAME                        "DX12")
 ELSEIF (MK_FEATURE_GPU__OGL)
-    SET (MK_FEATURE_GPU_NAME                        OGL)
+    SET (MK_FEATURE_GPU_NAME                        "OGL")
 ELSEIF (MK_FEATURE_GPU__OGLES)
-    SET (MK_FEATURE_GPU_NAME                        OGLES)
+    SET (MK_FEATURE_GPU_NAME                        "OGLES")
 ELSEIF (MK_FEATURE_GPU__METAL)
-    SET (MK_FEATURE_GPU_NAME                        METAL)
+    SET (MK_FEATURE_GPU_NAME                        "METAL")
 ELSEIF (MK_FEATURE_GPU__VULKAN)
-    SET (MK_FEATURE_GPU_NAME                        VULKAN)
+    SET (MK_FEATURE_GPU_NAME                        "VULKAN")
 ELSEIF (MK_FEATURE_GPU__NONE)
-    SET (MK_FEATURE_GPU_NAME                        NONE)
+    SET (MK_FEATURE_GPU_NAME                        "NONE")
 ELSE ()
     MESSAGE(FATAL_ERROR "UNSUPPORTED GPU FEATURE")
 ENDIF ()
@@ -641,34 +789,6 @@ SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgFEATURE_
 IF (NOT MK_FEATURE_AUDIO__NONE)
     SET (CMAKE_C_FLAGS                              "${CMAKE_C_FLAGS} -DTgCOMPILE_AUDIO_SUPPORT")
     SET (CMAKE_CXX_FLAGS                            "${CMAKE_CXX_FLAGS} -DTgCOMPILE_AUDIO_SUPPORT")
-ENDIF ()
-
-
-
-
-# ========================================================================================================================================================================================================
-# Build does not support Configurations
-# ========================================================================================================================================================================================================
-
-# If Generator does not support multiple configurations, collapse the flags
-
-IF (MK_IDE__UNIX_MAKEFILES)
-    IF (CONFIGURATION_TYPE_DEBUG)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
-    ELSEIF (CONFIGURATION_TYPE_RELEASE)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
-    ELSEIF (CONFIGURATION_TYPE_FINAL)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_FINAL}")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_FINAL}")
-    ELSEIF (CONFIGURATION_TYPE_TOOLS)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_TOOLS}")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_TOOLS}")
-    ELSE ()
-        MESSAGE(FATAL_ERROR "Unknown Makefile Build Configuration")
-    ENDIF ()
-
 ENDIF ()
 
 
@@ -751,7 +871,11 @@ FUNCTION (TGS_SET_STANDARD_PROPERTIES TARGET PCH_SOURCE_DIR PCH_SOURCE PCH_INCLU
         TARGET_COMPILE_OPTIONS(${TARGET}                PRIVATE -DTgCOMPILE_DEFAULT_PCH="${PCH_INCLUDE}")
 
         # Setup flags on the target to create and use the precompiled header.
-        TARGET_COMPILE_OPTIONS(${TARGET}                PRIVATE -include "${PCH_INCLUDE}")
+        TARGET_PRECOMPILE_HEADERS(${TARGET}             PRIVATE "${PCH_INCLUDE}")
+        #TARGET_COMPILE_OPTIONS(${TARGET}                PRIVATE -include "${PCH_INCLUDE}")
+        #TARGET_PRECOMPILE_HEADERS(${TARGET}             PRIVATE "$<$<COMPILE_LANGUAGE:C>:${PCH_INCLUDE}>" "$<$<COMPILE_LANGUAGE:CXX>:${PCH_INCLUDE}>" )
+        #SET_TARGET_PROPERTIES(${TARGET}                 PROPERTIES UNITY_BUILD ON)
+
     ENDIF ()
 
 
@@ -838,7 +962,6 @@ FUNCTION (TGS_ADD_UNITTEST_EXECUTABLE TARGET PCH_SOURCE_DIR PCH_SOURCE PCH_INCLU
             SOURCE_GROUP ("Resource Files" FILES "${PROJECT_SOURCE_DIR}/../src/TgS UNIT TEST/UnitTestApp.rd.xml")
         ENDIF (INCLUDE_NON_SOURCE_FILES)
     ENDIF ()
-
 
     ADD_EXECUTABLE (${TARGET}                       ${APP_TYPE} ${SOURCE_FILES} ${HEADER_FILES})
 

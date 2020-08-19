@@ -16,9 +16,11 @@
 
     #define GENERATE__MBZ
     #include __FILE__
+    #undef GENERATE__MBZ
 
     #define GENERATE__WCZ
     #include __FILE__
+    #undef GENERATE__WCZ
 
     #define GENERATE__NCZ
 
@@ -357,7 +359,7 @@ TEST_METHOD( FCN_UT(From_U16) )
 TEST_METHOD( FCN_UT(From_U32) )
 {
     CHAR()                              szTest_0[128] = { 0 };
-    TgUINT_F32_C                        ui32_Test = 2147483647;
+    TgUINT_F32_C    ui32_Test = 2147483647;
     TgSINT_F08                          iRet;
 
     Test__Expect_EQ(KTgS_OK, FCN(From_U32)( szTest_0, sizeof szTest_0, ui32_Test ));
@@ -431,8 +433,8 @@ TEST_METHOD( FCN_UT(From_S16) )
 TEST_METHOD( FCN_UT(From_S32) )
 {
     CHAR()                              szTest_0[128] = { 0 };
-    TgSINT_F32_C                        i32_Test_0 = 2147483647;
-    TgSINT_F32_C                        i32_Test_1 = -2147483647;
+    TgSINT_F32_C    i32_Test_0 = 2147483647;
+    TgSINT_F32_C    i32_Test_1 = -2147483647;
     TgSINT_F08                          iRet;
 
     Test__Expect_EQ(KTgS_OK, FCN(From_S32)( szTest_0, sizeof szTest_0, i32_Test_0 ));
@@ -535,7 +537,7 @@ TEST_METHOD( FCN_UT(From_F64) )
 TEST_METHOD( FCN_UT(Formatted_From_U32) )
 {
     CHAR()                              szTest_0[128] = { 0 };
-    TgUINT_F32_C                        ui32_Test = 2147483647;
+    TgUINT_F32_C    ui32_Test = 2147483647;
     TgUINT_F16_C                        ui16_Test = 32767;
     TgUINT_F08_C                        ui08_Test = 127;
     TgSINT_F08                          iRet;
@@ -565,7 +567,7 @@ TEST_METHOD( FCN_UT(Formatted_From_U64) )
 {
     CHAR()                              szTest_0[128] = { 0 };
     TgUINT_F64_C                        ui64_Test = 9223372036854775807ULL;
-    TgUINT_F32_C                        ui32_Test = 2147483647;
+    TgUINT_F32_C    ui32_Test = 2147483647;
     TgUINT_F16_C                        ui16_Test = 32767;
     TgUINT_F08_C                        ui08_Test = 127;
     TgSINT_F08                          iRet;
@@ -599,8 +601,8 @@ TEST_METHOD( FCN_UT(Formatted_From_U64) )
 TEST_METHOD( FCN_UT(Formatted_From_S32) )
 {
     CHAR()                              szTest_0[128] = { 0 };
-    TgSINT_F32_C                        i32_Test_0 = 2147483647;
-    TgSINT_F32_C                        i32_Test_1 = -2147483647;
+    TgSINT_F32_C    i32_Test_0 = 2147483647;
+    TgSINT_F32_C    i32_Test_1 = -2147483647;
     TgSINT_F16_C                        i16_Test_0 = 32767;
     TgSINT_F16_C                        i16_Test_1 = -32767;
     TgSINT_F08_C                        i08_Test_0 = 127;
@@ -650,8 +652,8 @@ TEST_METHOD( FCN_UT(Formatted_From_S64) )
     CHAR()                              szTest_0[128] = { 0 };
     TgSINT_F64_C                        i64_Test_0 = 9223372036854775807LL;
     TgSINT_F64_C                        i64_Test_1 = -9223372036854775807LL;
-    TgSINT_F32_C                        i32_Test_0 = 2147483647;
-    TgSINT_F32_C                        i32_Test_1 = -2147483647;
+    TgSINT_F32_C    i32_Test_0 = 2147483647;
+    TgSINT_F32_C    i32_Test_1 = -2147483647;
     TgSINT_F16_C                        i16_Test_0 = 32767;
     TgSINT_F16_C                        i16_Test_1 = -32767;
     TgSINT_F08_C                        i08_Test_0 = 127;

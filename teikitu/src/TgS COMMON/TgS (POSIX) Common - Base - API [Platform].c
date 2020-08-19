@@ -10,6 +10,12 @@
     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
     GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#include "TgS COMMON/TgS Common -- BASE.h"
+#include "TgS COMMON/TgS Common -- UTIL.h"
+#include "TgS COMMON/TgS Common -- UTIL.inl"
+
+
 /* == Common ===================================================================================================================================================================== */
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
@@ -148,7 +154,7 @@ TgTHREAD_ID tgTR_Query_Id( TgVOID )
     return (KTgTHREAD_ID__INVALID);
 /*# !defined(TGS_FINAL) ||  !TgCOMPILE__THREAD_LOCAL */
 #else
-    return (tgTHREAD_ID_Query_Unsafe(g_atiTR_Thread_Singleton + tls_uiThread_Index));
+    return (tgTHREAD_ID_Query_Unsafe(g_atiTR_Thread_Singleton + tls_tiThread_Local.m_uiI));
 /*# !defined(TGS_FINAL) ||  !TgCOMPILE__THREAD_LOCAL */
 #endif
 }

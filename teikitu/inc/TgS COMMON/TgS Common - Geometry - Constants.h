@@ -84,19 +84,19 @@ TgTYPE_ENUM( ETgFRUSTUM_PLANE, TgSINT_F32,
 /* ---- Constants ---------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 TgEXTN TgFLOAT32_C                          KTgGM_CUBE_VERTEX[24];
-TgEXTN TgUINT_F16_C                         KTgGM_CUBE_INDEX[36];
+TgEXTN TgUINT_E16_C                         KTgGM_CUBE_INDEX[36];
 
 TgEXTN TgFLOAT32_C                          KTgGM_TETRAHEDRON_VERTEX[12];
-TgEXTN TgUINT_F16_C                         KTgGM_TETRAHEDRON_INDEX[12];
+TgEXTN TgUINT_E16_C                         KTgGM_TETRAHEDRON_INDEX[12];
 
 TgEXTN TgFLOAT32_C                          KTgGM_OCTOGON_VERTEX[24];
-TgEXTN TgUINT_F16_C                         KTgGM_OCTOGON_INDEX[24];
+TgEXTN TgUINT_E16_C                         KTgGM_OCTOGON_INDEX[24];
 
 TgEXTN TgFLOAT32_C                          KTgGM_ICOSAHEDRON_VERTEX[96];
-TgEXTN TgUINT_F16_C                         KTgGM_ICOSAHEDRON_INDEX[60];
+TgEXTN TgUINT_E16_C                         KTgGM_ICOSAHEDRON_INDEX[60];
 
 TgEXTN TgFLOAT32_C                          KTgGM_ICOSAHEDRON_HEMI_VERTEX[160];
-TgEXTN TgUINT_F16_C                         KTgGM_ICOSAHEDRON_HEMI_INDEX[108];
+TgEXTN TgUINT_E16_C                         KTgGM_ICOSAHEDRON_HEMI_INDEX[108];
 
 
 /* =============================================================================================================================================================================== */

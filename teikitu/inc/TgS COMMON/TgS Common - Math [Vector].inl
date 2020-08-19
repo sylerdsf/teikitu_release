@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Math [Vector].inl
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -22,20 +22,20 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
 #define VEC_02_1_ASSIGN_EQN                                                                                                                                                         \
-    VEC_T(1)                            vResult;                                                                                                                                    \
+    VEC_S_T(1)                          vResult;                                                                                                                                    \
     vResult.m_aData[ 0] = EQN( 0);                                                                                                                                                  \
     vResult.m_aData[ 1] = EQN( 1);                                                                                                                                                  \
     return (vResult);
 
 #define VEC_03_1_ASSIGN_EQN                                                                                                                                                         \
-    VEC_T(1)                            vResult;                                                                                                                                    \
+    VEC_S_T(1)                          vResult;                                                                                                                                    \
     vResult.m_aData[ 0] = EQN( 0);                                                                                                                                                  \
     vResult.m_aData[ 1] = EQN( 1);                                                                                                                                                  \
     vResult.m_aData[ 2] = EQN( 2);                                                                                                                                                  \
     return (vResult);
 
 #define VEC_04_1_ASSIGN_EQN                                                                                                                                                         \
-    VEC_T(1)                            vResult;                                                                                                                                    \
+    VEC_S_T(1)                          vResult;                                                                                                                                    \
     vResult.m_aData[ 0] = EQN( 0);                                                                                                                                                  \
     vResult.m_aData[ 1] = EQN( 1);                                                                                                                                                  \
     vResult.m_aData[ 2] = EQN( 2);                                                                                                                                                  \
@@ -43,7 +43,7 @@
     return (vResult);
 
 #define VEC_08_1_ASSIGN_EQN                                                                                                                                                         \
-    VEC_T(1)                            vResult;                                                                                                                                    \
+    VEC_S_T(1)                          vResult;                                                                                                                                    \
     vResult.m_aData[ 0] = EQN( 0);                                                                                                                                                  \
     vResult.m_aData[ 1] = EQN( 1);                                                                                                                                                  \
     vResult.m_aData[ 2] = EQN( 2);                                                                                                                                                  \
@@ -55,7 +55,7 @@
     return (vResult);
 
 #define VEC_16_1_ASSIGN_EQN                                                                                                                                                         \
-    VEC_T(1)                            vResult;                                                                                                                                    \
+    VEC_S_T(1)                          vResult;                                                                                                                                    \
     vResult.m_aData[ 0] = EQN( 0);                                                                                                                                                  \
     vResult.m_aData[ 1] = EQN( 1);                                                                                                                                                  \
     vResult.m_aData[ 2] = EQN( 2);                                                                                                                                                  \

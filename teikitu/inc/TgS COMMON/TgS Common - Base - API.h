@@ -14,7 +14,6 @@
 #define TGS_COMMON_BASE_API_H
 #pragma once
 
-#include TgHEADER_HARDWARE(TgS COMMON/TgS,Common - Base - API.h)
 #include "TgS COMMON/TgS Common - Base - API [Math].h"
 #include "TgS COMMON/TgS Common - Base - API [Platform].h"
 #include "TgS COMMON/TgS Common - Base - API [Text].h"
@@ -40,6 +39,10 @@
 */
 
 /** @defgroup TGS_COMMON_BASE_API_IO Input / Output
+    @ingroup TGS_COMMON_BASE
+*/
+
+/** @defgroup TGS_COMMON_BASE_API_BITFIELD Bitfields
     @ingroup TGS_COMMON_BASE
 */
 
@@ -273,6 +276,55 @@ TgEXTN TgRESULT                             tgIO_File_Move( TgCHAR_MB_CPC ARG0, 
 TgEXTN TgBOOL                               tgIO_File_Exists( TgCHAR_MB_CPC ARG0, TgRSIZE_C ARG1 );
 
 /** @} TGS_COMMON_BASE_API_IO */
+
+
+/* ---- Bitfields ---------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/** @addtogroup TGS_COMMON_BASE_API_BITFIELD */
+/** @{ */
+
+                                            /** @brief Set the state of the bit at ARG1 in integer object at ARG0 according to the value in ARG2 (0 for false, and 1 otherwise)
+                                                @param[out] OUT0 Pointer to an exact integer type
+                                                @param[in] ARG1 The bit index to modify where bit 0 is the least significant
+                                                @param[in] ARG2 boolean flag to indicate set or reset state for bit */
+TgINLINE TgVOID                             tgBF_Set_Flag_U32( TgUINT_E32_PCU OUT0, TgUINT_F08_C ARG1, TgBOOL_C ARG2 );
+
+                                            /** @brief Set the state of the bit at ARG1 in integer object at ARG0 according to the value in ARG2 (0 for false, and 1 otherwise)
+                                                @param[out] OUT0 Pointer to an exact integer type
+                                                @param[in] ARG1 The bit index to modify where bit 0 is the least significant
+                                                @param[in] ARG2 boolean flag to indicate set or reset state for bit */
+TgINLINE TgVOID                             tgBF_Set_Flag_U64( TgUINT_E64_PCU OUT0, TgUINT_F08_C ARG1, TgBOOL_C ARG2 );
+
+                                            /** @brief Toggle (xor) the state of the bit at ARG1 in integer object at ARG0
+                                                @param[out] OUT0 Pointer to an exact integer type
+                                                @param[in] ARG1 The bit index to modify where bit 0 is the least significant */
+TgINLINE TgVOID                             tgBF_Toggle_Flag_U32( TgUINT_E32_PCU OUT0, TgUINT_F08_C ARG1 );
+
+                                            /** @brief Toggle (xor) the state of the bit at ARG1 in integer object at ARG0
+                                                @param[out] OUT0 Pointer to an exact integer type
+                                                @param[in] ARG1 The bit index to modify where bit 0 is the least significant */
+TgINLINE TgVOID                             tgBF_Toggle_Flag_U64( TgUINT_E64_PCU OUT0, TgUINT_F08_C ARG1 );
+
+                                            /** @brief Reset the state of all bits in integer object at ARG0
+                                                @param[out] OUT0 Pointer to an exact integer type */
+TgINLINE TgVOID                             tgBF_Reset_U32( TgUINT_E32_PCU OUT0 );
+
+                                            /** @brief Reset the state of all bits in integer object at ARG0
+                                                @param[out] OUT0 Pointer to an exact integer type */
+TgINLINE TgVOID                             tgBF_Reset_U64( TgUINT_E64_PCU OUT0 );
+
+                                            /** @@brief Return the value of the bit at ARG1 in integer object at ARG0
+                                                @param[in] ARG0 Pointer to an exact integer type
+                                                @param[in] ARG1 The bit index to read where bit 0 is the least significant
+                                                @return False if the bit is zero and true otherwise */
+TgINLINE TgBOOL                             tgBF_Test_Flag_U32( TgUINT_E32_CPCU ARG0, TgUINT_F08_C ARG1 );
+
+                                            /** @@brief Return the value of the bit at ARG1 in integer object at ARG0
+                                                @param[in] ARG0 Pointer to an exact integer type
+                                                @param[in] ARG1 The bit index to read where bit 0 is the least significant
+                                                @return False if the bit is zero and true otherwise */
+TgINLINE TgBOOL                             tgBF_Test_Flag_U64( TgUINT_E64_CPCU ARG0, TgUINT_F08_C ARG1 );
+
+/** @} */
 
 
 /* =============================================================================================================================================================================== */

@@ -20,6 +20,7 @@ MSVC_PRAGMA(warning( push, 0 ))
 #endif
 MSVC_PRAGMA(warning( pop ))
 CLANG_WARN_SUPPRESS(missing-prototypes)
+#include <stdlib.h>
 
 
 /* == Common ===================================================================================================================================================================== */

@@ -25,14 +25,14 @@
 
 #define MM_PERM(fp0,fp1,fp2,fp3) (((fp3) << 6) | ((fp2) << 4) | ((fp1) << 2) | ((fp0)))
 
-#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [N] [F32_04].inl"
-#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [N] [F32].inl"
-#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [N] [U08].inl"
-#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [N] [U16].inl"
-#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [N] [U32].inl"
-#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [N] [S08].inl"
-#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [N] [S16].inl"
-#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [N] [S32].inl"
+#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [F32_04].inl"
+#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [F32].inl"
+#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [U08].inl"
+#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [U16].inl"
+#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [U32].inl"
+#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [S08].inl"
+#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [S16].inl"
+#include "TgS COMMON/TgS (X86_64) Common - Math [Vector] [S32].inl"
 
 
 /* =============================================================================================================================================================================== */

@@ -14,7 +14,7 @@
 #define TGS_COMMON_BASE_TYPE_H
 #pragma once
 
-#include TgHEADER_PLATFORM(TgS COMMON/TgS,Common - Base - Type.h)
+#include TgHEADER_THREAD_SUPPORT(TgS COMMON/TgS,Common - Base - Type.h)
 
 
 /* == Common ===================================================================================================================================================================== */
@@ -204,10 +204,10 @@ TgTYPE_DECLARE(TgUN_POINTER,TgUN_PTR);
 
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
-TgCOMPILER_ASSERT(sizeof(rsize_t)*8 == TgCOMPILE__WORDSIZE,0);
-TgCOMPILER_ASSERT(sizeof(size_t)*8 == TgCOMPILE__WORDSIZE,0);
-TgCOMPILER_ASSERT(sizeof(uintmax_t)*8 == TgCOMPILE__WORDSIZE,0);
-TgCOMPILER_ASSERT(sizeof(uintptr_t)*8 == TgCOMPILE__WORDSIZE,0);
+TgCOMPILER_ASSERT(sizeof(rsize_t) == TgBUILD_HARDWARE__WORDSIZE,0);
+TgCOMPILER_ASSERT(sizeof(size_t) == TgBUILD_HARDWARE__WORDSIZE,0);
+TgCOMPILER_ASSERT(sizeof(uintmax_t) == TgBUILD_HARDWARE__WORDSIZE,0);
+TgCOMPILER_ASSERT(sizeof(uintptr_t) == TgBUILD_HARDWARE__WORDSIZE,0);
 
 #include "TgS COMMON/TgS Common - Base - Type [Vector].h"
 #include "TgS COMMON/TgS Common - Base - Type [Limits].h"

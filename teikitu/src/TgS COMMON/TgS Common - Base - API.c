@@ -91,7 +91,7 @@ TgTLS TgSINT_F32                            tls_uiMT_Index = KTgMERSENNE_TWISTER
 TgTLS union
 {
     TgUINT_F32                                  m_uiData[KTgMERSENNE_TWISTER_PERIOD_N];
-    TgVEC_U32_04_1                              m_vData[KTgMERSENNE_TWISTER_PERIOD_N >> 2];
+    TgVEC_S_U32_04_1                            m_vData[KTgMERSENNE_TWISTER_PERIOD_N >> 2];
 }                                           tls_uiMT_State;
 CLANG_WARN_DISABLE_POP(missing-variable-declarations)
 

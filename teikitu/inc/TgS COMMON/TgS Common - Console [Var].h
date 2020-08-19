@@ -138,8 +138,8 @@ TgEXTN TgCN_VAR_ID                          tgCN_Var_Init_F32( TgCHAR_MB_CPC ARG
                                                                TgFLOAT32_C ARG6, TgFLOAT32_C ARG7 );
 
                                             /** @copydoc tgCN_Var_Init_S08 */
-TgEXTN TgCN_VAR_ID                          tgCtgMH_Var_Init_N_F32_04_1( TgCHAR_MB_CPC ARG0, TgRSIZE_C ARG1, TgCHAR_MB_CPC ARG2, TgRSIZE_C ARG3, TgUINT_F16_C ARG4,
-                                                                    TgVEC_F32_04_1_C ARG5, TgVEC_F32_04_1_C ARG6, TgVEC_F32_04_1_C ARG7 );
+TgEXTN TgCN_VAR_ID                          tgCN_Var_Init_F32_04_1( TgCHAR_MB_CPC ARG0, TgRSIZE_C ARG1, TgCHAR_MB_CPC ARG2, TgRSIZE_C ARG3, TgUINT_F16_C ARG4,
+                                                                       TgVEC_F32_04_1_C ARG5, TgVEC_F32_04_1_C ARG6, TgVEC_F32_04_1_C ARG7 );
 
                                             /** @brief Create a new console variable from the function arguments
                                                 @param[in] ARG0 Multibyte string used to set the name of the console variable
@@ -190,7 +190,7 @@ TgEXTN TgBOOL                               tgCN_Var_Set_U64( TgCN_VAR_ID_C ARG0
 TgEXTN TgBOOL                               tgCN_Var_Set_F32( TgCN_VAR_ID_C ARG0, TgFLOAT32_C ARG1 );
 
                                             /** @copydoc tgCN_Var_Set_Bool */
-TgEXTN TgBOOL                               tgCtgMH_Var_Set_N_F32_04_1( TgCN_VAR_ID_C ARG0, TgVEC_F32_04_1_C ARG1 );
+TgEXTN TgBOOL                               tgCN_Var_Set_F32_04_1( TgCN_VAR_ID_C ARG0, TgVEC_F32_04_1_C ARG1 );
 
                                             /** @brief Assign a new value to the console variable
                                                 @param[in] ARG0 Console variable identifier
@@ -234,7 +234,7 @@ TgEXTN TgBOOL                               tgCN_Var_Query_U64( TgUINT_F64_P OUT
 TgEXTN TgBOOL                               tgCN_Var_Query_F32( TgFLOAT32_P OUT0, TgCN_VAR_ID_C ARG1 );
 
                                             /** @copydoc tgCN_Var_Query_Bool */
-TgEXTN TgBOOL                               tgCtgMH_Var_Query_N_F32_04_1( TgVEC_F32_04_1_P OUT0, TgCN_VAR_ID_C ARG1 );
+TgEXTN TgBOOL                               tgCN_Var_Query_F32_04_1( TgVEC_F32_04_1_P OUT0, TgCN_VAR_ID_C ARG1 );
 
                                             /** @copydoc tgCN_Var_Query_Bool */
 TgEXTN TgBOOL                               tgCN_Var_Query_String( TgCHAR_MB_CPP OUT0, TgCN_VAR_ID_C ARG1 );

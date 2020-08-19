@@ -10,6 +10,10 @@
     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
     GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#include "TgS COMMON/TgS Common -- MATH.inl"
+
+
 /* == Common ===================================================================================================================================================================== */
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
@@ -18,11 +22,11 @@
 
 #define TEMPLATE__TEST_AND_UNLOAD_TEMPLATE_MACROS
 #define TEMPLATE__VECTOR_DIM 4
-#define TEMPLATE__VECTOR_ROW 3
+#define TEMPLATE__VECTOR_COL 3
 #include "TgS Common [Unit Test] [Test] - Math [Matrix] [API].c_inc"
 
 #define TEMPLATE__VECTOR_DIM 4
-#define TEMPLATE__VECTOR_ROW 4
+#define TEMPLATE__VECTOR_COL 4
 #include "TgS Common [Unit Test] [Test] - Math [Matrix] [API].c_inc"
 
 

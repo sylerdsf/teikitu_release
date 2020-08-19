@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Geometry 3D - Box - Axis Aligned.i_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,45 +16,30 @@
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgBOOL FCN_VO(tgGM_BA_Is_Empty)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (
-        (
-            psBA0->m_vMin.x >= psBA0->m_vMax.x ||
-            psBA0->m_vMin.y >= psBA0->m_vMax.y ||
-            psBA0->m_vMin.z >= psBA0->m_vMax.z
-            )
-    );
+    return (FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_GE)( VEC_UN_1_MEMBER(psBA0->m_uMin), VEC_UN_1_MEMBER(psBA0->m_uMax) ) ));
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Union_PT) ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Union_PT)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,CPCU) NONULL pvS0 )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Union_PT)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,C) vS0 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
-
-    psBA0->m_vMin.x = FCN_F(tgPM_FSEL)( psBA0->m_vMin.x - pvS0->x, pvS0->x, psBA0->m_vMin.x );
-    psBA0->m_vMin.y = FCN_F(tgPM_FSEL)( psBA0->m_vMin.y - pvS0->y, pvS0->y, psBA0->m_vMin.y );
-    psBA0->m_vMin.z = FCN_F(tgPM_FSEL)( psBA0->m_vMin.z - pvS0->z, pvS0->z, psBA0->m_vMin.z );
-
-    psBA0->m_vMax.x = FCN_F(tgPM_FSEL)( pvS0->x - psBA0->m_vMax.x, pvS0->x, psBA0->m_vMax.x );
-    psBA0->m_vMax.y = FCN_F(tgPM_FSEL)( pvS0->y - psBA0->m_vMax.y, pvS0->y, psBA0->m_vMax.y );
-    psBA0->m_vMax.z = FCN_F(tgPM_FSEL)( pvS0->z - psBA0->m_vMax.z, pvS0->z, psBA0->m_vMax.z );
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Point)( vS0 ));
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_MIN)( VEC_UN_1_MEMBER(psBA0->m_uMin), FCN_V(tgMH_Init_Vector)( vS0 ) );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_MAX)( VEC_UN_1_MEMBER(psBA0->m_uMax), FCN_V(tgMH_Init_Vector)( vS0 ) );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Union_SP) ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Union_SP)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,CPCU) NONULL pvS0, VAR_T(C) fRadius )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Union_SP)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,C) vS0, VAR_T(C) fRadius )
 {
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ) && !FCN_F(tgPM_NAN)(fRadius));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Point)( vS0 ) && (fRadius >= TYPE_K(0)));
 
-    psBA0->m_vMin.x = FCN_F(tgPM_FSEL)( psBA0->m_vMin.x - pvS0->x + fRadius, pvS0->x - fRadius, psBA0->m_vMin.x );
-    psBA0->m_vMin.y = FCN_F(tgPM_FSEL)( psBA0->m_vMin.y - pvS0->y + fRadius, pvS0->y - fRadius, psBA0->m_vMin.y );
-    psBA0->m_vMin.z = FCN_F(tgPM_FSEL)( psBA0->m_vMin.z - pvS0->z + fRadius, pvS0->z - fRadius, psBA0->m_vMin.z );
-
-    psBA0->m_vMax.x = FCN_F(tgPM_FSEL)( pvS0->x + fRadius - psBA0->m_vMax.x, pvS0->x + fRadius, psBA0->m_vMax.x );
-    psBA0->m_vMax.y = FCN_F(tgPM_FSEL)( pvS0->y + fRadius - psBA0->m_vMax.y, pvS0->y + fRadius, psBA0->m_vMax.y );
-    psBA0->m_vMax.z = FCN_F(tgPM_FSEL)( pvS0->z + fRadius - psBA0->m_vMax.z, pvS0->z + fRadius, psBA0->m_vMax.z );
+    VEC_T(1,C)      vRadius = FCN_V(tgMH_Init_Vector_ELEM)( fRadius, fRadius, fRadius );
+    VEC_T(1,C)      vX0 = FCN_V(tgMH_Init_Vector)( vS0 );
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_MIN)( VEC_UN_1_MEMBER(psBA0->m_uMin), FCN_V(tgMH_SUB)( vX0, vRadius ) );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_MAX)( VEC_UN_1_MEMBER(psBA0->m_uMax), FCN_V(tgMH_ADD)( vX0, vRadius ) );
 }
 
 
@@ -62,31 +47,19 @@ TgINLINE TgVOID FCN_VO(tgGM_BA_Union_SP)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, V
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_BA_Union_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1));
-
-    psBA0->m_vMin.x = FCN_F(tgPM_FSEL)( psBA0->m_vMin.x - psBA1->m_vMin.x, psBA1->m_vMin.x, psBA0->m_vMin.x );
-    psBA0->m_vMin.y = FCN_F(tgPM_FSEL)( psBA0->m_vMin.y - psBA1->m_vMin.y, psBA1->m_vMin.y, psBA0->m_vMin.y );
-    psBA0->m_vMin.z = FCN_F(tgPM_FSEL)( psBA0->m_vMin.z - psBA1->m_vMin.z, psBA1->m_vMin.z, psBA0->m_vMin.z );
-
-    psBA0->m_vMax.x = FCN_F(tgPM_FSEL)( psBA1->m_vMax.x - psBA0->m_vMax.x, psBA1->m_vMax.x, psBA0->m_vMax.x );
-    psBA0->m_vMax.y = FCN_F(tgPM_FSEL)( psBA1->m_vMax.y - psBA0->m_vMax.y, psBA1->m_vMax.y, psBA0->m_vMax.y );
-    psBA0->m_vMax.z = FCN_F(tgPM_FSEL)( psBA1->m_vMax.z - psBA0->m_vMax.z, psBA1->m_vMax.z, psBA0->m_vMax.z );
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)( psBA1 ));
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_MIN)( VEC_UN_1_MEMBER(psBA0->m_uMin), VEC_UN_1_MEMBER(psBA1->m_uMin) );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_MAX)( VEC_UN_1_MEMBER(psBA0->m_uMax), VEC_UN_1_MEMBER(psBA1->m_uMax) );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Sweep) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Sweep)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,CPCU) NONULL pvDT )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Sweep)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,C) vDT )
 {
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDT));
-
-    psBA0->m_vMin.x = FCN_F(tgPM_FSEL)( pvDT->x, psBA0->m_vMin.x, psBA0->m_vMin.x + pvDT->x );
-    psBA0->m_vMin.y = FCN_F(tgPM_FSEL)( pvDT->y, psBA0->m_vMin.y, psBA0->m_vMin.y + pvDT->y );
-    psBA0->m_vMin.z = FCN_F(tgPM_FSEL)( pvDT->z, psBA0->m_vMin.z, psBA0->m_vMin.z + pvDT->z );
-
-    psBA0->m_vMax.x = FCN_F(tgPM_FSEL)( pvDT->x, psBA0->m_vMax.x + pvDT->x, psBA0->m_vMax.x );
-    psBA0->m_vMax.y = FCN_F(tgPM_FSEL)( pvDT->y, psBA0->m_vMax.y + pvDT->y, psBA0->m_vMax.y );
-    psBA0->m_vMax.z = FCN_F(tgPM_FSEL)( pvDT->z, psBA0->m_vMax.z + pvDT->z, psBA0->m_vMax.z );
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Vector)( vDT ));
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_MIN)( VEC_UN_1_MEMBER(psBA0->m_uMin), FCN_V(tgMH_ADD)( VEC_UN_1_MEMBER(psBA0->m_uMin), vDT ) );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_MAX)( VEC_UN_1_MEMBER(psBA0->m_uMax), FCN_V(tgMH_ADD)( VEC_UN_1_MEMBER(psBA0->m_uMax), vDT ) );
 }
 
 
@@ -94,14 +67,12 @@ TgINLINE TgVOID FCN_VO(tgGM_BA_Sweep)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_BA_Expand)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fExpand )
 {
-    VEC_T(1)                            vExpand;
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fExpand ) && fExpand > TYPE_K(0));
 
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fExpand) && fExpand > TYPE_K(0));
+    VEC_T(1,C)      vExpand = FCN_V(tgMH_Init_Vector_ELEM)( fExpand, fExpand, fExpand );
 
-    vExpand = FCN_V(tgMH_SET1)( fExpand );
-
-    psBA0->m_vMin = FCN_V(tgMH_SUB)( &(psBA0->m_vMin), &vExpand );
-    psBA0->m_vMax = FCN_V(tgMH_ADD)( &(psBA0->m_vMax), &vExpand );
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_SUB)( VEC_UN_1_MEMBER(psBA0->m_uMin), vExpand );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_ADD)( VEC_UN_1_MEMBER(psBA0->m_uMax), vExpand );
 }
 
 
@@ -109,34 +80,25 @@ TgINLINE TgVOID FCN_VO(tgGM_BA_Expand)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_BA_Scale)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fScale )
 {
-    VEC_T(1)                            vScale, vOrigin, vExtent;
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fScale ) && fScale > TYPE_K(0));
 
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fScale) && fScale > TYPE_K(0));
+    VEC_T(1,C)      vScale = FCN_V(tgMH_SET1)( fScale );
+    VEC_T(1,C)      vOrigin = FCN_V(tgMH_Init_Vector)( FCN_VO(tgGM_BA_Query_Centre)( psBA0 ) );
 
-    vScale = FCN_V(tgMH_SET1)( fScale );
-    vOrigin = FCN_VO(tgGM_BA_Query_Centre)( psBA0 );
+    VEC_T(1,C)      vX0 = FCN_V(tgMH_SUB)( VEC_UN_1_MEMBER(psBA0->m_uMin), vOrigin );
+    VEC_T(1,C)      vExtent = FCN_V(tgMH_MUL)( vX0, vScale );
 
-    vExtent = FCN_V(tgMH_SUB)( &(psBA0->m_vMin), &vOrigin );
-    vExtent = FCN_V(tgMH_MUL)( &vExtent, &vScale );
-    psBA0->m_vMin = FCN_V(tgMH_ADD)( &vExtent, &vOrigin );
-
-    vExtent = FCN_V(tgMH_SUB)( &(psBA0->m_vMax), &vOrigin );
-    vExtent = FCN_V(tgMH_MUL)( &vExtent, &vScale );
-    psBA0->m_vMax = FCN_V(tgMH_ADD)( &vExtent, &vOrigin );
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_ADD)( vOrigin, vExtent );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_SUB)( vOrigin, vExtent );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Query_Centre) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_VO(tgGM_BA_Query_Centre)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_BA_Query_Centre)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1));
-
-    return (FCN_V(tgMH_SETP_S)(
-        TYPE_K(0,5)*(psBA1->m_vMin.x + psBA1->m_vMax.x),
-        TYPE_K(0,5)*(psBA1->m_vMin.y + psBA1->m_vMax.y),
-        TYPE_K(0,5)*(psBA1->m_vMin.z + psBA1->m_vMax.z)
-    ));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)( psBA0 ));
+    return (FCN_V(tgMH_Init_Point)( FCN_V(tgMH_AVG)( VEC_UN_1_MEMBER(psBA0->m_uMin), VEC_UN_1_MEMBER(psBA0->m_uMax) ) ));
 }
 
 
@@ -152,26 +114,26 @@ TgINLINE TgVOID FCN_VO(tgGM_BA_Reset)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0 )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_BA_Zero)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0 )
 {
-    psBA0->m_vMin = FCN_V(tgMH_SETV_S)( VAR_K(KTgMAX), VAR_K(KTgMAX), VAR_K(KTgMAX) );
-    psBA0->m_vMax = FCN_V(tgMH_SETV_S)( -VAR_K(KTgMAX), -VAR_K(KTgMAX), -VAR_K(KTgMAX) );
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_Init_Vector_ELEM)(  VAR_K(KTgMAX),  VAR_K(KTgMAX),  VAR_K(KTgMAX) );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_Init_Vector_ELEM)( -VAR_K(KTgMAX), -VAR_K(KTgMAX), -VAR_K(KTgMAX) );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_VO(tgGM_BA_Is_Valid)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1 )
+TgINLINE TgBOOL FCN_VO(tgGM_BA_Is_Valid)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    if (FCN_F(tgPM_NAN)(psBA1->m_vMin.x) || FCN_F(tgPM_NAN)(psBA1->m_vMin.y) || FCN_F(tgPM_NAN)(psBA1->m_vMin.z))
+    if (!FCN_V(tgMH_Is_Valid)( VEC_UN_1_MEMBER(psBA0->m_uMin) ))
     {
         return (false);
     };
 
-    if (FCN_F(tgPM_NAN)(psBA1->m_vMax.x) || FCN_F(tgPM_NAN)(psBA1->m_vMax.y) || FCN_F(tgPM_NAN)(psBA1->m_vMax.z))
+    if (!FCN_V(tgMH_Is_Valid)( VEC_UN_1_MEMBER(psBA0->m_uMax) ))
     {
         return (false);
     };
 
-    if (psBA1->m_vMin.x >= psBA1->m_vMax.x || psBA1->m_vMin.y >= psBA1->m_vMax.y || psBA1->m_vMin.z >= psBA1->m_vMax.z)
+    if (FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_GE)( VEC_UN_1_MEMBER(psBA0->m_uMin), VEC_UN_1_MEMBER(psBA0->m_uMax) ) ))
     {
         return (false);
     };
@@ -182,40 +144,46 @@ TgINLINE TgBOOL FCN_VO(tgGM_BA_Is_Valid)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1 )
 
 /* ---- FCN_VO(tgGM_BA_Support_Point) -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_VO(tgGM_BA_Support_Point)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1, VEC_T(1,CPCU) NONULL pvDN )
+TgINLINE VEC_T(1) FCN_VO(tgGM_BA_Support_Point)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0, VEC_T(1,C) vDN )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1));
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvDN));
-    TgGEOM_ASSERT_PARAM(FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvDN)));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)( psBA0 ));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Unit_Vector)( vDN ));
 
-    return (FCN_V(tgMH_SETP_S)(
-        FCN_F(tgPM_FSEL)(pvDN->x, psBA1->m_vMax.x, psBA1->m_vMin.x),
-        FCN_F(tgPM_FSEL)(pvDN->y, psBA1->m_vMax.y, psBA1->m_vMin.y),
-        FCN_F(tgPM_FSEL)(pvDN->z, psBA1->m_vMax.z, psBA1->m_vMin.z)
-    ));
+    VEC_T(1,C)      vOrigin = FCN_VO(tgGM_BA_Query_Centre)( psBA0 );
+    VEC_T(1,C)      vExtent = FCN_V(tgMH_ABS)( FCN_V(tgMH_SUB)( VEC_UN_1_MEMBER(psBA0->m_uMin), vOrigin ) );
+    VEC_T(1,C)      vX0 = FCN_V(tgMH_MUL)( FCN_V(tgMH_SGN)( vDN ), vExtent );
+    VEC_T(1,C)      vReturn = FCN_V(tgMH_ADD)( vX0, vOrigin );
+
+    return (vReturn);
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Volume) --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Volume)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Volume)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1));
-    return ((psBA1->m_vMax.x - psBA1->m_vMin.x) * (psBA1->m_vMax.y - psBA1->m_vMin.y) * (psBA1->m_vMax.z - psBA1->m_vMin.z));
+    VEC_UN_T(1)                         uExtent;
+
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)( psBA0 ));
+
+    VEC_UN_1_MEMBER(uExtent) = FCN_V(tgMH_SUB)( VEC_UN_1_MEMBER(psBA0->m_uMax), VEC_UN_1_MEMBER(psBA0->m_uMin) );
+    return (VEC_S_UN_1_MEMBER(uExtent).x * VEC_S_UN_1_MEMBER(uExtent).y * VEC_S_UN_1_MEMBER(uExtent).z);
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Area) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Area)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Area)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    VAR_T(C)                fdx = psBA1->m_vMax.x - psBA1->m_vMin.x;
-    VAR_T(C)                fdy = psBA1->m_vMax.y - psBA1->m_vMin.y;
-    VAR_T(C)                fdz = psBA1->m_vMax.z - psBA1->m_vMin.z;
+    VEC_UN_T(1)                         uExtent;
 
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)( psBA0 ));
 
-    return (TYPE_K(2,0)*fdx*fdy + TYPE_K(2,0)*fdx*fdz + TYPE_K(2,0)*fdy*fdz);
+    VEC_UN_1_MEMBER(uExtent) = FCN_V(tgMH_SUB)( VEC_UN_1_MEMBER(psBA0->m_uMax), VEC_UN_1_MEMBER(psBA0->m_uMin) );
+
+    VEC_S_T(1,C)    vExtent = VEC_S_UN_1_MEMBER(uExtent);
+
+    return (TYPE_K(2)*(vExtent.x*vExtent.y + vExtent.x*vExtent.z + vExtent.y*vExtent.z));
 }
 
 
@@ -229,130 +197,106 @@ TgINLINE TgVOID FCN_VO(tgGM_BA_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_OBJ
 
 /* ---- FCN_VO(tgGM_BA_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1, VEC_T(1,CPCU) NONULL pvDT )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1, VEC_T(1,C) vDT )
 {
     FCN_VO(tgGM_BA_Copy)( psBA0, psBA1 );
-    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, vDT );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Project)( VAR_T(PCU) NONULL ptyMin, VAR_T(PCU) NONULL ptyMax, VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1, VEC_T(1,CPCU) NONULL pvAxis )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Project)( VAR_T(PCU) NONULL pfMin, VAR_T(PCU) NONULL pfMax, VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0, VEC_T(1,C) vDN )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1) && FCN_V(tgMH_Is_Vector_Valid)(pvAxis));
+    VEC_UN_T(1)                         uMin_Proj, uMax_Proj;
 
-    *ptyMin = pvAxis->x*psBA1->m_vMin.x + pvAxis->y*psBA1->m_vMin.y + pvAxis->z*psBA1->m_vMin.z;
-    *ptyMax = pvAxis->x*psBA1->m_vMax.x + pvAxis->y*psBA1->m_vMax.y + pvAxis->z*psBA1->m_vMax.z;
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)( psBA0 ) && FCN_V(tgMH_Is_Valid_Vector)( vDN ));
+
+    VEC_T(1,C)      vOrigin = FCN_VO(tgGM_BA_Query_Centre)( psBA0 );
+    VEC_T(1,C)      vX0 = FCN_V(tgMH_ABS)( FCN_V(tgMH_SUB)( VEC_UN_1_MEMBER(psBA0->m_uMin), vOrigin ) );
+    VEC_T(1,C)      vExtent = FCN_V(tgMH_MUL)( FCN_V(tgMH_SGN)( vDN ), vX0 );
+
+    VEC_UN_1_MEMBER(uMin_Proj) = FCN_V(tgMH_DOT)( vDN, FCN_V(tgMH_SUB)( vOrigin, vExtent ) );
+    VEC_UN_1_MEMBER(uMax_Proj) = FCN_V(tgMH_DOT)( vDN, FCN_V(tgMH_ADD)( vOrigin, vExtent ) );
+    
+    *pfMin = VEC_S_UN_1_MEMBER(uMin_Proj).x;
+    *pfMax = VEC_S_UN_1_MEMBER(uMax_Proj).x;
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_VO(tgGM_BA_Is_Contained)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1, VEC_T(1,CPCU) NONULL pvP0 )
+TgINLINE TgBOOL FCN_VO(tgGM_BA_Is_Contained)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0, VEC_T(1,C) vP0 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1) && FCN_V(tgMH_Is_Point_Valid)(pvP0));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)( psBA0 ) && FCN_V(tgMH_Is_Valid_Point)( vP0 ));
 
-    return (
-        pvP0->x >= psBA1->m_vMin.x && pvP0->x <= psBA1->m_vMax.x &&
-        pvP0->y >= psBA1->m_vMin.y && pvP0->y <= psBA1->m_vMax.y &&
-        pvP0->z >= psBA1->m_vMin.z && pvP0->z <= psBA1->m_vMax.z
-    );
+    return (FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_AND)( FCN_V(tgMH_CMP_GE)( vP0, VEC_UN_1_MEMBER(psBA0->m_uMin) ), FCN_V(tgMH_CMP_LE)( vP0, VEC_UN_1_MEMBER(psBA0->m_uMax) ) ) ));
 }
 
 
 /* ---- FCN_VO(tgGM_BA_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_TX)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_04_3_T(CPCU) NONULL pxM0 )
+TgINLINE TgVOID FCN_VO(tgGM_BA_TX)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(3,CPCU) NONULL pmM0 )
 {
-    VEC_04_4_T()                        tmM1;
+    VEC_T(1,C)      vA0 = FCN_V(tgMH_ABS)( FCN_V(tgMH_Query_Axis_0,3)( pmM0 ) );
+    VEC_T(1,C)      vA1 = FCN_V(tgMH_ABS)( FCN_V(tgMH_Query_Axis_1,3)( pmM0 ) );
+    VEC_T(1,C)      vA2 = FCN_V(tgMH_ABS)( FCN_V(tgMH_Query_Axis_2,3)( pmM0 ) );
+    VEC_T(1,C)      vA3 = FCN_V(tgMH_Query_Axis_3,3)( pmM0 );
 
-    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+    VEC_T(1,C)      vV0 = FCN_V(tgMH_MUL)( FCN_V(tgMH_SET1)( TYPE_K(0,5) * FCN_VO(tgGM_BA_Query_Size_X)( psBA0 ) ), vA0 );
+    VEC_T(1,C)      vV1 = FCN_V(tgMH_MUL)( FCN_V(tgMH_SET1)( TYPE_K(0,5) * FCN_VO(tgGM_BA_Query_Size_Y)( psBA0 ) ), vA1 );
+    VEC_T(1,C)      vV2 = FCN_V(tgMH_MUL)( FCN_V(tgMH_SET1)( TYPE_K(0,5) * FCN_VO(tgGM_BA_Query_Size_Z)( psBA0 ) ), vA2 );
+    VEC_T(1,C)      vV3 = FCN_V(tgMH_ADD)( vV0, FCN_V(tgMH_ADD)( vV1, vV2 ) );
+    VEC_T(1,C)      vV4 = FCN_VO(tgGM_BA_Query_Centre)( psBA0 );;
+    VEC_T(1,C)      vV5 = FCN_V(tgMH_ADD)( vV4, vA3 );
 
-    FCN_04_3_V(tgMH_TR)(&tmM1, pxM0);
-
-    {
-        VEC_T(1,C)                          v0 = FCN_V(tgMH_MUL_SV)( FCN_VO(tgGM_BA_Query_SizeX)( psBA0 ), (VEC_T(1,CPU))(tmM1.m_avRow + 0) );
-        VEC_T(1,C)                          v1 = FCN_V(tgMH_MUL_SV)( FCN_VO(tgGM_BA_Query_SizeY)( psBA0 ), (VEC_T(1,CPU))(tmM1.m_avRow + 1) );
-        VEC_T(1,C)                          v2 = FCN_V(tgMH_MUL_SV)( FCN_VO(tgGM_BA_Query_SizeZ)( psBA0 ), (VEC_T(1,CPU))(tmM1.m_avRow + 2) );
-        VEC_T(1,C)                          v3 = FCN_V(tgMH_SUB)( &v1, &v0 );
-        VEC_T(1,C)                          v4 = FCN_V(tgMH_SUB)( &v2, &v0 );
-        VEC_T(1,C)                          v5 = FCN_V(tgMH_SUB)( &v2, &v1 );
-        VEC_T(1,C)                          v7 = FCN_VO(tgGM_BA_Query_Centre)( psBA0 );
-        VEC_T(1,C)                          v6 = FCN_V(tgMH_ADD)( &v7, (VEC_T(1,CPU))(tmM1.m_avRow + 3) );
-
-        psBA0->m_vMin.x = v6.x + FCN_F(tgPM_FSEL)( v3.x, FCN_F(tgPM_FSEL)(v4.x, v0.x, v2.x), FCN_F(tgPM_FSEL)(v5.x, v1.x, v2.x) );
-        psBA0->m_vMin.y = v6.y + FCN_F(tgPM_FSEL)( v3.y, FCN_F(tgPM_FSEL)(v4.y, v0.y, v2.y), FCN_F(tgPM_FSEL)(v5.y, v1.y, v2.y) );
-        psBA0->m_vMin.z = v6.z + FCN_F(tgPM_FSEL)( v3.z, FCN_F(tgPM_FSEL)(v4.z, v0.z, v2.z), FCN_F(tgPM_FSEL)(v5.z, v1.z, v2.z) );
-
-        psBA0->m_vMax.x = v6.x + FCN_F(tgPM_FSEL)( v3.x, FCN_F(tgPM_FSEL)(v5.x, v2.x, v1.x), FCN_F(tgPM_FSEL)(v4.x, v2.x, v0.x) );
-        psBA0->m_vMax.y = v6.y + FCN_F(tgPM_FSEL)( v3.y, FCN_F(tgPM_FSEL)(v5.y, v2.y, v1.y), FCN_F(tgPM_FSEL)(v4.y, v2.y, v0.y) );
-        psBA0->m_vMax.z = v6.z + FCN_F(tgPM_FSEL)( v3.z, FCN_F(tgPM_FSEL)(v5.z, v2.z, v1.z), FCN_F(tgPM_FSEL)(v4.z, v2.z, v0.z) );
-    };
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_SUB)( vV5, vV3 );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_ADD)( vV5, vV3 );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Copy_TX)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1, VEC_04_3_T(CPCU) NONULL pxM0 )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Copy_TX)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA_Out, VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0, VEC_T(3,CPCU) NONULL pmM0 )
 {
-    VEC_04_4_T()                        tmM1;
-
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
-
-    FCN_04_3_V(tgMH_TR)(&tmM1, pxM0);
-
-    {
-        VEC_T(1,C)                          v0 = FCN_V(tgMH_MUL_SV)(FCN_VO(tgGM_BA_Query_SizeX)( psBA1), (VEC_T(1,CPU))(tmM1.m_avRow + 0) );
-        VEC_T(1,C)                          v1 = FCN_V(tgMH_MUL_SV)(FCN_VO(tgGM_BA_Query_SizeY)( psBA1), (VEC_T(1,CPU))(tmM1.m_avRow + 1) );
-        VEC_T(1,C)                          v2 = FCN_V(tgMH_MUL_SV)(FCN_VO(tgGM_BA_Query_SizeZ)( psBA1), (VEC_T(1,CPU))(tmM1.m_avRow + 2) );
-        VEC_T(1,C)                          v3 = FCN_V(tgMH_SUB)( &v1, &v0 );
-        VEC_T(1,C)                          v4 = FCN_V(tgMH_SUB)( &v2, &v0 );
-        VEC_T(1,C)                          v5 = FCN_V(tgMH_SUB)( &v2, &v1 );
-        VEC_T(1,C)                          v7 = FCN_VO(tgGM_BA_Query_Centre)( psBA1 );
-        VEC_T(1,C)                          v6 = FCN_V(tgMH_ADD)( &v7, (VEC_T(1,CPU))(tmM1.m_avRow + 3) );
-
-        psBA0->m_vMin.x = v6.x + FCN_F(tgPM_FSEL)( v3.x, FCN_F(tgPM_FSEL)(v4.x, v0.x, v2.x), FCN_F(tgPM_FSEL)(v5.x, v1.x, v2.x) );
-        psBA0->m_vMin.y = v6.y + FCN_F(tgPM_FSEL)( v3.y, FCN_F(tgPM_FSEL)(v4.y, v0.y, v2.y), FCN_F(tgPM_FSEL)(v5.y, v1.y, v2.y) );
-        psBA0->m_vMin.z = v6.z + FCN_F(tgPM_FSEL)( v3.z, FCN_F(tgPM_FSEL)(v4.z, v0.z, v2.z), FCN_F(tgPM_FSEL)(v5.z, v1.z, v2.z) );
-
-        psBA0->m_vMax.x = v6.x + FCN_F(tgPM_FSEL)( v3.x, FCN_F(tgPM_FSEL)(v5.x, v2.x, v1.x), FCN_F(tgPM_FSEL)(v4.x, v2.x, v0.x) );
-        psBA0->m_vMax.y = v6.y + FCN_F(tgPM_FSEL)( v3.y, FCN_F(tgPM_FSEL)(v5.y, v2.y, v1.y), FCN_F(tgPM_FSEL)(v4.y, v2.y, v0.y) );
-        psBA0->m_vMax.z = v6.z + FCN_F(tgPM_FSEL)( v3.z, FCN_F(tgPM_FSEL)(v5.z, v2.z, v1.z), FCN_F(tgPM_FSEL)(v4.z, v2.z, v0.z) );
-    };
+    FCN_VO(tgGM_BA_Copy)( psBA_Out, psBA0 );
+    FCN_VO(tgGM_BA_TX)( psBA_Out, pmM0 );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Init)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,CPCU) NONULL pvMin, VEC_T(1,CPCU) NONULL pvMax )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Init)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,C) vMin, VEC_T(1,C) vMax )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_V(tgMH_NaN)(pvMin) && !FCN_V(tgMH_NaN)(pvMax));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid)( vMin ) && FCN_V(tgMH_Is_Valid)( vMax ));
 
-    psBA0->m_vMin = *pvMin;
-    psBA0->m_vMax = *pvMax;
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = vMin;
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = vMax;
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Init_PT) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Init_PT)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,CPCU) NONULL pvPoint )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Init_PT)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,C) vPoint )
 {
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvPoint));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Point)( vPoint ));
 
-    psBA0->m_vMin = *pvPoint;
-    psBA0->m_vMax = *pvPoint;
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_Init_Vector)( vPoint );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_Init_Vector)( vPoint );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Init_SP) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Init_SP)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,CPCU) NONULL pvOrigin, VAR_T(C) fRadius )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Init_SP)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,C) vS0, VAR_T(C) fRadius )
 {
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)(pvOrigin) && !FCN_F(tgPM_NAN)(fRadius));
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Point)( vS0 ) && (fRadius >= TYPE_K(0)));
 
-    psBA0->m_vMin = FCN_V(tgMH_SETV_S)( pvOrigin->x - fRadius, pvOrigin->y - fRadius, pvOrigin->z - fRadius );
-    psBA0->m_vMax = FCN_V(tgMH_SETV_S)( pvOrigin->x + fRadius, pvOrigin->y + fRadius, pvOrigin->z + fRadius );
+    VEC_T(1,C)      vRadius = FCN_V(tgMH_Init_Vector_ELEM)( fRadius, fRadius, fRadius );
+    VEC_T(1,C)      vX0 = FCN_V(tgMH_Init_Vector)( vS0 );
+
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_SUB)( vX0, vRadius );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_ADD)( vX0, vRadius );
 }
 
 
@@ -360,10 +304,10 @@ TgINLINE TgVOID FCN_VO(tgGM_BA_Init_SP)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VE
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_BA_Copy)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA1 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)(psBA1));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_BA_Is_Valid)( psBA1 ));
 
-    psBA0->m_vMin = psBA1->m_vMin;
-    psBA0->m_vMax = psBA1->m_vMax;
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = VEC_UN_1_MEMBER(psBA1->m_uMin);
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = VEC_UN_1_MEMBER(psBA1->m_uMax);
 }
 
 
@@ -371,238 +315,166 @@ TgINLINE TgVOID FCN_VO(tgGM_BA_Copy)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_O
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Invalid)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0 )
 {
-    psBA0->m_vMin = FCN_V(tgMH_SET1)(  VAR_K(KTgMAX) );
-    psBA0->m_vMin = FCN_V(tgMH_SETV)( &psBA0->m_vMin );
-    psBA0->m_vMax = FCN_V(tgMH_SET1)( -VAR_K(KTgMAX) );
-    psBA0->m_vMax = FCN_V(tgMH_SETV)( &psBA0->m_vMax );
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_SET1)(  VAR_K(KTgMAX) ) );
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_SET1)( -VAR_K(KTgMAX) ) );
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Set_Min) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Min)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,CPCU) pvMin )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Min)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,C) vMin )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_V(tgMH_NaN)(pvMin));
-    psBA0->m_vMin = *pvMin;
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Vector)( vMin ));
+    VEC_UN_1_MEMBER(psBA0->m_uMin) = vMin;
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Set_Max) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Max)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,CPCU) pvMax )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Max)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VEC_T(1,C) vMax )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_V(tgMH_NaN)(pvMax));
-    psBA0->m_vMax = *pvMax;
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Vector)( vMax ));
+    VEC_UN_1_MEMBER(psBA0->m_uMax) = vMax;
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Set_MinX) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Set_Min_X) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Set_MinX)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMinX )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Min_X)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMinX )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fMinX));
-    psBA0->m_vMin.x = fMinX;
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fMinX ));
+    VEC_S_UN_1_MEMBER(psBA0->m_uMin).x = fMinX;
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Set_MinY) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Set_Min_Y) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Set_MinY)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMinY )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Min_Y)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMinY )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fMinY));
-    psBA0->m_vMin.y = fMinY;
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fMinY ));
+    VEC_S_UN_1_MEMBER(psBA0->m_uMin).y = fMinY;
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Set_MinZ) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Set_Min_Z) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Set_MinZ)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMinZ )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Min_Z)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMinZ )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fMinZ));
-    psBA0->m_vMin.z = fMinZ;
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fMinZ ));
+    VEC_S_UN_1_MEMBER(psBA0->m_uMin).z = fMinZ;
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Set_MaxX) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Set_Max_X) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Set_MaxX)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMaxX )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Max_X)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMaxX )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fMaxX));
-    psBA0->m_vMax.x = fMaxX;
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fMaxX ));
+    VEC_S_UN_1_MEMBER(psBA0->m_uMax).x = fMaxX;
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Set_MaxY) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Set_Max_Y) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Set_MaxY)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMaxY )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Max_Y)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMaxY )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fMaxY));
-    psBA0->m_vMax.y = fMaxY;
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fMaxY ));
+    VEC_S_UN_1_MEMBER(psBA0->m_uMax).y = fMaxY;
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Set_MaxZ) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Set_Max_Z) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_Set_MaxZ)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMaxZ )
+TgINLINE TgVOID FCN_VO(tgGM_BA_Set_Max_Z)( VEC_OBJ_T(TgBOXAA,PCU) NONULL psBA0, VAR_T(C) fMaxZ )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fMaxZ));
-    psBA0->m_vMax.z = fMaxZ;
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fMaxZ ));
+    VEC_S_UN_1_MEMBER(psBA0->m_uMax).z = fMaxZ;
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Query_Min) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_BA_Query_Min)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_BA_Query_Min)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (&psBA0->m_vMin);
+    return (VEC_UN_1_MEMBER(psBA0->m_uMin));
 }
 
 
 /* ---- FCN_VO(tgGM_BA_Query_Max) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_BA_Query_Max)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_BA_Query_Max)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (&psBA0->m_vMax);
+    return (VEC_UN_1_MEMBER(psBA0->m_uMax));
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_MinX) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Min_X) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_MinX)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Min_X)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMin.x);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMin).x);
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_MinY) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Min_Y) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_MinY)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Min_Y)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMin.y);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMin).y);
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_MinZ) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Min_Z) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_MinZ)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Min_Z)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMin.z);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMin).z);
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_MaxX) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Max_X) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_MaxX)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Max_X)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMax.x);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMax).x);
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_MaxY) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Max_Y) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_MaxY)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Max_Y)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMax.y);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMax).y);
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_MaxZ) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Max_Z) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_MaxZ)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Max_Z)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMax.z);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMax).z);
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_SizeX) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Size_X) -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_SizeX)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Size_X)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMax.x - psBA0->m_vMin.x);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMax).x - VEC_S_UN_1_MEMBER(psBA0->m_uMin).x);
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_SizeY) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Size_Y) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_SizeY)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Size_Y)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMax.y - psBA0->m_vMin.y);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMax).y - VEC_S_UN_1_MEMBER(psBA0->m_uMin).y);
 }
 
 
-/* ---- FCN_VO(tgGM_BA_Query_SizeZ) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_VO(tgGM_BA_Query_Size_Z) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_SizeZ)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
+TgINLINE VAR_T() FCN_VO(tgGM_BA_Query_Size_Z)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL psBA0 )
 {
-    return (psBA0->m_vMax.z - psBA0->m_vMin.z);
+    return (VEC_S_UN_1_MEMBER(psBA0->m_uMax).z - VEC_S_UN_1_MEMBER(psBA0->m_uMin).z);
 }
-
-
-
-
-#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
-
-/* ---- FCN_VO(tgGM_BA_N_Is_Empty) ----------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_VO(tgGM_BA_N_Is_Empty)( VEC_OBJ_T(TgBOXAA_N,CPCU) NONULL psBA0 )
-{
-    return (FCN_V(tgMH_CMP_TO_BOOL_N)( FCN_V(tgMH_CMP_LT_N)( psBA0->m_vMin, psBA0->m_vMax ) ) ? false : true);
-}
-
-
-/* ---- FCN_VO(tgGM_BA_N_Reset) -------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_N_Reset)( VEC_OBJ_T(TgBOXAA_N,PCU) NONULL psBA0 )
-{
-    psBA0->m_vMin = FCN_V(tgMH_SETV_N)( FCN_V(tgMH_SET1_N)(  VAR_K(KTgMAX) ) );
-    psBA0->m_vMax = FCN_V(tgMH_SETV_N)( FCN_V(tgMH_SET1_N)( -VAR_K(KTgMAX) ) );
-}
-
-
-/* ---- FCN_VO(tgGM_BA_N_Is_Valid) ----------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_VO(tgGM_BA_N_Is_Valid)( VEC_OBJ_T(TgBOXAA_N,CPCU) NONULL psBA0 )
-{
-    return (!FCN_VO(tgGM_BA_N_Is_Empty)( psBA0 ));
-}
-
-
-/* ---- FCN_VO(tgGM_BA_N_Sweep) -------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_N_Sweep)( VEC_OBJ_T(TgBOXAA_N,PCU) NONULL psBA0, VEC_N_T(1,C) vDT )
-{
-    VEC_N_T(1,C)                        vF0 = FCN_V(tgMH_ADD_N)( psBA0->m_vMin, vDT );
-    VEC_N_T(1,C)                        vF1 = FCN_V(tgMH_ADD_N)( psBA0->m_vMax, vDT );
-
-    psBA0->m_vMin = FCN_V(tgMH_MIN_N)( psBA0->m_vMin, vF0 );
-    psBA0->m_vMax = FCN_V(tgMH_MAX_N)( psBA0->m_vMax, vF1 );
-}
-
-
-/* ---- FCN_VO(tgGM_BA_N_Copy) --------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_BA_N_Copy)( VEC_OBJ_T(TgBOXAA_N,PCU) NONULL psBA0, VEC_OBJ_T(TgBOXAA_N,CPCU) NONULL psBA1 )
-{
-    psBA0->m_vMin = psBA1->m_vMin;
-    psBA0->m_vMax = psBA1->m_vMax;
-}
-
-
-/* ---- FCN_VO(tgGM_BA_N_Query_Min) ---------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_N_T(1) FCN_VO(tgGM_BA_N_Query_Min)( VEC_OBJ_T(TgBOXAA_N,CPCU) NONULL psBA0 )
-{
-    return (psBA0->m_vMin);
-}
-
-
-/* ---- FCN_VO(tgGM_BA_N_Query_Max) ---------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_N_T(1) FCN_VO(tgGM_BA_N_Query_Max)( VEC_OBJ_T(TgBOXAA_N,CPCU) NONULL psBA0 )
-{
-    return (psBA0->m_vMax);
-}
-
-
-/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
-#endif

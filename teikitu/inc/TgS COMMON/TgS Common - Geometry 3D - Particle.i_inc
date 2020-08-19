@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Geometry 3D - Particle.i_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,22 +16,22 @@
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_PC_Reset)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0 )
 {
-    psPC0->m_vPos = FCN_V(tgMH_SETP_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
-    psPC0->m_vVel = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
-    psPC0->m_vAccel = FCN_V(tgMH_SETV_S)( TYPE_K(0), TYPE_K(0), TYPE_K(0) );
+    psPC0->m_vPos = FCN_V(tgMH_Init_Point)( FCN_V(tgMH_SET1)( TYPE_K(0) ) );
+    psPC0->m_vVel = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_SET1)( TYPE_K(0) ) );
+    psPC0->m_vAccel = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_SET1)( TYPE_K(0) ) );
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Is_Valid) ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_VO(tgGM_PC_Is_Valid)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC1 )
+TgINLINE TgBOOL FCN_VO(tgGM_PC_Is_Valid)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC0 )
 {
-    if (!FCN_V(tgMH_Is_Point_Valid)(&psPC1->m_vPos) || !FCN_V(tgMH_Is_Vector_Valid)(&psPC1->m_vVel))
+    if (!FCN_V(tgMH_Is_Valid_Point)( psPC0->m_vPos ) || !FCN_V(tgMH_Is_Valid_Vector)( psPC0->m_vVel ))
     {
         return (false);
     };
 
-    if (!FCN_V(tgMH_Is_Vector_Valid)(&psPC1->m_vAccel))
+    if (!FCN_V(tgMH_Is_Valid_Vector)( psPC0->m_vAccel ))
     {
         return (false);
     };
@@ -42,35 +42,35 @@ TgINLINE TgBOOL FCN_VO(tgGM_PC_Is_Valid)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC1 )
 
 /* ---- FCN_VO(tgGM_PC_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_PC_TX)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_04_3_T(CPCU) pxM0 )
+TgINLINE TgVOID FCN_VO(tgGM_PC_TX)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(3,CPCU) pmM0 )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_04_3_V(tgMH_NaN)(pxM0));
+    TgGEOM_ASSERT_PARAM(!FCN_V(tgMH_NAN,3)( pmM0 ));
 
-    psPC0->m_vPos = FCN_04_3_V(tgMH_TX_P)( pxM0, &psPC0->m_vPos );
-    psPC0->m_vVel = FCN_04_3_V(tgMH_TX_V)( pxM0, &psPC0->m_vVel );
-    psPC0->m_vAccel = FCN_04_3_V(tgMH_TX_V)( pxM0, &psPC0->m_vAccel );
+    psPC0->m_vPos = FCN_V(tgMH_TX_P,3)( psPC0->m_vPos, pmM0 );
+    psPC0->m_vVel = FCN_V(tgMH_TX_V,3)( psPC0->m_vVel, pmM0 );
+    psPC0->m_vAccel = FCN_V(tgMH_TX_V,3)( psPC0->m_vAccel, pmM0 );
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_PC_Copy_TX)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_OBJ_T(TgPARTICLE,CPCU) psPC1, VEC_04_3_T(CPCU) pxM0 )
+TgINLINE TgVOID FCN_VO(tgGM_PC_Copy_TX)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_OBJ_T(TgPARTICLE,CPCU) psPC1, VEC_T(3,CPCU) pmM0 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PC_Is_Valid)(psPC1) && !FCN_04_3_V(tgMH_NaN)(pxM0));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PC_Is_Valid)( psPC1 ) && !FCN_V(tgMH_NAN,3)( pmM0 ));
 
-    psPC0->m_vPos = FCN_04_3_V(tgMH_TX_P)( pxM0, &psPC1->m_vPos );
-    psPC0->m_vVel = FCN_04_3_V(tgMH_TX_V)( pxM0, &psPC1->m_vVel );
-    psPC0->m_vAccel = FCN_04_3_V(tgMH_TX_V)( pxM0, &psPC1->m_vAccel );
+    psPC0->m_vPos = FCN_V(tgMH_TX_P,3)( psPC1->m_vPos, pmM0 );
+    psPC0->m_vVel = FCN_V(tgMH_TX_V,3)( psPC1->m_vVel, pmM0 );
+    psPC0->m_vAccel = FCN_V(tgMH_TX_V,3)( psPC1->m_vAccel, pmM0 );
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_PC_Init)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvV0, VEC_T(1,CPCU) pvA0 )
+TgINLINE TgVOID FCN_VO(tgGM_PC_Init)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,C) vS0, VEC_T(1,C) vV0, VEC_T(1,C) vA0 )
 {
-    FCN_VO(tgGM_PC_Set_Position)( psPC0, pvS0 );
-    FCN_VO(tgGM_PC_Set_Velocity)( psPC0, pvV0 );
-    FCN_VO(tgGM_PC_Set_Acceleration)( psPC0, pvA0 );
+    FCN_VO(tgGM_PC_Set_Position)( psPC0, vS0 );
+    FCN_VO(tgGM_PC_Set_Velocity)( psPC0, vV0 );
+    FCN_VO(tgGM_PC_Set_Acceleration)( psPC0, vA0 );
 }
 
 
@@ -78,7 +78,7 @@ TgINLINE TgVOID FCN_VO(tgGM_PC_Init)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,C
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_PC_Copy)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_OBJ_T(TgPARTICLE,CPCU) psPC1 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PC_Is_Valid)(psPC1));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_PC_Is_Valid)( psPC1 ));
 
     psPC0->m_vPos = psPC1->m_vPos;
     psPC0->m_vVel = psPC1->m_vVel;
@@ -88,71 +88,74 @@ TgINLINE TgVOID FCN_VO(tgGM_PC_Copy)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_OBJ_T
 
 /* ---- FCN_VO(tgGM_PC_Set_Position) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_PC_Set_Position)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,CPCU) pvS0 )
+TgINLINE TgVOID FCN_VO(tgGM_PC_Set_Position)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,C) vS0 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Point_Valid)( pvS0 ));
-    psPC0->m_vPos = *pvS0;
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Point)( vS0 ));
+    psPC0->m_vPos = vS0;
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Set_Velocity) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_PC_Set_Velocity)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,CPCU) pvV0 )
+TgINLINE TgVOID FCN_VO(tgGM_PC_Set_Velocity)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,C) vV0 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvV0) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvV0)));
-    psPC0->m_vVel = *pvV0;
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Vector)( vV0 ));
+    psPC0->m_vVel = vV0;
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Set_Acceleration) ----------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_PC_Set_Acceleration)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,CPCU) pvA0 )
+TgINLINE TgVOID FCN_VO(tgGM_PC_Set_Acceleration)( VEC_OBJ_T(TgPARTICLE,PCU) psPC0, VEC_T(1,C) vA0 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Vector_Valid)(pvA0) && FCN_F(tgCM_NR1)(FCN_V(tgMH_LSQ)(pvA0)));
-    psPC0->m_vAccel = *pvA0;
+    TgGEOM_ASSERT_PARAM(FCN_V(tgMH_Is_Valid_Vector)( vA0 ));
+    psPC0->m_vAccel = vA0;
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Query_Position) ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PC_Query_Position)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC1 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_PC_Query_Position)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC0 )
 {
-    return (&psPC1->m_vPos);
+    return (psPC0->m_vPos);
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Query_Velocity) ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PC_Query_Velocity)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC1 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_PC_Query_Velocity)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC0 )
 {
-    return (&psPC1->m_vVel);
+    return (psPC0->m_vVel);
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Query_Acceleration) --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_PC_Query_Acceleration)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC1 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_PC_Query_Acceleration)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC0 )
 {
-    return (&psPC1->m_vAccel);
+    return (psPC0->m_vAccel);
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Query_Position_Time) -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_VO(tgGM_PC_Query_Position_Time)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC1, VAR_T(C) fT )
+TgINLINE VEC_T(1) FCN_VO(tgGM_PC_Query_Position_Time)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC0, VAR_T(C) fT )
 {
-    VEC_T(1,C)                          vX0 = FCN_V(tgMH_MAD_SVV)( fT, &psPC1->m_vAccel, &psPC1->m_vVel );
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fT ) && fT >= TYPE_K(0));
 
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fT) && fT >= TYPE_K(0));
-
-    return (FCN_V(tgMH_MAD_VSV)( &vX0, fT, &psPC1->m_vPos) );
+    VEC_T(1,C)      vX0 = FCN_V(tgMH_MAD)( FCN_V(tgMH_SET1)( fT ), psPC0->m_vAccel, psPC0->m_vVel );
+    VEC_T(1,C)      vX1 = FCN_V(tgMH_MAD)( vX0, FCN_V(tgMH_SET1)( fT ), psPC0->m_vPos );
+    return (vX1);
 }
 
 
 /* ---- FCN_VO(tgGM_PC_Query_Velocity_Time) -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_VO(tgGM_PC_Query_Velocity_Time)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC1, VAR_T(C) fT )
+TgINLINE VEC_T(1) FCN_VO(tgGM_PC_Query_Velocity_Time)( VEC_OBJ_T(TgPARTICLE,CPCU) psPC0, VAR_T(C) fT )
 {
-    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)(fT) && fT >= TYPE_K(0));
-    return (FCN_V(tgMH_MAD_SVV)( fT, &psPC1->m_vAccel, &psPC1->m_vVel) );
+    TgGEOM_ASSERT_PARAM(!FCN_F(tgPM_NAN)( fT ) && fT >= TYPE_K(0));
+
+    VEC_T(1,C)      vX0 = FCN_V(tgMH_MAD)( FCN_V(tgMH_SET1)( fT ), psPC0->m_vAccel, psPC0->m_vVel );
+
+    return (vX0);
 }

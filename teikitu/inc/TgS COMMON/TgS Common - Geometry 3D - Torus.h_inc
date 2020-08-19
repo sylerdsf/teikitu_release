@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Geometry 3D - Torus.h_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -18,116 +18,115 @@
 
                                                 /** @brief Invalidate the geometry object (torus)
                                                     @param[out] OUT Pointer to the geometry object (torus) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Reset)( VEC_OBJ_T(TgTORUS,PCU) OUT );
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Reset)( VEC_OBJ_T(TgTORUS,PCU) NONULL OUT );
 
                                                 /** @brief Validate the integrity of the geometry object (torus)
                                                     @param[in] ARG Pointer to a geometry object (torus)
                                                     @return True if the geometry object (torus) is valid and false otherwise */
-TgEXTN TgBOOL                                   FCN_VO(tgGM_TS_Is_Valid)( VEC_OBJ_T(TgTORUS,CPCU) ARG );
+TgEXTN TgBOOL                                   FCN_VO(tgGM_TS_Is_Valid)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
 
                                                 /** @brief Determine the point on the geometry object (torus) that is furthest along the direction of ARG1
                                                     @param[in] ARG0 Pointer to a geometry object (torus)
-                                                    @param[in] ARG1 Pointer to a direction vector
+                                                    @param[in] ARG1 Direction vector
                                                     @return The point on the geometry object (torus) that is furthest along the direction of ARG1 */
-TgEXTN VEC_T(1)                                 FCN_VO(tgGM_TS_Support_Point)( VEC_OBJ_T(TgTORUS,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgEXTN VEC_T(1)                                 FCN_VO(tgGM_TS_Support_Point)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Calculate the volume of the geometry object (torus)
                                                     @param[in] ARG Pointer to a geometry object (torus)
                                                     @return The volume of the geometry object (torus) */
-TgINLINE VAR_T()                                FCN_VO(tgGM_TS_Volume)( VEC_OBJ_T(TgTORUS,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_TS_Volume)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
 
                                                 /** @brief Calculate the surface area of the geometry object (torus)
                                                     @param[in] ARG Pointer to a geometry object (torus)
                                                     @return The surface area of the geometry object (torus) */
-TgINLINE VAR_T()                                FCN_VO(tgGM_TS_Area)( VEC_OBJ_T(TgTORUS,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_TS_Area)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
 
                                                 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (torus)
                                                     @param[out] ARG0 Pointer to an axis-aligned bounding box object
                                                     @param[in] ARG1 Pointer to a geometry object (torus) */
-TgEXTN TgVOID                                   FCN_VO(tgGM_TS_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgTORUS,CPCU) ARG1 );
+TgEXTN TgVOID                                   FCN_VO(tgGM_TS_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG1 );
 
                                                 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (torus)
                                                     @param[out] ARG0 Pointer to an axis-aligned bounding box object
                                                     @param[in] ARG1 Pointer to a geometry object (torus)
                                                     @param[in] ARG2 Pointer to a vector describing the swept direction and magnitude */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgTORUS,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG1, VEC_T(1,C) ARG2 );
 
                                                 /** @brief Project the geometry object (torus) along the direction vector
                                                     @param[out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
                                                     @param[out] OUT1 Pointer to a scalar value to hold the upper bound of the projection
                                                     @param[in] ARG2 Pointer to a geometry object (torus)
-                                                    @param[in] ARG3 Pointer to a direction vector */
-TgEXTN TgVOID                                   FCN_VO(tgGM_TS_Project)( VAR_T(PCU) ARG0, VAR_T(PCU) ARG1, VEC_OBJ_T(TgTORUS,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
+                                                    @param[in] ARG3 Direction vector */
+TgEXTN TgVOID                                   FCN_VO(tgGM_TS_Project)( VEC_T(1,PCU) NONULL ARG0, VEC_T(1,PCU) NONULL ARG1, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG2, VEC_T(1,C) ARG3 );
 
                                                 /** @brief Test to see if a point is either on or in the geometry object (torus)
                                                     @param[in] ARG0 Pointer to a geometry object (torus)
-                                                    @param[in] ARG1 Pointer to a position vector
+                                                    @param[in] ARG1 Position vector
                                                     @return True if the position is either on or in the geometry object (torus) and false otherwise */
-TgEXTN TgBOOL                                   FCN_VO(tgGM_TS_Is_Contained)( VEC_OBJ_T(TgTORUS,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgEXTN TgBOOL                                   FCN_VO(tgGM_TS_Is_Contained)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Transform the geometry object (torus) at ARG0 by the matrix at ARG1
                                                     @param[in,out] ARG0 Pointer to a geometry object (torus)
                                                     @param[in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_TX)( VEC_OBJ_T(TgTORUS,PCU) ARG0, VEC_04_3_T(CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_TX)( VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
 
                                                 /** @brief Transform the geometry object (torus) at ARG1 by the matrix at ARG2 and store it in ARG0
                                                     @param[out] ARG0 Pointer to a geometry object (torus)
                                                     @param[in] ARG1 Pointer to a geometry object (torus)
                                                     @param[in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Copy_TX)( VEC_OBJ_T(TgTORUS,PCU) ARG0, VEC_OBJ_T(TgTORUS,CPCU) ARG1, VEC_04_3_T(CPCU) ARG2 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Copy_TX)( VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG1, VEC_T(3,CPCU) NONULL ARG2 );
 
 
                                                 /** @brief Initialize a new geometry object (torus) with the function arguments
                                                     @param[out] ARG0 Pointer to a geometry object (torus)
-                                                    @param[in] ARG1 Pointer to a position vector - origin
-                                                    @param[in] ARG2 Pointer to a direction vector - normal to the plane
-                                                    @param[in] ARG2 Scalar value - inner radius
-                                                    @param[in] ARG2 Scalar value - outer radius */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Init)( VEC_OBJ_T(TgTORUS,PCU) ARG0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+                                                    @param[in] ARG1 Column-Major matrix (3x4) containing rotation (basis vectors) and origin
+                                                    @param[in] ARG2 Scalar value - inner radius (radius of the torus-tube)
+                                                    @param[in] ARG3 Scalar value - outer radius */
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Init)( VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
 
                                                 /** @brief Copy the one geometry object (torus) to another of the same type
                                                     @param[out] ARG0 Pointer to a geometry object (torus)
                                                     @param[in] ARG1 Pointer to a geometry object (torus) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Copy)( VEC_OBJ_T(TgTORUS,PCU) ARG0, VEC_OBJ_T(TgTORUS,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Copy)( VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG1 );
 
-
-                                                /** @brief Set the origin
-                                                    @param[in,out] ARG0 Pointer to a geometry object (torus)
-                                                    @param[in] ARG1 Pointer to a position vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Set_Origin)( VEC_OBJ_T(TgTORUS,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
 
                                                 /** @brief Set the normal of the plane
                                                     @param[in,out] ARG0 Pointer to a geometry object (torus)
-                                                    @param[in] ARG1 Pointer to a normal vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Set_Normal)( VEC_OBJ_T(TgTORUS,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+                                                    @param[in] ARG1 Column-Major matrix (3x4) containing rotation (basis vectors) and origin */
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Set_Reference_Frame)( VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
+
+                                                /** @brief Set the origin
+                                                    @param[in,out] ARG0 Pointer to a geometry object (torus)
+                                                    @param[in] ARG1 Position vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Set_Origin)( VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Set the inner radius
                                                     @param[in,out] ARG0 Pointer to a geometry object (torus)
                                                     @param[in] ARG1 Scalar Value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Set_Inner_Radius)( VEC_OBJ_T(TgTORUS,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Set_Inner_Radius)( VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
                                                 /** @brief Set the outer radius
                                                     @param[in,out] ARG0 Pointer to a geometry object (torus)
                                                     @param[in] ARG1 Scalar Value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Set_Outer_Radius)( VEC_OBJ_T(TgTORUS,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_TS_Set_Outer_Radius)( VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
 
                                                 /** @brief Return the origin
                                                     @param[in] ARG Pointer to a geometry object (torus)
                                                     @return The origin */
-TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_TS_Query_Origin)( VEC_OBJ_T(TgTORUS,CPCU) ARG );
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_TS_Query_Origin)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
 
                                                 /** @brief Return the normal of the plane
                                                     @param[in] ARG Pointer to a geometry object (torus)
                                                     @return The normal of the plane */
-TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_TS_Query_Normal)( VEC_OBJ_T(TgTORUS,CPCU) ARG );
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_TS_Query_Normal)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
 
                                                 /** @brief Return the inner radius
                                                     @param[in] ARG Pointer to a geometry object (torus)
                                                     @return The inner radius */
-TgINLINE VAR_T()                                FCN_VO(tgGM_TS_Query_Inner_Radius)( VEC_OBJ_T(TgTORUS,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_TS_Query_Inner_Radius)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
 
                                                 /** @brief Return the outer radius
                                                     @param[in] ARG Pointer to a geometry object (torus)
                                                     @return The outer radius */
-TgINLINE VAR_T()                                FCN_VO(tgGM_TS_Query_Outer_Radius)( VEC_OBJ_T(TgTORUS,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_TS_Query_Outer_Radius)( VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );

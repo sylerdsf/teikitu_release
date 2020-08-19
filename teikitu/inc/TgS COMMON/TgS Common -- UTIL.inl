@@ -14,6 +14,9 @@
 #define TGS_COMMON_UTIL_INL
 #pragma once
 
+/* Make sure the header has been included */
+#include "TgS COMMON/TgS Common -- UTIL.h"
+
 /* Single threaded containers */
 #include "TgS COMMON/TgS Common - Util ST - Array.inl"
 #include "TgS COMMON/TgS Common - Util ST - Colour.inl"

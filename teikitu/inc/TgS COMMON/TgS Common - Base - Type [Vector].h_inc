@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Base - Type [Vector].h_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -47,10 +47,10 @@
 
 #if TEMPLATE__VECTOR_DIM < 10
     #define TgMACRO_VECTOR_(A,B,C,D,E) TgVEC_##A##B##_##C##_0##D
-    #define TgMACRO_NATIVE_VECTOR_(A,B,C,D,E) TgVEC_N_##A##B##_##C##_0##D
+    #define TgMACRO_NATIVE_VECTOR_(A,B,C,D,E) TgVEC_##A##B##_##C##_0##D
 #else
     #define TgMACRO_VECTOR_(A,B,C,D,E) TgVEC_##A##B##_##C##_##D
-    #define TgMACRO_NATIVE_VECTOR_(A,B,C,D,E) TgVEC_N_##A##B##_##C##_##D
+    #define TgMACRO_NATIVE_VECTOR_(A,B,C,D,E) TgVEC_##A##B##_##C##_##D
 #endif
 
 
@@ -60,33 +60,21 @@
 /*  Public Types                                                                                                                                                                   */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-#if !defined(TGS_COMMON_MATH_VECTOR_SPECIALIZATION) && ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
-/** @union Native vector */
-TgTYPE_UNION( VEC_N_T(1), )
+#if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || (!defined(TGS_COMMON_MATH_VECTOR_SPECIALIZATION) && VEC_IS_NATIVE) /* MACRO_COMPILE_NATIVE_VECTOR_GUARD */
+CLANG_WARN_DISABLE_PUSH(padded)
+TgTYPE_UNION( VEC_T(1), )
 {
+#if VEC_IS_NATIVE
     VAR_T() TgALIGN(16)                         m_aData[TEMPLATE__VECTOR_DIM];
+#else
+    VAR_T()                                     m_aData[TEMPLATE__VECTOR_DIM];
+#endif
 };
-/*# !defined(TGS_COMMON_MATH_VECTOR_SPECIALIZATION) && ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE)) */
+CLANG_WARN_DISABLE_POP(padded)
+/*# (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || (!defined(TGS_COMMON_MATH_VECTOR_SPECIALIZATION) && VEC_IS_NATIVE) */
 #endif
 
-#if ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
-/** @union Native and Non-native (scalar) vector with common direct member variable access */
-TgTYPE_UNION( VEC_T(1), )
-{
-    VAR_T() TgALIGN(16)                         m_aData[TEMPLATE__VECTOR_DIM];
-    #if 4 == TEMPLATE__VECTOR_DIM
-    struct { VAR_T()                            x,y,z,w; };
-    struct { VAR_T()                            r,g,b,a; };
-    #elif 3 == TEMPLATE__VECTOR_DIM
-    struct { VAR_T()                            x,y,z; };
-    struct { VAR_T()                            r,g,b; };
-    #elif 2 == TEMPLATE__VECTOR_DIM
-    struct { VAR_T()                            x,y; };
-    #endif
-};
-#else
-/** @union Non-native (scalar) vector with common direct member variable access */
-TgTYPE_UNION( VEC_T(1), )
+TgTYPE_UNION( VEC_S_T(1), )
 {
     VAR_T()                                     m_aData[TEMPLATE__VECTOR_DIM];
     #if 4 == TEMPLATE__VECTOR_DIM
@@ -99,44 +87,130 @@ TgTYPE_UNION( VEC_T(1), )
     struct { VAR_T()                            x,y; };
     #endif
 };
-#endif
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN,1), )
+{
+    VEC_T(1)                                    TgMACRO_CONCAT3( m_v, GENERATE__VEC_DESC, _1 );
+    VEC_S_T(1)                                  TgMACRO_CONCAT3( m_vS_, GENERATE__VEC_DESC, _1 );
+};
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN_PTR,1), )
+{
+    VEC_T(1,P)                                  TgMACRO_CONCAT3( m_pv, GENERATE__VEC_DESC, _1 );
+    VEC_S_T(1,P)                                TgMACRO_CONCAT3( m_pvS_, GENERATE__VEC_DESC, _1 );
+};
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN_CONST_PTR,1), )
+{
+    VEC_T(1,CP)                                 TgMACRO_CONCAT3( m_pv, GENERATE__VEC_DESC, _1 );
+    VEC_S_T(1,CP)                               TgMACRO_CONCAT3( m_pvS_, GENERATE__VEC_DESC, _1 );
+};
+
+
+
 
 #if !defined(TEMPLATE__ENABLE_INTEGER) && (TEMPLATE__VECTOR_DIM > 2)
 
-/** @union Non-native (scalar) vector with 3 rows (a DIMx3 matrix) */
-TgTYPE_UNION( VEC_T(3), )
+/** @union Non-native (scalar) vector with 3 rows (a DIMx3 matrix)
+    @brief Memory Layout - Column Major (currently used to match against apple simd implementation)
+           Matrix Layout - Row Major (Axis are stored across a row of the matrix), which with a column major memory layout allows for a 3x4 matrix size
+           Multiplication Order - Pre Multiplication (e.g., P' = P * T * R * S [Row Vector x Matrix] due to row-major matrix format */
+TgTYPE_UNION( VEC_S_T(3), )
 {
 #if 4 == TEMPLATE__VECTOR_DIM
-    struct { VAR_T()                            _11,_12,_13,_14,_21,_22,_23,_24,_31,_32,_33,_34; };
+    struct { VAR_T()                            _11,_21,_31,_41,_12,_22,_32,_42,_13,_23,_33,_43; };
 #endif
-#if 3 == TEMPLATE__VECTOR_DIM
-    struct { VAR_T()                            _11,_12,_13,_21,_22,_23,_31,_32,_33; };
-#endif
-    struct { VEC_T(1)                           m_r0, m_r1, m_r2; };
+    struct { VEC_S_T(1)                         m_vC0,m_vC1,m_vC2; };
     VAR_T()                                     m_aElement[3*TEMPLATE__VECTOR_DIM];
-    VAR_T()                                     m_aRowCol[3][TEMPLATE__VECTOR_DIM];
-    VEC_T(1)                                    m_avRow[3];
+    VAR_T()                                     m_aColRow[3][TEMPLATE__VECTOR_DIM];
+    VEC_S_T(1)                                  m_avCol[3];
 };
 
+
+#if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || (!defined(TGS_COMMON_MATH_MATRIX_SPECIALIZATION) && VEC_IS_NATIVE) /* MACRO_COMPILE_NATIVE_MATRIX_GUARD */
+/** @union Native vector */
+TgTYPE_UNION( VEC_T(3), )
+{
+    struct { VEC_T(1)                           m_vC0,m_vC1,m_vC2; };
+    VEC_T(1)                                    m_avCol[3];
+};
+
+/*# (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || (!defined(TGS_COMMON_MATH_MATRIX_SPECIALIZATION) && VEC_IS_NATIVE) */
 #endif
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN,3), )
+{
+    VEC_T(1)                                    TgMACRO_CONCAT3( m_m, GENERATE__VEC_DESC, _3 );
+    VEC_S_T(1)                                  TgMACRO_CONCAT3( m_mS_, GENERATE__VEC_DESC, _3 );
+};
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN_PTR,3), )
+{
+    VEC_T(3,P)                                  TgMACRO_CONCAT3( m_pm, GENERATE__VEC_DESC, _3 );
+    VEC_S_T(3,P)                                TgMACRO_CONCAT3( m_pmS_, GENERATE__VEC_DESC, _3 );
+};
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN_CONST_PTR,3), )
+{
+    VEC_T(3,CP)                                 TgMACRO_CONCAT3( m_pm, GENERATE__VEC_DESC, _3 );
+    VEC_S_T(3,CP)                               TgMACRO_CONCAT3( m_pmS_, GENERATE__VEC_DESC, _3 );
+};
+
+/*# !defined(TEMPLATE__ENABLE_INTEGER) && (TEMPLATE__VECTOR_DIM > 2) */
+#endif
+
+
+
+
 
 #if !defined(TEMPLATE__ENABLE_INTEGER) && (TEMPLATE__VECTOR_DIM > 3)
 
-/** @union Non-native (scalar) vector with 4 rows (a DIMx4 matrix) */
-TgTYPE_UNION( VEC_T(4), )
+/** @union Non-native (scalar) vector with 4 rows (a DIMx4 matrix)
+    @brief Memory Layout - Column Major (currently used to match against apple simd implementation)
+           Matrix Layout - Row Major (Axis are stored across a row of the matrix), which with a column major memory layout allows for a 3x4 matrix size
+           Multiplication Order - Pre Multiplication (e.g., P' = P * T * R * S [Row Vector x Matrix] due to row-major matrix format */
+TgTYPE_UNION( VEC_S_T(4), )
 {
 #if 4 == TEMPLATE__VECTOR_DIM
-    struct { VAR_T()                            _11,_12,_13,_14,_21,_22,_23,_24,_31,_32,_33,_34,_41,_42,_43,_44; };
+    struct { VAR_T()                            _11,_21,_31,_41,_12,_22,_32,_42,_13,_23,_33,_43,_14,_24,_34,_44; };
 #endif
-#if 3 == TEMPLATE__VECTOR_DIM
-    struct { VAR_T()                            _11,_12,_13,_21,_22,_23,_31,_32,_33,_41,_42,_43; };
-#endif
-    struct { VEC_T(1)                           m_r0,m_r1,m_r2,m_r3; };
+    struct { VEC_S_T(1)                         m_vC0,m_vC1,m_vC2,m_vC3; };
     VAR_T()                                     m_aElement[4*TEMPLATE__VECTOR_DIM];
-    VAR_T()                                     m_aRowCol[4][TEMPLATE__VECTOR_DIM];
-    VEC_T(1)                                    m_avRow[4];
+    VAR_T()                                     m_aColRow[4][TEMPLATE__VECTOR_DIM];
+    VEC_S_T(1)                                  m_avCol[4];
 };
 
+
+#if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || (!defined(TGS_COMMON_MATH_MATRIX_SPECIALIZATION) && VEC_IS_NATIVE) /* MACRO_COMPILE_NATIVE_MATRIX_GUARD */
+/** @union Native vector */
+TgTYPE_UNION( VEC_T(4), )
+{
+    struct { VEC_T(1)                           m_vC0,m_vC1,m_vC2,m_vC3; };
+    VEC_T(1)                                    m_avCol[4];
+};
+
+/*# (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || (!defined(TGS_COMMON_MATH_MATRIX_SPECIALIZATION) && VEC_IS_NATIVE) */
+#endif
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN,4), )
+{
+    VEC_T(1)                                    TgMACRO_CONCAT3( m_m, GENERATE__VEC_DESC, _4 );
+    VEC_S_T(1)                                  TgMACRO_CONCAT3( m_mS_, GENERATE__VEC_DESC, _4 );
+};
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN_PTR,4), )
+{
+    VEC_T(4,P)                                  TgMACRO_CONCAT3( m_pm, GENERATE__VEC_DESC, _4 );
+    VEC_S_T(4,P)                                TgMACRO_CONCAT3( m_pmS_, GENERATE__VEC_DESC, _4 );
+};
+
+TgTYPE_UNION( VEC_DEC_T(TgVEC_UN_CONST_PTR,4), )
+{
+    VEC_T(4,CP)                                 TgMACRO_CONCAT3( m_pm, GENERATE__VEC_DESC, _4 );
+    VEC_S_T(4,CP)                               TgMACRO_CONCAT3( m_pmS_, GENERATE__VEC_DESC, _4 );
+};
+
+/*# !defined(TEMPLATE__ENABLE_INTEGER) && (TEMPLATE__VECTOR_DIM > 3) */
 #endif
 
 

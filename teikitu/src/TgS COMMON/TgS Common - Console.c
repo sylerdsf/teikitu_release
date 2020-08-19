@@ -770,28 +770,28 @@ TgBOOL tgCN_Execute_Command( TgCHAR_MB_CPC mbzCmdLN, TgRSIZE_C nbyMaxCmdLN )
 
         if (ETgCN_COMMAND__VAR_F32_04 == psCmd->m_uiType)
         {
-            TgVEC_F32_04_1                      vValue;
+            TgUN_V128                           uValue;
 
             if (nuiArg == 1)
             {
-                bRet = tgCtgMH_Var_Query_N_F32_04_1( &vValue, tiCN_Var );
+                bRet = tgCN_Var_Query_F32_04_1( &uValue.m_vF32_04_1, tiCN_Var );
                 if (bRet)
                 {
-                    tgCN_PrintF( KTgCN_CHANEL_CONSOLE, "CN VAR %s: [%f, %f, %f, %f]",
-                                psCmd->m_mbzName, (TgFLOAT64)vValue.x, (TgFLOAT64)vValue.y, (TgFLOAT64)vValue.z, (TgFLOAT64)vValue.w );
+                    tgCN_PrintF( KTgCN_CHANEL_CONSOLE, "CN VAR %s: [%f, %f, %f, %f]", psCmd->m_mbzName, (TgFLOAT64)uValue.m_vS_F32_04_1.x, (TgFLOAT64)uValue.m_vS_F32_04_1.y,
+                                 (TgFLOAT64)uValue.m_vS_F32_04_1.z, (TgFLOAT64)uValue.m_vS_F32_04_1.w );
                 };
             }
             else if (nuiArg == 5)
             {
-                vValue.x = tgMBZ_To_F32( mbzArg[1], KTgMAX_SIZE_ALL );
-                vValue.y = tgMBZ_To_F32( mbzArg[2], KTgMAX_SIZE_ALL );
-                vValue.z = tgMBZ_To_F32( mbzArg[3], KTgMAX_SIZE_ALL );
-                vValue.w = tgMBZ_To_F32( mbzArg[4], KTgMAX_SIZE_ALL );
-                bRet = tgCtgMH_Var_Set_N_F32_04_1( tiCN_Var, vValue );
+                uValue.m_vS_F32_04_1.x = tgMBZ_To_F32( mbzArg[1], KTgMAX_SIZE_ALL );
+                uValue.m_vS_F32_04_1.y = tgMBZ_To_F32( mbzArg[2], KTgMAX_SIZE_ALL );
+                uValue.m_vS_F32_04_1.z = tgMBZ_To_F32( mbzArg[3], KTgMAX_SIZE_ALL );
+                uValue.m_vS_F32_04_1.w = tgMBZ_To_F32( mbzArg[4], KTgMAX_SIZE_ALL );
+                bRet = tgCN_Var_Set_F32_04_1( tiCN_Var, uValue.m_vF32_04_1 );
                 if (bRet)
                 {
-                    tgCN_PrintF( KTgCN_CHANEL_CONSOLE, "CN VAR %s: [%f, %f, %f, %f]",
-                                psCmd->m_mbzName, (TgFLOAT64)vValue.x, (TgFLOAT64)vValue.y, (TgFLOAT64)vValue.z, (TgFLOAT64)vValue.w );
+                    tgCN_PrintF( KTgCN_CHANEL_CONSOLE, "CN VAR %s: [%f, %f, %f, %f]", psCmd->m_mbzName, (TgFLOAT64)uValue.m_vS_F32_04_1.x, (TgFLOAT64)uValue.m_vS_F32_04_1.y,
+                                 (TgFLOAT64)uValue.m_vS_F32_04_1.z, (TgFLOAT64)uValue.m_vS_F32_04_1.w );
                 };
             };
             break;
@@ -1826,7 +1826,7 @@ TgVOID tgCN_Stop_Unit_Test( TgVOID_P pOutput )
 #if TgCOMPILE__CONSOLE
 static TgVOID tgCN_UID_Print_Internal( TgUINT_F32_C uiUID, TgUINT_F32_C uiChannel_Mask, TgCHAR_MB_CP mbzText, TgRSIZE_C nbyMaxText )
 {
-    TgUINT_F32_C                        uiSeverity = uiChannel_Mask & KTgCN_SEVERITY_MASK;
+    TgUINT_F32_C    uiSeverity = uiChannel_Mask & KTgCN_SEVERITY_MASK;
     TgUINT_F32                          uiChannel, uiOutput, uiLength;
     TgCHAR_MB_CP                        mbzStart;
     TgBOOL                              bEmitPrefix;
@@ -1864,7 +1864,7 @@ static TgVOID tgCN_UID_Print_Internal( TgUINT_F32_C uiUID, TgUINT_F32_C uiChanne
         for (uiChannel = 0; uiChannel < KTgCN_MAX_CHANNEL; ++uiChannel)
         {
             /* Continue if this channel is not part of the output request */
-            TgUINT_F32_C                        uiChannel_ID = 1 << (uiChannel + KTgCN_SEVERITY_BITS);
+            TgUINT_F32_C    uiChannel_ID = 1 << (uiChannel + KTgCN_SEVERITY_BITS);
 
             /* Skip if the message is not included for this channel */
             if (0 == (uiChannel_Mask & uiChannel_ID))
@@ -1938,8 +1938,8 @@ static TgVOID tgCN_UID_Print_Internal( TgUINT_F32_C uiUID, TgUINT_F32_C uiChanne
 #if TgCOMPILE__CONSOLE
 static TgVOID tgCN_Scroll_Display( TgSINT_F32_C niLN, TgSINT_F32_C niPG )
 {
-    TgSINT_F32_C                        iPageAmount = (s_iOS_Console_Render_Page_Height / s_iOS_Console_Render_Font_Height - 1);
-    TgSINT_F32_C                        iNew_Disp = (s_iOS_Console_Display_Index + (niLN + niPG*iPageAmount)) % KTgCN_OSCON_MAX_LINE;
+    TgSINT_F32_C    iPageAmount = (s_iOS_Console_Render_Page_Height / s_iOS_Console_Render_Font_Height - 1);
+    TgSINT_F32_C    iNew_Disp = (s_iOS_Console_Display_Index + (niLN + niPG*iPageAmount)) % KTgCN_OSCON_MAX_LINE;
 
     s_iOS_Console_Display_Index = iNew_Disp;
 }

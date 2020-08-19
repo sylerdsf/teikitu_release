@@ -20,9 +20,11 @@
 
     #define GENERATE__MBZ
     #include __FILE__
+    #undef GENERATE__MBZ
 
     #define GENERATE__WCZ
     #include __FILE__
+    #undef GENERATE__WCZ
 
     #define GENERATE__NCZ
 

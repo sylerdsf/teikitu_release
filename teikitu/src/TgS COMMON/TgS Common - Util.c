@@ -19,6 +19,7 @@
 /* ---- tgUTM_Check_C11_Lock_Free_Status ----------------------------------------------------------------------------------------------------------------------------------------- */
 #define LOCK_FREE_TEST(A)  { A##_A TEST_VAR; TgERROR_MSG( atomic_is_lock_free(&TEST_VAR), #A " failed the lock free test." ); }
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+CLANG_WARN_DISABLE_PUSH(unused-variable)
 TgVOID tgUTM_Check_C11_Lock_Free_Status( TgVOID )
 {
     LOCK_FREE_TEST(TgSINT_E08);
@@ -65,4 +66,4 @@ TgVOID tgUTM_Check_C11_Lock_Free_Status( TgVOID )
 
     LOCK_FREE_TEST(STg2_UT_ST__PTR_TKT);
 }
-
+CLANG_WARN_DISABLE_POP()

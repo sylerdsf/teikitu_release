@@ -9,7 +9,7 @@ cmake_policy(VERSION 3.17)
 #build library
 
 TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files" "${PROJECT_SOURCE_DIR}/../inc/TgS Ring 0 - Type.h" )
-TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common -- INCLUDE.h" )
+TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files" "${PROJECT_SOURCE_DIR}/../inc/TgS Common.h" )
 TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common -- VERSION.h" )
 
 
@@ -48,6 +48,7 @@ TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Fi
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Base/Template Files" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Base - API [Text].i_inc" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Base" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Base - API [Math].inl" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Base" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Base - API [Text].inl" )
+TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Base" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Base - API.inl" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Base" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Base - Type [IO].inl" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Base" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Base - Type.inl" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Base" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common -- BASE.inl" )
@@ -74,48 +75,48 @@ TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files
 # MATH
 
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [API].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [S] [F] [34].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [S] [F] [44].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [S] [F].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [S].h_inc" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [F] [34].h_inc" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [F] [44].h_inc" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [F].h_inc" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [N] [F] [34].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [N] [F] [44].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [N] [F].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [N].h_inc" )
 
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [API].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [F].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [S] [FXX_04].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [S] [F].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [S] [I].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [S].h_inc" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [FXX_04].h_inc" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [F].h_inc" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [I].h_inc" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [N] [F].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [N] [F32_04].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [N] [I].h_inc" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [N].h_inc" )
     
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math/Template Files/Scalar" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Scalar] [F].h_inc" )
 
 TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Files/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common -- MATH.h" )
 
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [API].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [S] [F] [34].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [S] [F] [44].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [S] [F].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [S].i_inc" )
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [F] [34].i_inc" )
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [F] [44].i_inc" )
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [F].i_inc" )
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix].i_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [N] [F] [34].i_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [N] [F] [44].i_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [N] [F].i_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Matrix" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix] [N].i_inc" )
 
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [API].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [S] [FXX_04].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [S] [F].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [S] [I].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [S].i_inc" )
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [FXX_04].i_inc" )
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [F].i_inc" )
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [I].i_inc" )
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector].i_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [N] [F32_04].i_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [N] [F].i_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [N] [I].i_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math/Template Files/Vector" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector] [N].i_inc" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Matrix].inl" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Math [Vector].inl" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common -- MATH.inl" )
@@ -191,20 +192,18 @@ TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "-" "-" "Public/Header Fi
     TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common - Geometry - API.i_inc" )
 TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "Public/Inline Files/Geometry" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS Common -- GEOMETRY.inl" )
 
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Box.c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Circle.c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Cylinder.c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Disk.c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Ellipse.c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Mesh [BA].c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Mesh [Simple].c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Mesh [Utility].c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Particle.c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Torus.c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Triangle [Collision].c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Triangle [Edge].c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Triangle [Point].c_inc" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry/Template Files" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry.c_inc" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Circle.c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Cylinder.c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Disk.c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Ellipse.c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Mesh [BA].c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Mesh [Simple].c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Mesh [Utility].c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Particle.c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Torus.c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Triangle [Collision].c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Triangle [Edge].c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry 3D - Triangle [Point].c" )
 TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "-" "-" "SDK/Source Files/Geometry" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common - Geometry.c" )
 
 
@@ -298,70 +297,100 @@ ENDFOREACH ()
 #library hardware specific files
 
 FOREACH (MK_LIST_ITEM__HARDWARE_NAME IN LISTS MK_GENERATE_LIST__HARDWARE_NAMES)
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Header Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Base - API.h" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Header Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Base - Defines [Hardware].h" )
     TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Header Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Base - Include.h" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Header Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector].h" )
-
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Matrix] [N] [F] [34].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Matrix] [N] [F] [44].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Matrix].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector] [N] [F32].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector] [N] [S08].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector] [N] [S16].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector] [N] [S32].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector] [N] [F32_04].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector] [N] [U08].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector] [N] [U16].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector] [N] [U32].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Vector].inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "Public/Inline Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Base - API.inl" )
-
-    TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "SDK/Source Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Matrix] [N] [F] [34].c" )
-    TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__HARDWARE_NAME} ${MK_HARDWARE_NAME} "SDK/Source Files/@Specialization/Hardware" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (${MK_LIST_ITEM__HARDWARE_NAME}) Common - Math [Matrix] [N] [F] [44].c" )
 
 ENDFOREACH ()
+
 
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ #
-#library platform specific files
+# threading library
 
-FOREACH (MK_LIST_ITEM__PLATFORM_NAME IN LISTS MK_GENERATE_LIST__PLATFORM_NAMES)
-    TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "SDK/Source Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Base - API [Platform].c" )
-    TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "SDK/Source Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Global.c" )
-    TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "SDK/Source Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Mem MGR.c" )
+FOREACH (MK_LIST_ITEM__THREAD_NAME IN LISTS MK_GENERATE_LIST__THREAD_NAMES)
+    TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "SDK/Source Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Base - API [Platform].c" )
+    TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "SDK/Source Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Global.c" )
+    TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "SDK/Source Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Mem MGR.c" )
 
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "Public/Inline Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Base - API [Platform].inl" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Base - Defines [Platform].h" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Base - Include.h" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Base - Type [MT].h" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Base - Type.h" )
-    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - Global.h" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "Public/Inline Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - STg1_MT_MX.inl" )
-    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__PLATFORM_NAME} ${MK_PLATFORM_NAME} "Public/Inline Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__PLATFORM_NAME}) Common - STg1_MT_SM.inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "Public/Inline Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Base - API [Platform].inl" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "Public/Header Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Base - Defines [Platform].h" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "Public/Header Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Base - Include.h" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "Public/Header Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Base - Type [MT].h" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "Public/Header Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Base - Type.h" )
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "Public/Header Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - Global.h" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "Public/Inline Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - STg1_MT_MX.inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__THREAD_NAME} ${MK_BUILD__THREAD_NAME} "Public/Inline Files/@Specialization/Thread Support" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__THREAD_NAME}) Common - STg1_MT_SM.inl" )
 
 ENDFOREACH ()
 
-#TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "WIN" ${MK_PLATFORM_NAME} "SDK/Source Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - Link Test.c" )
-#TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "WIN" ${MK_PLATFORM_NAME} "SDK/Source Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - SysInfo.c" )
 
-#TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (WIN) Common - Base - Defines.h" )
-#TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (WIN) Common - Base - LoadDLL.h" )
-#TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (WIN) Common - Base - Type [Platform].h" )
-#TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_PLATFORM_NAME} "Public/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (WIN) Common - SysInfo.h" )
-#TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_PLATFORM_NAME} "SDK/Header Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - Internal with Windows.h" )
 
-#TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "UWP" ${MK_PLATFORM_NAME} "SDK/Source Files/Base" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common [Static].cpp" )
-#TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "UWP" ${MK_PLATFORM_NAME} "SDK/Source Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (UWP) Common - Base - API [Platform].cpp" )
-#TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "UWP" ${MK_PLATFORM_NAME} "SDK/Source Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (UWP) Common - Global.cpp" )
-#TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "UWP" ${MK_PLATFORM_NAME} "SDK/Source Files/@Specialization/Platform" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (UWP) Common - Base - API - Platform.cpp" )
 
-#IF (MK_PLATFORM_WIN)
-#    TGS_ADD_WIN_PRECOMPILED_HEADER("${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common [Static].c" "WIN_C" "TgS (WIN) Common - Internal with Windows.h" )
-#    TGS_USE_WIN_PRECOMPILED_HEADER("${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - Link Test.c" "WIN_C" "TgS (WIN) Common - Internal with Windows.h" )
-#    TGS_USE_WIN_PRECOMPILED_HEADER("${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - Base - API - Platform.c" "WIN_C" "TgS (WIN) Common - Internal with Windows.h" )
-#ENDIF ()
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ #
+# operating system
+
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "WIN" ${MK_BUILD__OS_NAME} "SDK/Source Files/@Specialization/Operating System" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - Link Test.c" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "WIN" ${MK_BUILD__OS_NAME} "SDK/Source Files/@Specialization/Operating System" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - SysInfo.c" )
+
+TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_BUILD__OS_NAME} "Public/Header Files/@Specialization/Operating System" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (WIN) Common - Base - Defines [Platform].h" )
+TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_BUILD__OS_NAME} "Public/Header Files/@Specialization/Operating System" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (WIN) Common - Base - LoadDLL.h" )
+TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_BUILD__OS_NAME} "Public/Header Files/@Specialization/Operating System" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (WIN) Common - Base - Type.h" )
+TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_BUILD__OS_NAME} "Public/Header Files/@Specialization/Operating System" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (WIN) Common - SysInfo.h" )
+TGS_ADD_HEADER_FILE( lib_source_files lib_header_files "WIN" ${MK_BUILD__OS_NAME} "SDK/Header Files/@Specialization/Operating System" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - Internal with Windows.h" )
+
+
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ #
+# universal package
+
+FOREACH (MK_LIST_ITEM__UNIVERSAL_NAME IN LISTS MK_GENERATE_LIST__UNIVERSAL_NAMES)
+
+ENDFOREACH ()
+
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "UWP" ${MK_BUILD__UNIVERSAL_NAME} "SDK/Source Files/@Specialization/Universal" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS Common [Static].cpp" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "UWP" ${MK_BUILD__UNIVERSAL_NAME} "SDK/Source Files/@Specialization/Universal" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (UWP) Common - Base - API [Platform].cpp" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "UWP" ${MK_BUILD__UNIVERSAL_NAME} "SDK/Source Files/@Specialization/Universal" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (UWP) Common - Global.cpp" )
+TGS_ADD_SOURCE_FILE( lib_source_files lib_header_files "UWP" ${MK_BUILD__UNIVERSAL_NAME} "SDK/Source Files/@Specialization/Universal" "${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (UWP) Common - Base - API [Platform].cpp" )
+
+#TGS_ADD_WIN_PRECOMPILED_HEADER("${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common [Static].c" "WIN_C" "TgS (WIN) Common - Internal with Windows.h" )
+#TGS_USE_WIN_PRECOMPILED_HEADER("${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - Link Test.c" "WIN_C" "TgS (WIN) Common - Internal with Windows.h" )
+#TGS_USE_WIN_PRECOMPILED_HEADER("${PROJECT_SOURCE_DIR}/../src/TgS COMMON/TgS (WIN) Common - Base - API - Platform.c" "WIN_C" "TgS (WIN) Common - Internal with Windows.h" )
+
+
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ #
+# math interface and implementation
+
+SET( MK_GENERATE_LIST__MATH_INTERFACE_LIST_0    CLANG               X86_64              APPLE)
+SET( MK_GENERATE_LIST__MATH_INTERFACE_LIST_1    ${MK_COMPILER_NAME} ${MK_HARDWARE_NAME} ${MK_BUILD__UNIVERSAL_NAME})
+SET( MK_GENERATE_LIST__MATH_IMPLEMENTATION_0    X86_64              APPLE)
+SET( MK_GENERATE_LIST__MATH_IMPLEMENTATION_1    ${MK_HARDWARE_NAME} ${MK_BUILD__UNIVERSAL_NAME})
+
+FOREACH (MK_LIST_ITEM__NAME_0 MK_LIST_ITEM__NAME_1 IN ZIP_LISTS MK_GENERATE_LIST__MATH_INTERFACE_LIST_0 MK_GENERATE_LIST__MATH_INTERFACE_LIST_1)
+    TGS_ADD_HEADER_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Header Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector].h" )
+
+ENDFOREACH ()
+
+FOREACH (MK_LIST_ITEM__NAME_0 MK_LIST_ITEM__NAME_1 IN ZIP_LISTS MK_GENERATE_LIST__MATH_IMPLEMENTATION_0 MK_GENERATE_LIST__MATH_IMPLEMENTATION_1)
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector].i_inc" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Matrix] [F32] [34].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Matrix] [F32] [44].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Matrix].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector] [F32_04].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector] [F32].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector] [S08].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector] [S16].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector] [S32].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector] [U08].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector] [U16].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector] [U32].inl" )
+    TGS_ADD_INCSRC_FILE( lib_source_files lib_header_files ${MK_LIST_ITEM__NAME_0} ${MK_LIST_ITEM__NAME_1} "Public/Inline Files/@Specialization/Math" "${PROJECT_SOURCE_DIR}/../inc/TgS COMMON/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector].inl" )
+
+ENDFOREACH ()
+
 
 
 

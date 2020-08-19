@@ -73,7 +73,7 @@ TgCOMPILER_ASSERT( 0 == sizeof( STg2_UT_LF_ISO__ST ) % TgCCL, 0 ) ;
 
 /* ---- STg2_UT_MT__ST_MX -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-#define SIZE_STg2_UT_MT__ST_MX (SIZE_STg1_MT_MX + SIZE_STg1_MT_SM + TgCOMPILE_POINTER_SIZE)
+#define SIZE_STg2_UT_MT__ST_MX (SIZE_STg1_MT_MX + SIZE_STg1_MT_SM + TgBUILD_HARDWARE__POINTER_SIZE)
 TgCOMPILER_ASSERT( 96 == SIZE_STg2_UT_MT__ST_MX, 0 );
 
 TgTYPE_STRUCT(STg2_UT_MT__ST_MX,)

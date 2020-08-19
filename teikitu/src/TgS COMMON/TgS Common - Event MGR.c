@@ -80,8 +80,7 @@ TgTYPE_STRUCT(STg2_EM_TE_Job_Free_Pool_PM,)
     STg2_EM_TE_Pool_PP                          m_ppsPool_List;        /**< Example: g_apsEM_TE_FRM */
     STg2_EM_TE_Pool_PP                          m_ppsFree_Pool_Head;   /**< Example: &(g_psEM_TE_FRM_Free_List) */
     STg2_UT_LF__SN_P                            m_psFree_Lock;         /**< Example: g_sEM_TE_FRM_Lock */
-    TgSINT_F32                                  m_niMax_Pool;          /**< Example: KTgEM_MAX_TE_FRM_POOL */
-    TgUINT_F32                                  m_uiPad0;
+    TgRSIZE                                     m_nuiMax_Pool;          /**< Example: KTgEM_MAX_TE_FRM_POOL */
     STg2_UT_LF_ISO__SN_P                        m_psData_Lock;         /**< Example: g_asEM_TE_FRM_Data_Lock */
     STg2_UT_LF_ISO__SN_P                        m_psNewDel_Lock;       /**< Example: g_asEM_TE_FRM_NewDel_Lock */
 };
@@ -91,8 +90,7 @@ TgTYPE_STRUCT(STg2_Event_Pool_Update,)
     STg2_EM_TE_Pool_PP                          m_apsPool;
     STg2_UT_LF_ISO__SN_P                        m_asData_Lock;
     STg2_UT_LF_ISO__SN_P                        m_asNewDel_Lock;
-    TgSINT_F32                                  m_iMax;
-    TgUINT_F32                                  m_uiPad0;
+    TgRSIZE                                     m_uiMax;
     TgFCN_JOB_CALLBACK                          m_pfnExecute;
     TgRSIZE_AP                                  m_pxuiFree_Trigger;
     STg2_EM_TE_Job_Update_PM_CP                 m_psUpdate_Data;
@@ -116,7 +114,7 @@ static TgBOOL                               tgEM_Job_Execute__Submit_Event_Pool_
 static TgVOID                               tgEM_Job_Execute__Submit_Free_Pool_Fixup( STg2_Event_Pool_Update_PCU );
 TgFORCEINLINE TgVOID                        tgEM_List_Stitch( STg2_EM_TB_PP, STg2_EM_TB_P );
 static TgVOID                               tgEM_TE_Update_Internal__Waiting( STg2_EM_TE_Pool_PC, STg2_EM_TE_Job_Update_PM_CPCU );
-static TgVOID                               tgEM_TE_Update_Internal__Process( STg2_EM_TB_PP, TgSINT_F32_P , STg2_EM_TE_P, STg2_EM_TE_Pool_PC, STg2_EM_TE_Job_Update_PM_CPCU );
+static TgVOID                               tgEM_TE_Update_Internal__Process( STg2_EM_TB_PP, TgRSIZE_P, STg2_EM_TE_P, STg2_EM_TE_Pool_PC, STg2_EM_TE_Job_Update_PM_CPCU );
 static TgVOID                               tgEM_TE_Update_Internal__Delete( STg2_EM_TE_Pool_PC, STg2_EM_TB_P, STg2_EM_TE_Job_Update_PM_CPCU );
 static TgVOID                               tgEM_TE_Update_Internal__Paused( STg2_EM_TE_Pool_PC, STg2_EM_TE_Job_Update_PM_CPCU );
 static TgRESULT                             tgEM_Job_Execute__Update( STg2_Job_PC );
@@ -149,8 +147,6 @@ static TgRSIZE_A                            s_xuiJob_Trigger_TE_SEC;
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT tgEM_Init_MGR( TgVOID )
 {
-    TgSINT_F32                          iIndex;
-
     /* Verify the state of the system */
     TgERROR(ETgMODULE_STATE__FREED == s_enEvent_MGR_State);
     s_enEvent_MGR_State = ETgMODULE_STATE__INITIALIZING;
@@ -160,20 +156,20 @@ TgRESULT tgEM_Init_MGR( TgVOID )
     g_psEM_TE_FRM_Free_List = nullptr;
     tgCM_UT_LF__SN__Init( &g_sEM_TE_FRM_Lock.m_sLock );
 
-    for (iIndex = 0; iIndex < KTgEM_MAX_TE_FRM_POOL; ++iIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < KTgEM_MAX_TE_FRM_POOL; ++uiIndex)
     {
-        tgCM_UT_LF__SN__Init( &g_asEM_TE_FRM_Data_Lock[iIndex].m_sLock );
-        tgCM_UT_LF__SN__Init( &g_asEM_TE_FRM_NewDel_Lock[iIndex].m_sLock );
+        tgCM_UT_LF__SN__Init( &g_asEM_TE_FRM_Data_Lock[uiIndex].m_sLock );
+        tgCM_UT_LF__SN__Init( &g_asEM_TE_FRM_NewDel_Lock[uiIndex].m_sLock );
     };
 
     tgMM_Set_U08_0x00( g_apsEM_TE_SEC, sizeof( g_apsEM_TE_SEC ) );
     g_psEM_TE_SEC_Free_List = nullptr;
     tgCM_UT_LF__SN__Init( &g_sEM_TE_SEC_Lock.m_sLock );
 
-    for (iIndex = 0; iIndex < KTgEM_MAX_TE_SEC_POOL; ++iIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < KTgEM_MAX_TE_SEC_POOL; ++uiIndex)
     {
-        tgCM_UT_LF__SN__Init( &g_asEM_TE_SEC_Data_Lock[iIndex].m_sLock );
-        tgCM_UT_LF__SN__Init( &g_asEM_TE_SEC_NewDel_Lock[iIndex].m_sLock );
+        tgCM_UT_LF__SN__Init( &g_asEM_TE_SEC_Data_Lock[uiIndex].m_sLock );
+        tgCM_UT_LF__SN__Init( &g_asEM_TE_SEC_NewDel_Lock[uiIndex].m_sLock );
     };
 
     /* Configuration Parameters */
@@ -219,8 +215,6 @@ TgRESULT tgEM_Stop_MGR( TgVOID )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT tgEM_Free_MGR( TgVOID )
 {
-    TgSINT_F32                          iIndex;
-
     if (ETgMODULE_STATE__FREED == s_enEvent_MGR_State)
     {
         return (KTgS_OK);
@@ -230,27 +224,27 @@ TgRESULT tgEM_Free_MGR( TgVOID )
     TgERROR((ETgMODULE_STATE__STOPPED == s_enEvent_MGR_State) || (ETgMODULE_STATE__INITIALIZED == s_enEvent_MGR_State));
     s_enEvent_MGR_State = ETgMODULE_STATE__FREEING;
 
-    for (iIndex = 0; iIndex < KTgEM_MAX_TE_SEC_POOL; ++iIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < KTgEM_MAX_TE_SEC_POOL; ++uiIndex)
     {
-        if (g_apsEM_TE_SEC[iIndex])
+        if (g_apsEM_TE_SEC[uiIndex])
         {
-            TgFREE_POOL( g_apsEM_TE_SEC[iIndex] );
-            g_apsEM_TE_SEC[iIndex] = nullptr;
+            TgFREE_POOL( g_apsEM_TE_SEC[uiIndex] );
+            g_apsEM_TE_SEC[uiIndex] = nullptr;
         };
-        tgCM_UT_LF__SN__Free_Unsafe( &g_asEM_TE_SEC_Data_Lock[iIndex].m_sLock );
-        tgCM_UT_LF__SN__Free_Unsafe( &g_asEM_TE_SEC_NewDel_Lock[iIndex].m_sLock );
+        tgCM_UT_LF__SN__Free_Unsafe( &g_asEM_TE_SEC_Data_Lock[uiIndex].m_sLock );
+        tgCM_UT_LF__SN__Free_Unsafe( &g_asEM_TE_SEC_NewDel_Lock[uiIndex].m_sLock );
     };
     tgCM_UT_LF__SN__Free_Unsafe( &g_sEM_TE_SEC_Lock.m_sLock );
 
-    for (iIndex = 0; iIndex < KTgEM_MAX_TE_FRM_POOL; ++iIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < KTgEM_MAX_TE_FRM_POOL; ++uiIndex)
     {
-        if (g_apsEM_TE_FRM[iIndex])
+        if (g_apsEM_TE_FRM[uiIndex])
         {
-            TgFREE_POOL( g_apsEM_TE_FRM[iIndex] );
-            g_apsEM_TE_FRM[iIndex] = nullptr;
+            TgFREE_POOL( g_apsEM_TE_FRM[uiIndex] );
+            g_apsEM_TE_FRM[uiIndex] = nullptr;
         };
-        tgCM_UT_LF__SN__Free_Unsafe( &g_asEM_TE_FRM_Data_Lock[iIndex].m_sLock );
-        tgCM_UT_LF__SN__Free_Unsafe( &g_asEM_TE_FRM_NewDel_Lock[iIndex].m_sLock );
+        tgCM_UT_LF__SN__Free_Unsafe( &g_asEM_TE_FRM_Data_Lock[uiIndex].m_sLock );
+        tgCM_UT_LF__SN__Free_Unsafe( &g_asEM_TE_FRM_NewDel_Lock[uiIndex].m_sLock );
     };
     tgCM_UT_LF__SN__Free_Unsafe( &g_sEM_TE_FRM_Lock.m_sLock );
 
@@ -434,8 +428,6 @@ TgVOID tgEM_Stats( STg2_Output_P psOutput )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgVOID tgEM_TP_Init( STg2_EM_TE_Pool_PC psPool )
 {
-    TgSINT_F32                          iIndex;
-
     /* Validate the parameters */
     TgPARAM_CHECK(nullptr != psPool);
 
@@ -454,9 +446,9 @@ TgVOID tgEM_TP_Init( STg2_EM_TE_Pool_PC psPool )
     tgMM_Set_U08_0xFF( psPool->m_atiEM_TE_FRM_NoSingleton, KTgEM_NUM_TE_IN_POOL*sizeof( TgEM_TE_FRM_ID ) );
 
     /* Stitch the free list */
-    for (iIndex = 0; iIndex < KTgEM_NUM_TE_IN_POOL - 1; ++iIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < KTgEM_NUM_TE_IN_POOL - 1; ++uiIndex)
     {
-        psPool->m_asTB[iIndex].m_psHead_Next = psPool->m_asTB + iIndex + 1;
+        psPool->m_asTB[uiIndex].m_psHead_Next = psPool->m_asTB + uiIndex + 1;
     };
 
     psPool->m_asTB[KTgEM_NUM_TE_IN_POOL - 1].m_psHead_Next = nullptr;
@@ -480,27 +472,26 @@ static TgBOOL tgEM_Job_Execute__Submit_Event_Pool_Update( STg2_Event_Pool_Update
     }                                   tgUpdate_Cast;
 
     STg2_EM_TE_Job_Update_PM_P          psJob_Data;
-    TgSINT_F32                          iIndex;
     TgSINT_F32                          niUpdate;
 
     niUpdate = 0;
-    for (iIndex = 0; iIndex < psInit->m_iMax; ++iIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < psInit->m_uiMax; ++uiIndex)
     {
-        if (nullptr == psInit->m_apsPool[iIndex])
+        if (nullptr == psInit->m_apsPool[uiIndex])
         {
             continue;
         };
 
-        tgUpdate_Cast.m_psUntyped = psInit->m_apsPool[iIndex]->m_sJob.m_auiData;
+        tgUpdate_Cast.m_psUntyped = psInit->m_apsPool[uiIndex]->m_sJob.m_auiData;
         psJob_Data = tgUpdate_Cast.m_psJob_Param;
 
-        tgMM_Set_U08_0x00( &psInit->m_apsPool[iIndex]->m_sJob, sizeof( STg2_Job ) );
-        psInit->m_apsPool[iIndex]->m_sJob.m_pfnExecute = psInit->m_pfnExecute;
-        psInit->m_apsPool[iIndex]->m_sJob.m_pxuiFinish = &s_xuiJob_Count;
+        tgMM_Set_U08_0x00( &psInit->m_apsPool[uiIndex]->m_sJob, sizeof( STg2_Job ) );
+        psInit->m_apsPool[uiIndex]->m_sJob.m_pfnExecute = psInit->m_pfnExecute;
+        psInit->m_apsPool[uiIndex]->m_sJob.m_pxuiFinish = &s_xuiJob_Count;
 
-        psJob_Data->m_psPool = psInit->m_apsPool[iIndex];
-        psJob_Data->m_psData_Lock = &(psInit->m_asData_Lock[iIndex].m_sLock);
-        psJob_Data->m_psNewDel_Lock = &(psInit->m_asNewDel_Lock[iIndex].m_sLock);
+        psJob_Data->m_psPool = psInit->m_apsPool[uiIndex];
+        psJob_Data->m_psData_Lock = &(psInit->m_asData_Lock[uiIndex].m_sLock);
+        psJob_Data->m_psNewDel_Lock = &(psInit->m_asNewDel_Lock[uiIndex].m_sLock);
         psJob_Data->m_pxuiFree_Trigger = psInit->m_pxuiFree_Trigger;
         psJob_Data->m_enStage = ETgEM_UPDATE_STAGE__WAIT_FOR_EXECUTE;
         psJob_Data->m_fTime_Step = psInit->m_psUpdate_Data->m_fTime_Step;
@@ -511,7 +502,7 @@ static TgBOOL tgEM_Job_Execute__Submit_Event_Pool_Update( STg2_Event_Pool_Update
         atomic_fetch_add( psInit->m_pxuiFree_Trigger, 1 );
         atomic_fetch_add( &s_xuiJob_Count, 1 );
         ++niUpdate;
-        if (TgFAILED(tgJM_Queue_Job( g_tiJob_Queue__OS, &psInit->m_apsPool[iIndex]->m_sJob )))
+        if (TgFAILED(tgJM_Queue_Job( g_tiJob_Queue__OS, &psInit->m_apsPool[uiIndex]->m_sJob )))
         {
             atomic_fetch_sub( psInit->m_pxuiFree_Trigger, 1 );
             atomic_fetch_sub( &s_xuiJob_Count, 1 );
@@ -542,7 +533,7 @@ static TgVOID tgEM_Job_Execute__Submit_Free_Pool_Fixup( STg2_Event_Pool_Update_P
     tgJob_Cast.m_psJob_Param->m_ppsPool_List = psInit->m_apsPool;
     tgJob_Cast.m_psJob_Param->m_ppsFree_Pool_Head = psInit->m_ppsFree_Pool_Head;
     tgJob_Cast.m_psJob_Param->m_psFree_Lock = psInit->m_psFree_Lock;
-    tgJob_Cast.m_psJob_Param->m_niMax_Pool = psInit->m_iMax;
+    tgJob_Cast.m_psJob_Param->m_nuiMax_Pool = psInit->m_uiMax;
     tgJob_Cast.m_psJob_Param->m_psData_Lock = psInit->m_asData_Lock;
     tgJob_Cast.m_psJob_Param->m_psNewDel_Lock = psInit->m_asNewDel_Lock;
 
@@ -641,19 +632,17 @@ static TgVOID tgEM_TE_Update_Internal__Waiting( STg2_EM_TE_Pool_PC psPool, STg2_
 /** @note Since pause state is polled it is possible, if the time line pause state is being toggled on a concurrent thread that we will retrieve a temporary or in-flight value. If
     you need to toggle pause state this should be done within the events instead as a directed action instead of indirectly by pause state on the time line */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-static TgVOID tgEM_TE_Update_Internal__Process( STg2_EM_TB_PP ppsFree_TB, TgSINT_F32_P pniCallback, STg2_EM_TE_P psCallback, STg2_EM_TE_Pool_PC psPool_TB,
+static TgVOID tgEM_TE_Update_Internal__Process( STg2_EM_TB_PP ppsFree_TB, TgRSIZE_P pnuiCallback, STg2_EM_TE_P psCallback, STg2_EM_TE_Pool_PC psPool_TB,
                                                 STg2_EM_TE_Job_Update_PM_CPCU psParam )
 {
     STg2_EM_TB_PP                       ppsPrev_TB;
     STg2_EM_TB_P                        psTB;
-    STg2_EM_TE_Pool_P                   psPool_TE;
-    TgSINT_F32                          niCallback;
+    TgRSIZE                             nuiCallback;
     STg2_EM_TB_P                        psFree_TB;
 
-    TgPARAM_CHECK(nullptr != ppsFree_TB && nullptr != pniCallback && nullptr != psCallback && nullptr != psPool_TB && nullptr != psParam);
+    TgPARAM_CHECK(nullptr != ppsFree_TB && nullptr != pnuiCallback && nullptr != psCallback && nullptr != psPool_TB && nullptr != psParam);
 
-    psPool_TE = (STg2_EM_TE_Pool_P)psPool_TB;
-    niCallback = 0;
+    nuiCallback = 0;
     psFree_TB = nullptr;
 
     /* Process all the waiting time lines based on frame count */
@@ -682,7 +671,7 @@ static TgVOID tgEM_TE_Update_Internal__Process( STg2_EM_TB_PP ppsFree_TB, TgSINT
         /* Add this call back to the queue */
         if (KTgID__INVALID_VALUE != psPool_TB->m_atiEM_TE_FRM_NoSingleton[uiIndex].m_uiKI)
         {
-            psCallback[niCallback++] = psPool_TB->m_asTE[iLocal_Index];
+            psCallback[nuiCallback++] = psPool_TB->m_asTE[iLocal_Index];
         };
 
         /* Check to see if the time line should be closed (negative values in unsigned space will always exceed signed total) */
@@ -712,7 +701,7 @@ static TgVOID tgEM_TE_Update_Internal__Process( STg2_EM_TB_PP ppsFree_TB, TgSINT
     };
 
     *ppsFree_TB = psFree_TB;
-    *pniCallback = niCallback;
+    *pnuiCallback = nuiCallback;
 }
 
 
@@ -794,7 +783,7 @@ static TgRESULT tgEM_Job_Execute__Update( STg2_Job_PC psJob )
     tgUpdate_Init.m_apsPool = g_apsEM_TE_FRM;
     tgUpdate_Init.m_asData_Lock = g_asEM_TE_FRM_Data_Lock;
     tgUpdate_Init.m_asNewDel_Lock = g_asEM_TE_FRM_NewDel_Lock;
-    tgUpdate_Init.m_iMax = KTgEM_MAX_TE_FRM_POOL;
+    tgUpdate_Init.m_uiMax = KTgEM_MAX_TE_FRM_POOL;
     tgUpdate_Init.m_pfnExecute = tgEM_Job_Execute__TE;
     tgUpdate_Init.m_pxuiFree_Trigger = &s_xuiJob_Trigger_TE_FRM;
     tgUpdate_Init.m_psUpdate_Data = tgJob_Cast.m_psJob_Data;
@@ -812,7 +801,7 @@ static TgRESULT tgEM_Job_Execute__Update( STg2_Job_PC psJob )
     tgUpdate_Init.m_apsPool = g_apsEM_TE_SEC;
     tgUpdate_Init.m_asData_Lock = g_asEM_TE_SEC_Data_Lock;
     tgUpdate_Init.m_asNewDel_Lock = g_asEM_TE_SEC_NewDel_Lock;
-    tgUpdate_Init.m_iMax = KTgEM_MAX_TE_SEC_POOL;
+    tgUpdate_Init.m_uiMax = KTgEM_MAX_TE_SEC_POOL;
     tgUpdate_Init.m_pfnExecute = tgEM_Job_Execute__TE;
     tgUpdate_Init.m_pxuiFree_Trigger = &s_xuiJob_Trigger_TE_SEC;
     tgUpdate_Init.m_psUpdate_Data = tgJob_Cast.m_psJob_Data;
@@ -846,7 +835,6 @@ static TgRESULT tgEM_Job_Execute__TE( STg2_Job_PC psJob )
         STg2_EM_TB_P                        m_psJob;
     }                                   tgJob;
     STg2_EM_TE_Job_Update_PM_P          psJob_Data;
-    TgSINT_F32                          iIndex;
 
     TgPARAM_CHECK(nullptr != psJob);
 
@@ -876,19 +864,19 @@ static TgRESULT tgEM_Job_Execute__TE( STg2_Job_PC psJob )
     else
     {
         STg2_EM_TE                          asCallback[KTgEM_NUM_TE_IN_POOL];
-        TgSINT_F32                          niCallback;
+        TgRSIZE                             nuiCallback;
         STg2_EM_TB_P                        psFree_TB;
 
         tgCM_UT_LF__SN__Lock_Spin( psJob_Data->m_psData_Lock );
         psJob_Data->m_enStage = ETgEM_UPDATE_STAGE__WAITING;
         tgEM_TE_Update_Internal__Waiting( psJob_Data->m_psPool, psJob_Data );
         psJob_Data->m_enStage = ETgEM_UPDATE_STAGE__PROCESS;
-        tgEM_TE_Update_Internal__Process( &psFree_TB, &niCallback, asCallback, psJob_Data->m_psPool, psJob_Data );
+        tgEM_TE_Update_Internal__Process( &psFree_TB, &nuiCallback, asCallback, psJob_Data->m_psPool, psJob_Data );
         tgCM_UT_LF__SN__Signal( psJob_Data->m_psData_Lock );
 
-        for (iIndex = 0; iIndex < niCallback; ++iIndex)
+        for (TgRSIZE uiIndex = 0; uiIndex < nuiCallback; ++uiIndex)
         {
-            asCallback[iIndex].m_pfnCallback( asCallback[iIndex].m_uiParam );
+            asCallback[uiIndex].m_pfnCallback( asCallback[uiIndex].m_uiParam );
         };
 
         if (nullptr != psFree_TB)
@@ -921,10 +909,8 @@ static TgRESULT tgEM_Job_Execute__Free_Pool( STg2_Job_PC psJob )
 
     STg2_EM_TE_Job_Free_Pool_PM_P       psJob_Data;
 
-    TgSINT_F32                          iSort0, iSort1, iIndex;
     STg2_EM_TE_Pool_PP                  ppsFP_List; /* Dynamic array holding all of the valid pools with free elements */
-
-    TgSINT_F32                          niFree = 0;
+    TgRSIZE                             nuiFree = 0;
 
     TgPARAM_CHECK(nullptr != psJob);
 
@@ -935,7 +921,7 @@ static TgRESULT tgEM_Job_Execute__Free_Pool( STg2_Job_PC psJob )
     TgPARAM_CHECK(nullptr != psJob_Data->m_psFree_Lock);
     tgCM_UT_LF__SN__Lock_Spin( psJob_Data->m_psFree_Lock );
 
-    TgALLOCA( STg2_EM_TE_Pool_P, (TgRSIZE)psJob_Data->m_niMax_Pool, ppsFP_List );
+    TgALLOCA( STg2_EM_TE_Pool_P, psJob_Data->m_nuiMax_Pool, ppsFP_List );
     if (!ppsFP_List)
     {
         TgFREEA( ppsFP_List );
@@ -944,21 +930,21 @@ static TgRESULT tgEM_Job_Execute__Free_Pool( STg2_Job_PC psJob )
     }
 
     /* Collect all of the pools that have free lists */
-    for (iIndex = 0; iIndex < psJob_Data->m_niMax_Pool; ++iIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < psJob_Data->m_nuiMax_Pool; ++uiIndex)
     {
-        tgCM_UT_LF__SN__Lock_Spin( &psJob_Data->m_psNewDel_Lock[iIndex].m_sLock );
+        tgCM_UT_LF__SN__Lock_Spin( &psJob_Data->m_psNewDel_Lock[uiIndex].m_sLock );
 
-        if (nullptr != psJob_Data->m_ppsPool_List[iIndex] && nullptr != psJob_Data->m_ppsPool_List[iIndex]->m_psFree)
+        if (nullptr != psJob_Data->m_ppsPool_List[uiIndex] && nullptr != psJob_Data->m_ppsPool_List[uiIndex]->m_psFree)
         {
-            ppsFP_List[niFree++] = psJob_Data->m_ppsPool_List[iIndex];
+            ppsFP_List[nuiFree++] = psJob_Data->m_ppsPool_List[uiIndex];
         }
         else
         {
-            tgCM_UT_LF__SN__Signal( &psJob_Data->m_psNewDel_Lock[iIndex].m_sLock );
+            tgCM_UT_LF__SN__Signal( &psJob_Data->m_psNewDel_Lock[uiIndex].m_sLock );
         };
     };
 
-    if (0 == niFree)
+    if (0 == nuiFree)
     {
         TgFREEA( ppsFP_List );
         tgCM_UT_LF__SN__Signal( psJob_Data->m_psFree_Lock );
@@ -966,38 +952,38 @@ static TgRESULT tgEM_Job_Execute__Free_Pool( STg2_Job_PC psJob )
     }
 
     /* Free Pool Sort - The most filled pools are the top of the free stack */
-    for (iSort0 = 0; iSort0 < niFree; ++iSort0)
+    for (TgRSIZE uiSort0 = 0; uiSort0 < nuiFree; ++uiSort0)
     {
-        TgSINT_F32                          niUsed = ppsFP_List[iSort0]->m_niUsed;
-        TgSINT_F32                          iSort_Swap = -1;
+        TgSINT_F32                          niUsed = ppsFP_List[uiSort0]->m_niUsed;
+        TgRSIZE                             uiSort_Swap = KTgMAX_RSIZE;
 
-        for (iSort1 = iSort0 + 1; iSort1 < niFree; ++iSort1)
+        for (TgRSIZE uiSort1 = uiSort0 + 1; uiSort1 < nuiFree; ++uiSort1)
         {
-            if (ppsFP_List[iSort1]->m_niUsed > niUsed)
+            if (ppsFP_List[uiSort1]->m_niUsed > niUsed)
             {
-                niUsed = ppsFP_List[iSort1]->m_niUsed;
-                iSort_Swap = iSort1;
+                niUsed = ppsFP_List[uiSort1]->m_niUsed;
+                uiSort_Swap = uiSort1;
             };
         };
 
-        if (iSort_Swap >= 0)
+        if (uiSort_Swap != KTgMAX_RSIZE)
         {
-            STg2_EM_TE_Pool_P                   psSwap = ppsFP_List[iSort0];
+            STg2_EM_TE_Pool_P                   psSwap = ppsFP_List[uiSort0];
 
-            ppsFP_List[iSort0] = ppsFP_List[iSort1];
-            ppsFP_List[iSort1] = psSwap;
+            ppsFP_List[uiSort0] = ppsFP_List[uiSort_Swap];
+            ppsFP_List[uiSort_Swap] = psSwap;
         };
     };
 
     /* Look to remove empty pools */
-    if (niFree >= 2)
+    if (nuiFree >= 2)
     {
         do
         {
-            TgSINT_F32_C                        iPool = ppsFP_List[niFree - 1]->m_iPool;
+            TgSINT_F32_C    iPool = ppsFP_List[nuiFree - 1]->m_iPool;
             STg2_EM_TE_Pool_P                   psDel;
 
-            if (0 == ppsFP_List[niFree - 1]->m_niUsed && tgCM_UT_LF__ST__Is_Empty( &ppsFP_List[niFree - 1]->m_sNew ))
+            if (0 == ppsFP_List[nuiFree - 1]->m_niUsed && tgCM_UT_LF__ST__Is_Empty( &ppsFP_List[nuiFree - 1]->m_sNew ))
             {
                 break;
             };
@@ -1007,9 +993,9 @@ static TgRESULT tgEM_Job_Execute__Free_Pool( STg2_Job_PC psJob )
             psDel = psJob_Data->m_ppsPool_List[iPool];
             psJob_Data->m_ppsPool_List[iPool] = nullptr;
 
-            tgCM_UT_LF__ST__Free( &ppsFP_List[niFree - 1]->m_sNew );
+            tgCM_UT_LF__ST__Free( &ppsFP_List[nuiFree - 1]->m_sNew );
             TgFREE_POOL( psDel );
-            --niFree;
+            --nuiFree;
 
             tgCM_UT_LF__SN__Signal( &psJob_Data->m_psData_Lock[iPool].m_sLock );
             tgCM_UT_LF__SN__Signal( &psJob_Data->m_psNewDel_Lock[iPool].m_sLock );
@@ -1019,14 +1005,14 @@ static TgRESULT tgEM_Job_Execute__Free_Pool( STg2_Job_PC psJob )
 
 
     /* Link up the free pool list and assigned into the link list head */
-    for (iIndex = 0; iIndex + 1 < niFree; ++iIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex + 1 < nuiFree; ++uiIndex)
     {
-        ppsFP_List[iIndex]->m_psFree_Next = ppsFP_List[iIndex + 1];
-        tgCM_UT_LF__SN__Signal( &psJob_Data->m_psNewDel_Lock[ppsFP_List[iIndex]->m_iPool].m_sLock );
+        ppsFP_List[uiIndex]->m_psFree_Next = ppsFP_List[uiIndex + 1];
+        tgCM_UT_LF__SN__Signal( &psJob_Data->m_psNewDel_Lock[ppsFP_List[uiIndex]->m_iPool].m_sLock );
     };
 
-    ppsFP_List[niFree - 1]->m_psFree_Next = nullptr;
-    tgCM_UT_LF__SN__Signal( &psJob_Data->m_psNewDel_Lock[ppsFP_List[niFree - 1]->m_iPool].m_sLock );
+    ppsFP_List[nuiFree - 1]->m_psFree_Next = nullptr;
+    tgCM_UT_LF__SN__Signal( &psJob_Data->m_psNewDel_Lock[ppsFP_List[nuiFree - 1]->m_iPool].m_sLock );
 
     *psJob_Data->m_ppsFree_Pool_Head = ppsFP_List[0];
 

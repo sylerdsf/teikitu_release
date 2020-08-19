@@ -59,7 +59,7 @@ TgVOID Unit_Test__Case_Init( Test_Case_PCU psTest_Case )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT Unit_Test__Case_Execute( Test_Context_PCU psTest_Context, Test_Case_PCU psCase_Default )
 {
-    TgBOOL_C                                bValid_Case = nullptr != psTest_Context->m_psRestart_Case;
+    TgBOOL_C            bValid_Case = nullptr != psTest_Context->m_psRestart_Case;
     Test_Case_P                             psCase = bValid_Case ? psTest_Context->m_psRestart_Case : psCase_Default;
     TgRESULT                                tgRet = KTgS_OK;
     TgUINT_F32                              uiTest_Index = psTest_Context->m_psRestart_Case_Test;
@@ -216,7 +216,7 @@ TgVOID Unit_Test__Set_Init( Test_Set_PC psSet )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT Unit_Test__Set_Execute( Test_Context_PCU psTest_Context, Test_Set_PCU psSet_Start )
 {
-    TgBOOL_C                                bOutput_Message = nullptr == psTest_Context->m_psRestart_Set;
+    TgBOOL_C            bOutput_Message = nullptr == psTest_Context->m_psRestart_Set;
     Test_Set_P                              psSet = psSet_Start;
     TgRESULT                                iResult;
     TgRESULT                                tgRet = KTgS_OK;

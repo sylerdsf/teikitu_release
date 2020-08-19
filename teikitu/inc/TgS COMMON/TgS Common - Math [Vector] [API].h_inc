@@ -53,7 +53,7 @@
     @ingroup TGS_COMMON_MATH
 */
 
-/** @defgroup TGS_COMMON_MATH_VECTOR_N_API Vector SIMD Functions
+/** @defgroup TGS_COMMON_MATH_VECTOR_API Vector SIMD Functions
     @ingroup TGS_COMMON_MATH
 */
 
@@ -66,26 +66,26 @@
 /*  Public Functions                                                                                                                                                               */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-#include "TgS COMMON/TgS Common - Math [Vector].h_inc"
-#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
-    #include "TgS COMMON/TgS Common - Math [Vector] [N].h_inc"
+#include "TgS COMMON/TgS Common - Math [Vector] [S].h_inc"
+#if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_VECTOR_GUARD */
+    #include "TgS COMMON/TgS Common - Math [Vector].h_inc"
 #endif
 
 #if defined(TEMPLATE__ENABLE_INTEGER)
-    #include "TgS COMMON/TgS Common - Math [Vector] [I].h_inc"
-    #if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
-        #include "TgS COMMON/TgS Common - Math [Vector] [N] [I].h_inc"
+    #include "TgS COMMON/TgS Common - Math [Vector] [S] [I].h_inc"
+    #if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_VECTOR_GUARD */
+        #include "TgS COMMON/TgS Common - Math [Vector] [I].h_inc"
     #endif
 
 #else
-    #include "TgS COMMON/TgS Common - Math [Vector] [F].h_inc"
+    #include "TgS COMMON/TgS Common - Math [Vector] [S] [F].h_inc"
     #if (4 == TEMPLATE__VECTOR_DIM)
-        #include "TgS COMMON/TgS Common - Math [Vector] [FXX_04].h_inc"
+        #include "TgS COMMON/TgS Common - Math [Vector] [S] [FXX_04].h_inc"
     #endif
-    #if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
-        #include "TgS COMMON/TgS Common - Math [Vector] [N] [F].h_inc"
+    #if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_VECTOR_GUARD */
+        #include "TgS COMMON/TgS Common - Math [Vector] [F].h_inc"
         #if (4 == TEMPLATE__VECTOR_DIM)
-            #include "TgS COMMON/TgS Common - Math [Vector] [N] [F32_04].h_inc"
+            #include "TgS COMMON/TgS Common - Math [Vector] [FXX_04].h_inc"
         #endif
     #endif
 

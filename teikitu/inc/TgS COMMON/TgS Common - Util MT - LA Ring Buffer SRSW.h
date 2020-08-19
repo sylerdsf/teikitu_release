@@ -34,11 +34,11 @@
 TgTYPE_STRUCT(STg2_UT_LF__LA_RB_SRSW,) /**< Look Aside, Ring Buffer, Single Reader, Single Writer */
 {
     TgRSIZE_A TgALIGN(TgCCL)                 m_nuiPushed;
-    TgUINT_E08                                  m_uiPad0[TgCCL - (TgCOMPILE_POINTER_SIZE % TgCCL)];
+    TgUINT_E08                                  m_uiPad0[TgCCL - (TgBUILD_HARDWARE__POINTER_SIZE % TgCCL)];
     TgRSIZE_A TgALIGN(TgCCL)                 m_nuiPopped;
-    TgUINT_E08                                  m_uiPad1[TgCCL - (TgCOMPILE_POINTER_SIZE % TgCCL)];
+    TgUINT_E08                                  m_uiPad1[TgCCL - (TgBUILD_HARDWARE__POINTER_SIZE % TgCCL)];
     TgRSIZE                                     m_uiMaxSize; /**< Stored as a bit shift value since buffer must be power of two */
-    TgUINT_E08                                  m_uiPad2[TgCCL - (TgCOMPILE_POINTER_SIZE % TgCCL)];
+    TgUINT_E08                                  m_uiPad2[TgCCL - (TgBUILD_HARDWARE__POINTER_SIZE % TgCCL)];
 };
 TgCOMPILER_ASSERT( 4 == sizeof( TgSINT_E32 ), 0 );
 

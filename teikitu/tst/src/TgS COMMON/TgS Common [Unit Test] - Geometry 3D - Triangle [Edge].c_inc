@@ -131,7 +131,7 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Calc_Normal) )
     VEC_OBJ_T(TgETRI)                   sET0;
 
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Calc_Normal)(&sET0);
+    FCN_VO(tgGM_ET_Calc_Normal)( &sET0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -142,10 +142,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Calc_Normal) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Calc_Point) )
 {
     VEC_OBJ_T(TgETRI)                   sET0;
-    VEC_T(1)                            vRT;
 
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Calc_Point)( &vRT, &sET0, TYPE_K(1), TYPE_K(1) );
+    FCN_VO(tgGM_ET_Calc_Point)( &sET0, FCN_V(tgMH_SET1)( TYPE_K(1) ), FCN_V(tgMH_SET1)( TYPE_K(1) ) );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -184,12 +183,12 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Is_Valid) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Support_Point) )
 {
     VEC_OBJ_T(TgETRI)                   sET0;
-    VEC_T(1)                            vV0, vRT;
+    VEC_T(1)                            vV0;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Support_Point)( &vRT, &sET0, &vV0 );
+    FCN_VO(tgGM_ET_Support_Point)( &sET0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -230,10 +229,10 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Sweep_BA) )
     VEC_OBJ_T(TgBOXAA)                  sBA0;
     VEC_T(1)                            vV0;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Sweep_BA)( &sBA0, &sET0, &vV0 );
+    FCN_VO(tgGM_ET_Sweep_BA)( &sBA0, &sET0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -244,13 +243,12 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Sweep_BA) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Project) )
 {
     VEC_OBJ_T(TgETRI)                   sET0;
-    VEC_T(1)                            vV0;
-    VAR_T()                             fVal;
+    VEC_T(1)                            vV0, vVal;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Project)( &fVal, &fVal, &sET0, &vV0 );
+    FCN_VO(tgGM_ET_Project)( &vVal, &vVal, &sET0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -263,9 +261,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Is_Contained) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Is_Contained)( &sET0, &vS0 );
+    FCN_VO(tgGM_ET_Is_Contained)( &sET0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -276,9 +274,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Is_Contained) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_TX) )
 {
     VEC_OBJ_T(TgETRI)                   sET0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
     FCN_VO(tgGM_ET_TX)( &sET0, &xM0 );
 
@@ -291,9 +289,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_TX) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Copy_TX) )
 {
     VEC_OBJ_T(TgETRI)                   sET0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
     FCN_VO(tgGM_ET_Copy_TX)( &sET0, &sET0, &xM0 );
 
@@ -308,15 +306,15 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Init_PN) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0, vS1, vS2, vE0, vE1, vNM;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vS1 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vS2 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS1 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS2 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
 
-    vE0 = FCN_V(tgMH_SUB)( &vS1, &vS0 );
-    vE1 = FCN_V(tgMH_SUB)( &vS2, &vS0 );
-    vNM = FCN_V(tgMH_UCX)( &vE0, &vE1 );
+    vE0 = FCN_V(tgMH_SUB)( vS1, vS0 );
+    vE1 = FCN_V(tgMH_SUB)( vS2, vS0 );
+    vNM = FCN_V(tgMH_UCX)( vE0, vE1 );
 
-    FCN_VO(tgGM_ET_Init_PN)( &sET0, &vS0, &vS1, &vS2, &vNM );
+    FCN_VO(tgGM_ET_Init_PN)( &sET0, vS0, vS1, vS2, vNM );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -329,10 +327,10 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Init_P) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0, vS1, vS2;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vS1 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vS2 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    FCN_VO(tgGM_ET_Init_P)( &sET0, &vS0, &vS1, &vS2 );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS1 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS2 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    FCN_VO(tgGM_ET_Init_P)( &sET0, vS0, vS1, vS2 );
     Test__Expect_EQ(true, FCN_VO(tgGM_ET_Is_Valid)( &sET0 ));
 
     TEST_END_METHOD( KTgS_OK );
@@ -346,14 +344,14 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Init_EN) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0, vV0, vV1, vNM;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    vV1 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV1 = FCN_V(tgMH_NORM)( &vV1 );
-    vNM = FCN_V(tgMH_UCX)( &vV0, &vV1 );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
+    vV1 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV1 = FCN_V(tgMH_NORM)( vV1 );
+    vNM = FCN_V(tgMH_UCX)( vV0, vV1 );
 
-    FCN_VO(tgGM_ET_Init_EN)( &sET0, &vS0, &vV0, &vV1, &vNM );
+    FCN_VO(tgGM_ET_Init_EN)( &sET0, vS0, vV0, vV1, vNM );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -366,13 +364,13 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Init_E) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0, vV0, vV1;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    vV1 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV1 = FCN_V(tgMH_NORM)( &vV1 );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
+    vV1 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV1 = FCN_V(tgMH_NORM)( vV1 );
 
-    FCN_VO(tgGM_ET_Init_E)( &sET0, &vS0, &vV0, &vV1 );
+    FCN_VO(tgGM_ET_Init_E)( &sET0, vS0, vV0, vV1 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -412,9 +410,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Set_Origin) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Set_Origin)( &sET0, &vS0 );
+    FCN_VO(tgGM_ET_Set_Origin)( &sET0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -427,9 +425,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Set_Point_0) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Set_Point_0)( &sET0, &vS0 );
+    FCN_VO(tgGM_ET_Set_Point_0)( &sET0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -442,9 +440,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Set_Point_1) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Set_Point_1)( &sET0, &vS0 );
+    FCN_VO(tgGM_ET_Set_Point_1)( &sET0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -457,9 +455,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Set_Point_2) )
     VEC_OBJ_T(TgETRI)                   sET0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Set_Point_2)( &sET0, &vS0 );
+    FCN_VO(tgGM_ET_Set_Point_2)( &sET0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -472,7 +470,7 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Set_Edge_0) )
     VEC_OBJ_T(TgETRI)                   sET0;
 
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Set_Edge_0)( &sET0, sET0.m_avEdge + 0 ); /**< Point 0 to Point 1; */
+    FCN_VO(tgGM_ET_Set_Edge_0)( &sET0, sET0.m_avEdge[0] ); /**< Point 0 to Point 1; */
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -485,7 +483,7 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Set_Edge_1) )
     VEC_OBJ_T(TgETRI)                   sET0;
 
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Set_Edge_1)( &sET0, sET0.m_avEdge + 1 ); /**< Point 1 to Point 2; */
+    FCN_VO(tgGM_ET_Set_Edge_1)( &sET0, sET0.m_avEdge[1] ); /**< Point 1 to Point 2; */
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -498,7 +496,7 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_ET_Set_Edge_2) )
     VEC_OBJ_T(TgETRI)                   sET0;
 
     FCN_V(UNIT_TEST__SETUP__ET)( &sET0 );
-    FCN_VO(tgGM_ET_Set_Edge_2)( &sET0, sET0.m_avEdge + 2 ); /**< Point 2 to Point 0; */
+    FCN_VO(tgGM_ET_Set_Edge_2)( &sET0, sET0.m_avEdge[2] ); /**< Point 2 to Point 0; */
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -683,13 +681,13 @@ static TgVOID FCN_V(UNIT_TEST__SETUP__ET)( VEC_OBJ_T(TgETRI,PCU) psET )
 {
     VEC_T(1)                            vS0, vS1, vS2, vE0, vE1, vNM;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vS1 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vS2 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS1 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS2 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
 
-    vE0 = FCN_V(tgMH_SUB)( &vS1, &vS0 );
-    vE1 = FCN_V(tgMH_SUB)( &vS2, &vS0 );
-    vNM = FCN_V(tgMH_UCX)( &vE0, &vE1 );
+    vE0 = FCN_V(tgMH_SUB)( vS1, vS0 );
+    vE1 = FCN_V(tgMH_SUB)( vS2, vS0 );
+    vNM = FCN_V(tgMH_UCX)( vE0, vE1 );
 
-    FCN_VO(tgGM_ET_Init_PN)( psET, &vS0, &vS1, &vS2, &vNM );
+    FCN_VO(tgGM_ET_Init_PN)( psET, vS0, vS1, vS2, vNM );
 }

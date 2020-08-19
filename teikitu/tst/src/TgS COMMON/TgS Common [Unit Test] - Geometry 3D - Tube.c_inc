@@ -21,16 +21,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Is_Valid) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_TX) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Copy_TX) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Init) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Init_3D) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Copy) );
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Reference_Frame) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Origin) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axes_Unit) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axes_Unit_3D) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Half_Axis) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axis_Unit) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Basis_Unit_0) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Basis_Unit_1) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_3D) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Extent) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Radius) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Query_Origin) );
@@ -68,16 +61,9 @@ TEST_METHOD_DEFINE( FCN_V(UNIT_TEST__TEST__GEOM_TB) )
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_TX)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Copy_TX)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Init)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Init_3D)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Copy)());
+    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Reference_Frame)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Origin)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axes_Unit)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axes_Unit_3D)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Half_Axis)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axis_Unit)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Basis_Unit_0)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Basis_Unit_1)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_3D)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Extent)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Set_Radius)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_TB_Query_Origin)());
@@ -133,11 +119,11 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Is_Valid) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_TX) )
 {
     VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            mM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &mM0 );
     FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_TX)( &sTB0, &xM0 );
+    FCN_VO(tgGM_TB_TX)( &sTB0, &mM0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -148,11 +134,11 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_TX) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Copy_TX) )
 {
     VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            mM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &mM0 );
     FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Copy_TX)( &sTB0, &sTB0, &xM0 );
+    FCN_VO(tgGM_TB_Copy_TX)( &sTB0, &sTB0, &mM0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -163,27 +149,11 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Copy_TX) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Init) )
 {
     VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_T(1)                            vV0, vS0;
+    VEC_T(3)                            mM0;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    FCN_VO(tgGM_TB_Init)( &sTB0, &vV0, &vV0, &vV0, &vS0, TYPE_K(1), TYPE_K(1) );
+    FCN_V(tgMH_CLI,3)( &mM0 );
+    FCN_VO(tgGM_TB_Init)( &sTB0, &mM0, TYPE_K(1), TYPE_K(1) );
     Test__Expect_EQ(true, FCN_VO(tgGM_TB_Is_Valid)( &sTB0 ));
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Init_3D) ------------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Init_3D) )
-{
-    VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_04_3_T()                        xM0;
-
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_VO(tgGM_TB_Init_3D)( &sTB0, &xM0, TYPE_K(1), TYPE_K(1) );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -202,6 +172,21 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Copy) )
 }
 
 
+/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_Reference_Frame) ------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Reference_Frame) )
+{
+    VEC_OBJ_T(TgTUBE)                   sTB0;
+    VEC_T(3)                            mM0;
+
+    FCN_V(tgMH_CLI,3)( &mM0 );
+    FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
+    FCN_VO(tgGM_TB_Set_Reference_Frame)( &sTB0, &mM0 );
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
 /* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_Origin) --------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Origin) )
@@ -209,119 +194,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Origin) )
     VEC_OBJ_T(TgTUBE)                   sTB0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Set_Origin)( &sTB0, &vS0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axes_Unit) ------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axes_Unit) )
-{
-    VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Set_Axes_Unit)( &sTB0, &vV0, &vV0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axes_Unit_3D) --------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axes_Unit_3D) )
-{
-    VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_04_3_T()                        xM0;
-
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Set_Axes_Unit_3D)( &sTB0, &xM0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_Half_Axis) ------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Half_Axis) )
-{
-    VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Set_Half_Axis)( &sTB0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axis_Unit) ------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Axis_Unit) )
-{
-    VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Set_Axis_Unit)( &sTB0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_Basis_Unit_0) --------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Basis_Unit_0) )
-{
-    VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Set_Basis_Unit_0)( &sTB0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_Basis_Unit_1) --------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_Basis_Unit_1) )
-{
-    VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Set_Basis_Unit_1)( &sTB0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_TB_Set_3D) ------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Set_3D) )
-{
-    VEC_OBJ_T(TgTUBE)                   sTB0;
-    VEC_04_3_T()                        xM0;
-
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_V(UNIT_TEST__SETUP__TB)( &sTB0 );
-    FCN_VO(tgGM_TB_Set_3D)( &sTB0, &xM0 );
+    FCN_VO(tgGM_TB_Set_Origin)( &sTB0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -478,8 +353,8 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_TB_Query_Radius_Sq) )
 
 static TgVOID FCN_V(UNIT_TEST__SETUP__TB)( VEC_OBJ_T(TgTUBE,PCU) psTB )
 {
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            mM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_VO(tgGM_TB_Init_3D)( psTB, &xM0, TYPE_K(2), TYPE_K(1) );
+    FCN_V(tgMH_CLI,3)( &mM0 );
+    FCN_VO(tgGM_TB_Init)( psTB, &mM0, TYPE_K(2), TYPE_K(1) );
 }

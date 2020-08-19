@@ -81,11 +81,11 @@
 
 #define TEMPLATE__TEST_AND_UNLOAD_TEMPLATE_MACROS
 #define TEMPLATE__VECTOR_DIM 4
-#define TEMPLATE__VECTOR_ROW 3
+#define TEMPLATE__VECTOR_COL 3
 #include "TgS COMMON/TgS Common - Math [Matrix] [API].h_inc"
 
 #define TEMPLATE__VECTOR_DIM 4
-#define TEMPLATE__VECTOR_ROW 4
+#define TEMPLATE__VECTOR_COL 4
 #include "TgS COMMON/TgS Common - Math [Matrix] [API].h_inc"
 
 #define TGS_COMMON_MATH_MATRIX_HINC

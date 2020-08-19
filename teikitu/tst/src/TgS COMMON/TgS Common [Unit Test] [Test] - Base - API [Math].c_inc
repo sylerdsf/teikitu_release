@@ -533,8 +533,6 @@ TEST_METHOD( FPM_UT(BSR) )
     Test__Expect_EQ(13, FPM(BSR)( TYPE_K(1) << 13 ));
     Test__Expect_EQ(14, FPM(BSR)( TYPE_K(1) << 14 ));
     Test__Expect_EQ(15, FPM(BSR)( TYPE_K(1) << 15 ));
-#else
-    Test__Expect_EQ( 6, FPM(BSR)( (VAR_T())(TYPE_K(5) <<  6 )));
 #endif
 #if TEMPLATE__TYPE_SIZE > 16
     Test__Expect_EQ(16, FPM(BSR)( TYPE_K(1) << 16 ));
@@ -997,12 +995,12 @@ TEST_METHOD( FPM_UT(LOG) )
         for (nuiTest = 0; nuiTest < 50; ++nuiTest)
         {
             /* Random test of some of the math functions */
-            VAR_T(C)                             f10 = FPM(ABS)( FCM(RAND)() );
+            VAR_T(C)         f10 = FPM(ABS)( FCM(RAND)() );
 
-            VAR_T(C)                             tWork_0 = FPM(LOG)( f10 );
-            VAR_T(C)                             tWork_1 = FPM(POW)( TYPE_K(10), tWork_0 );
-            VAR_T(C)                             tWork_2 = FPM(LN)( f10 );
-            VAR_T(C)                             tWork_3 = FPM(EXP)( tWork_2 );
+            VAR_T(C)         tWork_0 = FPM(LOG)( f10 );
+            VAR_T(C)         tWork_1 = FPM(POW)( TYPE_K(10), tWork_0 );
+            VAR_T(C)         tWork_2 = FPM(LN)( f10 );
+            VAR_T(C)         tWork_3 = FPM(EXP)( tWork_2 );
 
             Test__Expect_NE(0, FCM(NR0)( f10 - tWork_1 ));
             Test__Expect_NE(0, FCM(NR0)( f10 - tWork_3 ));

@@ -16,7 +16,6 @@
 
 // TODO:|FIXME: Review Console Text processing (and any other text processing)
 // TODO:|FIXME: Refactor File IO to use IDs
-// TODO:|FIXME: Document math functions
 // TODO:|FIXME: Add support for modern intrinsics - 256 and 512 (also note the expanded set of registers for these intrinsics)
 // TODO:|FIXME: __builtin_shufflevector
 // TODO:|FIXME: __attribute__((cpu_specific(ivybridge))), __attribute__((cpu_specific(generic)))
@@ -50,11 +49,11 @@
 /* 5.11 */ /* C1663C45-B8EA-46E7-8607-56216A251FC8 */ /* May 2020 - After losing work to reset --hard */
 /*  Brief: May 2020 - After losing work to reset --hard
     Description: Includes: reformatting to a wide default file width (size), standardization on C11, cleanup of CMakeFiles, C11 atomics, enforced alignment - the old GCC style
-    attribute does not seem to have work in Clang. Moving to C11 alignment command highlighted some areas to improve. Same with the use of C11 atomics, where issues came up that were
-    appearing to have worked in the past. Enabled POSIX. Cleaned up the compiler, hardware, platform sequence of defines and includes for compilation to a target platform. Created
-    the new text object (to differentiate from strings). This will be the standard way that text is used in the engine and will be based on UTF standards. Unfortunately, uchar.h
-    is not available on the Mac. Once it is more common, will integrate it into the text object. In the mean time, will separate out the char type declaration for use with the
-    operating system from the common character type used in the engine. Removed the old atomic functions. Kept the other wrapper functions for numerics for standardization. */
+    attribute does not seem to have work in Clang. Moving to C11 alignment command highlighted some areas to improve. Same with the use of C11 atomics, where issues came up that
+    were appearing to have worked in the past. Enabled POSIX. Cleaned up the compiler, hardware, platform sequence of defines and includes for compilation to a target platform.
+    Created the new text object (to differentiate from strings). This will be the standard way that text is used in the engine and will be based on UTF standards. Unfortunately,
+    uchar.h is not available on the Mac. Once it is more common, will integrate it into the text object. In the mean time, will separate out the char type declaration for use with
+    the operating system from the common character type used in the engine. Removed the old atomic functions. Kept the other wrapper functions for numerics for standardization. */
 
 /* 5.12 */ /* 964CB1A6-814D-4E19-8E67-A83FCA98BF05 */
 /*  Brief: May 2020 - After changing the integer types
@@ -74,6 +73,11 @@
 /*  Brief: June 2020 - WIP for Release 0.1, Finalizing Doxygen configuration and documentation
     Description: Move Doxygen configuration into the individual header files. Include [in] and [out] on the parameter declarations for comments. Move file wide comments into the
     group definition so that it appears under the group. Add comments to all of the header files, including the code generation files (h_inc).
+ */
+
+/* 5.17 */ /* 3ED3C595-046B-47FB-8785-5C167178CD24 */
+/*  Brief: August 2020 - WIP for Release 0.2, Physics Module, Apple & ARM compilation and support, change in math standards
+    Description: Physics module port, update as part of implementation. Change to column major storage for matrices, row major matrix representation.
  */
 
 

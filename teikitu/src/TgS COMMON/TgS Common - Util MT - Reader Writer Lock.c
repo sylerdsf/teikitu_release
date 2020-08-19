@@ -20,14 +20,16 @@
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgVOID tgCM_UT_MT__RW_DATA__Update( STg2_UT_ST__RW_DATA_PCU psRW_DATA )
 {
-    TgUINT_F32_C                        uiIndex = psRW_DATA->m_uiIndex;
-    TgUINT_F32_C                        uiMax = psRW_DATA->m_nuiThread;
     TgUINT_F32                          uiCount;
+
+    TgUINT_F32_C    uiIndex = psRW_DATA->m_uiIndex;
+    TgUINT_F32_C    uiMax = psRW_DATA->m_nuiThread;
 
     for (uiCount = 0; uiCount < uiMax; ++uiCount)
     {
-        TgUINT_F32_C                        uiThread_Index = (uiIndex + uiCount) % KTgMP_MAX_READ_WRITER_LOCK;
         STg1_MT_SM_P                        psExecute;
+
+        TgUINT_F32_C    uiThread_Index = (uiIndex + uiCount) % KTgMP_MAX_READ_WRITER_LOCK;
 
         if (psRW_DATA->m_abReader[uiThread_Index])
         {

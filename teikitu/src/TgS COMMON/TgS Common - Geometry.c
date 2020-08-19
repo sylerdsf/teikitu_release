@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Geometry.c
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -11,6 +11,7 @@
     GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 /* == Common ===================================================================================================================================================================== */
+#if defined (TGS_COMMON_GEOMETRY_H)
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
 /*  File Local Data */
@@ -31,7 +32,7 @@
 
 /* ---- TETRAHEDRON -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-TgUINT_F16_C KTgGM_CUBE_INDEX[36] =
+TgUINT_E16_C KTgGM_CUBE_INDEX[36] =
 {
     0,1,2, 1,3,2, 4,6,5, 5,6,7, 0,5,1, 0,4,5, 2,7,6, 2,3,7, 0,6,4, 0,2,6, 1,7,3, 1,5,7
 };
@@ -44,7 +45,7 @@ TgFLOAT32_C KTgGM_CUBE_VERTEX[24] =
 
 /* ---- TETRAHEDRON -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-TgUINT_F16_C KTgGM_TETRAHEDRON_INDEX[12] =
+TgUINT_E16_C KTgGM_TETRAHEDRON_INDEX[12] =
 {
        0,3,6,     0,9,3,       6,3,9,      9,0,6
 };
@@ -57,7 +58,7 @@ TgFLOAT32_C KTgGM_TETRAHEDRON_VERTEX[12] =
 
 /* ---- OCTOGON ------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 
-TgUINT_F16_C KTgGM_OCTOGON_INDEX[24] =
+TgUINT_E16_C KTgGM_OCTOGON_INDEX[24] =
 {
       0,12,6,     6,12,3,     3,12,9,     9,12,0,     0,6,15,     6,3,15,     3,9,15,     9,0,15
 };
@@ -75,7 +76,7 @@ TgFLOAT32_C KTgGM_OCTOGON_VERTEX[24] =
 
 /* ---- ICOSAHEDRON -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-TgUINT_F16_C KTgGM_ICOSAHEDRON_INDEX[60] =
+TgUINT_E16_C KTgGM_ICOSAHEDRON_INDEX[60] =
 {
      4, 8, 7,     4, 7, 9,     5, 6,11,     5,10, 6,     0, 4, 3,     0, 3, 5,     2, 7, 1,     2, 1, 6,     8, 0,11,     8,11, 1,
      9,10, 3,     9, 2,10,     8, 4, 0,    11, 0, 5,     4, 9, 3,     5, 3,10,     7, 8, 1,     6, 1,11,     7, 2, 9,     6,10, 2
@@ -102,7 +103,7 @@ TgFLOAT32_C KTgGM_ICOSAHEDRON_VERTEX[96] =
 
 /* ---- ICOSAHEDRON_HEMI --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-TgUINT_F16_C KTgGM_ICOSAHEDRON_HEMI_INDEX[108] =
+TgUINT_E16_C KTgGM_ICOSAHEDRON_HEMI_INDEX[108] =
 {
      /* Positive Cap */
       2, 6, 5, /* 0,P,0,*/
@@ -233,6 +234,5 @@ TgCHAR_MB_P tgGM_Primitive_To_String( ETgPRIMITIVE_C enPM )
 
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-#define TEMPLATE__TEST_AND_UNLOAD_TEMPLATE_MACROS
-#define TEMPLATE__VECTOR_DIM 4
-#include "TgS Common - Geometry.c_inc"
+/*# defined (TGS_COMMON_GEOMETRY_H) */
+#endif

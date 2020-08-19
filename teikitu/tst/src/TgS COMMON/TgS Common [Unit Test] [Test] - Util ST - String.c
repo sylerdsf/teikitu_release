@@ -268,7 +268,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SZ_Init )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         STg2_UT_ST__ST                      tgKB;
         TgCHAR_MB_CP                        mbzKB;
@@ -294,16 +294,16 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SN_Init )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
 
         for (TgRSIZE nbySize = 0, nbySize_Step = 0; nbySize_Step <= uiMaxStep_nbyTest; ++nbySize_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Size_End = tgMBZ_Query_End( s_ambzTest[uiIndex], nbySize, KTgMAX_RSIZE );
-            TgRSIZE_C                           nbyTest = (TgRSIZE)(mbzTest_Size_End - s_ambzTest[uiIndex]);
-
             STg2_UT_ST__ST                      tgKB;
             TgCHAR_MB_CP                        mbzKB;
+
+            TgCHAR_MB_CPC   mbzTest_Size_End = tgMBZ_Query_End( s_ambzTest[uiIndex], nbySize, KTgMAX_RSIZE );
+            TgRSIZE_C       nbyTest = (TgRSIZE)(mbzTest_Size_End - s_ambzTest[uiIndex]);
 
             tgCM_UT_ST__ST__SN_Init( &tgKB, s_ambzTest[uiIndex], nbySize );
             mbzKB = tgCM_UT_ST__ST__Query_String( &tgKB );
@@ -329,21 +329,21 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__PT_Init )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
-
                 STg2_UT_ST__ST                      tgKB;
                 TgCHAR_MB_CP                        mbzKB;
+
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 tgCM_UT_ST__ST__PT_Init( &tgKB, mbzTest_Start, mbzTest_End );
                 mbzKB = tgCM_UT_ST__ST__Query_String( &tgKB );
@@ -372,9 +372,10 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__ST_Init )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
         STg2_UT_ST__ST                      tgKB, tgKC;
         TgCHAR_MB_CP                        mbzKB;
+
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         /* Assign with pointer to non-self, with empty string */
         tgCM_UT_ST__ST__SZ_Init( &tgKC, s_ambzTest[uiIndex] );
@@ -400,16 +401,17 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_Init )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-            TgRSIZE_C                           nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
             STg2_UT_ST__ST                      tgKB, tgKC;
             TgCHAR_MB_CP                        mbzKB;
+
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgRSIZE_C       nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
 
             /* Assign with pointer to non-self, with empty string */
             tgCM_UT_ST__ST__SZ_Init( &tgKC, s_ambzTest[uiIndex] );
@@ -438,21 +440,21 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SF_Init )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
-
                 STg2_UT_ST__ST                      tgKB, tgKC;
                 TgCHAR_MB_CP                        mbzKB;
+
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 /* Assign with pointer to non-self, with empty string */
                 tgCM_UT_ST__ST__SZ_Init( &tgKC, s_ambzTest[uiIndex] );
@@ -484,10 +486,10 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SZ_Assign )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-
         TgCHAR_MB_CP                        mbzKB;
         STg2_UT_ST__ST                      tgKB;
+
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         /* Assign with pointer to self */
         tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
@@ -530,16 +532,16 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SN_Assign )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
 
         for (TgRSIZE nbySize = 0, nbySize_Step = 0; nbySize_Step <= uiMaxStep_nbyTest; ++nbySize_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_End( s_ambzTest[uiIndex], nbySize, KTgMAX_RSIZE );
-            TgRSIZE_C                           nbyTest = (TgRSIZE)(mbzTest_End - s_ambzTest[uiIndex]);
-
             STg2_UT_ST__ST                      tgKB;
             TgCHAR_MB_CP                        mbzKB;
+
+            TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_End( s_ambzTest[uiIndex], nbySize, KTgMAX_RSIZE );
+            TgRSIZE_C       nbyTest = (TgRSIZE)(mbzTest_End - s_ambzTest[uiIndex]);
 
             /* Assign with pointer to self */
             tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
@@ -587,21 +589,21 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__PT_Assign )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
-
                 STg2_UT_ST__ST                      tgKB;
                 TgCHAR_MB_CP                        mbzKB, mbzKB_Start, mbzKB_End;
+
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 /* Assign with pointer to self (start) */
                 tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
@@ -652,10 +654,10 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__ST_Assign )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-
         STg2_UT_ST__ST                      tgKB;
         TgCHAR_MB_CP                        mbzKB;
+
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         /* Assign with pointer to self */
         tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
@@ -700,17 +702,17 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_Assign )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-            TgRSIZE_C                           nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
-
             STg2_UT_ST__ST                      tgKB;
             TgCHAR_MB_CP                        mbzKB;
+
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgRSIZE_C       nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
 
             /* Assign with pointer to self */
             tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
@@ -758,21 +760,21 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SF_Assign )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
-
                 STg2_UT_ST__ST                      tgKB;
                 TgCHAR_MB_CP                        mbzKB;
+
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 /* Assign with pointer to self */
                 tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
@@ -823,18 +825,18 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SZ_Append )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         /* Assign with pointer to self */
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-            TgRSIZE_C                           nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
-
             STg2_UT_ST__ST                      tgKB;
             TgCHAR_MB_CP                        mbzKB, mbzKB_Start;
+
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgRSIZE_C       nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
 
             tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
             mbzKB = tgCM_UT_ST__ST__Query_String( &tgKB );
@@ -854,7 +856,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SZ_Append )
             /* Append with pointer to non-self */
             for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
             {
-                TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
 
                 tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex2] );
                 tgCM_UT_ST__ST__SZ_Append( &tgKB, mbzTest_Start );
@@ -883,19 +885,19 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SN_Append )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE nbySize = 0, nbySize_Step = 0; nbySize_Step <= uiMaxStep_nbyTest; ++nbySize_Step)
         {
             /* Append with pointer to self */
             for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_End( mbzTest_Start, nbySize, KTgMAX_RSIZE );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
+                TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_End( mbzTest_Start, nbySize, KTgMAX_RSIZE );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 STg2_UT_ST__ST                      tgKB;
                 TgCHAR_MB_CP                        mbzKB, mbzKB_Start;
@@ -918,7 +920,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SN_Append )
                 /* Append with pointer to non-self, with initialized string */
                 for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
                 {
-                    TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                    TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
 
                     tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex2] );
                     tgCM_UT_ST__ST__SN_Append( &tgKB, mbzTest_Start, nbySize );
@@ -950,20 +952,20 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__PT_Append )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         /* Assign with pointer to self */
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 STg2_UT_ST__ST                      tgKB;
                 TgCHAR_MB_CP                        mbzKB, mbzKB_Start, mbzKB_End;
@@ -990,7 +992,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__PT_Append )
 
                 for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
                 {
-                    TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                    TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
 
                     tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex2] );
                     tgCM_UT_ST__ST__PT_Append( &tgKB, mbzTest_Start, mbzTest_End );
@@ -1022,7 +1024,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__ST_Append )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         STg2_UT_ST__ST                      tgKB;
         TgCHAR_MB_CP                        mbzKB;
@@ -1046,7 +1048,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__ST_Append )
 
         for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
         {
-            TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+            TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
 
             STg2_UT_ST__ST                      tgKC;
             
@@ -1077,14 +1079,14 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_Append )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-            TgRSIZE_C                           nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgRSIZE_C       nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
 
             STg2_UT_ST__ST                      tgKB;
             TgCHAR_MB_CP                        mbzKB;
@@ -1107,7 +1109,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_Append )
             /* Append with pointer to non-self, with empty string */
             for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
             {
-                TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
 
                 STg2_UT_ST__ST                      tgKC;
                 
@@ -1140,20 +1142,20 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SF_Append )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         /* Assign with pointer to self */
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 STg2_UT_ST__ST                      tgKB;
                 TgCHAR_MB_CP                        mbzKB;
@@ -1175,7 +1177,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SF_Append )
 
                 for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
                 {
-                    TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                    TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
 
                     STg2_UT_ST__ST                      tgKC;
                     
@@ -1212,15 +1214,15 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SZ_Insert )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         /* Assign with pointer to self */
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-            TgRSIZE_C                           nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgRSIZE_C       nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
 
             for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
             {
@@ -1255,9 +1257,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SZ_Insert )
             {
                 for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
                 {
-                    TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                    TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                    TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                    TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                    TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                    TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                     STg2_UT_ST__ST                      tgKB;
                     TgCHAR_MB_CP                        mbzKB, mbzKB_Start;
@@ -1297,18 +1299,18 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SN_Insert )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE nbySize = 0, nbySize_Step = 0; nbySize_Step <= uiMaxStep_nbyTest; ++nbySize_Step)
         {
             for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_End( mbzTest_Start, nbySize, KTgMAX_RSIZE );
-                TgRSIZE_C                           nbyTest = (TgRSIZE)(mbzTest_End - mbzTest_Start);
+                TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_End( mbzTest_Start, nbySize, KTgMAX_RSIZE );
+                TgRSIZE_C       nbyTest = (TgRSIZE)(mbzTest_End - mbzTest_Start);
 
                 for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
                 {
@@ -1343,9 +1345,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SN_Insert )
                 {
                     for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
                     {
-                        TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                        TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                        TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                        TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                        TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                        TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                         STg2_UT_ST__ST                      tgKB;
                         TgCHAR_MB_CP                        mbzKB, mbzKB_Start;
@@ -1389,18 +1391,18 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__PT_Insert )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
                 {
@@ -1436,9 +1438,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__PT_Insert )
                 {
                     for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
                     {
-                        TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                        TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                        TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                        TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                        TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                        TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                         STg2_UT_ST__ST                      tgKB;
                         TgCHAR_MB_CP                        mbzKB, mbzKB_Start;
@@ -1482,9 +1484,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__ST_Insert )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
         {
@@ -1517,9 +1519,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__ST_Insert )
         {
             for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
             {
-                TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                 STg2_UT_ST__ST                      tgKB, tgKC;
                 TgCHAR_MB_CP                        mbzKB, mbzKB_Start;
@@ -1559,14 +1561,14 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_Insert )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-            TgRSIZE_C                           nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgRSIZE_C       nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
 
             for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
             {
@@ -1599,9 +1601,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_Insert )
             {
                 for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
                 {
-                    TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                    TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                    TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                    TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                    TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                    TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                     STg2_UT_ST__ST                      tgKB, tgKC;
                     TgCHAR_MB_CP                        mbzKB, mbzKB_Start;
@@ -1644,18 +1646,18 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SF_Insert )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
                 {
@@ -1687,9 +1689,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SF_Insert )
                 {
                     for (TgRSIZE uiInsert_Index = 0, uiInsert_Index_Step = 0; uiInsert_Index_Step <= uiMaxStep_nuiTest; ++uiInsert_Index_Step)
                     {
-                        TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                        TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                        TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                        TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                        TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                        TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                         STg2_UT_ST__ST                      tgKB, tgKC;
                         TgCHAR_MB_CP                        mbzKB, mbzKB_Start;
@@ -1735,14 +1737,14 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SZ_Replace )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-            TgRSIZE_C                           nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgRSIZE_C       nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
 
             TgCHAR_MB_CP                        mbzDest_Start, mbzDest_End;
             TgRSIZE                             nbyDest_Start, nbyDest_End;
@@ -1785,9 +1787,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SZ_Replace )
 
             for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
             {
-                TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                 for (TgRSIZE uiDest_Start = 0, uiDest_Start_Step = 0; uiDest_Start_Step <= uiMaxStep_nuiTest; ++uiDest_Start_Step)
                 {
@@ -1838,19 +1840,19 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SN_Replace )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       uiMaxStep_nbyTest = tgCM_MIN_UMAX( nbyMaxTest, 10 );
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         /* Replace with pointer to self */
         for (TgRSIZE nbySize = 0, nbySize_Step = 0; nbySize_Step <= uiMaxStep_nbyTest; ++nbySize_Step)
         {
             for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_End( mbzTest_Start, nbySize, KTgMAX_RSIZE );
-                TgRSIZE_C                           nbyTest = (TgRSIZE)(mbzTest_End - mbzTest_Start);
+                TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_End( mbzTest_Start, nbySize, KTgMAX_RSIZE );
+                TgRSIZE_C       nbyTest = (TgRSIZE)(mbzTest_End - mbzTest_Start);
 
                 TgCHAR_MB_CP                        mbzDest_Start, mbzDest_End;
                 TgRSIZE                             nbyDest_Start, nbyDest_End;
@@ -1893,9 +1895,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SN_Replace )
 
                 for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
                 {
-                    TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                    TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                    TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                    TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                    TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                    TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                     for (TgRSIZE uiDest_Start = 0, uiDest_Start_Step = 0; uiDest_Start_Step <= uiMaxStep_nuiTest; ++uiDest_Start_Step)
                     {
@@ -1950,18 +1952,18 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__PT_Replace )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
             for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
+                TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                 TgCHAR_MB_CP                        mbzDest_Start, mbzDest_End;
                 TgRSIZE                             nbyDest_Start, nbyDest_End;
@@ -2006,9 +2008,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__PT_Replace )
 
                 for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
                 {
-                    TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                    TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                    TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                    TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                    TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                    TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                     for (TgRSIZE uiDest_Start = 0, uiDest_Start_Step = 0; uiDest_Start_Step <= uiMaxStep_nuiTest; ++uiDest_Start_Step)
                     {
@@ -2062,11 +2064,11 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__ST_Replace )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
-        TgCHAR_MB_CPC                       mbzTest_Start = s_ambzTest[uiIndex];
-        TgRSIZE_C                           nbyTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgCHAR_MB_CPC   mbzTest_Start = s_ambzTest[uiIndex];
+        TgRSIZE_C       nbyTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         TgCHAR_MB_CP                        mbzDest_Start, mbzDest_End;
         TgRSIZE                             nbyDest_Start, nbyDest_End;
@@ -2107,9 +2109,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__ST_Replace )
 
         for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
         {
-            TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-            TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-            TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+            TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+            TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+            TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
             for (TgRSIZE uiDest_Start = 0, uiDest_Start_Step = 0; uiDest_Start_Step <= uiMaxStep_nuiTest; ++uiDest_Start_Step)
             {
@@ -2158,14 +2160,14 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_Replace )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
         {
-            TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
-            TgRSIZE_C                           nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
+            TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+            TgRSIZE_C       nbyTest = nbyMaxTest - (TgRSIZE)(mbzTest_Start - s_ambzTest[uiIndex]);
 
             TgCHAR_MB_CP                        mbzDest_Start, mbzDest_End;
             TgRSIZE                             nbyDest_Start, nbyDest_End;
@@ -2207,9 +2209,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_Replace )
 
             for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
             {
-                TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                 for (TgRSIZE uiDest_Start = 0, uiDest_Start_Step = 0; uiDest_Start_Step <= uiMaxStep_nuiTest; ++uiDest_Start_Step)
                 {
@@ -2261,20 +2263,20 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SF_Replace )
 {
      for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
      {
-         TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-         TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-         TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+         TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+         TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+         TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
          /* Assign with pointer to self */
 
          for (TgRSIZE uiTest_Start = 0, uiTest_Start_Step = 0; uiTest_Start_Step <= uiMaxStep_nuiTest; ++uiTest_Start_Step)
          {
-             TgCHAR_MB_CPC                       mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
+             TgCHAR_MB_CPC   mbzTest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_Start );
 
              for (TgRSIZE uiTest_End = uiTest_Start, uiTest_End_Step = uiTest_Start_Step; uiTest_End_Step <= uiMaxStep_nuiTest; ++uiTest_End_Step)
              {
-                 TgCHAR_MB_CPC                       mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
-                 TgRSIZE_C                           nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
+                 TgCHAR_MB_CPC   mbzTest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiTest_End );
+                 TgRSIZE_C       nbyTest = mbzTest_End >= mbzTest_Start ? (TgRSIZE)(mbzTest_End - mbzTest_Start) : 0;
 
                  TgCHAR_MB_CP                        mbzDest_Start, mbzDest_End;
                  TgRSIZE                             nbyDest_Start, nbyDest_End;
@@ -2314,9 +2316,9 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SF_Replace )
 
                  for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
                  {
-                     TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
-                     TgRSIZE_C                           nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
-                     TgRSIZE_C                           uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
+                     TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+                     TgRSIZE_C       nuiMaxTest2 = s_asTest_Length[uiIndex2].m_nuiCharacters;
+                     TgRSIZE_C       uiMaxStep_nuiTest2 = tgCM_MIN_UMAX( nuiMaxTest2, 10 );
 
                      for (TgRSIZE uiDest_Start = 0, uiDest_Start_Step = 0; uiDest_Start_Step <= uiMaxStep_nuiTest; ++uiDest_Start_Step)
                      {
@@ -2371,22 +2373,22 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__Erase )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiMaxStep_nuiTest = tgCM_MIN_UMAX( nuiMaxTest, 10 );
 
         for (TgRSIZE uiDest_Start = 0, uiDest_Start_Step = 0; uiDest_Start_Step <= uiMaxStep_nuiTest; ++uiDest_Start_Step)
         {
             for (TgRSIZE uiDest_End = uiDest_Start, uiDest_End_Step = uiDest_Start_Step; uiDest_End_Step <= uiMaxStep_nuiTest; ++uiDest_End_Step)
             {
-                TgCHAR_MB_CPC                       mbzDest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiDest_Start );
-                TgRSIZE_C                           nbyDest_Start = (TgRSIZE)(mbzDest_Start - s_ambzTest[uiIndex]);
-                TgCHAR_MB_CPC                       mbzDest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiDest_End );
-                TgRSIZE_C                           nbyDest_End = (TgRSIZE)(mbzDest_End - s_ambzTest[uiIndex]);
-                TgRSIZE_C                           nbyDest = mbzDest_End >= mbzDest_Start ? (TgRSIZE)(mbzDest_End - mbzDest_Start) : 0;
-
                 STg2_UT_ST__ST                      tgKB;
                 TgCHAR_MB_CP                        mbzKB;
+
+                TgCHAR_MB_CPC   mbzDest_Start = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiDest_Start );
+                TgRSIZE_C       nbyDest_Start = (TgRSIZE)(mbzDest_Start - s_ambzTest[uiIndex]);
+                TgCHAR_MB_CPC   mbzDest_End = tgMBZ_Query_At( s_ambzTest[uiIndex], nbyMaxTest + 1, uiDest_End );
+                TgRSIZE_C       nbyDest_End = (TgRSIZE)(mbzDest_End - s_ambzTest[uiIndex]);
+                TgRSIZE_C       nbyDest = mbzDest_End >= mbzDest_Start ? (TgRSIZE)(mbzDest_End - mbzDest_Start) : 0;
 
                 tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
 
@@ -2444,7 +2446,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__To_Upper )
 {
     for (TgRSIZE uiIndex = 1; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
         TgCHAR_MB_P                         mbzTemp;
         STg2_UT_ST__ST                      tgKB;
         TgCHAR_MB_CP                        mbzKB;
@@ -2476,10 +2478,11 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__To_Lower )
 {
     for (TgRSIZE uiIndex = 1; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
         TgCHAR_MB_P                         mbzTemp;
         STg2_UT_ST__ST                      tgKB;
         TgCHAR_MB_CP                        mbzKB;
+
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         tgCM_UT_ST__ST__SZ_Init( &tgKB, s_ambzTest[uiIndex] );
 
@@ -2548,10 +2551,11 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__Capacity )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
-        TgRSIZE_C                           uiCapacity = tgCM_MAX_UMAX( KTgSTRING_STATIC_BUFFER_SIZE - 1, nbyMaxTest );
         STg2_UT_ST__ST                      tgKB;
+
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       uiCapacity = tgCM_MAX_UMAX( KTgSTRING_STATIC_BUFFER_SIZE - 1, nbyMaxTest );
 
         tgCM_UT_ST__ST__Init( &tgKB );
 
@@ -2596,7 +2600,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__Length_U08 )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         STg2_UT_ST__ST                      tgKB;
 
@@ -2621,8 +2625,8 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__Length_Count )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
-        TgRSIZE_C                           nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nuiMaxTest = s_asTest_Length[uiIndex].m_nuiCharacters;
 
         STg2_UT_ST__ST                      tgKB;
         TgRSIZE                             uiCount;
@@ -2660,11 +2664,11 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__Resize_NCS )
 {
     for (TgRSIZE uiIndex2 = 0; uiIndex2 < TgARRAY_COUNT(s_ambzTest); ++uiIndex2)
     {
-        TgRSIZE_C                           nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
+        TgRSIZE_C       nbyMaxTest2 = s_asTest_Length[uiIndex2].m_nbyCharacters;
 
         for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
         {
-            TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+            TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
             STg2_UT_ST__ST                      tgKB;
             TgCHAR_MB_CP                        mbzKB;
@@ -2725,7 +2729,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__Reserve )
     {
         for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
         {
-            TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+            TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
             STg2_UT_ST__ST                      tgKB;
             TgCHAR_MB_CP                        mbzKB;
@@ -2763,7 +2767,7 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__Swap )
 {
     for (TgRSIZE uiIndex = 0; uiIndex < TgARRAY_COUNT(s_ambzTest); ++uiIndex)
     {
-        TgRSIZE_C                           nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
+        TgRSIZE_C       nbyMaxTest = s_asTest_Length[uiIndex].m_nbyCharacters;
 
         STg2_UT_ST__ST                      tgKB, tgKC;
         TgCHAR_MB_CP                        mbzKB;
@@ -3166,11 +3170,11 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_SZ_Find_String )
     {
         for (TgRSIZE uiCmp = 0; uiCmp < TgARRAY_COUNT(s_ambzTest); ++uiCmp)
         {
-            TgRSIZE_C                           nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
-            TgRSIZE_C                           uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : KTgMAX_RSIZE;
+            TgRSIZE_C       nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
+            TgRSIZE_C       uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : KTgMAX_RSIZE;
 
             STg2_UT_ST__ST                      tgKA, tgKB;
             TgCHAR_MB_CP                        mbzKA;
@@ -3211,15 +3215,15 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_SN_Find_String )
 {
     for (TgRSIZE uiSrc = 0; uiSrc < TgARRAY_COUNT(s_ambzTest); ++uiSrc)
     {
-        TgRSIZE_C                           nuiSrc_MaxTest = s_asTest_Length[uiSrc].m_nuiCharacters;
+        TgRSIZE_C       nuiSrc_MaxTest = s_asTest_Length[uiSrc].m_nuiCharacters;
 
         for (TgRSIZE uiCmp = 0; uiCmp < TgARRAY_COUNT(s_ambzTest); ++uiCmp)
         {
-            TgRSIZE_C                           nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
-            TgRSIZE_C                           uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : KTgMAX_RSIZE;
+            TgRSIZE_C       nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
+            TgRSIZE_C       uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : KTgMAX_RSIZE;
 
             STg2_UT_ST__ST                      tgKA, tgKB;
             TgCHAR_MB_CP                        mbzKA;
@@ -3262,11 +3266,11 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_ST_Find_String )
     {
         for (TgRSIZE uiCmp = 0; uiCmp < TgARRAY_COUNT(s_ambzTest); ++uiCmp)
         {
-            TgRSIZE_C                           nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
-            TgRSIZE_C                           uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : KTgMAX_RSIZE;
+            TgRSIZE_C       nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
+            TgRSIZE_C       uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : KTgMAX_RSIZE;
 
             STg2_UT_ST__ST                      tgKA, tgKB;
             STg1_Text_Length                    sOffset;
@@ -3305,18 +3309,18 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_SF_Find_String )
 {
     for (TgRSIZE uiSrc = 0; uiSrc < TgARRAY_COUNT(s_ambzTest); ++uiSrc)
     {
-        TgRSIZE_C                           nuiSrc_MaxTest = s_asTest_Length[uiSrc].m_nuiCharacters;
+        TgRSIZE_C       nuiSrc_MaxTest = s_asTest_Length[uiSrc].m_nuiCharacters;
 
         for (TgRSIZE uiCmp = 0; uiCmp < TgARRAY_COUNT(s_ambzTest); ++uiCmp)
         {
-            TgRSIZE_C                           nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
-            TgRSIZE_C                           uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : KTgMAX_RSIZE;
-
             STg2_UT_ST__ST                      tgKA, tgKB, tgKC;
             STg1_Text_Length                    sOffset;
+
+            TgRSIZE_C       nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
+            TgRSIZE_C       uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : KTgMAX_RSIZE;
 
             tgCM_UT_ST__ST__SZ_Init( &tgKA, s_ambzTest[uiSrc] );
 
@@ -3620,11 +3624,11 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_SZ_RFind_String )
     {
         for (TgRSIZE uiCmp = 0; uiCmp < TgARRAY_COUNT(s_ambzTest); ++uiCmp)
         {
-            TgRSIZE_C                           nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
-            TgRSIZE_C                           uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : KTgMAX_RSIZE;
-            TgRSIZE_C                           uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : KTgMAX_RSIZE;
+            TgRSIZE_C       nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
+            TgRSIZE_C       uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : KTgMAX_RSIZE;
+            TgRSIZE_C       uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : KTgMAX_RSIZE;
 
             STg2_UT_ST__ST                      tgKA, tgKB;
             TgCHAR_MB_CP                        mbzKA;
@@ -3665,15 +3669,15 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_SN_RFind_String )
 {
     for (TgRSIZE uiSrc = 0; uiSrc < TgARRAY_COUNT(s_ambzTest); ++uiSrc)
     {
-        TgRSIZE_C                           nbySrc_MaxTest = s_asTest_Length[uiSrc].m_nbyCharacters;
+        TgRSIZE_C       nbySrc_MaxTest = s_asTest_Length[uiSrc].m_nbyCharacters;
 
         for (TgRSIZE uiCmp = 0; uiCmp < TgARRAY_COUNT(s_ambzTest); ++uiCmp)
         {
-            TgRSIZE_C                           nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
-            TgRSIZE_C                           uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : KTgMAX_RSIZE;
-            TgRSIZE_C                           uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : KTgMAX_RSIZE;
+            TgRSIZE_C       nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
+            TgRSIZE_C       uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : KTgMAX_RSIZE;
+            TgRSIZE_C       uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : KTgMAX_RSIZE;
 
             STg2_UT_ST__ST                      tgKA, tgKB;
             TgCHAR_MB_CP                        mbzKA;
@@ -3716,11 +3720,11 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_ST_RFind_String )
     {
         for (TgRSIZE uiCmp = 0; uiCmp < TgARRAY_COUNT(s_ambzTest); ++uiCmp)
         {
-            TgRSIZE_C                           nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
-            TgRSIZE_C                           uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : KTgMAX_RSIZE;
-            TgRSIZE_C                           uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : KTgMAX_RSIZE;
+            TgRSIZE_C       nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
+            TgRSIZE_C       uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : KTgMAX_RSIZE;
+            TgRSIZE_C       uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : KTgMAX_RSIZE;
 
             STg2_UT_ST__ST                      tgKA, tgKB;
             TgCHAR_MB_CP                        mbzKA;
@@ -3761,15 +3765,15 @@ TEST_METHOD( UNIT_TEST__TEST__CM_UT_ST__ST__SO_SF_RFind_String )
 {
     for (TgRSIZE uiSrc = 0; uiSrc < TgARRAY_COUNT(s_ambzTest); ++uiSrc)
     {
-        TgRSIZE_C                           nuiSrc_MaxTest = s_asTest_Length[uiSrc].m_nuiCharacters;
+        TgRSIZE_C       nuiSrc_MaxTest = s_asTest_Length[uiSrc].m_nuiCharacters;
 
         for (TgRSIZE uiCmp = 0; uiCmp < TgARRAY_COUNT(s_ambzTest); ++uiCmp)
         {
-            TgRSIZE_C                           nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
-            TgRSIZE_C                           uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
-            TgRSIZE_C                           uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : KTgMAX_RSIZE;
-            TgRSIZE_C                           uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : KTgMAX_RSIZE;
+            TgRSIZE_C       nuiCmp_MaxTest = s_asTest_Length[uiCmp].m_nuiCharacters;
+            TgRSIZE_C       uiRes0 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 3 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes1 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 2 : nuiCmp_MaxTest * 2;
+            TgRSIZE_C       uiRes2 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 1 : KTgMAX_RSIZE;
+            TgRSIZE_C       uiRes3 = (uiSrc == uiCmp) ? nuiCmp_MaxTest * 0 : KTgMAX_RSIZE;
 
             STg2_UT_ST__ST                      tgKA, tgKB, tgKC;
             STg1_Text_Length                    sOffset;

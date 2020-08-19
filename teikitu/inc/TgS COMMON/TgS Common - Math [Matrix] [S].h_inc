@@ -1,0 +1,61 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Math API [Matrix].h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
+                                                @brief Clear (set each element to zero) the destination
+                                                @param[out] OUT Destination matrix
+                                                @return A vector where each element is assigned the same value as ARG */
+TgINLINE TgVOID                             FCN_M(tgMH_CLR_S)( MAT_S_T(PCU) NONULL OUT );
+
+
+
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
+                                                @brief Store a matrix where each element is the maximum of the corresponding elements in the argument matrices
+                                                @param[out] OUT0 Destination Matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_MAX_S)( MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
+                                                @brief Store a matrix where each element is the minimum of the corresponding elements in the argument matrices
+                                                @param[out] OUT0 Destination Matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_MIN_S)( MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
+                                                @brief Store the result of a bit-wise and between both arguments
+                                                @param[out] OUT0 Destination Matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_AND_S)( MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
+                                                @brief Store the result of a bit-wise or between both arguments
+                                                @param[out] OUT0 Destination Matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_OR_S)( MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
+                                                @brief Store the result of a bit-wise xor between both arguments
+                                                @param[out] OUT0 Destination Matrix
+                                                @param[in] ARG1 Matrix
+                                                @param[in] ARG2 Matrix */
+TgINLINE TgVOID                             FCN_M(tgMH_XOR_S)( MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );

@@ -14,7 +14,11 @@
 #define TGS_COMMON_GEOMETRY_H
 #pragma once
 
-#define TgGEOM_ASSERT_PARAM                 TgPARAM_CHECK
+#if defined(TgCOMPILE_ASSERT__GEOM_PARAM_CHECK) && TgCOMPILE_ASSERT__GEOM_PARAM_CHECK
+    #define TgGEOM_ASSERT_PARAM(...)            TgPARAM_CHECK(__VA_ARGS__)
+#else
+    #define TgGEOM_ASSERT_PARAM(...)
+#endif
 
 #include "TgS COMMON/TgS Common - Geometry - Constants.h"
 

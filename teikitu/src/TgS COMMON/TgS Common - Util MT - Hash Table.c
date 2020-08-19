@@ -26,7 +26,6 @@
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT tgCM_UT_LF__HT_RW__Init_Virtual( STg2_UT_LF__HT_RW_P psHash_Table, TgRSIZE_C nbyNode_Data, TgRSIZE_C nuiEntries, TgRSIZE_C nuiTotal )
 {
-    TgRSIZE                             nbyNode_With_Data;
     TgUN_PTR                            uMem;
 
     if ((nuiTotal <= 1) || (nuiTotal < nuiEntries + 1))
@@ -34,7 +33,7 @@ TgRESULT tgCM_UT_LF__HT_RW__Init_Virtual( STg2_UT_LF__HT_RW_P psHash_Table, TgRS
         return (KTgE_FAIL);
     };
 
-    nbyNode_With_Data = sizeof( STg2_UT_ST__HT_Node ) + tgCM_CEL_ALGN_PW2_UMAX( nbyNode_Data, 8 );
+    TgRSIZE_C       nbyNode_With_Data = sizeof( STg2_UT_ST__HT_Node ) + tgCM_CEL_ALGN_PW2_UMAX( nbyNode_Data, 8 );
 
     uMem.m_pVoid = TgRESERVE_VIRTUAL( nuiEntries * sizeof( STg2_UT_ST__HT_Node_P ) + nuiTotal * nbyNode_With_Data );
     if (nullptr == uMem.m_pVoid)
@@ -78,14 +77,11 @@ TgRESULT tgCM_UT_LF__HT_RW__Init_Virtual( STg2_UT_LF__HT_RW_P psHash_Table, TgRS
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT tgCM_UT_LF__HT_RW__Init_Fixed( STg2_UT_LF__HT_RW_PCU psHash_Table, TgRSIZE_C nbyNode_Data, TgRSIZE_C nuiEntries, TgRSIZE_C nuiBuffer_Size, TgVOID_P psBuffer )
 {
-    TgRSIZE                             nbyNode_With_Data;
-    TgRSIZE                             nbyOverhead;
-    TgRSIZE                             nuiNode_Commit;
     TgUN_PTR                            uMem;
 
-    nbyNode_With_Data = sizeof( STg2_UT_ST__HT_Node ) + tgCM_CEL_ALGN_PW2_UMAX( nbyNode_Data, 8 );
-    nbyOverhead = nuiEntries * sizeof( STg2_UT_ST__HT_Node_P );
-    nuiNode_Commit = (nuiBuffer_Size - nbyOverhead) / nbyNode_With_Data;
+    TgRSIZE_C       nbyNode_With_Data = sizeof( STg2_UT_ST__HT_Node ) + tgCM_CEL_ALGN_PW2_UMAX( nbyNode_Data, 8 );
+    TgRSIZE_C       nbyOverhead = nuiEntries * sizeof( STg2_UT_ST__HT_Node_P );
+    TgRSIZE_C       nuiNode_Commit = (nuiBuffer_Size - nbyOverhead) / nbyNode_With_Data;
 
     if ((nuiBuffer_Size < nbyOverhead + nuiEntries * nbyNode_With_Data) || (nuiNode_Commit < 1))
     {
@@ -182,10 +178,10 @@ TgRESULT tgCM_UT_LF__HT_RW__Insert_Internal( STg2_UT_LF__HT_RW_PCU NONULL psHash
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT tgCM_UT_LF__HT_RW__Remove_Internal( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash )
 {
-    TgRSIZE                             uiIndex;
     STg2_UT_ST__HT_Node_P               psNode;
 
-    uiIndex = uiHash % psHash_Table->m_nuiTop_Level_Node;
+    TgRSIZE_C       uiIndex = uiHash % psHash_Table->m_nuiTop_Level_Node;
+
     psNode = psHash_Table->m_psHash_List[uiIndex];
 
     if (nullptr == psNode)

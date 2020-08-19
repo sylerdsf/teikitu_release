@@ -1,0 +1,31 @@
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/*  »Project«   Teikitu Gaming System (TgS) (∂)
+    »File«      TgS Common - Math API [Vector] [I].h_inc
+    »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
+    GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* == Common ===================================================================================================================================================================== */
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Public Functions                                                                                                                                                               */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_INT
+                                                @brief Return a vector that is assigned the per-element operation ARG0 + ARG1, clamped to an unsigned maximum
+                                                @param[in] ARG0 Pointer to a vector
+                                                @param[in] ARG1 Pointer to a vector
+                                                @return A new vector where each element is the corresponding sum from the arguments, clamped to an unsigned maximum */
+TgINLINE VEC_S_T(1)                         FCN_V(tgMH_ADD_CLP_S)( VEC_S_T(1,C) ARG0, VEC_S_T(1,C) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_INT
+                                                @brief Return a vector that is assigned the per-element operation ARG0 - ARG1, clamped to zero
+                                                @param[in] ARG0 Pointer to a vector
+                                                @param[in] ARG1 Pointer to a vector
+                                                @return A new vector where each element is the corresponding subtract of the arguments, clamped to zero */
+TgINLINE VEC_S_T(1)                         FCN_V(tgMH_SUB_CLP_S)( VEC_S_T(1,C) ARG0, VEC_S_T(1,C) ARG1 );

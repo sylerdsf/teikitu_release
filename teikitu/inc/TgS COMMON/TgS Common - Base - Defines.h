@@ -65,8 +65,20 @@
 
 #define TgHEADER_(A,B,C)                    TgMACRO_SZ(A (B) C )
 #define TgHEADER_COMPILER(A,B)              TgHEADER_(A,TgBUILD_COMPILER,B)
-#define TgHEADER_HARDWARE(A,B)              TgHEADER_(A,TgCOMPILE_HARDWARE,B)
-#define TgHEADER_PLATFORM(A,B)              TgHEADER_(A,TgCOMPILE_PLATFORM,B)
+#define TgHEADER_HARDWARE(A,B)              TgHEADER_(A,TgBUILD_HARDWARE,B)
+#define TgHEADER_THREAD_SUPPORT(A,B)        TgHEADER_(A,TgCOMPILE_THREAD_SUPPORT,B)
+
+#if defined(TgBUILD_UNIVERSAL)
+#define TgHEADER_UNIVERSAL(A,B)             TgHEADER_(A,TgBUILD_UNIVERSAL,B)
+#else
+#define TgHEADER_UNIVERSAL(A,B)             TgERROR_NOT_IMPLEMENTED
+#endif
+
+#if defined(TgBUILD_OS)
+#define TgHEADER_OPERATING_SYSTEM(A,B)      TgHEADER_(A,TgBUILD_OS,B)
+#else
+#define TgHEADER_OPERATING_SYSTEM(A,B)      TgERROR_NOT_IMPLEMENTED
+#endif
 
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
@@ -76,7 +88,7 @@
 #include "TgS COMMON/TgS Common - Base - Defines [Configuration].h"
 #include TgHEADER_COMPILER(TgS COMMON/TgS,Common - Base - Defines [Compiler].h)
 #include "TgS COMMON/TgS Common - Base - Defines [Hardware].h"
-#include TgHEADER_PLATFORM(TgS COMMON/TgS,Common - Base - Defines [Platform].h)
+#include TgHEADER_THREAD_SUPPORT(TgS COMMON/TgS,Common - Base - Defines [Platform].h)
 #include "TgS COMMON/TgS Common - Base - Defines [Code].h"
 #include "TgS COMMON/TgS Common - Base - Defines [Text].h"
 
@@ -548,8 +560,8 @@
 /*  Compilation Validations                                                                                                                                                        */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-TgCOMPILER_ASSERT( sizeof( void* ) == TgCOMPILE_POINTER_SIZE, 0 );
-TgCOMPILER_ASSERT( TgCOMPILE_CPU_CACHE_LINE_SIZE >= TgCOMPILE_POINTER_SIZE * 6, 0 );
+TgCOMPILER_ASSERT( sizeof( void* ) == TgBUILD_HARDWARE__POINTER_SIZE, 0 );
+TgCOMPILER_ASSERT( TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE >= TgBUILD_HARDWARE__POINTER_SIZE * 6, 0 );
 
 
 /* =============================================================================================================================================================================== */

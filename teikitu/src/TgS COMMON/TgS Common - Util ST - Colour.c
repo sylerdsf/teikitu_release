@@ -16,14 +16,14 @@
 /*  Public Data                                                                                                                                                                    */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-TgALIGN(16) TgVEC_F32_04_1_C         KTg_BLACK_709_F32_04       = { { 0.0F, 0.0F, 0.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C         KTg_WHITE_709_F32_04       = { { 1.0F, 1.0F, 1.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C         KTg_RED_709_F32_04         = { { 1.0F, 0.0F, 0.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C         KTg_GREEN_709_F32_04       = { { 0.0F, 1.0F, 0.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C         KTg_BLUE_709_F32_04        = { { 0.0F, 0.0F, 1.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C         KTg_YELLOW_709_F32_04      = { { 1.0F, 1.0F, 0.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C         KTg_MAGENTA_709_F32_04     = { { 1.0F, 0.0F, 1.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C         KTg_CYAN_709_F32_04        = { { 0.0F, 1.0F, 1.0F, 1.0F } };
+TgALIGN(16) TgVEC_F32_04_1_C         KTg_BLACK_709_F32_04       = { 0.0F, 0.0F, 0.0F, 1.0F };
+TgALIGN(16) TgVEC_F32_04_1_C         KTg_WHITE_709_F32_04       = { 1.0F, 1.0F, 1.0F, 1.0F };
+TgALIGN(16) TgVEC_F32_04_1_C         KTg_RED_709_F32_04         = { 1.0F, 0.0F, 0.0F, 1.0F };
+TgALIGN(16) TgVEC_F32_04_1_C         KTg_GREEN_709_F32_04       = { 0.0F, 1.0F, 0.0F, 1.0F };
+TgALIGN(16) TgVEC_F32_04_1_C         KTg_BLUE_709_F32_04        = { 0.0F, 0.0F, 1.0F, 1.0F };
+TgALIGN(16) TgVEC_F32_04_1_C         KTg_YELLOW_709_F32_04      = { 1.0F, 1.0F, 0.0F, 1.0F };
+TgALIGN(16) TgVEC_F32_04_1_C         KTg_MAGENTA_709_F32_04     = { 1.0F, 0.0F, 1.0F, 1.0F };
+TgALIGN(16) TgVEC_F32_04_1_C         KTg_CYAN_709_F32_04        = { 0.0F, 1.0F, 1.0F, 1.0F };
 
 TgALIGN(16) TgCOLOUR32_C             KTg_BLACK_709_U32           = { TgCOLOUR_FROM_RGBA( 0x00u, 0x00u, 0x00u, 0xFFu ) };
 TgALIGN(16) TgCOLOUR32_C             KTg_WHITE_709_U32           = { TgCOLOUR_FROM_RGBA( 0xFFu, 0xFFu, 0xFFu, 0xFFu ) };

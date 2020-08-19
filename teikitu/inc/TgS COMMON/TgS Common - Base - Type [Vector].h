@@ -14,7 +14,15 @@
 #define TGS_COMMON_BASE_TYPE_VECTOR_H
 #pragma once
 
-#include TgHEADER_HARDWARE(TgS COMMON/TgS,Common - Math [Vector].h)
+#if defined(TgBUILD_UNIVERSAL) && !defined (TGS_COMMON_MATH_VECTOR_SPECIALIZATION)
+    #include TgHEADER_UNIVERSAL(TgS COMMON/TgS,Common - Math [Vector].h)
+#endif
+#if defined(TgBUILD_HARDWARE) && !defined(TgBUILD_HARDWARE__C11_32) && !defined(TgBUILD_HARDWARE__C11_64) && !defined (TGS_COMMON_MATH_VECTOR_SPECIALIZATION)
+    #include TgHEADER_HARDWARE(TgS COMMON/TgS,Common - Math [Vector].h)
+#endif
+#if defined(TgBUILD_COMPILER) && defined(TgBUILD_VECTOR__COMPILER) && !defined (TGS_COMMON_MATH_VECTOR_SPECIALIZATION)
+    #include TgHEADER_COMPILER(TgS COMMON/TgS,Common - Math [Vector].h)
+#endif
 
 
 /* == Common ===================================================================================================================================================================== */
@@ -64,90 +72,76 @@
 
 #define TGS_COMMON_BASE_TYPE_VECTOR_HINC
 
-/** @brief Native (scalar) vector with 3 rows (a DIMx3 matrix) */
-TgTYPE_UNION( TgVEC_N_F32_04_3, )
-{
-    struct { TgVEC_N_F32_04_1                   m_r0,m_r1,m_r2; };
-    TgVEC_N_F32_04_1                            m_avRow[3];
-};
-
-/** @brief Native (scalar) vector with 4 rows (a DIMx4 matrix) */
-TgTYPE_UNION( TgVEC_N_F32_04_4, )
-{
-    struct { TgVEC_N_F32_04_1                   m_r0,m_r1,m_r2,m_r3; };
-    TgVEC_N_F32_04_1                            m_avRow[4];
-};
-
 
 /* NOTE: From a memory alignment point of view, it is reasonable to cast a native vector down to a scalar vector, but not the other way around. */
 TgTYPE_UNION(TgUN_V128,)
 {
-    TgVEC_N_F32_04_1                            m_N_F32_04_1;
-    TgVEC_N_U32_04_1                            m_N_U32_04_1;
-    TgVEC_N_U16_08_1                            m_N_U16_08_1;
-    TgVEC_N_U08_16_1                            m_N_U08_16_1;
-    TgVEC_N_S32_04_1                            m_N_S32_04_1;
-    TgVEC_N_S16_08_1                            m_N_S16_08_1;
-    TgVEC_N_S08_16_1                            m_N_S08_16_1;
+    TgVEC_F32_04_1                              m_vF32_04_1;
+    TgVEC_U32_04_1                              m_vU32_04_1;
+    TgVEC_U16_08_1                              m_vU16_08_1;
+    TgVEC_U08_16_1                              m_vU08_16_1;
+    TgVEC_S32_04_1                              m_vS32_04_1;
+    TgVEC_S16_08_1                              m_vS16_08_1;
+    TgVEC_S08_16_1                              m_vS08_16_1;
 
-    TgVEC_F32_04_1                              m_F32_04_1;
-    TgVEC_U32_04_1                              m_U32_04_1;
-    TgVEC_U16_08_1                              m_U16_08_1;
-    TgVEC_U08_16_1                              m_U08_16_1;
-    TgVEC_S32_04_1                              m_S32_04_1;
-    TgVEC_S16_08_1                              m_S16_08_1;
-    TgVEC_S08_16_1                              m_S08_16_1;
+    TgVEC_S_F32_04_1                            m_vS_F32_04_1;
+    TgVEC_S_U32_04_1                            m_vS_U32_04_1;
+    TgVEC_S_U16_08_1                            m_vS_U16_08_1;
+    TgVEC_S_U08_16_1                            m_vS_U08_16_1;
+    TgVEC_S_S32_04_1                            m_vS_S32_04_1;
+    TgVEC_S_S16_08_1                            m_vS_S16_08_1;
+    TgVEC_S_S08_16_1                            m_vS_S08_16_1;
 };
 TgCOMPILER_ASSERT(16 == sizeof(TgUN_V128),);
 
 TgTYPE_UNION(TgUN_PTR_V128,)
 {
-    TgVEC_N_F32_04_1_P                          m_pN_F32_04_1;
-    TgVEC_N_U32_04_1_P                          m_pN_U32_04_1;
-    TgVEC_N_U16_08_1_P                          m_pN_U16_08_1;
-    TgVEC_N_U08_16_1_P                          m_pN_U08_16_1;
-    TgVEC_N_S32_04_1_P                          m_pN_S32_04_1;
-    TgVEC_N_S16_08_1_P                          m_pN_S16_08_1;
-    TgVEC_N_S08_16_1_P                          m_pN_S08_16_1;
+    TgVEC_F32_04_1_P                            m_pvF32_04_1;
+    TgVEC_U32_04_1_P                            m_pvU32_04_1;
+    TgVEC_U16_08_1_P                            m_pvU16_08_1;
+    TgVEC_U08_16_1_P                            m_pvU08_16_1;
+    TgVEC_S32_04_1_P                            m_pvS32_04_1;
+    TgVEC_S16_08_1_P                            m_pvS16_08_1;
+    TgVEC_S08_16_1_P                            m_pvS08_16_1;
 
-    TgVEC_N_F32_04_3_P                          m_pN_F32_04_3;
-    TgVEC_N_F32_04_4_P                          m_pN_F32_04_4;
+    TgVEC_F32_04_3_P                            m_pvF32_04_3;
+    TgVEC_F32_04_4_P                            m_pvF32_04_4;
 
-    TgVEC_F32_04_1_P                            m_pF32_04_1;
-    TgVEC_U32_04_1_P                            m_pU32_04_1;
-    TgVEC_U16_08_1_P                            m_pU16_08_1;
-    TgVEC_U08_16_1_P                            m_pU08_16_1;
-    TgVEC_S32_04_1_P                            m_pS32_04_1;
-    TgVEC_S16_08_1_P                            m_pS16_08_1;
-    TgVEC_S08_16_1_P                            m_pS08_16_1;
+    TgVEC_S_F32_04_1_P                          m_pvS_F32_04_1;
+    TgVEC_S_U32_04_1_P                          m_pvS_U32_04_1;
+    TgVEC_S_U16_08_1_P                          m_pvS_U16_08_1;
+    TgVEC_S_U08_16_1_P                          m_pvS_U08_16_1;
+    TgVEC_S_S32_04_1_P                          m_pvS_S32_04_1;
+    TgVEC_S_S16_08_1_P                          m_pvS_S16_08_1;
+    TgVEC_S_S08_16_1_P                          m_pvS_S08_16_1;
 
-    TgVEC_F32_04_3_P                            m_pF32_04_3;
-    TgVEC_F32_04_4_P                            m_pF32_04_4;
+    TgVEC_S_F32_04_3_P                          m_pvS_F32_04_3;
+    TgVEC_S_F32_04_4_P                          m_pvS_F32_04_4;
 };
 
 TgTYPE_UNION(TgUN_CONST_PTR_V128,)
 {
-    TgVEC_N_F32_04_1_CP                         m_pN_F32_04_1;
-    TgVEC_N_U32_04_1_CP                         m_pN_U32_04_1;
-    TgVEC_N_U16_08_1_CP                         m_pN_U16_08_1;
-    TgVEC_N_U08_16_1_CP                         m_pN_U08_16_1;
-    TgVEC_N_S32_04_1_CP                         m_pN_S32_04_1;
-    TgVEC_N_S16_08_1_CP                         m_pN_S16_08_1;
-    TgVEC_N_S08_16_1_CP                         m_pN_S08_16_1;
+    TgVEC_F32_04_1_CP                           m_pvF32_04_1;
+    TgVEC_U32_04_1_CP                           m_pvU32_04_1;
+    TgVEC_U16_08_1_CP                           m_pvU16_08_1;
+    TgVEC_U08_16_1_CP                           m_pvU08_16_1;
+    TgVEC_S32_04_1_CP                           m_pvS32_04_1;
+    TgVEC_S16_08_1_CP                           m_pvS16_08_1;
+    TgVEC_S08_16_1_CP                           m_pvS08_16_1;
 
-    TgVEC_N_F32_04_3_CP                         m_pN_F32_04_3;
-    TgVEC_N_F32_04_4_CP                         m_pN_F32_04_4;
+    TgVEC_F32_04_3_CP                           m_pvF32_04_3;
+    TgVEC_F32_04_4_CP                           m_pvF32_04_4;
 
-    TgVEC_F32_04_1_CP                           m_pF32_04_1;
-    TgVEC_U32_04_1_CP                           m_pU32_04_1;
-    TgVEC_U16_08_1_CP                           m_pU16_08_1;
-    TgVEC_U08_16_1_CP                           m_pU08_16_1;
-    TgVEC_S32_04_1_CP                           m_pS32_04_1;
-    TgVEC_S16_08_1_CP                           m_pS16_08_1;
-    TgVEC_S08_16_1_CP                           m_pS08_16_1;
+    TgVEC_S_F32_04_1_CP                         m_pvS_F32_04_1;
+    TgVEC_S_U32_04_1_CP                         m_pvS_U32_04_1;
+    TgVEC_S_U16_08_1_CP                         m_pvS_U16_08_1;
+    TgVEC_S_U08_16_1_CP                         m_pvS_U08_16_1;
+    TgVEC_S_S32_04_1_CP                         m_pvS_S32_04_1;
+    TgVEC_S_S16_08_1_CP                         m_pvS_S16_08_1;
+    TgVEC_S_S08_16_1_CP                         m_pvS_S08_16_1;
 
-    TgVEC_F32_04_3_CP                           m_pF32_04_3;
-    TgVEC_F32_04_4_CP                           m_pF32_04_4;
+    TgVEC_S_F32_04_3_CP                         m_pvS_F32_04_3;
+    TgVEC_S_F32_04_4_CP                         m_pvS_F32_04_4;
 };
 
 

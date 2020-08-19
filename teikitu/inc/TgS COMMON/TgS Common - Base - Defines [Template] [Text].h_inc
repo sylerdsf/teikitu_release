@@ -133,14 +133,14 @@
     /* Macros used in the process of creating the generation macros */
 
     #undef GENERATE__UNLOAD_TEMPLATE_MACROS
-    #undef GENERATE__NCZ
-    #undef GENERATE__WCZ
-    #undef GENERATE__MBZ
 
 
     /* MACROS defined in including file (inputs) */
 
     #if !defined(ENABLE_RELOAD_GUARD)
+        #undef GENERATE__NCZ
+        #undef GENERATE__WCZ
+        #undef GENERATE__MBZ
     #endif
 
 #endif

@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Geometry 3D - Box - Axis Aligned.h_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -19,258 +19,228 @@
                                                 /** @brief Tests for the bounding box having a non-zero size
                                                     @param[in] ARG Pointer to the geometry object (axis aligned box)
                                                     @return True if empty (min and max matching extents) and false otherwise */
-TgINLINE TgBOOL                                 FCN_VO(tgGM_BA_Is_Empty)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE TgBOOL                                 FCN_VO(tgGM_BA_Is_Empty)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Minimal increase to the extents so that the position vector is contained
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
-                                                    @param[in] ARG1 Pointer to a position vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Union_PT)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+                                                    @param[in] ARG1 Position vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Union_PT)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Minimal increase to the extents so that the sphere with origin and radius is contained
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
-                                                    @param[in] ARG1 Pointer to a position vector - origin
-                                                    @param[in] ARG2 Scalar value - radius */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Union_SP)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_T(1,CPCU) ARG1, VAR_T(C) ARG2 );
+                                                    @param[in] ARG1 Position vector - origin
+                                                    @param[in] ARG2 Scalar - Radius */
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Union_SP)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VAR_T(C) ARG2 );
 
                                                 /** @brief Minimal increase to the extents so that the other axis aligned box is contained
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Pointer to a geometry object (axis aligned box) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Union_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgBOXAA,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Union_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG1 );
 
                                                 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (axis aligned box)
                                                     @param[in,out] ARG0 Pointer to an axis-aligned bounding box object
                                                     @param[in] ARG1 Pointer to a vector describing the swept direction and magnitude */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Sweep)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Sweep)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Extend the extents by the argument scalar value (decrease the min and increase the max extents)
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Expand)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Expand)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
                                                 /** @brief Scale the extents (away from the centre) by the scalar value
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Scale)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Scale)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
                                                 /** @brief Return the centre
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The centre */
-TgINLINE VEC_T(1)                               FCN_VO(tgGM_BA_Query_Centre)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_BA_Query_Centre)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Invalidate the geometry object (axis aligned box)
                                                     @param[out] OUT Pointer to the geometry object (axis aligned box) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Reset)( VEC_OBJ_T(TgBOXAA,PCU) OUT );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Reset)( VEC_OBJ_T(TgBOXAA,PCU) NONULL OUT );
 
                                                 /** @brief Zero the geometry object (axis aligned box)
                                                     @param[out] OUT Pointer to the geometry object (axis aligned box) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Zero)( VEC_OBJ_T(TgBOXAA,PCU) OUT );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Zero)( VEC_OBJ_T(TgBOXAA,PCU) NONULL OUT );
 
                                                 /** @brief Validate the integrity of the geometry object (axis aligned box)
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return True if the geometry object (axis aligned box) is valid and false otherwise */
-TgINLINE TgBOOL                                 FCN_VO(tgGM_BA_Is_Valid)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE TgBOOL                                 FCN_VO(tgGM_BA_Is_Valid)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Determine the point on the geometry object (axis aligned box) that is furthest along the direction of ARG1
                                                     @param[in] ARG0 Pointer to a geometry object (axis aligned box)
-                                                    @param[in] ARG1 Pointer to a direction vector
+                                                    @param[in] ARG1 Direction vector
                                                     @return The point on the geometry object (axis aligned box) that is furthest along the direction of ARG1 */
-TgINLINE VEC_T(1)                               FCN_VO(tgGM_BA_Support_Point)( VEC_OBJ_T(TgBOXAA,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_BA_Support_Point)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Calculate the volume of the geometry object (axis aligned box)
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The volume of the geometry object (axis aligned box) */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Volume)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Volume)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Calculate the surface area of the geometry object (axis aligned box)
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The surface area of the geometry object (axis aligned box) */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Area)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Area)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (axis aligned box)
                                                     @param[out] ARG0 Pointer to an axis-aligned bounding box object
                                                     @param[in] ARG1 Pointer to a geometry object (axis aligned box) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgBOXAA,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG1 );
 
                                                 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (axis aligned box)
                                                     @param[out] ARG0 Pointer to an axis-aligned bounding box object
                                                     @param[in] ARG1 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG2 Pointer to a vector describing the swept direction and magnitude */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgBOXAA,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG1, VEC_T(1,C) ARG2 );
 
                                                 /** @brief Project the geometry object (axis aligned box) along the direction vector
                                                     @param[out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
                                                     @param[out] OUT1 Pointer to a scalar value to hold the upper bound of the projection
                                                     @param[in] ARG2 Pointer to a geometry object (axis aligned box)
-                                                    @param[in] ARG3 Pointer to a direction vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Project)( VAR_T(PCU) ARG0, VAR_T(PCU) ARG1, VEC_OBJ_T(TgBOXAA,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
+                                                    @param[in] ARG3 Direction vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Project)( VAR_T(PCU) NONULL ARG0, VAR_T(PCU) NONULL ARG1, VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG2, VEC_T(1,C) ARG3 );
 
                                                 /** @brief Test to see if a point is either on or in the geometry object (axis aligned box)
                                                     @param[in] ARG0 Pointer to a geometry object (axis aligned box)
-                                                    @param[in] ARG1 Pointer to a position vector
+                                                    @param[in] ARG1 Position vector
                                                     @return True if the position is either on or in the geometry object (axis aligned box) and false otherwise */
-TgINLINE TgBOOL                                 FCN_VO(tgGM_BA_Is_Contained)( VEC_OBJ_T(TgBOXAA,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE TgBOOL                                 FCN_VO(tgGM_BA_Is_Contained)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Transform the geometry object (axis aligned box) at ARG0 by the matrix at ARG1
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_TX)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_04_3_T(CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_TX)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
 
                                                 /** @brief Transform the geometry object (axis aligned box) at ARG1 by the matrix at ARG2 and store it in ARG0
                                                     @param[out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Copy_TX)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgBOXAA,CPCU) ARG1, VEC_04_3_T(CPCU) ARG2 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Copy_TX)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG1, VEC_T(3,CPCU) NONULL ARG2 );
 
 
                                                 /** @brief Initialize a new geometry object (axis aligned box) with the function arguments
                                                     @param[out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Pointer to a vector - minimum extents
                                                     @param[in] ARG2 Pointer to a vector - maximum extents  */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Init)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Init)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
                                                 /** @brief Initialize a new geometry object (axis aligned box) with the function arguments
                                                     @param[out] ARG0 Pointer to a geometry object (axis aligned box)
-                                                    @param[in] ARG1 Pointer to a position vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Init_PT)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+                                                    @param[in] ARG1 Position vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Init_PT)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Initialize a new geometry object (axis aligned box) with the function arguments
                                                     @param[out] ARG0 Pointer to a geometry object (axis aligned box)
-                                                    @param[in] ARG1 Pointer to a position vector
-                                                    @param[in] ARG2 Scalar Value - radius */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Init_SP)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_T(1,CPCU) ARG1, VAR_T(C) ARG2 ); /**< Single Point and Radius */
+                                                    @param[in] ARG1 Position vector
+                                                    @param[in] ARG2 Scalar - Radius */
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Init_SP)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VAR_T(C) ARG2 ); /**< Single Point and Radius */
 
                                                 /** @brief Copy the one geometry object (axis aligned box) to another of the same type
                                                     @param[out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Pointer to a geometry object (axis aligned box) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Copy)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_OBJ_T(TgBOXAA,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Copy)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG1 );
 
 
                                                 /** @brief Set the minimum extents to be a MAX value, and the maximum extents to be a MIN value
                                                     @param[out] ARG0 Pointer to a geometry object (axis aligned box) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Invalid)( VEC_OBJ_T(TgBOXAA,PCU) ARG );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Invalid)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG );
 
                                                 /** @brief Set the minimum extents
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Pointer to a vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Min)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Min)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Set the maximum extents
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Pointer to a vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Max)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Max)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Set the minimum extent along the x-axis
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_MinX)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Min_X)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
                                                 /** @brief Set the minimum extent along the y-axis
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_MinY)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Min_Y)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
                                                 /** @brief Set the minimum extent along the z-axis
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_MinZ)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Min_Z)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
                                                 /** @brief Set the maximum extent along the x-axis
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_MaxX)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Max_X)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
                                                 /** @brief Set the maximum extent along the y-axis
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_MaxY)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Max_Y)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
                                                 /** @brief Set the maximum extent along the z-axis
                                                     @param[in,out] ARG0 Pointer to a geometry object (axis aligned box)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_MaxZ)( VEC_OBJ_T(TgBOXAA,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_BA_Set_Max_Z)( VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
 
                                                 /** @brief Return the minimum extents as a vector
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The minimum extents as a vector */
-TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_BA_Query_Min)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_BA_Query_Min)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the maximum extents as a vector
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The maximum extents as a vector */
-TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_BA_Query_Max)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_BA_Query_Max)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the minimum extent along the x-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The minimum extent along the x-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_MinX)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Min_X)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the minimum extent along the y-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The minimum extent along the y-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_MinY)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Min_Y)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the minimum extent along the z-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The minimum extent along the z-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_MinZ)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Min_Z)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the maximum extent along the x-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The maximum extent along the x-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_MaxX)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Max_X)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the maximum extent along the y-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The maximum extent along the y-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_MaxY)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Max_Y)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the maximum extent along the z-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The maximum extent along the z-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_MaxZ)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Max_Z)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the length along of the x-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The length along of the x-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_SizeX)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Size_X)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the length along of the y-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The length along of the y-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_SizeY)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Size_Y)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );
 
                                                 /** @brief Return the length along of the z-axis
                                                     @param[in] ARG Pointer to a geometry object (axis aligned box)
                                                     @return The length along of the z-axis */
-TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_SizeZ)( VEC_OBJ_T(TgBOXAA,CPCU) ARG );
-
-
-
-
-#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
-
-                                                /** @copydoc FCN_VO(tgGM_BA_Is_Empty) */
-TgINLINE TgBOOL                                 FCN_VO(tgGM_BA_N_Is_Empty)( VEC_OBJ_T(TgBOXAA_N,CPCU) ARG );
-
-                                                /** @copydoc FCN_VO(tgGM_BA_Reset) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_N_Reset)( VEC_OBJ_T(TgBOXAA_N,PCU) OUT );
-
-                                                /** @copydoc FCN_VO(tgGM_BA_Is_Valid) */
-TgINLINE TgBOOL                                 FCN_VO(tgGM_BA_N_Is_Valid)( VEC_OBJ_T(TgBOXAA_N,CPCU) ARG );
-
-                                                /** @copydoc FCN_VO(tgGM_BA_Sweep) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_N_Sweep)( VEC_OBJ_T(TgBOXAA_N,PCU) ARG0, VEC_N_T(1,C) ARG1 );
-
-                                                /** @copydoc FCN_VO(tgGM_BA_Copy) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_BA_N_Copy)( VEC_OBJ_T(TgBOXAA_N,PCU) ARG0, VEC_OBJ_T(TgBOXAA_N,CPCU) ARG1 );
-
-
-                                                /** @copydoc FCN_VO(tgGM_BA_Query_Min) */
-TgINLINE VEC_N_T(1)                             FCN_VO(tgGM_BA_N_Query_Min)( VEC_OBJ_T(TgBOXAA_N,CPCU) ARG );
-
-                                                /** @copydoc FCN_VO(tgGM_BA_Query_Max) */
-TgINLINE VEC_N_T(1)                             FCN_VO(tgGM_BA_N_Query_Max)( VEC_OBJ_T(TgBOXAA_N,CPCU) ARG );
-
-/*# defined(VEC_IS_NATIVE) && VEC_IS_NATIVE */
-#endif
+TgINLINE VAR_T()                                FCN_VO(tgGM_BA_Query_Size_Z)( VEC_OBJ_T(TgBOXAA,CPCU) NONULL ARG );

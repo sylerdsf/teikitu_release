@@ -14,7 +14,7 @@
 #define TGS_COMMON_BASE_INCLUDE_H
 #pragma once
 
-#include TgHEADER_PLATFORM(TgS COMMON/TgS,Common - Base - Include.h)
+#include TgHEADER_THREAD_SUPPORT(TgS COMMON/TgS,Common - Base - Include.h)
 #include TgHEADER_HARDWARE(TgS COMMON/TgS,Common - Base - Include.h)
 
 

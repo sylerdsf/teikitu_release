@@ -49,7 +49,7 @@ enum { KTgMAX_SEMAPHORE_NAME                = 16 };
 TgTYPE_FORWARD_STRUCT( STg1_MT_MX );
 TgTYPE_FORWARD_STRUCT( STg1_MT_SM );
 
-#include TgHEADER_PLATFORM(TgS COMMON/TgS,Common - Base - Type [MT].h)  /**< Synchronization can be used in Structures and Templates. */
+#include TgHEADER_THREAD_SUPPORT(TgS COMMON/TgS,Common - Base - Type [MT].h)  /**< Synchronization can be used in Structures and Templates. */
 
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */

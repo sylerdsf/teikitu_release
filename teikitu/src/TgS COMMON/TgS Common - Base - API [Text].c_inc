@@ -16,9 +16,11 @@
 
     #define GENERATE__MBZ
     #include __FILE__
+    #undef GENERATE__MBZ
 
     #define GENERATE__WCZ
     #include __FILE__
+    #undef GENERATE__WCZ
 
     #define GENERATE__NCZ
 
@@ -48,7 +50,7 @@ static CHAR(P)                              FCN(Read_String_With_Comments_Quotes
 
 /* ---- FCN_CHAR(Is_Print) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgBOOL FCN_CHAR(Is_Print)( CHAR(CP) NONULL ARG0 )
+TgBOOL FCN_CHAR(Is_Print)( CHAR(CP) ARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0);
 
@@ -82,7 +84,7 @@ TgBOOL FCN_CHAR(Is_Print)( CHAR(CP) NONULL ARG0 )
 
 /* ---- FCN_CHAR(Is_Space) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgBOOL FCN_CHAR(Is_Space)( CHAR(CP) NONULL ARG0 )
+TgBOOL FCN_CHAR(Is_Space)( CHAR(CP) ARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0);
 
@@ -115,7 +117,7 @@ TgBOOL FCN_CHAR(Is_Space)( CHAR(CP) NONULL ARG0 )
 
 /* ---- FCN_CHAR(To_Lower) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID FCN_CHAR(To_Lower)( CHAR(P) NONULL ARG0, CHAR(CP) NONULL ARG1 )
+TgVOID FCN_CHAR(To_Lower)( CHAR(P) ARG0, CHAR(CP) ARG1 )
 {
     TgPARAM_CHECK(nullptr != ARG0);
     TgPARAM_CHECK(nullptr != ARG1);
@@ -158,7 +160,7 @@ TgVOID FCN_CHAR(To_Lower)( CHAR(P) NONULL ARG0, CHAR(CP) NONULL ARG1 )
 
 /* ---- FCN_CHAR(To_Upper) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID FCN_CHAR(To_Upper)( CHAR(P) NONULL ARG0, CHAR(CP) NONULL ARG1 )
+TgVOID FCN_CHAR(To_Upper)( CHAR(P) ARG0, CHAR(CP) ARG1 )
 {
     TgPARAM_CHECK(nullptr != ARG0);
     TgPARAM_CHECK(nullptr != ARG1);
@@ -203,7 +205,7 @@ TgVOID FCN_CHAR(To_Upper)( CHAR(P) NONULL ARG0, CHAR(CP) NONULL ARG1 )
 
 /* ---- FCN(Hash) ---------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Hash)( TgUINT_MAX_P NONULL OUT0, CHAR(CP) NONULL ARG1, TgRSIZE nbyMaxARG1 )
+TgRESULT FCN(Hash)( TgUINT_MAX_P OUT0, CHAR(CP) ARG1, TgRSIZE nbyMaxARG1 )
 {
     TgUINT_MAX                          uiHash = KTgEMPTY_HASH;
 
@@ -261,7 +263,7 @@ TgRESULT FCN(Hash)( TgUINT_MAX_P NONULL OUT0, CHAR(CP) NONULL ARG1, TgRSIZE nbyM
 
 /* ---- FCN(From_U08) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_U08)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F08_C ARG2 )
+TgRESULT FCN(From_U08)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F08_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -286,7 +288,7 @@ TgRESULT FCN(From_U08)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F08_C
 
 /* ---- FCN(From_U16) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_U16)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F16_C ARG2 )
+TgRESULT FCN(From_U16)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F16_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -311,7 +313,7 @@ TgRESULT FCN(From_U16)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F16_C
 
 /* ---- FCN(From_U32) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_U32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F32_C ARG2 )
+TgRESULT FCN(From_U32)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F32_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -336,7 +338,7 @@ TgRESULT FCN(From_U32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F32_C
 
 /* ---- FCN(From_U64) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_U64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F64_C ARG2 )
+TgRESULT FCN(From_U64)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F64_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -361,7 +363,7 @@ TgRESULT FCN(From_U64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F64_C
 
 /* ---- FCN(From_S08) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_S08)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F08_C ARG2 )
+TgRESULT FCN(From_S08)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F08_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -386,7 +388,7 @@ TgRESULT FCN(From_S08)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F08_C
 
 /* ---- FCN(From_S16) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_S16)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F16_C ARG2 )
+TgRESULT FCN(From_S16)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F16_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -411,7 +413,7 @@ TgRESULT FCN(From_S16)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F16_C
 
 /* ---- FCN(From_S32) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_S32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F32_C ARG2 )
+TgRESULT FCN(From_S32)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F32_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -436,7 +438,7 @@ TgRESULT FCN(From_S32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F32_C
 
 /* ---- FCN(From_S64) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_S64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F64_C ARG2 )
+TgRESULT FCN(From_S64)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F64_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -461,7 +463,7 @@ TgRESULT FCN(From_S64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F64_C
 
 /* ---- FCN(From_F32) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_F32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgFLOAT32_C ARG2 )
+TgRESULT FCN(From_F32)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgFLOAT32_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -486,7 +488,7 @@ TgRESULT FCN(From_F32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgFLOAT32_C 
 
 /* ---- FCN(From_F64) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(From_F64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgFLOAT64_C ARG2 )
+TgRESULT FCN(From_F64)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgFLOAT64_C ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -511,7 +513,7 @@ TgRESULT FCN(From_F64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgFLOAT64_C 
 
 /* ---- FCN(Formatted_From_U32) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Formatted_From_U32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F32_C ARG2 )
+TgRESULT FCN(Formatted_From_U32)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F32_C ARG2 )
 {
     CHAR()                              szTemp[32];
 
@@ -523,7 +525,7 @@ TgRESULT FCN(Formatted_From_U32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, Tg
 
 /* ---- FCN(Formatted_From_U64) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Formatted_From_U64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F64_C ARG2 )
+TgRESULT FCN(Formatted_From_U64)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgUINT_F64_C ARG2 )
 {
     CHAR()                              szTemp[32];
 
@@ -535,7 +537,7 @@ TgRESULT FCN(Formatted_From_U64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, Tg
 
 /* ---- FCN(Formatted_From_S32) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Formatted_From_S32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F32_C ARG2 )
+TgRESULT FCN(Formatted_From_S32)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F32_C ARG2 )
 {
     CHAR()                              szTemp[32];
 
@@ -547,7 +549,7 @@ TgRESULT FCN(Formatted_From_S32)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, Tg
 
 /* ---- FCN(Formatted_From_S64) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Formatted_From_S64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F64_C ARG2 )
+TgRESULT FCN(Formatted_From_S64)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, TgSINT_F64_C ARG2 )
 {
     CHAR()                              szTemp[32];
 
@@ -559,7 +561,7 @@ TgRESULT FCN(Formatted_From_S64)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, Tg
 
 /* ---- FCN(To_U32) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgUINT_F32 FCN(To_U32)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
+TgUINT_F32 FCN(To_U32)( CHAR(CPC) ARG0, TgRSIZE_C nbyMaxARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
 #if defined(GENERATE__WCZ)
@@ -572,7 +574,7 @@ TgUINT_F32 FCN(To_U32)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
 
 /* ---- FCN(To_U64) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgUINT_F64 FCN(To_U64)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
+TgUINT_F64 FCN(To_U64)( CHAR(CPC) ARG0, TgRSIZE_C nbyMaxARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
 #if defined(GENERATE__WCZ)
@@ -585,7 +587,7 @@ TgUINT_F64 FCN(To_U64)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
 
 /* ---- FCN(To_S32) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgSINT_F32 FCN(To_S32)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
+TgSINT_F32 FCN(To_S32)( CHAR(CPC) ARG0, TgRSIZE_C nbyMaxARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
 #if defined(GENERATE__WCZ)
@@ -598,7 +600,7 @@ TgSINT_F32 FCN(To_S32)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
 
 /* ---- FCN(To_S64) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgSINT_F64 FCN(To_S64)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
+TgSINT_F64 FCN(To_S64)( CHAR(CPC) ARG0, TgRSIZE_C nbyMaxARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
 #if defined(GENERATE__WCZ)
@@ -611,7 +613,7 @@ TgSINT_F64 FCN(To_S64)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
 
 /* ---- FCN(To_F32) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgFLOAT32 FCN(To_F32)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
+TgFLOAT32 FCN(To_F32)( CHAR(CPC) ARG0, TgRSIZE_C nbyMaxARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
 #if defined(GENERATE__WCZ)
@@ -624,7 +626,7 @@ TgFLOAT32 FCN(To_F32)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
 
 /* ---- FCN(To_F64) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgFLOAT64 FCN(To_F64)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
+TgFLOAT64 FCN(To_F64)( CHAR(CPC) ARG0, TgRSIZE_C nbyMaxARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
 #if defined(GENERATE__WCZ)
@@ -637,7 +639,7 @@ TgFLOAT64 FCN(To_F64)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
 
 /* ---- FCN(Length_Count) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Length_Count)( TgRSIZE_P NONULL OUT0, CHAR(CP) NONULL mbzARG, TgRSIZE nbyMaxARG )
+TgRESULT FCN(Length_Count)( TgRSIZE_P OUT0, CHAR(CP) mbzARG, TgRSIZE nbyMaxARG )
 {
     TgPARAM_CHECK(nullptr != OUT0);
     TgPARAM_CHECK(nullptr != mbzARG && nbyMaxARG > 0);
@@ -676,7 +678,7 @@ TgRESULT FCN(Length_Count)( TgRSIZE_P NONULL OUT0, CHAR(CP) NONULL mbzARG, TgRSI
 
 /* ---- FCN(Length_U08) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRSIZE FCN(Length_U08)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
+TgRSIZE FCN(Length_U08)( CHAR(CPC) ARG0, TgRSIZE_C nbyMaxARG0 )
 {
     TgPARAM_CHECK(nullptr != ARG0);
 #if defined(GENERATE__WCZ)
@@ -691,7 +693,7 @@ TgRSIZE FCN(Length_U08)( CHAR(CPC) NONULL ARG0, TgRSIZE_C nbyMaxARG0 )
 
 /* ---- FCN(Length) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Length)( STg1_Text_Length_P NONULL OUT0, CHAR(CP) NONULL mbzARG, TgRSIZE nbyMaxARG )
+TgRESULT FCN(Length)( STg1_Text_Length_P OUT0, CHAR(CP) mbzARG, TgRSIZE nbyMaxARG )
 {
     TgPARAM_CHECK(nullptr != OUT0);
     TgPARAM_CHECK(nullptr != mbzARG && nbyMaxARG > 0);
@@ -733,9 +735,9 @@ TgRESULT FCN(Length)( STg1_Text_Length_P NONULL OUT0, CHAR(CP) NONULL mbzARG, Tg
 
 /* ---- FCN(Compare_Internal) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Compare_Internal)( TgSINT_F08_P NONULL OUT0,
-                                CHAR(CPC) NONULL ARG1, TgRSIZE_C nbyMaxARG1, TgRSIZE_C uiOffset_1,
-                                CHAR(CPC) NONULL ARG2, TgRSIZE_C nbyMaxARG2, TgRSIZE_C uiOffset_2,
+TgRESULT FCN(Compare_Internal)( TgSINT_F08_P OUT0,
+                                CHAR(CPC) ARG1, TgRSIZE_C nbyMaxARG1, TgRSIZE_C uiOffset_1,
+                                CHAR(CPC) ARG2, TgRSIZE_C nbyMaxARG2, TgRSIZE_C uiOffset_2,
                                 TgRSIZE uiMaxRead,
                                 TgBOOL_C bNoCase, TgBOOL_C bLexographical )
 {
@@ -817,15 +819,16 @@ TgRESULT FCN(Compare_Internal)( TgSINT_F08_P NONULL OUT0,
             return (KTgS_OK);
         };
 
-        if (!nbyRemain1 && !*pIN0)
-        {
-            nbyRemain0 = 0;
-        };
-        if (!nbyRemain0 && !*pIN1)
-        {
-            nbyRemain1 = 0;
-        };
-        *OUT0 = 0; //!uiMaxRead ? 0 : ((!nbyRemain0 && !nbyRemain1) ? 0 : ((nbyRemain0 < nbyRemain1) ? -1 : 1));
+//#       if (!nbyRemain1 && !*pIN0)
+//#       {
+//#           nbyRemain0 = 0;
+//#       };
+//#       if (!nbyRemain0 && !*pIN1)
+//#       {
+//#           nbyRemain1 = 0;
+//#       };
+//#       *OUT0 = !uiMaxRead ? 0 : ((!nbyRemain0 && !nbyRemain1) ? 0 : ((nbyRemain0 < nbyRemain1) ? -1 : 1));
+        *OUT0 = 0;
     };
 
 #elif defined(GENERATE__WCZ)
@@ -855,7 +858,7 @@ TgRESULT FCN(Compare_Internal)( TgSINT_F08_P NONULL OUT0,
 
 /* ---- FCN(To_Upper) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(To_Upper)( CHAR(P) NONULL pOUT, TgRSIZE nuiRemain0, CHAR(CP) NONULL pIN, TgRSIZE nuiRemain1 )
+TgRESULT FCN(To_Upper)( CHAR(P) pOUT, TgRSIZE nuiRemain0, CHAR(CP) pIN, TgRSIZE nuiRemain1 )
 {
     TgPARAM_CHECK(nullptr != pOUT && nuiRemain0 > 0);
     TgPARAM_CHECK(nullptr != pIN && nuiRemain1 > 0);
@@ -913,7 +916,7 @@ TgRESULT FCN(To_Upper)( CHAR(P) NONULL pOUT, TgRSIZE nuiRemain0, CHAR(CP) NONULL
 
 /* ---- FCN(To_Lower) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(To_Lower)( CHAR(P) NONULL pOUT, TgRSIZE nuiRemain0, CHAR(CP) NONULL pIN, TgRSIZE nuiRemain1 )
+TgRESULT FCN(To_Lower)( CHAR(P) pOUT, TgRSIZE nuiRemain0, CHAR(CP) pIN, TgRSIZE nuiRemain1 )
 {
     TgPARAM_CHECK(nullptr != pOUT && nuiRemain0 > 0);
     TgPARAM_CHECK(nullptr != pIN && nuiRemain1 > 0);
@@ -972,7 +975,7 @@ TgRESULT FCN(To_Lower)( CHAR(P) NONULL pOUT, TgRSIZE nuiRemain0, CHAR(CP) NONULL
 
 /* ---- FCN(Copy) ---------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Copy)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL ARG2, TgRSIZE_C nbyMaxARG2 )
+TgRESULT FCN(Copy)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) ARG2, TgRSIZE_C nbyMaxARG2 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
     TgPARAM_CHECK(nullptr != ARG2 && nbyMaxARG2 > 0);
@@ -999,7 +1002,7 @@ TgRESULT FCN(Copy)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL
 
 /* ---- FCN(Append) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Append)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL ARG2, TgRSIZE_C nbyMaxARG2 )
+TgRESULT FCN(Append)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) ARG2, TgRSIZE_C nbyMaxARG2 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
     TgPARAM_CHECK(nullptr != ARG2 && nbyMaxARG2 > 0);
@@ -1026,7 +1029,7 @@ TgRESULT FCN(Append)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONU
 
 /* ---- FCN(CopyN) --------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(CopyN)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL ARG2, TgRSIZE_C nbyMaxARG2, TgRSIZE_C ARG4 )
+TgRESULT FCN(CopyN)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) ARG2, TgRSIZE_C nbyMaxARG2, TgRSIZE_C ARG4 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0);
     TgPARAM_CHECK(nullptr != ARG2 && nbyMaxARG2 > 0);
@@ -1053,7 +1056,7 @@ TgRESULT FCN(CopyN)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONUL
 
 /* ---- FCN(AppendN) ------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(AppendN)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL ARG2, TgRSIZE_C nbyMaxARG2, TgRSIZE_C ARG4 )
+TgRESULT FCN(AppendN)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) ARG2, TgRSIZE_C nbyMaxARG2, TgRSIZE_C ARG4 )
 {
     TgPARAM_CHECK(nullptr != ARG0 && nbyMaxARG0 > 0)
     TgPARAM_CHECK(nullptr != ARG2 && nbyMaxARG2 > 0);
@@ -1080,7 +1083,7 @@ TgRESULT FCN(AppendN)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NON
 
 /* ---- FCN(Token) --------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Token)( CHAR(PP) NONULL szToken, CHAR(PC) OKNULL ARG, TgRSIZE_P NONULL pnbyARG, CHAR(CPC) NONULL szDelim, CHAR(PP) NONULL szContext )
+TgRESULT FCN(Token)( CHAR(PP) szToken, CHAR(PC) ARG, TgRSIZE_P pnbyARG, CHAR(CPC) szDelim, CHAR(PP) szContext )
 {
     TgPARAM_CHECK(nullptr != szToken);
     TgPARAM_CHECK(nullptr != pnbyARG && *pnbyARG > 0 );
@@ -1100,12 +1103,12 @@ TgRESULT FCN(Token)( CHAR(PP) NONULL szToken, CHAR(PC) OKNULL ARG, TgRSIZE_P NON
 
 /* ---- FCN(StrChr) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(StrChr)( TgRSIZE_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C ARG2, CHAR(C) ARG3 )
+TgRESULT FCN(StrChr)( TgRSIZE_P OUT0, CHAR(CPC) ARG1, TgRSIZE_C ARG2, CHAR(C) ARG3 )
 {
     CHAR(P)                             pRet;
 
     TgPARAM_CHECK(nullptr != OUT0);
-    TgPARAM_CHECK(nullptr != ARG1 && ARG2 > 0)
+    TgPARAM_CHECK(nullptr != ARG1 && ARG2 > 0);
 
 #if defined(GENERATE__WCZ)
     pRet = wcschr( ARG1, ARG3 );
@@ -1131,12 +1134,12 @@ TgRESULT FCN(StrChr)( TgRSIZE_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C AR
 
 /* ---- FCN(StrStr) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(StrStr)( TgRSIZE_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C nbyMaxARG1, CHAR(CPC) NONULL ARG3, TgRSIZE_C nbyMaxARG3 )
+TgRESULT FCN(StrStr)( TgRSIZE_P OUT0, CHAR(CPC) ARG1, TgRSIZE_C nbyMaxARG1, CHAR(CPC) ARG3, TgRSIZE_C nbyMaxARG3 )
 {
     TgVOID_P                            pRet;
 
     TgPARAM_CHECK(nullptr != OUT0);
-    TgPARAM_CHECK(nullptr != ARG1 && nbyMaxARG1 > 0)
+    TgPARAM_CHECK(nullptr != ARG1 && nbyMaxARG1 > 0);
     TgPARAM_CHECK(nullptr != ARG3 && nbyMaxARG3 > 0);
 
 #if defined(GENERATE__WCZ)
@@ -1163,7 +1166,7 @@ TgRESULT FCN(StrStr)( TgRSIZE_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C nb
 
 /* ---- FCN(Token_List) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgEXTN TgSINT_F32 FCN(Token_List)( CHAR(PP) NONULL ARG0, TgSINT_F32_C ARG1, CHAR(PC) NONULL ARG2, TgRSIZE_C ARG3 )
+TgEXTN TgSINT_F32 FCN(Token_List)( CHAR(PP) ARG0, TgSINT_F32_C ARG1, CHAR(PC) ARG2, TgRSIZE_C ARG3 )
 {
     CHAR(P)                            mbzNext;
     TgSINT_F32                          iToken;
@@ -1190,7 +1193,7 @@ TgEXTN TgSINT_F32 FCN(Token_List)( CHAR(PP) NONULL ARG0, TgSINT_F32_C ARG1, CHAR
 /* ---- FCN(LengthVF_Count) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 CLANG_WARN_DISABLE_PUSH(format-nonliteral)
-TgRESULT FCN(LengthVF_Count)( TgRSIZE_P NONULL ARG0, CHAR(CPC) NONULL ARG1, va_list ARG2 )
+TgRESULT FCN(LengthVF_Count)( TgRSIZE_P ARG0, CHAR(CPC) ARG1, va_list ARG2 )
 {
     TgSINT_F32                          iRet;
 
@@ -1223,7 +1226,7 @@ CLANG_WARN_DISABLE_POP(format-nonliteral)
 /* ---- FCN(PrintVF) ------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 CLANG_WARN_DISABLE_PUSH(format-nonliteral)
-TgRESULT FCN(PrintVF)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL ARG2, va_list ARG3 )
+TgRESULT FCN(PrintVF)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) ARG2, va_list ARG3 )
 {
     TgSINT_F32                          iRet;
 
@@ -1246,7 +1249,7 @@ CLANG_WARN_DISABLE_POP(format-nonliteral)
 /* ---- FCN(AppendVF) ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 CLANG_WARN_DISABLE_PUSH(format-nonliteral)
-TgRESULT FCN(AppendVF)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL ARG2, va_list ARG3 )
+TgRESULT FCN(AppendVF)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) ARG2, va_list ARG3 )
 {
     STg1_Text_Length                    sLength;
     TgSINT_F32                          iRet;
@@ -1272,7 +1275,7 @@ CLANG_WARN_DISABLE_POP(format-nonliteral)
 /* ---- FCN(PrintF) -------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 CLANG_WARN_DISABLE_PUSH(format-nonliteral)
-TgRESULT FCN(PrintF)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL ARG2, ... )
+TgRESULT FCN(PrintF)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) ARG2, ... )
 {
     va_list                             vaList;
     TgRESULT                            iResult;
@@ -1289,7 +1292,7 @@ CLANG_WARN_DISABLE_POP(format-nonliteral)
 /* ---- FCN(AppendF) ------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 CLANG_WARN_DISABLE_PUSH(format-nonliteral)
-TgRESULT FCN(AppendF)( CHAR(PC) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) NONULL ARG2, ... )
+TgRESULT FCN(AppendF)( CHAR(PC) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPC) ARG2, ... )
 {
     va_list                             vaList;
     TgRESULT                            iResult;
@@ -1305,7 +1308,7 @@ CLANG_WARN_DISABLE_POP(format-nonliteral)
 
 /* ---- FCN(Convert_NCZ) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Convert_NCZ)( CHAR(P) NONULL OUT0, TgRSIZE nbyOUT0, TgCHAR_NC_CP NONULL ARG2, TgRSIZE nbyMaxARG2 )
+TgRESULT FCN(Convert_NCZ)( CHAR(P) OUT0, TgRSIZE nbyOUT0, TgCHAR_NC_CP ARG2, TgRSIZE nbyMaxARG2 )
 {
     TgPARAM_CHECK(nullptr != OUT0 && nbyOUT0 > 0 && 0 == nbyOUT0 % sizeof( CHAR() ));
     TgPARAM_CHECK(nullptr != ARG2 && nbyMaxARG2 > 0 && 0 == nbyOUT0 % sizeof( TgCHAR_NC ));
@@ -1337,7 +1340,7 @@ TgRESULT FCN(Convert_NCZ)( CHAR(P) NONULL OUT0, TgRSIZE nbyOUT0, TgCHAR_NC_CP NO
 
 /* ---- FCN(Convert_WCZ) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Convert_WCZ)( CHAR(P) NONULL OUT0, TgRSIZE nbyOUT0, TgCHAR_WC_CP NONULL ARG2, TgRSIZE nbyMaxARG2 )
+TgRESULT FCN(Convert_WCZ)( CHAR(P) OUT0, TgRSIZE nbyOUT0, TgCHAR_WC_CP ARG2, TgRSIZE nbyMaxARG2 )
 {
     TgPARAM_CHECK(nullptr != OUT0 && nbyOUT0 > 0 && 0 == nbyOUT0 % sizeof( CHAR() ));
     TgPARAM_CHECK(nullptr != ARG2 && nbyMaxARG2 > 0 && 0 == nbyOUT0 % sizeof( TgCHAR_WC ));
@@ -1381,7 +1384,7 @@ TgRESULT FCN(Convert_WCZ)( CHAR(P) NONULL OUT0, TgRSIZE nbyOUT0, TgCHAR_WC_CP NO
 
 /* ---- FCN(Convert_MBZ) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT FCN(Convert_MBZ)( CHAR(P) NONULL OUT0, TgRSIZE nbyOUT0, TgCHAR_MB_CP NONULL ARG2, TgRSIZE nbyMaxARG2 )
+TgRESULT FCN(Convert_MBZ)( CHAR(P) OUT0, TgRSIZE nbyOUT0, TgCHAR_MB_CP ARG2, TgRSIZE nbyMaxARG2 )
 {
     TgPARAM_CHECK(nullptr != OUT0 && nbyOUT0 > 0 && 0 == nbyOUT0 % sizeof( CHAR() ));
     TgPARAM_CHECK(nullptr != ARG2 && nbyMaxARG2 > 0 && 0 == nbyOUT0 % sizeof( TgCHAR_MB ));
@@ -1454,7 +1457,7 @@ TgRESULT FCN(Convert_MBZ)( CHAR(P) NONULL OUT0, TgRSIZE nbyOUT0, TgCHAR_MB_CP NO
 
 /* ---- tgMBZ_With_Grouping_From_SZ ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-static TgRESULT FCN(Formated_From_SZ)( CHAR(P) NONULL ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPU) NONULL ARG2, TgRSIZE_C nbyMaxARG2 )
+static TgRESULT FCN(Formated_From_SZ)( CHAR(P) ARG0, TgRSIZE_C nbyMaxARG0, CHAR(CPU) ARG2, TgRSIZE_C nbyMaxARG2 )
 {
     TgRSIZE                             nuiSrc;
     TgRSIZE                             uiIndex;
@@ -1496,7 +1499,7 @@ static TgRESULT FCN(Formated_From_SZ)( CHAR(P) NONULL ARG0, TgRSIZE_C nbyMaxARG0
 
 /* ---- FCN(Read_String_With_Comments_Quotes) ------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-static CHAR(P) FCN(Read_String_With_Comments_Quotes)( CHAR(PP) NONULL ppszNextOut, CHAR(PC) NONULL mbzSrc, TgRSIZE_C nbyMaxSrc, TgBOOL_C bIgnoreComments )
+static CHAR(P) FCN(Read_String_With_Comments_Quotes)( CHAR(PP) ppszNextOut, CHAR(PC) mbzSrc, TgRSIZE_C nbyMaxSrc, TgBOOL_C bIgnoreComments )
 {
     CHAR(P)                             mbzStart;
     CHAR(P)                             mbzNext;

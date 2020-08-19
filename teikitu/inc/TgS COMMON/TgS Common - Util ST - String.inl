@@ -21,12 +21,12 @@
 /*  Private Functions                                                                                                                                                              */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-TgEXTN TgRESULT                             tgCM_UT_ST__ST__Change_Cast_Internal( STg2_UT_ST__ST_PC psDest, TgBOOL_C  );
-TgEXTN TgRESULT                             tgCM_UT_ST__ST__SO_SF_Find_String_Internal(
-                                                STg1_Text_Length_PC, STg2_UT_ST__ST_CPC, TgRSIZE_C, STg2_UT_ST__ST_CPC, TgRSIZE_C, TgRSIZE_C, TgBOOL );
+TgEXTN TgRESULT                             tgCM_UT_ST__ST__Change_Cast_Internal( STg2_UT_ST__ST_PC NONULL, TgBOOL_C  );
+TgEXTN TgRESULT                             tgCM_UT_ST__ST__SO_SF_Find_String_Internal( STg1_Text_Length_PC NONULL, STg2_UT_ST__ST_CPC NONULL, TgRSIZE_C,
+                                                                                        STg2_UT_ST__ST_CPC NONULL, TgRSIZE_C, TgRSIZE_C, TgBOOL );
 
-TgEXTN TgRESULT                             tgCM_UT_ST__ST__SO_SN_Find_Set_Internal(
-                                                STg1_Text_Length_PC, STg2_UT_ST__ST_CPC, TgRSIZE_C, TgCHAR_MB_CPC, TgRSIZE_C, TgBOOL_C, TgBOOL_C );
+TgEXTN TgRESULT                             tgCM_UT_ST__ST__SO_SN_Find_Set_Internal( STg1_Text_Length_PC NONULL, STg2_UT_ST__ST_CPC NONULL, TgRSIZE_C, TgCHAR_MB_CPC NONULL,
+                                                                                     TgRSIZE_C, TgBOOL_C, TgBOOL_C );
 
 
 
@@ -37,7 +37,7 @@ TgEXTN TgRESULT                             tgCM_UT_ST__ST__SO_SN_Find_Set_Inter
 
 /* ---- tgCM_UT_LF__ST__Init ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__Init( STg2_UT_ST__ST_PC NONULL psDest )
+TgINLINE TgVOID tgCM_UT_ST__ST__Init( STg2_UT_ST__ST_PC psDest )
 {
     psDest->m_nbyReserve = KTgSTRING_STATIC_BUFFER_SIZE;
     psDest->m_nbyBuffer = 0;
@@ -47,7 +47,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__Init( STg2_UT_ST__ST_PC NONULL psDest )
 
 /* ---- tgCM_UT_ST__ST__Free ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__Free( STg2_UT_ST__ST_PC NONULL psDest )
+TgINLINE TgVOID tgCM_UT_ST__ST__Free( STg2_UT_ST__ST_PC psDest )
 {
     tgCM_UT_ST__ST__Clear( psDest );
 }
@@ -55,7 +55,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__Free( STg2_UT_ST__ST_PC NONULL psDest )
 
 /* ---- tgCM_UT_ST__ST__SZ_Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Init( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Init( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzARG )
 {
     TgPARAM_CHECK((nullptr != psDest) && (nullptr != mbzARG));
     tgCM_UT_ST__ST__Init( psDest );
@@ -65,7 +65,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Init( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR
 
 /* ---- tgCM_UT_ST__ST__SN_Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SN_Init( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG, TgRSIZE_C nbyMaxARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SN_Init( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzARG, TgRSIZE_C nbyMaxARG )
 {
     TgPARAM_CHECK((nullptr != psDest) && (nullptr != mbzARG));
     tgCM_UT_ST__ST__Init( psDest );
@@ -75,7 +75,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SN_Init( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR
 
 /* ---- tgCM_UT_ST__ST__PT_Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__PT_Init( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzStart, TgCHAR_MB_CPC NONULL mbzEnd )
+TgINLINE TgVOID tgCM_UT_ST__ST__PT_Init( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzStart, TgCHAR_MB_CPC mbzEnd )
 {
     TgPARAM_CHECK((nullptr != psDest) && (nullptr != mbzStart) && (nullptr != mbzEnd));
     tgCM_UT_ST__ST__Init( psDest );
@@ -85,7 +85,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__PT_Init( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR
 
 /* ---- tgCM_UT_ST__ST__ST_Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__ST_Init( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__ST_Init( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG )
 {
     TgPARAM_CHECK((nullptr != psDest) && (nullptr != psARG));
     tgCM_UT_ST__ST__Init( psDest );
@@ -95,7 +95,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__ST_Init( STg2_UT_ST__ST_PC NONULL psDest, STg2_U
 
 /* ---- tgCM_UT_ST__ST__SO_Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SO_Init( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset )
+TgINLINE TgVOID tgCM_UT_ST__ST__SO_Init( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset )
 {
     TgPARAM_CHECK((nullptr != psDest) && (nullptr != psARG));
     tgCM_UT_ST__ST__Init( psDest );
@@ -105,7 +105,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SO_Init( STg2_UT_ST__ST_PC NONULL psDest, STg2_U
 
 /* ---- tgCM_UT_ST__ST__SF_Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SF_Init( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
+TgINLINE TgVOID tgCM_UT_ST__ST__SF_Init( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
 {
     TgPARAM_CHECK((nullptr != psDest) && (nullptr != psARG));
     tgCM_UT_ST__ST__Init( psDest );
@@ -115,7 +115,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SF_Init( STg2_UT_ST__ST_PC NONULL psDest, STg2_U
 
 /* ---- tgCM_UT_ST__ST__SZ_Assign ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Assign( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Assign( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -130,7 +130,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Assign( STg2_UT_ST__ST_PC NONULL psDest, TgCH
 
 /* ---- tgCM_UT_ST__ST__SN_Assign ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SN_Assign( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG, TgRSIZE_C nbyMaxARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SN_Assign( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzARG, TgRSIZE_C nbyMaxARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -145,7 +145,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SN_Assign( STg2_UT_ST__ST_PC NONULL psDest, TgCH
 
 /* ---- tgCM_UT_ST__ST__PT_Assign ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__PT_Assign( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzStart, TgCHAR_MB_CPC NONULL mbzEnd )
+TgINLINE TgVOID tgCM_UT_ST__ST__PT_Assign( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzStart, TgCHAR_MB_CPC mbzEnd )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -167,7 +167,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__PT_Assign( STg2_UT_ST__ST_PC NONULL psDest, TgCH
 
 /* ---- tgCM_UT_ST__ST__ST_Assign ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__ST_Assign( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__ST_Assign( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG )
 {
     tgCM_UT_ST__ST__SF_Assign( psDest, psARG, 0, KTgMAX_RSIZE );
 }
@@ -175,7 +175,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__ST_Assign( STg2_UT_ST__ST_PC NONULL psDest, STg2
 
 /* ---- tgCM_UT_ST__ST__SO_Assign ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SO_Assign( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset )
+TgINLINE TgVOID tgCM_UT_ST__ST__SO_Assign( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset )
 {
     tgCM_UT_ST__ST__SF_Assign( psDest, psARG, uiARG_Offset, KTgMAX_RSIZE );
 }
@@ -183,7 +183,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SO_Assign( STg2_UT_ST__ST_PC NONULL psDest, STg2
 
 /* ---- tgCM_UT_ST__ST__SZ_Append ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Append( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Append( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -198,7 +198,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Append( STg2_UT_ST__ST_PC NONULL psDest, TgCH
 
 /* ---- tgCM_UT_ST__ST__SN_Append ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SN_Append( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG, TgRSIZE_C nbyMaxARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SN_Append( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzARG, TgRSIZE_C nbyMaxARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -213,7 +213,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SN_Append( STg2_UT_ST__ST_PC NONULL psDest, TgCH
 
 /* ---- tgCM_UT_ST__ST__PT_Append ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__PT_Append( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzStart, TgCHAR_MB_CPC NONULL mbzEnd )
+TgINLINE TgVOID tgCM_UT_ST__ST__PT_Append( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzStart, TgCHAR_MB_CPC mbzEnd )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -235,7 +235,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__PT_Append( STg2_UT_ST__ST_PC NONULL psDest, TgCH
 
 /* ---- tgCM_UT_ST__ST__ST_Append ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__ST_Append( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__ST_Append( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG )
 {
     tgCM_UT_ST__ST__SF_Append( psDest, psARG, 0, KTgMAX_RSIZE );
 }
@@ -243,7 +243,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__ST_Append( STg2_UT_ST__ST_PC NONULL psDest, STg2
 
 /* ---- tgCM_UT_ST__ST__SO_Append ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SO_Append( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset )
+TgINLINE TgVOID tgCM_UT_ST__ST__SO_Append( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset )
 {
     tgCM_UT_ST__ST__SF_Append( psDest, psARG, uiARG_Offset, KTgMAX_RSIZE );
 }
@@ -251,7 +251,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SO_Append( STg2_UT_ST__ST_PC NONULL psDest, STg2
 
 /* ---- tgCM_UT_ST__ST__SZ_Insert ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiIndex, TgCHAR_MB_CPC NONULL mbzARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Insert( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiIndex, TgCHAR_MB_CPC mbzARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -266,7 +266,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRS
 
 /* ---- tgCM_UT_ST__ST__SN_Insert ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SN_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiIndex, TgCHAR_MB_CPC NONULL mbzARG, TgRSIZE_C nbyMaxARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SN_Insert( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiIndex, TgCHAR_MB_CPC mbzARG, TgRSIZE_C nbyMaxARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -281,7 +281,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SN_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRS
 
 /* ---- tgCM_UT_ST__ST__PT_Insert ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__PT_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiIndex, TgCHAR_MB_CPC NONULL mbzStart, TgCHAR_MB_CPC NONULL mbzEnd )
+TgINLINE TgVOID tgCM_UT_ST__ST__PT_Insert( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiIndex, TgCHAR_MB_CPC mbzStart, TgCHAR_MB_CPC mbzEnd )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -303,7 +303,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__PT_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRS
 
 /* ---- tgCM_UT_ST__ST__ST_Insert ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__ST_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiIndex, STg2_UT_ST__ST_CPC NONULL psARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__ST_Insert( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiIndex, STg2_UT_ST__ST_CPC psARG )
 {
     tgCM_UT_ST__ST__SF_Insert( psDest, uiIndex, psARG, 0, KTgMAX_RSIZE );
 }
@@ -311,7 +311,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__ST_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRS
 
 /* ---- tgCM_UT_ST__ST__SO_Insert ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SO_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiIndex, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset )
+TgINLINE TgVOID tgCM_UT_ST__ST__SO_Insert( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiIndex, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset )
 {
     tgCM_UT_ST__ST__SF_Insert( psDest, uiIndex, psARG, uiARG_Offset, KTgMAX_RSIZE );
 }
@@ -319,7 +319,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SO_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRS
 
 /* ---- tgCM_UT_ST__ST__SF_Insert ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SF_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiIndex, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
+TgINLINE TgVOID tgCM_UT_ST__ST__SF_Insert( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiIndex, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
 {
     tgCM_UT_ST__ST__SF_Replace( psDest, uiIndex, uiIndex, psARG, uiARG_Offset, uiMaxRead );
 }
@@ -327,7 +327,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SF_Insert( STg2_UT_ST__ST_PC NONULL psDest, TgRS
 
 /* ---- tgCM_UT_ST__ST__SZ_Replace ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, TgCHAR_MB_CPC NONULL mbzARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Replace( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, TgCHAR_MB_CPC mbzARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -348,7 +348,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SZ_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgR
 
 /* ---- tgCM_UT_ST__ST__SN_Replace ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SN_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, TgCHAR_MB_CPC NONULL mbzARG, TgRSIZE_C nbyMaxARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__SN_Replace( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, TgCHAR_MB_CPC mbzARG, TgRSIZE_C nbyMaxARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -369,7 +369,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SN_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgR
 
 /* ---- tgCM_UT_ST__ST__PT_Replace ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__PT_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, TgCHAR_MB_CPC NONULL mbzStart, TgCHAR_MB_CPC NONULL mbzEnd )
+TgINLINE TgVOID tgCM_UT_ST__ST__PT_Replace( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, TgCHAR_MB_CPC mbzStart, TgCHAR_MB_CPC mbzEnd )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -391,7 +391,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__PT_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgR
 
 /* ---- tgCM_UT_ST__ST__ST_Replace ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__ST_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, STg2_UT_ST__ST_CPC NONULL psARG )
+TgINLINE TgVOID tgCM_UT_ST__ST__ST_Replace( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, STg2_UT_ST__ST_CPC psARG )
 {
     tgCM_UT_ST__ST__SF_Replace( psDest, uiStart, uiEnd, psARG, 0, KTgMAX_RSIZE );
 }
@@ -399,7 +399,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__ST_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgR
 
 /* ---- tgCM_UT_ST__ST__SO_Replace ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__SO_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset )
+TgINLINE TgVOID tgCM_UT_ST__ST__SO_Replace( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiStart, TgRSIZE_C uiEnd, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset )
 {
     tgCM_UT_ST__ST__SF_Replace( psDest, uiStart, uiEnd, psARG, uiARG_Offset, KTgMAX_RSIZE );
 }
@@ -407,7 +407,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__SO_Replace( STg2_UT_ST__ST_PC NONULL psDest, TgR
 
 /* ---- tgCM_UT_ST__ST__Clear ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__Clear( STg2_UT_ST__ST_PC NONULL psDest )
+TgINLINE TgVOID tgCM_UT_ST__ST__Clear( STg2_UT_ST__ST_PC psDest )
 {
     if (psDest->m_nbyReserve > KTgSTRING_STATIC_BUFFER_SIZE)
     {
@@ -422,7 +422,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__Clear( STg2_UT_ST__ST_PC NONULL psDest )
 
 /* ---- tgCM_UT_ST__ST__To_Upper ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__To_Upper( STg2_UT_ST__ST_PC NONULL psDest )
+TgINLINE TgRESULT tgCM_UT_ST__ST__To_Upper( STg2_UT_ST__ST_PC psDest )
 {
     return (tgCM_UT_ST__ST__Change_Cast_Internal(psDest, true));
 }
@@ -430,7 +430,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__To_Upper( STg2_UT_ST__ST_PC NONULL psDest )
 
 /* ---- tgCM_UT_ST__ST__To_Lower ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__To_Lower( STg2_UT_ST__ST_PC NONULL psDest )
+TgINLINE TgRESULT tgCM_UT_ST__ST__To_Lower( STg2_UT_ST__ST_PC psDest )
 {
     return (tgCM_UT_ST__ST__Change_Cast_Internal(psDest, false));
 }
@@ -438,15 +438,15 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__To_Lower( STg2_UT_ST__ST_PC NONULL psDest )
 
 /* ---- tgCM_UT_ST__ST__Query_String --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgCHAR_MB_CP tgCM_UT_ST__ST__Query_String( STg2_UT_ST__ST_CPC NONULL psDest )
+TgINLINE TgCHAR_MB_CP tgCM_UT_ST__ST__Query_String( STg2_UT_ST__ST_CPC psDest )
 {
-    return (KTgSTRING_STATIC_BUFFER_SIZE < psDest->m_nbyReserve ? psDest->m_mbzDest : psDest->m_ambBuffer);
+    return (nullptr == psDest ? nullptr : KTgSTRING_STATIC_BUFFER_SIZE < psDest->m_nbyReserve ? psDest->m_mbzDest : psDest->m_ambBuffer);
 }
 
 
 /* ---- tgCM_UT_ST__ST__Is_Empty ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_ST__ST__Is_Empty( STg2_UT_ST__ST_CPC NONULL psDest )
+TgINLINE TgBOOL tgCM_UT_ST__ST__Is_Empty( STg2_UT_ST__ST_CPC psDest )
 {
     return (0 == psDest->m_nbyBuffer);
 }
@@ -454,7 +454,7 @@ TgINLINE TgBOOL tgCM_UT_ST__ST__Is_Empty( STg2_UT_ST__ST_CPC NONULL psDest )
 
 /* ---- tgCM_UT_ST__ST__Capacity ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRSIZE tgCM_UT_ST__ST__Capacity( STg2_UT_ST__ST_CPC NONULL psDest )
+TgINLINE TgRSIZE tgCM_UT_ST__ST__Capacity( STg2_UT_ST__ST_CPC psDest )
 {
     return (psDest->m_nbyReserve - 1);
 }
@@ -470,7 +470,7 @@ TgINLINE TgRSIZE tgCM_UT_ST__ST__Max_Size( STg2_UT_ST__ST_CPC UNUSED_PARAM psDes
 
 /* ---- tgCM_UT_ST__ST__Length_U08 ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRSIZE tgCM_UT_ST__ST__Length_U08( STg2_UT_ST__ST_CPC NONULL psDest )
+TgINLINE TgRSIZE tgCM_UT_ST__ST__Length_U08( STg2_UT_ST__ST_CPC psDest )
 {
     return (psDest->m_nbyBuffer);
 }
@@ -478,7 +478,7 @@ TgINLINE TgRSIZE tgCM_UT_ST__ST__Length_U08( STg2_UT_ST__ST_CPC NONULL psDest )
 
 /* ---- tgCM_UT_ST__ST__Length_Count --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__Length_Count( TgRSIZE_P puiLength_Count, STg2_UT_ST__ST_CPC NONULL psDest )
+TgINLINE TgRESULT tgCM_UT_ST__ST__Length_Count( TgRSIZE_P puiLength_Count, STg2_UT_ST__ST_CPC psDest )
 {
     return (tgMBZ_Length_Count(puiLength_Count, tgCM_UT_ST__ST__Query_String( psDest ), psDest->m_nbyReserve));
 }
@@ -486,7 +486,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__Length_Count( TgRSIZE_P puiLength_Count, STg2_
 
 /* ---- tgCM_UT_ST__ST__Reserve -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__Reserve( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C nbyNew_Size )
+TgINLINE TgVOID tgCM_UT_ST__ST__Reserve( STg2_UT_ST__ST_PC psDest, TgRSIZE_C nbyNew_Size )
 {
     if (TgEXPECT_TRUE( nbyNew_Size + 1 > psDest->m_nbyReserve ))
     {
@@ -497,7 +497,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__Reserve( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZ
 
 /* ---- tgCM_UT_ST__ST__Swap ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__Swap( STg2_UT_ST__ST_PC NONULL psARG0, STg2_UT_ST__ST_PC NONULL psARG1 )
+TgINLINE TgVOID tgCM_UT_ST__ST__Swap( STg2_UT_ST__ST_PC psARG0, STg2_UT_ST__ST_PC psARG1 )
 {
     STg2_UT_ST__ST                      tgTmp;
 
@@ -508,7 +508,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__Swap( STg2_UT_ST__ST_PC NONULL psARG0, STg2_UT_S
 
 /* ---- tgCM_UT_ST__ST__Is_Inside ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_ST__ST__Is_Inside( STg2_UT_ST__ST_CPC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG1 )
+TgINLINE TgBOOL tgCM_UT_ST__ST__Is_Inside( STg2_UT_ST__ST_CPC psDest, TgCHAR_MB_CPC mbzARG1 )
 {
     return (tgCM_UT_ST__ST__Query_String( psDest ) <= mbzARG1 && mbzARG1 <= tgCM_UT_ST__ST__Query_String( psDest ) + psDest->m_nbyBuffer);
 }
@@ -516,7 +516,7 @@ TgINLINE TgBOOL tgCM_UT_ST__ST__Is_Inside( STg2_UT_ST__ST_CPC NONULL psDest, TgC
 
 /* ---- tgCM_UT_ST__ST__ST_SZ_Compare -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__ST_SZ_Compare( TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC NONULL psARG0, TgCHAR_MB_CPC NONULL mbzARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__ST_SZ_Compare( TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC psARG0, TgCHAR_MB_CPC mbzARG1 )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -530,7 +530,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__ST_SZ_Compare( TgSINT_F08_P piCMP, STg2_UT_ST_
 
 /* ---- tgCM_UT_ST__ST__ST_SN_Compare -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__ST_SN_Compare( TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC NONULL psARG0, TgCHAR_MB_CPC NONULL mbzARG1, TgRSIZE_C nbyARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__ST_SN_Compare( TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC psARG0, TgCHAR_MB_CPC mbzARG1, TgRSIZE_C nbyARG1 )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -544,7 +544,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__ST_SN_Compare( TgSINT_F08_P piCMP, STg2_UT_ST_
 
 /* ---- tgCM_UT_ST__ST__ST_ST_Compare -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__ST_ST_Compare( TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC NONULL psARG0, STg2_UT_ST__ST_CPC NONULL psARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__ST_ST_Compare( TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC psARG0, STg2_UT_ST__ST_CPC psARG1 )
 {
     return (tgCM_UT_ST__ST__SF_SF_Compare( piCMP, psARG0, 0, KTgMAX_RSIZE, psARG1, 0 ));
 }
@@ -553,7 +553,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__ST_ST_Compare( TgSINT_F08_P piCMP, STg2_UT_ST_
 /* ---- tgCM_UT_ST__ST__ST_SF_Compare -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__ST_SF_Compare(
-    TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC NONULL psARG0, STg2_UT_ST__ST_CPC NONULL psARG1, TgRSIZE_C uiOffset_ARG1, TgRSIZE_C uiMaxRead )
+    TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC psARG0, STg2_UT_ST__ST_CPC psARG1, TgRSIZE_C uiOffset_ARG1, TgRSIZE_C uiMaxRead )
 {
     return (tgCM_UT_ST__ST__SF_SF_Compare( piCMP, psARG0, 0, uiMaxRead, psARG1, uiOffset_ARG1 ));
 }
@@ -561,7 +561,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__ST_SF_Compare(
 
 /* ---- tgCM_UT_ST__ST__SF_SZ_Compare -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SF_SZ_Compare( TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgRSIZE_C uiMaxRead, TgCHAR_MB_CPC NONULL mbzARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SF_SZ_Compare( TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgRSIZE_C uiMaxRead, TgCHAR_MB_CPC mbzARG1 )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -576,7 +576,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SF_SZ_Compare( TgSINT_F08_P piCMP, STg2_UT_ST_
 /* ---- tgCM_UT_ST__ST__SF_SN_Compare -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__SF_SN_Compare(
-    TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgRSIZE_C uiMaxRead, TgCHAR_MB_CPC NONULL mbzARG1, TgRSIZE_C nbyARG )
+    TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgRSIZE_C uiMaxRead, TgCHAR_MB_CPC mbzARG1, TgRSIZE_C nbyARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -591,7 +591,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SF_SN_Compare(
 /* ---- tgCM_UT_ST__ST__SF_ST_Compare -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__SF_ST_Compare(
-    TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgRSIZE_C uiMaxRead, STg2_UT_ST__ST_CPC NONULL psARG1 )
+    TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgRSIZE_C uiMaxRead, STg2_UT_ST__ST_CPC psARG1 )
 {
     return (tgCM_UT_ST__ST__SF_SF_Compare( piCMP, psARG0, uiOffset_ARG0, uiMaxRead, psARG1, 0 ));
 }
@@ -600,7 +600,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SF_ST_Compare(
 /* ---- tgCM_UT_ST__ST__SF_SF_Compare -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__SF_SF_Compare(
-    TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgRSIZE_C uiMaxRead, STg2_UT_ST__ST_CPC NONULL psARG1, TgRSIZE_C uiOffset_ARG1 )
+    TgSINT_F08_P piCMP, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgRSIZE_C uiMaxRead, STg2_UT_ST__ST_CPC psARG1, TgRSIZE_C uiOffset_ARG1 )
 {
     TgCHAR_MB_CP                        mbzARG0, mbzARG1;
 
@@ -614,7 +614,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SF_SF_Compare(
 /* ---- tgCM_UT_ST__ST__SO_SZ_Find_String ---------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_Find_String(
-    STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC NONULL mbzARG1 )
+    STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC mbzARG1 )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -629,7 +629,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_Find_String(
 /* ---- tgCM_UT_ST__ST__SO_SN_Find_String ---------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_Find_String(
-    STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC NONULL mbzARG1, TgRSIZE_C nbyARG )
+    STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC mbzARG1, TgRSIZE_C nbyARG )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -643,7 +643,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_Find_String(
 
 /* ---- tgCM_UT_ST__ST__SO_ST_Find_String ---------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_String( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC NONULL psARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_String( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC psARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SF_Find_String( psOffset, psARG0, uiOffset_ARG0, psARG1, 0, KTgMAX_RSIZE ));
 }
@@ -652,7 +652,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_String( STg1_Text_Length_PC psOffse
 /* ---- tgCM_UT_ST__ST__SO_SF_Find_String ---------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SF_Find_String(
-    STg1_Text_Length_PC OUT0, STg2_UT_ST__ST_CPC NONULL psARG_0, TgRSIZE_C uiARG_0_Offset, STg2_UT_ST__ST_CPC NONULL psARG_1, TgRSIZE_C uiARG_1_Offset, TgRSIZE_C uiMaxRead )
+    STg1_Text_Length_PC OUT0, STg2_UT_ST__ST_CPC psARG_0, TgRSIZE_C uiARG_0_Offset, STg2_UT_ST__ST_CPC psARG_1, TgRSIZE_C uiARG_1_Offset, TgRSIZE_C uiMaxRead )
 {
     return (tgCM_UT_ST__ST__SO_SF_Find_String_Internal( OUT0, psARG_0, uiARG_0_Offset, psARG_1, uiARG_1_Offset, uiMaxRead, false ));
 }
@@ -660,7 +660,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SF_Find_String(
 
 /* ---- tgCM_UT_ST__ST__SO_SZ_Find_Set ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_Find_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC NONULL mbzARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_Find_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC mbzARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SN_Find_Set( psOffset, psARG0, uiOffset_ARG0, mbzARG1, KTgMAX_RSIZE ));
 }
@@ -676,7 +676,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_Find_Set( STg1_Text_Length_PC psOffset, 
 
 /* ---- tgCM_UT_ST__ST__SO_ST_Find_Set ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC NONULL psARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC psARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SN_Find_Set( psOffset, psARG0, uiOffset_ARG0, tgCM_UT_ST__ST__Query_String( psARG1 ), psARG1->m_nbyBuffer ));
 }
@@ -684,7 +684,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_Set( STg1_Text_Length_PC psOffset, 
 
 /* ---- tgCM_UT_ST__ST__SO_SZ_Find_Not_Set --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_Find_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC NONULL mbzARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_Find_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC mbzARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SN_Find_Not_Set( psOffset, psARG0, uiOffset_ARG0, mbzARG1, KTgMAX_RSIZE ));
 }
@@ -692,7 +692,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_Find_Not_Set( STg1_Text_Length_PC psOffs
 
 /* ---- tgCM_UT_ST__ST__SO_SN_Find_Not_Set --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_Find_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG_0, TgRSIZE_C uiARG_0_Offset, TgCHAR_MB_CPC mbzARG_1, TgRSIZE_C nbyARG_1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_Find_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG_0, TgRSIZE_C uiARG_0_Offset, TgCHAR_MB_CPC mbzARG_1, TgRSIZE_C nbyARG_1)
 {
     return (tgCM_UT_ST__ST__SO_SN_Find_Set_Internal( psOffset, psARG_0, uiARG_0_Offset, mbzARG_1, nbyARG_1, false, false ));
 }
@@ -700,7 +700,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_Find_Not_Set( STg1_Text_Length_PC psOffs
 
 /* ---- tgCM_UT_ST__ST__SO_ST_Find_Not_Set --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC NONULL psARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC psARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SN_Find_Not_Set( psOffset, psARG0, uiOffset_ARG0, tgCM_UT_ST__ST__Query_String( psARG1 ), psARG1->m_nbyBuffer ));
 }
@@ -708,7 +708,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_Find_Not_Set( STg1_Text_Length_PC psOffs
 
 /* ---- tgCM_UT_ST__ST__SO_ST_RFind_String --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_String( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC NONULL psARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_String( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC psARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SF_RFind_String( psOffset, psARG0, uiOffset_ARG0, psARG1, 0, KTgMAX_RSIZE ));
 }
@@ -717,7 +717,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_String( STg1_Text_Length_PC psOffs
 /* ---- tgCM_UTS_SO_SF_RFind_String ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SF_RFind_String(
-    STg1_Text_Length_PC OUT0, STg2_UT_ST__ST_CPC NONULL psARG_0, TgRSIZE_C uiARG_0_Offset, STg2_UT_ST__ST_CPC NONULL psARG_1, TgRSIZE_C uiARG_1_Offset, TgRSIZE_C uiMaxRead )
+    STg1_Text_Length_PC OUT0, STg2_UT_ST__ST_CPC psARG_0, TgRSIZE_C uiARG_0_Offset, STg2_UT_ST__ST_CPC psARG_1, TgRSIZE_C uiARG_1_Offset, TgRSIZE_C uiMaxRead )
 {
     return (tgCM_UT_ST__ST__SO_SF_Find_String_Internal( OUT0, psARG_0, uiARG_0_Offset, psARG_1, uiARG_1_Offset, uiMaxRead, true ));
 }
@@ -725,7 +725,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SF_RFind_String(
 
 /* ---- tgCM_UT_ST__ST__SO_SZ_RFind_String --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_RFind_String( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC NONULL mbzARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_RFind_String( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC mbzARG1 )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -740,7 +740,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_RFind_String( STg1_Text_Length_PC psOffs
 /* ---- tgCM_UT_ST__ST__SO_SN_RFind_String --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_RFind_String(
-    STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC NONULL mbzARG1, TgRSIZE_C nbyARG1 )
+    STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC mbzARG1, TgRSIZE_C nbyARG1 )
 {
     STg2_UT_ST__ST                    sSrc;
 
@@ -754,7 +754,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_RFind_String(
 
 /* ---- tgCM_UT_ST__ST__SO_SZ_RFind_Set ------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_RFind_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC NONULL mbzARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_RFind_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC mbzARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SN_RFind_Set( psOffset, psARG0, uiOffset_ARG0, mbzARG1, KTgMAX_RSIZE ));
 }
@@ -770,7 +770,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_RFind_Set( STg1_Text_Length_PC psOffset,
 
 /* ---- tgCM_UT_ST__ST__SO_ST_RFind_Set ------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC NONULL psARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC psARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SN_RFind_Set( psOffset, psARG0, uiOffset_ARG0, tgCM_UT_ST__ST__Query_String( psARG1 ), psARG1->m_nbyBuffer ));
 }
@@ -778,7 +778,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_Set( STg1_Text_Length_PC psOffset,
 
 /* ---- tgCM_UT_ST__ST__SO_SZ_RFind_Not_Set -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_RFind_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC NONULL mbzARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SZ_RFind_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, TgCHAR_MB_CPC mbzARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SN_RFind_Not_Set( psOffset, psARG0, uiOffset_ARG0, mbzARG1, KTgMAX_RSIZE ));
 }
@@ -794,7 +794,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_SN_RFind_Not_Set( STg1_Text_Length_PC psOff
 
 /* ---- tgCM_UT_ST__ST__SO_ST_RFind_Not_Set -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC NONULL psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC NONULL psARG1 )
+TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_Not_Set( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG0, TgRSIZE_C uiOffset_ARG0, STg2_UT_ST__ST_CPC psARG1 )
 {
     return (tgCM_UT_ST__ST__SO_SN_RFind_Not_Set( psOffset, psARG0, uiOffset_ARG0, tgCM_UT_ST__ST__Query_String( psARG1 ), psARG1->m_nbyBuffer ));
 }
@@ -802,7 +802,7 @@ TgINLINE TgRESULT tgCM_UT_ST__ST__SO_ST_RFind_Not_Set( STg1_Text_Length_PC psOff
 
 /* ---- tgCM_UT_ST__ST__Trim_Start_Set ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__Trim_Start_Set( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG1, TgRSIZE_C nbyARG1 )
+TgINLINE TgVOID tgCM_UT_ST__ST__Trim_Start_Set( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzARG1, TgRSIZE_C nbyARG1 )
 {
     STg1_Text_Length                    sOffset;
 
@@ -819,7 +819,7 @@ TgINLINE TgVOID tgCM_UT_ST__ST__Trim_Start_Set( STg2_UT_ST__ST_PC NONULL psDest,
 
 /* ---- tgCM_UT_ST__ST__Trim_End_Set --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__ST__Trim_End_Set( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL mbzARG1, TgRSIZE_C nbyARG1 )
+TgINLINE TgVOID tgCM_UT_ST__ST__Trim_End_Set( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC mbzARG1, TgRSIZE_C nbyARG1 )
 {
     STg1_Text_Length                    sOffset;
 

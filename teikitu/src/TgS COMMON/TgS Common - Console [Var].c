@@ -33,10 +33,10 @@ TgTYPE_UNION( STg2_CN_Var_Data, )
 
     struct
     {
-        TgVEC_F32_04_1 m_vCurrent;
-        TgVEC_F32_04_1 m_vMin;
-        TgVEC_F32_04_1 m_vMax;
-        TgVEC_F32_04_1 m_vDefault;
+        TgUN_V128 m_uCurrent;
+        TgUN_V128 m_uMin;
+        TgUN_V128 m_uMax;
+        TgUN_V128 m_uDefault;
     } m_sVector;
 
     struct
@@ -160,15 +160,15 @@ TgVOID tgCN_Var_Load_Config( STg2_Input_PC psInput, TgRSIZE_C uiOffset )
 
             case ETgCN_COMMAND__VAR_F32_04:
             {
-                TgVEC_F32_04_1                      vValue;
+                TgUN_V128                           uValue;
 
                 if (niToken >= 5)
                 {
-                    vValue.x = tgMBZ_To_F32( aszToken[1], KTgMAX_RSIZE );
-                    vValue.y = tgMBZ_To_F32( aszToken[2], KTgMAX_RSIZE );
-                    vValue.z = tgMBZ_To_F32( aszToken[3], KTgMAX_RSIZE );
-                    vValue.w = tgMBZ_To_F32( aszToken[4], KTgMAX_RSIZE );
-                    bRet = tgCtgMH_Var_Set_N_F32_04_1( tiCN_Var, vValue );
+                    uValue.m_vS_F32_04_1.x = tgMBZ_To_F32( aszToken[1], KTgMAX_RSIZE );
+                    uValue.m_vS_F32_04_1.y = tgMBZ_To_F32( aszToken[2], KTgMAX_RSIZE );
+                    uValue.m_vS_F32_04_1.z = tgMBZ_To_F32( aszToken[3], KTgMAX_RSIZE );
+                    uValue.m_vS_F32_04_1.w = tgMBZ_To_F32( aszToken[4], KTgMAX_RSIZE );
+                    bRet = tgCN_Var_Set_F32_04_1( tiCN_Var, uValue.m_vF32_04_1 );
                 };
                 break;
             };
@@ -249,9 +249,11 @@ TgVOID tgCN_Var_Save_Config( STg2_Output_PC psOutput )
                 break;
 
             case ETgCN_COMMAND__VAR_F32_04:
-                tgIO_PrintF_NCZ( psOutput, "%s %f %f %f %f\n", psCmd_Var->m_sCommon.m_mbzName, (TgFLOAT64)psCmd_Var->m_sData.m_sVector.m_vCurrent.x,
-                    (TgFLOAT64)psCmd_Var->m_sData.m_sVector.m_vCurrent.y, (TgFLOAT64)psCmd_Var->m_sData.m_sVector.m_vCurrent.z,
-                    (TgFLOAT64)psCmd_Var->m_sData.m_sVector.m_vCurrent.w );
+                tgIO_PrintF_NCZ( psOutput, "%s %f %f %f %f\n", psCmd_Var->m_sCommon.m_mbzName,
+                                (TgFLOAT64)psCmd_Var->m_sData.m_sVector.m_uCurrent.m_vS_F32_04_1.x,
+                                (TgFLOAT64)psCmd_Var->m_sData.m_sVector.m_uCurrent.m_vS_F32_04_1.y,
+                                (TgFLOAT64)psCmd_Var->m_sData.m_sVector.m_uCurrent.m_vS_F32_04_1.z,
+                                (TgFLOAT64)psCmd_Var->m_sData.m_sVector.m_uCurrent.m_vS_F32_04_1.w );
                 break;
 
             case ETgCN_COMMAND__VAR_STRING:
@@ -558,7 +560,7 @@ TgCN_VAR_ID tgCN_Var_Init_F32(
 
 /* ---- tgCN_Var_Init_F32_04 ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgCN_VAR_ID tgCtgMH_Var_Init_N_F32_04_1(
+TgCN_VAR_ID tgCN_Var_Init_F32_04_1(
     TgCHAR_MB_CPC mbzVar, TgRSIZE_C nbyMaxVar, TgCHAR_MB_CPC mbzDesc, TgRSIZE_C nbyMaxDesc, TgUINT_F16_C uiFlags,
     TgVEC_F32_04_1_C vDefault, TgVEC_F32_04_1_C vMin, TgVEC_F32_04_1_C vMax )
 {
@@ -571,10 +573,10 @@ TgCN_VAR_ID tgCtgMH_Var_Init_N_F32_04_1(
     };
 
     psCmd_Var->m_sCommon.m_uiType = ETgCN_COMMAND__VAR_F32_04;
-    psCmd_Var->m_sData.m_sVector.m_vCurrent = vDefault;
-    psCmd_Var->m_sData.m_sVector.m_vMin = vMin;
-    psCmd_Var->m_sData.m_sVector.m_vMax = vMax;
-    psCmd_Var->m_sData.m_sVector.m_vDefault = vDefault;
+    psCmd_Var->m_sData.m_sVector.m_uCurrent.m_vF32_04_1 = vDefault;
+    psCmd_Var->m_sData.m_sVector.m_uMin.m_vF32_04_1 = vMin;
+    psCmd_Var->m_sData.m_sVector.m_uMax.m_vF32_04_1 = vMax;
+    psCmd_Var->m_sData.m_sVector.m_uDefault.m_vF32_04_1 = vDefault;
 
     return (tgCN_Insert_Command_Variable( psCmd_Var ));
 }
@@ -809,7 +811,7 @@ TgBOOL tgCN_Var_Set_F32( TgCN_VAR_ID_C tiCN_Var, TgFLOAT32_C fValue )
 
 /* ---- tgCN_Var_Set_F32_04 ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgBOOL tgCtgMH_Var_Set_N_F32_04_1( TgCN_VAR_ID_C tiCN_Var, TgVEC_F32_04_1_C vValue )
+TgBOOL tgCN_Var_Set_F32_04_1( TgCN_VAR_ID_C tiCN_Var, TgVEC_F32_04_1_C vValue )
 {
     STg2_CN_Command_Variable_P          psCmd_Var;
 
@@ -822,7 +824,7 @@ TgBOOL tgCtgMH_Var_Set_N_F32_04_1( TgCN_VAR_ID_C tiCN_Var, TgVEC_F32_04_1_C vVal
         return (false);
     };
 
-    psCmd_Var->m_sData.m_sVector.m_vCurrent = tgMH_CLP_F32_04_1( &vValue, &psCmd_Var->m_sData.m_sVector.m_vMin, &psCmd_Var->m_sData.m_sVector.m_vMax );
+    psCmd_Var->m_sData.m_sVector.m_uCurrent.m_vF32_04_1 = tgMH_CLP_F32_04_1( vValue, psCmd_Var->m_sData.m_sVector.m_uMin.m_vF32_04_1, psCmd_Var->m_sData.m_sVector.m_uMax.m_vF32_04_1 );
     return (true);
 }
 
@@ -1049,7 +1051,7 @@ TgBOOL tgCN_Var_Query_F32( TgFLOAT32_P pfRet, TgCN_VAR_ID_C tiCN_Var )
 
 /* ---- tgCN_Var_Query_F32_04 ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgBOOL tgCtgMH_Var_Query_N_F32_04_1( TgVEC_F32_04_1_P pvRet, TgCN_VAR_ID_C tiCN_Var )
+TgBOOL tgCN_Var_Query_F32_04_1( TgVEC_F32_04_1_P pvRet, TgCN_VAR_ID_C tiCN_Var )
 {
     STg2_CN_Command_Variable_P          psCmd_Var;
 
@@ -1062,7 +1064,7 @@ TgBOOL tgCtgMH_Var_Query_N_F32_04_1( TgVEC_F32_04_1_P pvRet, TgCN_VAR_ID_C tiCN_
         return (false);
     };
 
-    *pvRet = psCmd_Var->m_sData.m_sVector.m_vCurrent;
+    *pvRet = psCmd_Var->m_sData.m_sVector.m_uCurrent.m_vF32_04_1;
     return (true);
 }
 

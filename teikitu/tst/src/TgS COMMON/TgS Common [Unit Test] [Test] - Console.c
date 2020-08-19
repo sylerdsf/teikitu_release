@@ -68,7 +68,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Var_Init_U16 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Init_U32 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Init_U64 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Init_F32 );
-TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Init_N_F32_04_1 );
+TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Init_F32_04_1 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Init_String );
 
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Set_Bool );
@@ -81,7 +81,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Var_Set_U16 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Set_U32 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Set_U64 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Set_F32 );
-TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Set_N_F32_04_1 );
+TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Set_F32_04_1 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Set_String );
 
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Query_Bool );
@@ -94,7 +94,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Var_Query_U16 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Query_U32 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Query_U64 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Query_F32 );
-TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Query_N_F32_04_1 );
+TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Query_F32_04_1 );
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Query_String );
 
 TEST_METHOD( UNIT_TEST__TEST__CN_Var_Query_Id );
@@ -180,7 +180,7 @@ TEST_METHOD_DEFINE( UNIT_TEST__TEST__COMMON_Console )
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Init_U32());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Init_U64());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Init_F32());
-    Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CtgMH_Var_Init_N_F32_04_1());
+    Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CtgMH_Var_Init_F32_04_1());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Init_String());
 
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Set_Bool());
@@ -193,7 +193,7 @@ TEST_METHOD_DEFINE( UNIT_TEST__TEST__COMMON_Console )
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Set_U32());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Set_U64());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Set_F32());
-    Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CtgMH_Var_Set_N_F32_04_1());
+    Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CtgMH_Var_Set_F32_04_1());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Set_String());
 
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Query_Bool());
@@ -206,7 +206,7 @@ TEST_METHOD_DEFINE( UNIT_TEST__TEST__COMMON_Console )
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Query_U32());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Query_U64());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Query_F32());
-    Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CtgMH_Var_Query_N_F32_04_1());
+    Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CtgMH_Var_Query_F32_04_1());
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Query_String());
 
     Test__Expect_EQ(KTgS_OK, UNIT_TEST__TEST__CN_Var_Query_Id());
@@ -374,7 +374,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Attach_Output )
 
     for (TgRSIZE uiIndex = 0; uiIndex < KTgCN_CHANEL_BITS; ++uiIndex)
     {
-        TgUINT_F32_C                        uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
+        TgUINT_F32_C    uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
         TgRSIZE                             uiPrefix_Length = 0;
 
         /* We need to skip certain channels since they can be used for higher level testing logic in the unit test framework */
@@ -458,7 +458,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Attach_Default_Break )
 
     for (TgRSIZE uiIndex = 0; uiIndex < KTgCN_CHANEL_BITS; ++uiIndex)
     {
-        TgUINT_F32_C                        uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
+        TgUINT_F32_C    uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
 
         /* We need to skip certain channels since they can be used for higher level testing logic in the unit test framework */
         if (
@@ -498,7 +498,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Attach_Default_Abort )
 
     for (TgRSIZE uiIndex = 0; uiIndex < KTgCN_CHANEL_BITS; ++uiIndex)
     {
-        TgUINT_F32_C                        uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
+        TgUINT_F32_C    uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
 
         /* We need to skip certain channels since they can be used for higher level testing logic in the unit test framework */
         if (
@@ -779,7 +779,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Print )
 
     for (TgRSIZE uiIndex = 0; uiIndex < KTgCN_CHANEL_BITS; ++uiIndex)
     {
-        TgUINT_F32_C                        uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
+        TgUINT_F32_C    uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
         TgRSIZE                             uiPrefix_Length = 0;
 
         /* We need to skip certain channels since they can be used for higher level testing logic in the unit test framework */
@@ -844,7 +844,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_PrintF )
 
     for (TgRSIZE uiIndex = 0; uiIndex < KTgCN_CHANEL_BITS; ++uiIndex)
     {
-        TgUINT_F32_C                        uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
+        TgUINT_F32_C    uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
         TgRSIZE                             uiPrefix_Length = 0;
 
         /* We need to skip certain channels since they can be used for higher level testing logic in the unit test framework */
@@ -909,7 +909,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_UID_Print )
 
     for (TgRSIZE uiIndex = 0; uiIndex < KTgCN_CHANEL_BITS; ++uiIndex)
     {
-        TgUINT_F32_C                        uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
+        TgUINT_F32_C    uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
         TgRSIZE                             uiPrefix_Length = 0;
 
         /* We need to skip certain channels since they can be used for higher level testing logic in the unit test framework */
@@ -987,7 +987,7 @@ TEST_METHOD( UNIT_TEST__TEST__CN_UID_PrintF )
 
     for (TgRSIZE uiIndex = 0; uiIndex < KTgCN_CHANEL_BITS; ++uiIndex)
     {
-        TgUINT_F32_C                        uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
+        TgUINT_F32_C    uiChannel = 1 << (uiIndex + KTgCN_SEVERITY_BITS);
         TgRSIZE                             uiPrefix_Length = 0;
 
         /* We need to skip certain channels since they can be used for higher level testing logic in the unit test framework */
@@ -1399,20 +1399,19 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Var_Init_F32 )
 }
 
 
-/* ---- UNIT_TEST__TEST__CtgMH_Var_Init_N_F32_04_1 ------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- UNIT_TEST__TEST__CtgMH_Var_Init_F32_04_1 ------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Init_N_F32_04_1 )
+TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Init_F32_04_1 )
 {
-    TgVEC_F32_04_1                      vMin, vMax, vDefault, vValue;
+    TgUN_V128                           uMin, uMax, uDefault;
     TgCN_VAR_ID                         tiVarTest;
     TgUINT_E08                          uiData[16];
 
-    vMin = tgMH_SET1_F32_04_1( -10.0F );
-    vMax = tgMH_SET1_F32_04_1(  10.0F );
-    vDefault = tgMH_SET1_F32_04_1( 0.0F );
-    vValue = tgMH_SET_S_F32_04_1( -12.0F, 3.0F, 5.0F, 12.0F );
+    uMin.m_vF32_04_1 = tgMH_SET1_F32_04_1( -10.0F );
+    uMax.m_vF32_04_1 = tgMH_SET1_F32_04_1(  10.0F );
+    uDefault.m_vF32_04_1 = tgMH_SET1_F32_04_1( 0.0F );
 
-    tiVarTest = tgCtgMH_Var_Init_N_F32_04_1( "Var_Init_F32_04_1", KTgMAX_RSIZE, "Desc", KTgMAX_RSIZE, 0, vDefault, vMin, vMax );
+    tiVarTest = tgCN_Var_Init_F32_04_1( "Var_Init_F32_04_1", KTgMAX_RSIZE, "Desc", KTgMAX_RSIZE, 0, uDefault.m_vF32_04_1, uMin.m_vF32_04_1, uMax.m_vF32_04_1 );
     Test__Expect_NE(KTgID__INVALID_VALUE, tiVarTest.m_uiKI);
 
     /* Attempt to use an accesor function of the wrong type */
@@ -1620,22 +1619,22 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Var_Set_F32 )
 }
 
 
-/* ---- UNIT_TEST__TEST__CtgMH_Var_Set_N_F32_04_1 ------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- UNIT_TEST__TEST__CtgMH_Var_Set_F32_04_1 ------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Set_N_F32_04_1 )
+TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Set_F32_04_1 )
 {
-    TgVEC_F32_04_1                      vMin, vMax, vDefault, vValue;
+    TgUN_V128                           uMin, uMax, uDefault, uValue;
     TgCN_VAR_ID                         tiVarTest;
 
-    vMin = tgMH_SET1_F32_04_1( -10.0F );
-    vMax = tgMH_SET1_F32_04_1(  10.0F );
-    vDefault = tgMH_SET1_F32_04_1( 0.0F );
+    uMin.m_vF32_04_1 = tgMH_SET1_F32_04_1( -10.0F );
+    uMax.m_vF32_04_1 = tgMH_SET1_F32_04_1(  10.0F );
+    uDefault.m_vF32_04_1 = tgMH_SET1_F32_04_1( 0.0F );
 
-    tiVarTest = tgCtgMH_Var_Init_N_F32_04_1( "Var_Set_F32_04_1", KTgMAX_RSIZE, "Desc", KTgMAX_RSIZE, 0, vDefault, vMin, vMax );
+    tiVarTest = tgCN_Var_Init_F32_04_1( "Var_Set_F32_04_1", KTgMAX_RSIZE, "Desc", KTgMAX_RSIZE, 0, uDefault.m_vF32_04_1, uMin.m_vF32_04_1, uMax.m_vF32_04_1 );
     Test__Expect_NE(KTgID__INVALID_VALUE, tiVarTest.m_uiKI);
 
-    vValue = tgMH_SET_S_F32_04_1( -12.0F, 3.0F, 5.0F, 12.0F );
-    Test__Expect_EQ(true, tgCtgMH_Var_Set_N_F32_04_1( tiVarTest, vValue ));
+    uValue.m_vF32_04_1 = tgMH_Init_ELEM_F32_04_1( -12.0F, 3.0F, 5.0F, 12.0F );
+    Test__Expect_EQ(true, tgCN_Var_Set_F32_04_1( tiVarTest, uValue.m_vF32_04_1 ));
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -1950,33 +1949,33 @@ TEST_METHOD( UNIT_TEST__TEST__CN_Var_Query_F32 )
 }
 
 
-/* ---- UNIT_TEST__TEST__CtgMH_Var_Query_N_F32_04_1 ----------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- UNIT_TEST__TEST__CtgMH_Var_Query_F32_04_1 ----------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Query_N_F32_04_1 )
+TEST_METHOD( UNIT_TEST__TEST__CtgMH_Var_Query_F32_04_1 )
 {
-    TgVEC_F32_04_1                      vMin, vMax, vDefault, vValue, vQuery;
+    TgUN_V128                           uMin, uMax, uDefault, uValue, uQuery;
     TgCN_VAR_ID                         tiVarTest;
 
-    vDefault = tgMH_SET1_F32_04_1( 0.0F );
-    vMin = tgMH_SET1_F32_04_1( -10.0F );
-    vMax = tgMH_SET1_F32_04_1(  10.0F );
+    uDefault.m_vF32_04_1 = tgMH_SET1_F32_04_1( 0.0F );
+    uMin.m_vF32_04_1 = tgMH_SET1_F32_04_1( -10.0F );
+    uMax.m_vF32_04_1 = tgMH_SET1_F32_04_1(  10.0F );
 
-    tiVarTest = tgCtgMH_Var_Init_N_F32_04_1( "Var_Query_F32_04_1", KTgMAX_RSIZE, "Desc", KTgMAX_RSIZE, 0, vDefault, vMin, vMax );
+    tiVarTest = tgCN_Var_Init_F32_04_1( "Var_Query_F32_04_1", KTgMAX_RSIZE, "Desc", KTgMAX_RSIZE, 0, uDefault.m_vF32_04_1, uMin.m_vF32_04_1, uMax.m_vF32_04_1 );
     Test__Expect_NE(KTgID__INVALID_VALUE, tiVarTest.m_uiKI);
 
-    Test__Expect_EQ(true, tgCtgMH_Var_Query_N_F32_04_1( &vQuery, tiVarTest ));
-    Test__Expect_EQ(true, vQuery.x == 0.0F);
-    Test__Expect_EQ(true, vQuery.y == 0.0F);
-    Test__Expect_EQ(true, vQuery.z == 0.0F);
-    Test__Expect_EQ(true, vQuery.w == 0.0F);
+    Test__Expect_EQ(true, tgCN_Var_Query_F32_04_1( &uQuery.m_vF32_04_1, tiVarTest ));
+    Test__Expect_EQ(true, uQuery.m_vS_F32_04_1.x == 0.0F);
+    Test__Expect_EQ(true, uQuery.m_vS_F32_04_1.y == 0.0F);
+    Test__Expect_EQ(true, uQuery.m_vS_F32_04_1.z == 0.0F);
+    Test__Expect_EQ(true, uQuery.m_vS_F32_04_1.w == 0.0F);
 
-    vValue = tgMH_SET_S_F32_04_1( -12.0F, 3.0F, 5.0F, 12.0F );
-    Test__Expect_EQ(true, tgCtgMH_Var_Set_N_F32_04_1( tiVarTest, vValue ));
-    Test__Expect_EQ(true, tgCtgMH_Var_Query_N_F32_04_1( &vQuery, tiVarTest ));
-    Test__Expect_EQ(true, vQuery.x == -10.0F);
-    Test__Expect_EQ(true, vQuery.y == 3.0F);
-    Test__Expect_EQ(true, vQuery.z == 5.0F);
-    Test__Expect_EQ(true, vQuery.w == 10.0F);
+    uValue.m_vF32_04_1 = tgMH_Init_ELEM_F32_04_1( -12.0F, 3.0F, 5.0F, 12.0F );
+    Test__Expect_EQ(true, tgCN_Var_Set_F32_04_1( tiVarTest, uValue.m_vF32_04_1 ));
+    Test__Expect_EQ(true, tgCN_Var_Query_F32_04_1( &uQuery.m_vF32_04_1, tiVarTest ));
+    Test__Expect_EQ(true, uQuery.m_vS_F32_04_1.x == -10.0F);
+    Test__Expect_EQ(true, uQuery.m_vS_F32_04_1.y == 3.0F);
+    Test__Expect_EQ(true, uQuery.m_vS_F32_04_1.z == 5.0F);
+    Test__Expect_EQ(true, uQuery.m_vS_F32_04_1.w == 10.0F);
 
     TEST_END_METHOD( KTgS_OK );
 }

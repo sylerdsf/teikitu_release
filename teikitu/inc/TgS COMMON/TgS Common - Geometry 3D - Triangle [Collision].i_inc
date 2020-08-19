@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Geometry 3D - Triangle [Collision].i_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -30,9 +30,9 @@ TgINLINE TgVOID FCN_VO(tgGM_CT_Calc_Normal)( VEC_OBJ_T(TgCTRI,PCU) psCT0 )
 
 /* ---- FCN_VO(tgGM_CT_Calc_Point) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Calc_Point)( VEC_T(1,P) pvRT, VEC_OBJ_T(TgCTRI,CPCU) psCT1, VAR_T(C) fT0, VAR_T(C) fT1 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Calc_Point)( VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,C) vT0, VEC_T(1,C) vT1 )
 {
-    FCN_VO(tgGM_ET_Calc_Point)( pvRT, &psCT1->m_sET, fT0, fT1 );
+    return (FCN_VO(tgGM_ET_Calc_Point)( &psCT1->m_sET, vT0, vT1 ));
 }
 
 
@@ -60,9 +60,9 @@ TgINLINE TgBOOL FCN_VO(tgGM_CT_Is_Valid)( VEC_OBJ_T(TgCTRI,CPCU) psCT1 )
 
 /* ---- FCN_VO(tgGM_CT_Support_Point) -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Support_Point)( VEC_T(1,P) pvRT, VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,CPCU) pvDN )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Support_Point)( VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,C) vDN )
 {
-    FCN_VO(tgGM_ET_Support_Point)( pvRT, &psCT1->m_sET, pvDN );
+    return ( FCN_VO(tgGM_ET_Support_Point)( &psCT1->m_sET, vDN ));
 }
 
 
@@ -84,78 +84,78 @@ TgINLINE TgVOID FCN_VO(tgGM_CT_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgCT
 
 /* ---- FCN_VO(tgGM_CT_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,CPCU) pvDT )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,C) vDT )
 {
     FCN_VO(tgGM_CT_BA)( psBA0, psCT1 );
-    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, vDT );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,CPCU) pvDN )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Project)( VEC_T(1,PCU) pvMin, VEC_T(1,PCU) pvMax, VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,C) vDN )
 {
-    FCN_VO(tgGM_ET_Project)( ptyMin, ptyMax, &psCT1->m_sET, pvDN );
+    FCN_VO(tgGM_ET_Project)( pvMin, pvMax, &psCT1->m_sET, vDN );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_VO(tgGM_CT_Is_Contained)( VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,CPCU) pvS0 )
+TgINLINE TgBOOL FCN_VO(tgGM_CT_Is_Contained)( VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(1,C) vS0 )
 {
-    return (FCN_VO(tgGM_ET_Is_Contained)( &psCT1->m_sET, pvS0 ));
+    return (FCN_VO(tgGM_ET_Is_Contained)( &psCT1->m_sET, vS0 ));
 }
 
 
 /* ---- FCN_VO(tgGM_CT_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_TX)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_04_3_T(CPCU) pxM0 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_TX)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(3,CPCU) pmM0 )
 {
-    FCN_VO(tgGM_ET_TX)( &psCT0->m_sET, pxM0 );
+    FCN_VO(tgGM_ET_TX)( &psCT0->m_sET, pmM0 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Copy_TX)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_04_3_T(CPCU) pxM0 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Copy_TX)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_OBJ_T(TgCTRI,CPCU) psCT1, VEC_T(3,CPCU) pmM0 )
 {
-    FCN_VO(tgGM_ET_Copy_TX)( &psCT0->m_sET, &psCT1->m_sET, pxM0 );
+    FCN_VO(tgGM_ET_Copy_TX)( &psCT0->m_sET, &psCT1->m_sET, pmM0 );
     psCT0->m_bfFlags = psCT1->m_bfFlags;
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Init_PN) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Init_PN)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvS1, VEC_T(1,CPCU) pvS2, VEC_T(1,CPCU) pvN)
+TgINLINE TgVOID FCN_VO(tgGM_CT_Init_PN)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vS0, VEC_T(1,C) vS1, VEC_T(1,C) vS2, VEC_T(1,C) vN)
 {
-    FCN_VO(tgGM_ET_Init_PN)( &psCT0->m_sET, pvS0, pvS1, pvS2, pvN );
+    FCN_VO(tgGM_ET_Init_PN)( &psCT0->m_sET, vS0, vS1, vS2, vN );
     FCN_VO(tgGM_CT_Reset_Flags)( psCT0 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Init_P) --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Init_P)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvS1, VEC_T(1,CPCU) pvS2 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Init_P)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vS0, VEC_T(1,C) vS1, VEC_T(1,C) vS2 )
 {
-    FCN_VO(tgGM_ET_Init_P)( &psCT0->m_sET, pvS0, pvS1, pvS2 );
+    FCN_VO(tgGM_ET_Init_P)( &psCT0->m_sET, vS0, vS1, vS2 );
     FCN_VO(tgGM_CT_Reset_Flags)( psCT0 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Init_EN) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Init_EN)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvE0, VEC_T(1,CPCU) pvE1, VEC_T(1,CPCU) pvN)
+TgINLINE TgVOID FCN_VO(tgGM_CT_Init_EN)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vS0, VEC_T(1,C) vE0, VEC_T(1,C) vE1, VEC_T(1,C) vN)
 {
-    FCN_VO(tgGM_ET_Init_EN)( &psCT0->m_sET, pvS0, pvE0, pvE1, pvN );
+    FCN_VO(tgGM_ET_Init_EN)( &psCT0->m_sET, vS0, vE0, vE1, vN );
     FCN_VO(tgGM_CT_Reset_Flags)( psCT0 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Init_E) --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Init_E)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvS0, VEC_T(1,CPCU) pvE0, VEC_T(1,CPCU) pvE1 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Init_E)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vS0, VEC_T(1,C) vE0, VEC_T(1,C) vE1 )
 {
-    FCN_VO(tgGM_ET_Init_E)( &psCT0->m_sET, pvS0, pvE0, pvE1 );
+    FCN_VO(tgGM_ET_Init_E)( &psCT0->m_sET, vS0, vE0, vE1 );
     FCN_VO(tgGM_CT_Reset_Flags)( psCT0 );
 }
 
@@ -164,7 +164,7 @@ TgINLINE TgVOID FCN_VO(tgGM_CT_Init_E)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPC
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_CT_Init_PT)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_OBJ_T(TgPTRI,CPCU) psPT1 )
 {
-    FCN_VO(tgGM_CT_Init_PN)( psCT0, psPT1->m_avPoint + 0, psPT1->m_avPoint + 1, psPT1->m_avPoint + 2, &psPT1->m_vNormal );
+    FCN_VO(tgGM_CT_Init_PN)( psCT0, psPT1->m_avPoint[0], psPT1->m_avPoint[1], psPT1->m_avPoint[2], psPT1->m_vNormal );
     FCN_VO(tgGM_CT_Reset_Flags)( psCT0 );
 }
 
@@ -182,7 +182,7 @@ TgINLINE TgVOID FCN_VO(tgGM_CT_Init_ET)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_OBJ_T(
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_CT_Copy)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_OBJ_T(TgCTRI,CPCU) psCT1 )
 {
-    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_CT_Is_Valid)(psCT1));
+    TgGEOM_ASSERT_PARAM(FCN_VO(tgGM_CT_Is_Valid)( psCT1 ));
 
     FCN_VO(tgGM_ET_Copy)( &psCT0->m_sET, &psCT1->m_sET );
     psCT0->m_bfFlags = psCT1->m_bfFlags;
@@ -191,57 +191,57 @@ TgINLINE TgVOID FCN_VO(tgGM_CT_Copy)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_OBJ_T(TgC
 
 /* ---- FCN_VO(tgGM_CT_Set_Origin) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Origin)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvS0 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Origin)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vS0 )
 {
-    FCN_VO(tgGM_ET_Set_Origin)( &psCT0->m_sET, pvS0 );
+    FCN_VO(tgGM_ET_Set_Origin)( &psCT0->m_sET, vS0 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Set_Point_0) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Point_0)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvS0 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Point_0)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vS0 )
 {
-    FCN_VO(tgGM_ET_Set_Point_0)( &psCT0->m_sET, pvS0 );
+    FCN_VO(tgGM_ET_Set_Point_0)( &psCT0->m_sET, vS0 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Set_Point_1) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Point_1)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvS1 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Point_1)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vS1 )
 {
-    FCN_VO(tgGM_ET_Set_Point_1)( &psCT0->m_sET, pvS1 );
+    FCN_VO(tgGM_ET_Set_Point_1)( &psCT0->m_sET, vS1 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Set_Point_2) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Point_2)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvS2 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Point_2)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vS2 )
 {
-    FCN_VO(tgGM_ET_Set_Point_2)( &psCT0->m_sET, pvS2 );
+    FCN_VO(tgGM_ET_Set_Point_2)( &psCT0->m_sET, vS2 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Set_Edge_0) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Edge_0)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvE0 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Edge_0)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vE0 )
 {
-    FCN_VO(tgGM_ET_Set_Edge_0)( &psCT0->m_sET, pvE0 );
+    FCN_VO(tgGM_ET_Set_Edge_0)( &psCT0->m_sET, vE0 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Set_Edge_1) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Edge_1)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvE1 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Edge_1)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vE1 )
 {
-    FCN_VO(tgGM_ET_Set_Edge_1)( &psCT0->m_sET, pvE1 );
+    FCN_VO(tgGM_ET_Set_Edge_1)( &psCT0->m_sET, vE1 );
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Set_Edge_2) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Edge_2)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,CPCU) pvE2 )
+TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Edge_2)( VEC_OBJ_T(TgCTRI,PCU) psCT0, VEC_T(1,C) vE2 )
 {
-    FCN_VO(tgGM_ET_Set_Edge_2)( &psCT0->m_sET, pvE2 );
+    FCN_VO(tgGM_ET_Set_Edge_2)( &psCT0->m_sET, vE2 );
 }
 
 
@@ -255,83 +255,83 @@ TgINLINE TgVOID FCN_VO(tgGM_CT_Set_Flags)( VEC_OBJ_T(TgCTRI,PCU) psCT0, TgUINT_F
 
 /* ---- FCN_VO(tgGM_CT_Query_Origin) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Origin)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Origin)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
 {
-    return (psCT0->m_sET.m_sPT.m_avPoint + 0);
+    return (psCT0->m_sET.m_sPT.m_avPoint[0]);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Normal) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Normal)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Normal)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
 {
-    return (&psCT0->m_sET.m_sPT.m_vNormal);
+    return (psCT0->m_sET.m_sPT.m_vNormal);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Point_0) -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Point_0)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Point_0)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
 {
-    return (psCT0->m_sET.m_sPT.m_avPoint + 0);
+    return (psCT0->m_sET.m_sPT.m_avPoint[0]);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Point_1) -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Point_1)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Point_1)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
 {
-    return (psCT0->m_sET.m_sPT.m_avPoint + 1);
+    return (psCT0->m_sET.m_sPT.m_avPoint[1]);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Point_2) -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Point_2)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Point_2)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
 {
-    return (psCT0->m_sET.m_sPT.m_avPoint + 2);
+    return (psCT0->m_sET.m_sPT.m_avPoint[2]);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Point) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Point)( VEC_OBJ_T(TgCTRI,CPCU) psCT0, TgRSIZE_C uiIndex )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Point)( VEC_OBJ_T(TgCTRI,CPCU) psCT0, TgRSIZE_C uiIndex )
 {
     TgGEOM_ASSERT_PARAM(uiIndex <= 2);
-    return (psCT0->m_sET.m_sPT.m_avPoint + uiIndex);
+    return (psCT0->m_sET.m_sPT.m_avPoint[uiIndex]);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Edge_0) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Edge_0)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Edge_0)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
 {
-    return (psCT0->m_sET.m_avEdge + 0);
+    return (psCT0->m_sET.m_avEdge[0]);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Edge_1) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Edge_1)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Edge_1)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
 {
-    return (psCT0->m_sET.m_avEdge + 1);
+    return (psCT0->m_sET.m_avEdge[1]);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Edge_2) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Edge_2)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Edge_2)( VEC_OBJ_T(TgCTRI,CPCU) psCT0 )
 {
-    return (psCT0->m_sET.m_avEdge + 2);
+    return (psCT0->m_sET.m_avEdge[2]);
 }
 
 
 /* ---- FCN_VO(tgGM_CT_Query_Edge) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1,CP) FCN_VO(tgGM_CT_Query_Edge)( VEC_OBJ_T(TgCTRI,CPCU) psCT0, TgRSIZE_C uiIndex )
+TgINLINE VEC_T(1) FCN_VO(tgGM_CT_Query_Edge)( VEC_OBJ_T(TgCTRI,CPCU) psCT0, TgRSIZE_C uiIndex )
 {
     TgGEOM_ASSERT_PARAM(uiIndex <= 2);
-    return (psCT0->m_sET.m_avEdge + uiIndex);
+    return (psCT0->m_sET.m_avEdge[uiIndex]);
 }
 
 

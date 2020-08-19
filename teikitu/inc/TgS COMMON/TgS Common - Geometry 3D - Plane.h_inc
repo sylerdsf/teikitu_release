@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Geometry 3D - Plane.h_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -18,85 +18,111 @@
 
                                                 /** @brief Negate the normal of the plane (flip the plane)
                                                     @param[in,out] ARG Pointer to the geometry object (plane) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Negate)( VEC_OBJ_T(TgPLANE,PCU) ARG );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Negate)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG );
 
                                                 /** @brief Invalidate the geometry object (plane)
                                                     @param[out] OUT Pointer to the geometry object (plane) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Reset)( VEC_OBJ_T(TgPLANE,PCU) OUT );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Reset)( VEC_OBJ_T(TgPLANE,PCU) NONULL OUT );
 
                                                 /** @brief Validate the integrity of the geometry object (plane)
                                                     @param[in] ARG Pointer to a geometry object (plane)
                                                     @return True if the geometry object (plane) is valid and false otherwise */
-TgINLINE TgBOOL                                 FCN_VO(tgGM_PN_Is_Valid)( VEC_OBJ_T(TgPLANE,CPCU) ARG );
+TgINLINE TgBOOL                                 FCN_VO(tgGM_PN_Is_Valid)( VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG );
 
                                                 /** @brief Test to see if a point is either on or in the geometry object (plane)
                                                     @param[in] ARG0 Pointer to a geometry object (plane)
-                                                    @param[in] ARG1 Pointer to a position vector
+                                                    @param[in] ARG1 Position vector
                                                     @return True if the position is either on or in the geometry object (plane) and false otherwise */
-TgINLINE TgBOOL                                 FCN_VO(tgGM_PN_Is_Contained)( VEC_OBJ_T(TgPLANE,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE TgBOOL                                 FCN_VO(tgGM_PN_Is_Contained)( VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Transform the geometry object (plane) at ARG0 by the matrix at ARG1
                                                     @param[in,out] ARG0 Pointer to a geometry object (plane)
                                                     @param[in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_TX)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VEC_04_3_T(CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_TX)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
 
                                                 /** @brief Transform the geometry object (plane) at ARG1 by the matrix at ARG2 and store it in ARG0
                                                     @param[out] ARG0 Pointer to a geometry object (plane)
                                                     @param[in] ARG1 Pointer to a geometry object (plane)
                                                     @param[in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Copy_TX)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VEC_OBJ_T(TgPLANE,CPCU) ARG1, VEC_04_3_T(CPCU) ARG2 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Copy_TX)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG1, VEC_T(3,CPCU) NONULL ARG2 );
 
 
                                                 /** @brief Initialize a new geometry object (plane) with the function arguments
                                                     @param[out] ARG0 Pointer to a geometry object (plane)
-                                                    @param[in] ARG1 Pointer to a direction vector - normal
+                                                    @param[in] ARG1 Direction vector - normal
                                                     @param[in] ARG2 Scalar value - plane constant */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Init_ND)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VEC_T(1,CPCU) ARG1, VAR_T(C) ARG2 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Init_ND)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VAR_T(C) ARG2 );
 
                                                 /** @brief Initialize a new geometry object (plane) with the function arguments
                                                     @param[out] ARG0 Pointer to a geometry object (plane)
-                                                    @param[in] ARG1 Pointer to a direction vector - normal
-                                                    @param[in] ARG2 Pointer to a position vector - point on the plane */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Init_NP)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+                                                    @param[in] ARG1 Direction vector - normal
+                                                    @param[in] ARG2 Position vector - point on the plane */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Init_NP)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
                                                 /** @brief Copy the one geometry object (plane) to another of the same type
                                                     @param[out] ARG0 Pointer to a geometry object (plane)
                                                     @param[in] ARG1 Pointer to a geometry object (plane) */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Copy)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VEC_OBJ_T(TgPLANE,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Copy)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG1 );
 
 
                                                 /** @brief Set the equation of the plane
                                                     @param[in,out] ARG0 Pointer to a geometry object (plane)
                                                     @param[in] ARG1 Normal and plane constant as a vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Set_PlnEqN)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Set_PlnEqN)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Set the normal
                                                     @param[in,out] ARG0 Pointer to a geometry object (plane)
                                                     @param[in] ARG1 Pointer to a normal vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Set_Normal)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Set_Normal)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Set the origin
                                                     @param[in,out] ARG0 Pointer to a geometry object (plane)
-                                                    @param[in] ARG1 Pointer to a position vector */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Set_Origin)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VEC_T(1,CPCU) ARG1 );
+                                                    @param[in] ARG1 Position vector */
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Set_Origin)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
 
                                                 /** @brief Set the plane constant
                                                     @param[in,out] ARG0 Pointer to a geometry object (plane)
                                                     @param[in] ARG1 Scalar value */
-TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Set_Constant)( VEC_OBJ_T(TgPLANE,PCU) ARG0, VAR_T(C) ARG1 );
+TgINLINE TgVOID                                 FCN_VO(tgGM_PN_Set_Constant)( VEC_OBJ_T(TgPLANE,PCU) NONULL ARG0, VAR_T(C) ARG1 );
 
 
                                                 /** @brief Return the equation of the plane
                                                     @param[in] ARG Pointer to a geometry object (plane)
                                                     @return The equation of the plane */
-TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PN_Query_PlnEqN)( VEC_OBJ_T(TgPLANE,CPCU) ARG );
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_PN_Query_PlnEqN)( VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG );
 
                                                 /** @brief Return the normal
                                                     @param[in] ARG Pointer to a geometry object (plane)
                                                     @return The normal */
-TgINLINE VEC_T(1,CP)                            FCN_VO(tgGM_PN_Query_Normal)( VEC_OBJ_T(TgPLANE,CPCU) ARG );
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_PN_Query_Normal)( VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG );
 
                                                 /** @brief Return the plane constant
                                                     @param[in] ARG Pointer to a geometry object (plane)
                                                     @return The plane constant */
-TgINLINE VAR_T()                                FCN_VO(tgGM_PN_Query_Constant)( VEC_OBJ_T(TgPLANE,CPCU) ARG );
+TgINLINE VAR_T()                                FCN_VO(tgGM_PN_Query_Constant)( VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG );
+
+
+                                                /** @brief Return the minimum distance squared from the geometry object (plane) to the point
+                                                    @param[in] ARG0 Pointer to a geometry object (plane)
+                                                    @param[in] ARG1 Position vector
+                                                    @return Minimum distance squared from the geometry object (plane) to the point if above the plane, and negative max otherwise */
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_DistSq_PN_PT)( VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+
+                                                /** @brief Return the minimum distance from the geometry object (plane) to the point
+                                                    @param[in] ARG0 Pointer to a geometry object (plane)
+                                                    @param[in] ARG1 Position vector
+                                                    @return Minimum distance from the geometry object (plane) to the point if above the plane, and negative max otherwise */
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_Dist_PN_PT)( VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+
+                                                /** @brief Return the minimum distance from the geometry object (plane) to the point
+                                                    @param[in] ARG0 Pointer to a geometry object (plane)
+                                                    @param[in] ARG1 Position vector
+                                                    @return Minimum distance from the geometry object (plane) to the point (positive for above the plane, negative otherwise) */
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_Sign_Dist_PN_PT)( VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+
+                                                /** @brief Return the closest point on the geometry object (plane) and the minimum distance from it to the point
+                                                    @param[in] OUT0 Pointer to a position vector - store the resulting closest point on the geometry object (plane)
+                                                    @param[in] ARG1 Pointer to a geometry object (plane)
+                                                    @param[in] ARG2 Position vector
+                                                    @return Minimum distance from the geometry object (plane) to the point (positive for above the plane, negative otherwise) */
+TgINLINE VEC_T(1)                               FCN_VO(tgGM_Sign_Closest_PN_PT)( VEC_T(1,PCU) NONULL ARG0, VEC_OBJ_T(TgPLANE,CPCU) NONULL ARG1, VEC_T(1,C) ARG2 );

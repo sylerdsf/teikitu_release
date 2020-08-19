@@ -77,8 +77,8 @@ TgVOID tgCM_Unit_Test_Register_MATH( TgVOID )
 
     Unit_Test__Set_Register_Case( &s_sSET__MATH, &s_sCASE__Math_Constant );
     Unit_Test__Set_Register_Case( &s_sSET__MATH, &s_sCASE__Math );
-    tgCM_Unit_Test_Register_Math_Vector( &s_sSET__MATH );
     tgCM_Unit_Test_Register_Math_Matrix( &s_sSET__MATH );
+    tgCM_Unit_Test_Register_Math_Vector( &s_sSET__MATH );
 
 
 

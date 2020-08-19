@@ -13,9 +13,10 @@
 #if !defined(TGS_COMMON_UNIT_TEST_INTERNAL_H)
 #define TGS_COMMON_UNIT_TEST_INTERNAL_H
 
-#include "TgS COMMON/TgS Common -- INCLUDE.h"
+#include "TgS Common.h"
 #include "TgS COMMON/TgS Common [Unit Test] - Unit Test.h"
 #include <string.h> /** memcmp, used for low level test comparisons */
+#include <stdlib.h>
 
 
 /* == Common ===================================================================================================================================================================== */

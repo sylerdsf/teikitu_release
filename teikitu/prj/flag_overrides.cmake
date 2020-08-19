@@ -1,3 +1,4 @@
+# 015482FC-A4BD-4E1C-AE49-A30E5728D73A
 # ========================================================================================================================================================================================================
 # Clear out all the default flags - if I don't SET it up, it should not be SET
 # ========================================================================================================================================================================================================
@@ -194,10 +195,14 @@ IF (__CMAKE_C_COMPILER__MSVC)
     ENDIF ()
     
 ELSEIF (__CMAKE_C_COMPILER__CLANG)
-    SET (CMAKE_C_FLAGS_INIT                         "${CMAKE_C_FLAGS_INIT} -Weverything -fstack-protector -fstrict-aliasing -ffunction-sections -g2 -gdwarf-2 -O0")
+    SET (CMAKE_C_FLAGS_INIT                         "${CMAKE_C_FLAGS_INIT} -Weverything -fstack-protector -fstrict-aliasing -ffunction-sections -g2 -gdwarf-2")
     SET (CMAKE_C_FLAGS_INIT                         "${CMAKE_C_FLAGS_INIT} -fomit-frame-pointer -fdata-sections -fno-ms-compatibility -fno-short-enums -fno-exceptions")
-    SET (CMAKE_C_FLAGS_INIT                         "${CMAKE_C_FLAGS_INIT} -std=c11 -fno-ms-extensions -fno-rtti -march=native -Wall")
+    SET (CMAKE_C_FLAGS_INIT                         "${CMAKE_C_FLAGS_INIT} -std=c11 -fno-ms-extensions -fno-rtti")
     
+    SET (CMAKE_C_FLAGS_DEBUG_INIT                   "${CMAKE_C_FLAGS_DEBUG_INIT} -O0")
+    SET (CMAKE_C_FLAGS_RELEASE_INIT                 "${CMAKE_C_FLAGS_RELEASE_INIT} -O3")
+    SET (CMAKE_C_FLAGS_FINAL_INIT                   "${CMAKE_C_FLAGS_FINAL_INIT} -O3")
+    SET (CMAKE_C_FLAGS_TOOLS_INIT                   "${CMAKE_C_FLAGS_TOOLS_INIT} -O3")
 ENDIF ()
 
 
@@ -215,10 +220,14 @@ IF (__CMAKE_CXX_COMPILER__MSVC)
     ENDIF ()
 
 ELSEIF (__CMAKE_CXX_COMPILER__CLANG)
-    SET (CMAKE_CXX_FLAGS_INIT                       "${CMAKE_CXX_FLAGS_INIT} -Weverything -fstack-protector -fstrict-aliasing -ffunction-sections -g2 -gdwarf-2 -O0")
+    SET (CMAKE_CXX_FLAGS_INIT                       "${CMAKE_CXX_FLAGS_INIT} -Weverything -fstack-protector -fstrict-aliasing -ffunction-sections -g2 -gdwarf-2")
     SET (CMAKE_CXX_FLAGS_INIT                       "${CMAKE_CXX_FLAGS_INIT} -fomit-frame-pointer -fdata-sections -fno-ms-compatibility -fno-short-enums -fno-exceptions")
-    SET (CMAKE_CXX_FLAGS_INIT                       "${CMAKE_CXX_FLAGS_INIT} -std=c++1y -fno-ms-extensions -fno-rtti -march=native -Wall")
+    SET (CMAKE_CXX_FLAGS_INIT                       "${CMAKE_CXX_FLAGS_INIT} -std=c++1y -fno-ms-extensions -fno-rtti")
 
+    SET (CMAKE_CXX_FLAGS_DEBUG_INIT                 "${CMAKE_CXX_FLAGS_DEBUG_INIT} -O0")
+    SET (CMAKE_CXX_FLAGS_RELEASE_INIT               "${CMAKE_CXX_FLAGS_RELEASE_INIT} -O3")
+    SET (CMAKE_CXX_FLAGS_FINAL_INIT                 "${CMAKE_CXX_FLAGS_FINAL_INIT} -O3")
+    SET (CMAKE_CXX_FLAGS_TOOLS_INIT                 "${CMAKE_CXX_FLAGS_TOOLS_INIT} -O3")
 ENDIF ()
 
 
@@ -234,61 +243,6 @@ ENDIF ()
 IF (DEFINED CMAKE_CXX_COMPILER_ID AND NOT CMAKE_CXX_FLAGS_INIT)
     MESSAGE(FATAL_ERROR "CXX Compile Flags not initialized.")
 ENDIF ()
-
-
-
-
-# ========================================================================================================================================================================================================
-#  Configuration Types
-# ========================================================================================================================================================================================================
-
-IF (CMAKE_CONFIGURATION_TYPES)
-
-    SET (CMAKE_CONFIGURATION_TYPES                  Debug Release Final Tools )
-    SET (CMAKE_CONFIGURATION_TYPES                  "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING "Reset the configurations to what we need" FORCE )
-    SET (CMAKE_BUILD_TYPE                           "${CMAKE_BUILD_TYPE}" CACHE STRING "Choose the type of build, options are: None Debug Release Final Tools." FORCE )
-    MARK_AS_ADVANCED(                               CMAKE_BUILD_TYPE )
-
-ELSE(CMAKE_CONFIGURATION_TYPES)
-
-    SET (CONFIGURATION_TYPE_DEBUG                   1 CACHE BOOL "")
-    SET (CONFIGURATION_TYPE_RELEASE                 0 CACHE BOOL "")
-    SET (CONFIGURATION_TYPE_FINAL                   0 CACHE BOOL "")
-    SET (CONFIGURATION_TYPE_TOOLS                   0 CACHE BOOL "")
-
-    IF (CONFIGURATION_TYPE_DEBUG)
-
-        SET (CONFIGURATION_TYPE_RELEASE                 0 CACHE BOOL "" FORCE)
-        SET (CONFIGURATION_TYPE_FINAL                   0 CACHE BOOL "" FORCE)
-        SET (CONFIGURATION_TYPE_TOOLS                   0 CACHE BOOL "" FORCE)
-
-    ENDIF (CONFIGURATION_TYPE_DEBUG)
-
-    IF (CONFIGURATION_TYPE_RELEASE)
-
-        SET (CONFIGURATION_TYPE_DEBUG                   0 CACHE BOOL "" FORCE)
-        SET (CONFIGURATION_TYPE_FINAL                   0 CACHE BOOL "" FORCE)
-        SET (CONFIGURATION_TYPE_TOOLS                   0 CACHE BOOL "" FORCE)
-
-    ENDIF (CONFIGURATION_TYPE_RELEASE)
-
-    IF (CONFIGURATION_TYPE_FINAL)
-
-        SET (CONFIGURATION_TYPE_DEBUG                   0 CACHE BOOL "" FORCE)
-        SET (CONFIGURATION_TYPE_RELEASE                 0 CACHE BOOL "" FORCE)
-        SET (CONFIGURATION_TYPE_TOOLS                   0 CACHE BOOL "" FORCE)
-
-    ENDIF (CONFIGURATION_TYPE_FINAL)
-
-    IF (CONFIGURATION_TYPE_TOOLS)
-
-        SET (CONFIGURATION_TYPE_DEBUG                   0 CACHE BOOL "" FORCE)
-        SET (CONFIGURATION_TYPE_RELEASE                 0 CACHE BOOL "" FORCE)
-        SET (CONFIGURATION_TYPE_FINAL                   0 CACHE BOOL "" FORCE)
-
-    ENDIF (CONFIGURATION_TYPE_TOOLS)
-
-ENDIF (CMAKE_CONFIGURATION_TYPES)
 
 
 

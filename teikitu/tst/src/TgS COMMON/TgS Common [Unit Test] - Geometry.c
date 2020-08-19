@@ -10,6 +10,7 @@
     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
     GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+#if defined(TGS_COMMON_GEOMETRY_H)
 
 #include "TgS COMMON/TgS Common [Unit Test] - Unit Test.h"
 
@@ -149,7 +150,9 @@ TgVOID tgCM_Unit_Test_Register_GEOM( TgVOID )
     /* Configure the test cases */
 
     SETUP_GEOM_TEST(F32_04_1);
+#if TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE
     SETUP_GEOM_TEST(F64_04_1);
+#endif
 
 
 
@@ -164,3 +167,12 @@ TgVOID tgCM_Unit_Test_Register_GEOM( TgVOID )
 
     Unit_Test__Register( &s_sSET__GEOM );
 }
+
+#else
+
+TgEXTN TgVOID                               tgCM_Unit_Test_Register_GEOM(TgVOID);
+
+TgVOID tgCM_Unit_Test_Register_GEOM( TgVOID ) {}
+
+#endif
+

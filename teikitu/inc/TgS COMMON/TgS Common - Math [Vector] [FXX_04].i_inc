@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Math [Vector] [FXX_04].i_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,607 +16,226 @@
 /*  Public Functions                                                                                                                                                               */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-/* ---- FCN_V(tgMH_SET_S) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_Init_ELEM) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_SET_S)( VAR_T(C) fX, VAR_T(C) fy, VAR_T(C) fZ, VAR_T(C) fW )
+TgINLINE VEC_T(1) FCN_V(tgMH_Init_ELEM)( VAR_T(C) fX, VAR_T(C) fy, VAR_T(C) fZ, VAR_T(C) fW )
 {
-    VEC_T(1)                            vResult;
-
-    vResult.m_aData[0] = fX;
-    vResult.m_aData[1] = fy;
-    vResult.m_aData[2] = fZ;
-    vResult.m_aData[3] = fW;
-
-    return (vResult);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_Init_ELEM_S)( fX, fy, fZ, fW ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_SETP_S) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_Init_Point_ELEM) ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_SETP_S)( VAR_T(C) fX, VAR_T(C) fy, VAR_T(C) fZ )
+TgINLINE VEC_T(1) FCN_V(tgMH_Init_Point_ELEM)( VAR_T(C) fX, VAR_T(C) fy, VAR_T(C) fZ )
 {
-    VEC_T(1)                            vResult;
-
-    vResult.m_aData[0] = fX;
-    vResult.m_aData[1] = fy;
-    vResult.m_aData[2] = fZ;
-    vResult.m_aData[3] = TYPE_K(1);
-
-    return (vResult);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_Init_Point_ELEM_S)( fX, fy, fZ ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_SETV_S) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_Init_Vector_ELEM) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_SETV_S)( VAR_T(C) fX, VAR_T(C) fy, VAR_T(C) fZ )
+TgINLINE VEC_T(1) FCN_V(tgMH_Init_Vector_ELEM)( VAR_T(C) fX, VAR_T(C) fy, VAR_T(C) fZ )
 {
-    VEC_T(1)                            vResult;
-
-    vResult.m_aData[0] = fX;
-    vResult.m_aData[1] = fy;
-    vResult.m_aData[2] = fZ;
-    vResult.m_aData[3] = TYPE_K(0);
-
-    return (vResult);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_Init_Vector_ELEM_S)( fX, fy, fZ ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_SETP) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_Init_Point) --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_SETP)( VEC_T(1,CPCU) pv0 )
+TgINLINE VEC_T(1) FCN_V(tgMH_Init_Point)( VEC_T(1,C) v0 )
 {
-    VEC_T(1)                            vResult;
-
-    vResult.m_aData[0] = pv0->m_aData[0];
-    vResult.m_aData[1] = pv0->m_aData[1];
-    vResult.m_aData[2] = pv0->m_aData[2];
-    vResult.m_aData[3] = TYPE_K(1);
-
-    return (vResult);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_Init_Point_S)( *(VEC_S_T(1,CP))&v0 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_SETV) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_Init_Vector) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_SETV)( VEC_T(1,CPCU) pv0 )
+TgINLINE VEC_T(1) FCN_V(tgMH_Init_Vector)( VEC_T(1,C) v0 )
 {
-    VEC_T(1)                            vResult;
-
-    vResult.m_aData[0] = pv0->m_aData[0];
-    vResult.m_aData[1] = pv0->m_aData[1];
-    vResult.m_aData[2] = pv0->m_aData[2];
-    vResult.m_aData[3] = TYPE_K(0);
-
-    return (vResult);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_Init_Vector_S)( *(VEC_S_T(1,CP))&v0 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_Set_Ortho) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_Init_Ortho) --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_Set_Ortho)( VEC_T(1,CPCU) pv0 )
+TgINLINE VEC_T(1) FCN_V(tgMH_Init_Ortho)( VEC_T(1,C) v0 )
 {
-    VAR_T(C)                            fX = FCN_F(tgPM_ABS)( pv0->m_aData[0] );
-    VAR_T(C)                            fY = FCN_F(tgPM_ABS)( pv0->m_aData[1] );
-    VAR_T(C)                            fZ = FCN_F(tgPM_ABS)( pv0->m_aData[2] );
-
-    if (fX < fY && fX < fZ)
-    {
-        return (FCN_V(tgMH_SETV_S)( TYPE_K(0), pv0->m_aData[2], -pv0->m_aData[1] ));
-    }
-    else if (fY < fZ)
-    {
-        return (FCN_V(tgMH_SETV_S)( pv0->m_aData[2], TYPE_K(0), -pv0->m_aData[0] ));
-    }
-    else
-    {
-        return (FCN_V(tgMH_SETV_S)( pv0->m_aData[1], -pv0->m_aData[0], TYPE_K(0) ));
-    };
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_Init_Ortho_S)( *(VEC_S_T(1,CP))&v0 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
 /* ---- FCN_V(tgMH_Init_Basis_From_Vector) --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_V(tgMH_Init_Basis_From_Vector)( VEC_T(1,PCU) pvB0, VEC_T(1,PCU) pvB1, VEC_T(1,CPCU) pvA )
+TgINLINE TgVOID FCN_V(tgMH_Init_Basis_From_Vector)( VEC_T(1,PCU) NONULL vARG_0, VEC_T(1,PCU) NONULL vARG_1, VEC_T(1,C) vARG_2 )
 {
-    VAR_T(C)                            fXX_ZZ = pvA->m_aData[0] * pvA->m_aData[0] + pvA->m_aData[2] * pvA->m_aData[2];
-    VAR_T(C)                            fXZ = FCN_F(tgPM_SQRT)( fXX_ZZ );
-
-    TgERROR(FCN_V(tgMH_Is_Vector_Valid)( pvA ) && FCN_F(tgCM_NR1)( FCN_V(tgMH_LSQ)( pvA ) ));
-
-    if (FCN_F(tgCM_NR0)( fXZ ))
-    {
-        *pvB0 = VEC_K(KTgUNIT_X);
-        *pvB1 = VEC_K(KTgUNIT_Z);
-    }
-    else
-    {
-        VAR_T(C)                            fXY = pvA->m_aData[0] * pvA->m_aData[1];
-        VAR_T(C)                            fYZ = pvA->m_aData[1] * pvA->m_aData[2];
-        VAR_T(C)                            fInvXZ = TYPE_K(1) / fXZ;
-
-        *pvB0 = FCN_V(tgMH_SETV_S)( -pvA->m_aData[2] * fInvXZ, TYPE_K(0), pvA->m_aData[0] * fInvXZ );
-        *pvB1 = FCN_V(tgMH_SETV_S)( -fXY, fXX_ZZ, -fYZ );
-    };
+    FCN_V(tgMH_Init_Basis_From_Vector_S)( (VEC_S_T(1,P))vARG_0, (VEC_S_T(1,P))vARG_1, *(VEC_S_T(1,CP))&vARG_2 );
 }
 
 
-/* ---- FCN_V(tgMH_Is_Point_Valid) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_SPX) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_V(tgMH_Is_Point_Valid)( VEC_T(1,CPCU) pv0 )
+TgINLINE VEC_T(1) FCN_V(tgMH_SPX)( VEC_T(1,C) v0 )
 {
-    return (!FCN_F(tgPM_NAN)(pv0->x) && !FCN_F(tgPM_NAN)( pv0->y) && !FCN_F(tgPM_NAN)(pv0->z) && (TYPE_K(1) == pv0->w));
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_SET1_S)( ((VEC_S_T(1,CP))&v0)->m_aData[0] ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_Is_Vector_Valid) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_SPY) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_V(tgMH_Is_Vector_Valid)( VEC_T(1,CPCU) pv0 )
+TgINLINE VEC_T(1) FCN_V(tgMH_SPY)( VEC_T(1,C) v0 )
 {
-    return (!FCN_F(tgPM_NAN)(pv0->x) && !FCN_F(tgPM_NAN)( pv0->y) && !FCN_F(tgPM_NAN)(pv0->z) && (TYPE_K(0) == pv0->w));
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_SET1_S)( ((VEC_S_T(1,CP))&v0)->m_aData[1] ) };
+    return (VEC_UN_1_MEMBER(uResult));
+}
+
+
+/* ---- FCN_V(tgMH_SPZ) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_V(tgMH_SPZ)( VEC_T(1,C) v0 )
+{
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_SET1_S)( ((VEC_S_T(1,CP))&v0)->m_aData[2] ) };
+    return (VEC_UN_1_MEMBER(uResult));
+}
+
+
+/* ---- FCN_V(tgMH_SPW) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE VEC_T(1) FCN_V(tgMH_SPW)( VEC_T(1,C) v0 )
+{
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_SET1_S)( ((VEC_S_T(1,CP))&v0)->m_aData[3] ) };
+    return (VEC_UN_1_MEMBER(uResult));
+}
+
+
+/* ---- FCN_V(tgMH_Is_Valid_Point) ----------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_V(tgMH_Is_Valid_Point)( VEC_T(1,C) vARG_0 )
+{
+    return (FCN_V(tgMH_Is_Valid_Point_S)( *(VEC_S_T(1,CP))&vARG_0 ));
+}
+
+
+/* ---- FCN_V(tgMH_Is_Valid_Vector) ---------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_V(tgMH_Is_Valid_Vector)( VEC_T(1,C) vARG_0 )
+{
+    return (FCN_V(tgMH_Is_Valid_Vector_S)( *(VEC_S_T(1,CP))&vARG_0 ));
+}
+
+
+/* ---- FCN_V(tgMH_Is_Valid_Unit_Vector) ----------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgBOOL FCN_V(tgMH_Is_Valid_Unit_Vector)( VEC_T(1,C) vARG_0 )
+{
+    return (FCN_V(tgMH_Is_Valid_Unit_Vector_S)( *(VEC_S_T(1,CP))&vARG_0 ));
 }
 
 
 /* ---- FCN_V(tgMH_DOT3) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VAR_T() FCN_V(tgMH_DOT3)( VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+TgINLINE VEC_T(1) FCN_V(tgMH_DOT3)( VEC_T(1,C) v0, VEC_T(1,C) v1 )
 {
-    return (pv0->m_aData[0] * pv1->m_aData[0] + pv0->m_aData[1] * pv1->m_aData[1] + pv0->m_aData[2] * pv1->m_aData[2]);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_SET1_S)( FCN_V(tgMH_DOT3_S)( *(VEC_S_T(1,CP))&v0, *(VEC_S_T(1,CP))&v1 ) ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
 /* ---- FCN_V(tgMH_CX) ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_CX)( VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+TgINLINE VEC_T(1) FCN_V(tgMH_CX)( VEC_T(1,C) v0, VEC_T(1,C) v1 )
 {
-    return (FCN_V(tgMH_SETV_S)(
-        pv0->m_aData[1] * pv1->m_aData[2] - pv0->m_aData[2] * pv1->m_aData[1],
-        pv0->m_aData[2] * pv1->m_aData[0] - pv0->m_aData[0] * pv1->m_aData[2],
-        pv0->m_aData[0] * pv1->m_aData[1] - pv0->m_aData[1] * pv1->m_aData[0]
-    ));
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_CX_S)( *(VEC_S_T(1,CP))&v0, *(VEC_S_T(1,CP))&v1 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
 /* ---- FCN_V(tgMH_UCX) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_UCX)( VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+TgINLINE VEC_T(1) FCN_V(tgMH_UCX)( VEC_T(1,C) v0, VEC_T(1,C) v1 )
 {
-    VEC_T(1)                            vRet;
-    VAR_T()                             fLength;
-
-    vRet = FCN_V(tgMH_CX)( pv0, pv1 );
-    return (FCN_V(tgMH_NORM_LEN)(&fLength, &vRet ));
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_UCX_S)( *(VEC_S_T(1,CP))&v0, *(VEC_S_T(1,CP))&v1 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
 /* ---- FCN_V(tgMH_UCX_LEN) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_UCX_LEN)( VAR_T(PCU) ptyLength, VEC_T(1,CPCU) pv0, VEC_T(1,CPCU) pv1 )
+TgINLINE VEC_T(1) FCN_V(tgMH_UCX_LEN)( VEC_T(1,PCU) pvLength, VEC_T(1,C) v0, VEC_T(1,C) v1 )
 {
-    VEC_T(1)                            vRet;
-
-    vRet = FCN_V(tgMH_CX)( pv0, pv1 );
-    return (FCN_V(tgMH_NORM_LEN)( ptyLength, &vRet ));
-}
-
-
-/* ---- FCN_V(tgMH_NORM3_LEN) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_NORM3_LEN)( VAR_T(P)  __restrict const pfLength, VEC_T(1,CPCU) pvS0 )
-{
-    VAR_T(C)                            fa0 = FCN_F(tgPM_ABS)( pvS0->m_aData[0] );
-    VAR_T(C)                            fa1 = FCN_F(tgPM_ABS)( pvS0->m_aData[1] );
-    VAR_T(C)                            fa2 = FCN_F(tgPM_ABS)( pvS0->m_aData[2] );
-    VAR_T(C)                            fM0 = FCN_F(tgCM_MAX)( fa0, fa1 );
-    VAR_T(C)                            fM1 = FCN_F(tgCM_MAX)( fa1, fa2 );
-    VAR_T(C)                            fMX = FCN_F(tgCM_MAX)( fM0, fM1 );
-    VAR_T(C)                            f0 = pvS0->m_aData[0] / fMX;
-    VAR_T(C)                            f1 = pvS0->m_aData[1] / fMX;
-    VAR_T(C)                            f2 = pvS0->m_aData[2] / fMX;
-    VAR_T(C)                            fLength = FCN_F(tgPM_SQRT)( f0*f0 + f1*f1 + f2*f2 );
-    VAR_T(C)                            fInvLength = fLength > VAR_K(KTgEPS) ? TYPE_K(1) / fLength : TYPE_K(0);
-
-    *pfLength = fLength*fMX;
-
-    return (FCN_V(tgMH_SET_S)( f0*fInvLength, f1*fInvLength, f2*fInvLength, pvS0->m_aData[3] ) );
-}
-
-
-/* ---- FCN_V(tgMH_NORM3)------------------------------------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_NORM3)( VEC_T(1,CPCU) pv0 )
-{
+    VEC_UN_T(1)                         uResult;
     VAR_T()                             fLength;
 
-    return (FCN_V(tgMH_NORM3_LEN)( &fLength, pv0) );
+    VEC_S_UN_1_MEMBER(uResult) = FCN_V(tgMH_UCX_LEN_S)( &fLength, *(VEC_S_T(1,CP))&v0, *(VEC_S_T(1,CP))&v1 );
+    *pvLength = FCN_V(tgMH_SET1)( fLength );
+
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_PRX3) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_PRX3_CMP_EQ) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_V(tgMH_PRX3)( VEC_T(1,CPC) pV0, VEC_T(1,CPC) pV1 )
+TgINLINE TgBOOL FCN_V(tgMH_PRX3_CMP_EQ)( VEC_T(1,C) v0, VEC_T(1,C) v1 )
 {
-    VEC_T(1)                            vDiff;
-
-    vDiff = FCN_V(tgMH_SUB)( pV0, pV1 );
-    if (!FCN_F(tgCM_NR0)( vDiff.x ))
-        return (false);
-    if (!FCN_F(tgCM_NR0)( vDiff.y ))
-        return (false);
-    if (!FCN_F(tgCM_NR0)( vDiff.z ))
-        return (false);
-
-    if (!FCN_F(tgCM_NR0)( vDiff.x*vDiff.x + vDiff.y*vDiff.y + vDiff.z*vDiff.z ))
-        return (false);
-
-    return (true);
-}
-
-
-/* ---- FCN_V(tgMH_PRX4) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_V(tgMH_PRX4)( VEC_T(1,CPCU) pV0, VEC_T(1,CPCU) pV1 )
-{
-    VEC_T(1)                            vDiff;
-
-    vDiff = FCN_V(tgMH_SUB)( pV0, pV1 );
-    if (!FCN_F(tgCM_NR0)( vDiff.x ))
-        return (false);
-    if (!FCN_F(tgCM_NR0)( vDiff.y ))
-        return (false);
-    if (!FCN_F(tgCM_NR0)( vDiff.z ))
-        return (false);
-    if (!FCN_F(tgCM_NR0)( vDiff.w ))
-        return (false);
-
-    if (!FCN_F(tgCM_NR0)( vDiff.x*vDiff.x + vDiff.y*vDiff.y + vDiff.z*vDiff.z + vDiff.w*vDiff.w ))
-        return (false);
-
-    return (true);
-}
-
-
-/* ---- FCN_V(tgMH_QT_Init_Axis_Angle_S) ----------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_Init_Axis_Angle_S)( VAR_T(C) fX, VAR_T(C) fY, VAR_T(C) fZ, VAR_T(C) fAngle )
-{
-    VAR_T()                             fSinA, fCosA;
-    VEC_T(1)                            vRet;
-
-#if TgCOMPILE_ASSERT
-    vRet = FCN_V(tgMH_SETV_S)( fX, fY, fZ );
-    TgERROR( FCN_F(tgCM_NR1)( FCN_V(tgMH_LEN)(&vRet) ));
-    TgERROR( !FCN_F(tgPM_NAN)( fAngle ) );
-#endif
-
-    FCN_F(tgPM_SINCOS)( &fSinA, &fCosA, TYPE_K(0,5)*fAngle );
-    vRet.x = fX * fSinA;
-    vRet.y = fY * fSinA;
-    vRet.z = fZ * fSinA;
-    vRet.w = fCosA;
-
-    return (vRet);
-}
-
-
-/* ---- FCN_V(tgMH_QT_Init_Axis_Angle) ------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_Init_Axis_Angle)( VEC_T(1,CPCU) pvAA )
-{
-    TgPARAM_CHECK( nullptr != pvAA );
-    return (FCN_V(tgMH_QT_Init_Axis_Angle_S)( pvAA->x, pvAA->y, pvAA->z, pvAA->w ));
-}
-
-
-/* ---- FCN_V(tgMH_QT_Init_Euler_S) ---------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_Init_Euler_S)( VAR_T(C) fX, VAR_T(C) fy, VAR_T(C) fZ )
-{
-    VAR_T()                             fSinZ, fCosZ, fSinX, fCosX, fSinY, fCosY; /* [ROLL, PITCH, YAW] */
-    VEC_T(1)                            vRet;
-
-    FCN_F(tgPM_SINCOS)( &fSinX, &fCosX, TYPE_K(0,5)*fX ); /**< Roll */
-    FCN_F(tgPM_SINCOS)( &fSinY, &fCosY, TYPE_K(0,5)*fy ); /**< Pitch */
-    FCN_F(tgPM_SINCOS)( &fSinZ, &fCosZ, TYPE_K(0,5)*fZ ); /**< Yaw */
-
-    {
-        VAR_T(C)                            fTA = fSinX*fCosY;
-        VAR_T(C)                            fTB = fCosX*fSinY;
-        VAR_T(C)                            fTC = fCosX*fCosY;
-        VAR_T(C)                            fTD = fSinX*fSinY;
-
-        vRet.x = fTA*fCosZ - fTB*fSinZ;
-        vRet.y = fTB*fCosZ + fTA*fSinZ;
-        vRet.z = fTC*fSinZ - fTD*fCosZ;
-        vRet.w = fTC*fCosZ + fTD*fSinZ;
-    }
-
-    return (vRet);
-}
-
-
-/* ---- FCN_V(tgMH_QT_Init_Euler) ------------------------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_Init_Euler)( VEC_T(1,CPCU) pvEul )
-{
-    return (FCN_V(tgMH_QT_Init_Euler_S)( pvEul->x, pvEul->y, pvEul->z ));
-}
-
-
-/* ---- FCN_V(tgMH_QT_Init_EulerX) ----------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_Init_EulerX)( VAR_T(C) fX )
-{
-    VAR_T()                             fSinX, fCosA;
-    VEC_T(1)                            vRet;
-
-    FCN_F(tgPM_SINCOS)( &fSinX, &fCosA, TYPE_K(0,5)*fX);
-    vRet.x = fSinX;
-    vRet.y = TYPE_K(0);
-    vRet.z = TYPE_K(0);
-    vRet.w = fCosA;
-
-    return (vRet);
-}
-
-
-/* ---- FCN_V(tgMH_QT_Init_EulerY) ----------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_Init_EulerY)( VAR_T(C) fY )
-{
-    VAR_T()                             fSinY, fCosA;
-    VEC_T(1)                            vRet;
-
-    FCN_F(tgPM_SINCOS)( &fSinY, &fCosA, TYPE_K(0,5)*fY);
-    vRet.x = TYPE_K(0);
-    vRet.y = fSinY;
-    vRet.z = TYPE_K(0);
-    vRet.w = fCosA;
-
-    return (vRet);
-}
-
-
-/* ---- FCN_V(tgMH_QT_Init_EulerZ) ----------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_Init_EulerZ)( VAR_T(C) fZ )
-{
-    VAR_T()                             fSinZ, fCosA;
-    VEC_T(1)                            vRet;
-
-    FCN_F(tgPM_SINCOS)( &fSinZ, &fCosA, TYPE_K(0,5)*fZ );
-    vRet.x = TYPE_K(0);
-    vRet.y = TYPE_K(0);
-    vRet.z = fSinZ;
-    vRet.w = fCosA;
-
-    return (vRet);
-}
-
-
-/* ---- FCN_V(tgMH_Quat2Euler_S) ------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_V(tgMH_Quat2Euler_S)( VAR_T(PCU) ptyX, VAR_T(PCU) ptyY, VAR_T(PCU) ptyZ, VEC_T(1,CPCU) pqR0 )
-{
-    VAR_T(C)                            fSinY = TYPE_K(2) * (pqR0->m_aData[1] * pqR0->m_aData[3] - pqR0->m_aData[0] * pqR0->m_aData[2]);
-
-    if (TYPE_K(1) + fSinY <= VAR_K(KTgEPS))
-    {
-        *ptyX = TYPE_K(2) * FCN_F(tgPM_ATAN2)( pqR0->m_aData[2], pqR0->m_aData[3] );
-        *ptyY = -VAR_K(KTgHALF_PI);
-        *ptyZ = TYPE_K(0);
-    }
-    else if (fSinY >= TYPE_K(1) - VAR_K(KTgEPS))
-    {
-        *ptyX = TYPE_K(2) * FCN_F(tgPM_ATAN2)( pqR0->m_aData[0], pqR0->m_aData[3] );
-        *ptyY = VAR_K(KTgHALF_PI);
-        *ptyZ = TYPE_K(0);
-    }
-    else
-    {
-        VAR_T(C) fTMPA = TYPE_K(2)*(pqR0->m_aData[1] * pqR0->m_aData[2] + pqR0->m_aData[3] * pqR0->m_aData[0]);
-        VAR_T(C) fTMPB = TYPE_K(2)*(pqR0->m_aData[0] * pqR0->m_aData[0] + pqR0->m_aData[1] * pqR0->m_aData[1]);
-        VAR_T(C) fTMPC = TYPE_K(2)*(pqR0->m_aData[0] * pqR0->m_aData[1] + pqR0->m_aData[2] * pqR0->m_aData[3]);
-        VAR_T(C) fTMPD = TYPE_K(2)*(pqR0->m_aData[1] * pqR0->m_aData[1] + pqR0->m_aData[2] * pqR0->m_aData[2]);
-
-        *ptyX = FCN_F(tgPM_ATAN2)( fTMPA, TYPE_K(1) - fTMPB );
-        *ptyY = FCN_F(tgPM_ASIN)( fSinY );
-        *ptyZ = FCN_F(tgPM_ATAN2)( fTMPC, TYPE_K(1) - fTMPD );
-    };
-}
-
-
-/* ---- FCN_V(tgMH_Quat2Euler) --------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_Quat2Euler)( VEC_T(1,CPCU) pqR0 )
-{
-    VEC_T(1)                            vRet;
-
-    FCN_V(tgMH_Quat2Euler_S)( &vRet.x, &vRet.y, &vRet.z, pqR0 );
-    vRet.w = TYPE_K(0);
-    return (vRet);
+    return FCN_V(tgMH_PRX3_CMP_EQ_S)( *(VEC_S_T(1,CP))&v0, *(VEC_S_T(1,CP))&v1 );
 }
 
 
 /* ---- FCN_V(tgMH_QT_INV) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_INV)( VEC_T(1,CPCU) pqR1 )
+TgINLINE VEC_T(1) FCN_V(tgMH_QT_INV)( VEC_T(1,C) qR1 )
 {
-    VEC_T(1)                            vR0;
-
-    vR0.x = -pqR1->x;
-    vR0.y = -pqR1->y;
-    vR0.z = -pqR1->z;
-    vR0.w = pqR1->w;
-
-    return (vR0);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_QT_INV_S)( *(VEC_S_T(1,CP))&qR1 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
 /* ---- FCN_V(tgMH_QT_MUL) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_MUL)( VEC_T(1,CPCU) pqR1, VEC_T(1,CPCU) pqR2 )
+TgINLINE VEC_T(1) FCN_V(tgMH_QT_MUL)( VEC_T(1,C) qR1, VEC_T(1,C) qR2 )
 {
-    VEC_T(1)                            vR0;
-
-    vR0.x = pqR1->w * pqR2->x + pqR1->x * pqR2->w + pqR1->y * pqR2->z - pqR1->z * pqR2->y;
-    vR0.y = pqR1->w * pqR2->y + pqR1->y * pqR2->w + pqR1->z * pqR2->x - pqR1->x * pqR2->z;
-    vR0.z = pqR1->w * pqR2->z + pqR1->z * pqR2->w + pqR1->x * pqR2->y - pqR1->y * pqR2->x;
-    vR0.w = pqR1->w * pqR2->w - pqR1->x * pqR2->x - pqR1->y * pqR2->y - pqR1->z * pqR2->z;
-    return (vR0);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_QT_MUL_S)( *(VEC_S_T(1,CP))&qR1, *(VEC_S_T(1,CP))&qR2 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_QT_SLERP) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V(tgMH_QT_Slerp) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_SLERP)( VAR_T(C) fdT, VEC_T(1,CPCU) pvR1, VEC_T(1,CPCU) pvR2 )
+TgINLINE VEC_T(1) FCN_V(tgMH_QT_Slerp)( VEC_T(1,C) vdT, VEC_T(1,C) qR1, VEC_T(1,C) qR2 )
 {
-    VAR_T()                             fCosA;
-    VEC_T(1)                            vX0, vX1, vX2;
-    VAR_T()                             fF0, fF1;
-
-    if (fdT <= TYPE_K(0))
-    {
-        return (*pvR1);
-    }
-    else if (fdT >= TYPE_K(1))
-    {
-        return (*pvR2);
-    }
-
-    fCosA = FCN_V(tgMH_DOT)( pvR1, pvR2 );
-
-    if (fCosA < TYPE_K(0))
-    {
-        fCosA = -fCosA;
-        vX0 = FCN_V(tgMH_NEG)( pvR2 );
-    }
-    else
-    {
-        vX0 = *pvR2;
-    };
-
-    if ((TYPE_K(1) - fCosA) > VAR_K(KTgEPS))
-    {
-        VAR_T(C)                            fAngle = FCN_F(tgPM_ACOS)( fCosA );
-        VAR_T(C)                            fInvSinA = TYPE_K(1) / FCN_F(tgPM_SIN)( fAngle );
-
-        fF0 = FCN_F(tgPM_SIN)((TYPE_K(1) - fdT) * fAngle) * fInvSinA;
-        fF1 = FCN_F(tgPM_SIN)(fdT * fAngle) * fInvSinA;
-    }
-    else
-    {
-        fF0 = TYPE_K(1) - fdT;
-        fF1 = fdT;
-    }
-
-    vX1 = FCN_V(tgMH_MUL_VS)( pvR1, fF0 );
-    vX2 = FCN_V(tgMH_MUL_VS)( &vX0, fF1 );
-
-    return (FCN_V(tgMH_ADD)(&vX1, &vX2));
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_QT_Slerp_S)( ((VEC_S_T(1,CP))&vdT)->m_aData[0], *(VEC_S_T(1,CP))&qR1, *(VEC_S_T(1,CP))&qR2 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
-/* ---- FCN_V(tgMH_QT_VECTOR_TO_VECTOR) ------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- FCN_V(tgMH_QT_Vector_To_Vector) ------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_VECTOR_TO_VECTOR)( VEC_T(1,CPC) pvFrom, VEC_T(1,CPC) pvTo )
+TgINLINE VEC_T(1) FCN_V(tgMH_QT_Vector_To_Vector)( VEC_T(1,C) vFrom, VEC_T(1,C) vTo )
 {
-    /* If either the scale or the dot product are invalid this will cause a return of the zero quaternion. */
-
-    VAR_T(C)                            fFm_To = FCN_V(tgMH_DOT)( pvFrom, pvTo ); /**< cos(θ) = A*B/|A||B| */
-    VAR_T(C)                            fScale = FCN_V(tgMH_LEN)( pvFrom )*FCN_V(tgMH_LEN)( pvTo );
-    VAR_T(C)                            fCosA = FCN_F(tgPM_FSEL)( fScale - VAR_K(KTgEPS), fFm_To / fScale, TYPE_K(1) );
-    VEC_T(1,C)                          vAxis = FCN_V(tgMH_UCX)( pvFrom, pvTo );
-    VAR_T(C)                            fSinHA = FCN_F(tgPM_SQRT)( (TYPE_K(1) - fCosA)*TYPE_K(0,5) );
-    VAR_T(C)                            fLimit = FCN_F(tgCM_CLP)( fCosA, TYPE_K(-1), TYPE_K(1) );
-    VEC_T(1)                            qRet;
-
-    /* Ensure that the result is within function range (floating point error) */
-    /* Axis of rotation would be the vector perpendicular to both inputs, normalized if necessary */
-    /* For an axis-angle, need to generate cos(θ/2) and sin(θ/2) */
-    /*  Trig Identity: cos(2θ) = cos²(θ) - sin²(θ) = 2*cos²(θ) - 1 = 1 - 2*sin²(θ) */
-    /*                 cos(θ/2) = √((1 + cos(θ))/2) */
-
-    qRet.x = vAxis.m_aData[0] * fSinHA;
-    qRet.y = vAxis.m_aData[1] * fSinHA;
-    qRet.z = vAxis.m_aData[2] * fSinHA;
-    qRet.w = FCN_F(tgPM_SQRT)( (TYPE_K(1) + fLimit)*TYPE_K(0,5) );
-
-    return (qRet);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_QT_Vector_To_Vector_S)( *(VEC_S_T(1,CP))&vFrom, *(VEC_S_T(1,CP))&vTo ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
 /* ---- FCN_V(tgMH_QT_TX) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_TX)( VEC_T(1,CPCU) pV0, VEC_T(1,CPCU) pqR0 )
+TgINLINE VEC_T(1) FCN_V(tgMH_QT_TX)( VEC_T(1,C) vV0, VEC_T(1,C) qR0 )
 {
-    VEC_04_3_T()                        mR0;
-
-    /* #PERF: Can definitely be made faster */
-    FCN_04_3_V(tgMH_Init_Quat)( &mR0, pqR0 );
-    return (FCN_04_3_V(tgMH_TX_V)(&mR0, pV0));
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_QT_TX_S)( *(VEC_S_T(1,CP))&vV0, *(VEC_S_T(1,CP))&qR0 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }
 
 
 /* ---- FCN_V(tgMH_QT_INV_TX) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_QT_INV_TX)( VEC_T(1,CPCU) pV0, VEC_T(1,CPCU) pqR0 )
+TgINLINE VEC_T(1) FCN_V(tgMH_QT_INV_TX)( VEC_T(1,C) vV0, VEC_T(1,C) qR0)
 {
-    VEC_04_3_T()                        mR0;
-    VEC_T(1)                            vR0;
-
-    /* #PERF: Can definitely be made faster */
-    vR0 = FCN_V(tgMH_QT_INV)( pqR0 );
-    FCN_04_3_V(tgMH_Init_Quat)( &mR0, &vR0 );
-    return (FCN_04_3_V(tgMH_TX_V)( &mR0, pV0 ));
-}
-
-
-/* ---- FCN_V(tgMH_Rotate_Vector_EulerX) ----------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_Rotate_Vector_EulerX)( VEC_T(1,CPCU) pvV0, VAR_T(C) fX )
-{
-    VAR_T()                             fSinX, fCosX;
-    VEC_T(1)                            qRet;
-
-    FCN_F(tgPM_SINCOS)( &fSinX, &fCosX, fX );
-    qRet.x = pvV0->x;
-    qRet.y = pvV0->y*fCosX - pvV0->z*fSinX;
-    qRet.z = pvV0->y*fSinX + pvV0->z*fCosX;
-    qRet.w = pvV0->w;
-
-    return (qRet);
-}
-
-
-/* ---- FCN_V(tgMH_Rotate_Vector_EulerY) ----------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_Rotate_Vector_EulerY)( VEC_T(1,CPCU) pvV0, VAR_T(C) fy )
-{
-    VAR_T()                             fSinY, fCosY;
-    VEC_T(1)                            qRet;
-
-    FCN_F(tgPM_SINCOS)( &fSinY, &fCosY, fy );
-    qRet.x = pvV0->z*fSinY + pvV0->x*fCosY;
-    qRet.y = pvV0->y;
-    qRet.z = pvV0->z*fCosY - pvV0->x*fSinY;
-    qRet.w = pvV0->w;
-
-    return (qRet);
-}
-
-
-/* ---- FCN_V(tgMH_Rotate_Vector_EulerZ) ----------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE VEC_T(1) FCN_V(tgMH_Rotate_Vector_EulerZ)( VEC_T(1,CPCU) pvV0, VAR_T(C) fZ )
-{
-    VAR_T()                             fSinZ, fCosZ;
-    VEC_T(1)                            qRet;
-
-    FCN_F(tgPM_SINCOS)( &fSinZ, &fCosZ, fZ );
-    qRet.x = pvV0->x*fCosZ - pvV0->y*fSinZ;
-    qRet.y = pvV0->x*fSinZ + pvV0->y*fCosZ;
-    qRet.z = pvV0->z;
-    qRet.w = pvV0->w;
-
-    return (qRet);
+    VEC_UN_T(1,C)   uResult = { VEC_S_UN_1_MEMBER() = FCN_V(tgMH_QT_INV_TX_S)( *(VEC_S_T(1,CP))&vV0, *(VEC_S_T(1,CP))&qR0 ) };
+    return (VEC_UN_1_MEMBER(uResult));
 }

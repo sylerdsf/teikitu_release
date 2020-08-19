@@ -96,7 +96,10 @@ TgTYPE_STRUCT(TgTRACE_ENTRY,)
 /*  File Local Functions and Data                                                                                                                                                  */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
+#if TgS_STAT__COMMON
 TgINLINE TgVOID                             tgMM_Stat_Internal__Entry( ETgMM_ALLOCATOR_C, TgMEM_INFO_HEADER_P );
+/*# TgS_STAT__COMMON */
+#endif
 
                                             /* Base OS Allocator */
 static TgRESULT                             tgMM_OS__Init_MGR( TgVOID );
@@ -749,7 +752,6 @@ TgVOID_P tgMM_Realloc( ETgMM_ALLOCATOR_C enAllocator, TgVOID_PC NONULL pMem, TgR
 {
     TgMEM_INFO_HEADER                   sOld_Info, sNew_Info;
     TgVOID_P                            pReturn;
-    TgSINT_MAX                          iValue;
 
     TgERROR(ETgMODULE_STATE__BOOTED == s_enMem_MGR_State);
     TgPARAM_CHECK_INDEX( enAllocator, s_asAllocator );
@@ -767,6 +769,8 @@ TgVOID_P tgMM_Realloc( ETgMM_ALLOCATOR_C enAllocator, TgVOID_PC NONULL pMem, TgR
 #if TgS_STAT__COMMON
     if (pReturn != pMem)
     {
+        TgSINT_MAX                          iValue;
+
         tgMM_Stat_Internal__Entry( enAllocator, &sNew_Info );
         atomic_fetch_add( s_anuiStat_Allocations + enAllocator, -1 );
 
@@ -827,6 +831,7 @@ static TgUINT_PTR tgMM_Hash_Trace_Entry( TgUINT_PTR_C uiValue )
 
 /* ---- tgMM_Stat_Internal__Entry ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+#if TgS_STAT__COMMON
 TgINLINE TgVOID tgMM_Stat_Internal__Entry( ETgMM_ALLOCATOR_C enAllocator, TgMEM_INFO_HEADER_P psInfo )
 {
     TgRSIZE                             nbyReserved, nbyAllocated, uiValue, uiUpdate;
@@ -852,6 +857,8 @@ TgINLINE TgVOID tgMM_Stat_Internal__Entry( ETgMM_ALLOCATOR_C enAllocator, TgMEM_
         while (!atomic_compare_exchange_strong( s_auiStat_Max_Allocated + enAllocator, &uiUpdate, uiValue) && (uiValue > uiUpdate));
     };
 }
+/*# TgS_STAT__COMMON */
+#endif
 
 
 /* ---- tgMM_OS__Init_MGR -------------------------------------------------------------------------------------------------------------------------------------------------------- */

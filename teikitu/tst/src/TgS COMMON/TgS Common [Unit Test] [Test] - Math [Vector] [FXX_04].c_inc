@@ -16,110 +16,116 @@
 /*  Test Functions                                                                                                                                                                 */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-/* ---- FCN_V_UT(tgMH_SET_S) --------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_Init_ELEM) --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_SET_S) )
+TEST_METHOD( FCN_V_UT(tgMH_Init_ELEM) )
 {
-    VEC_T(1)                            v0;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    v0 = FCN_V(tgMH_SET_S)( TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
+    sV0.vN = FCN_V(tgMH_Init_ELEM)( TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
 
-    Test__Expect_EQ(v0.x, TYPE_K(7,0) );
-    Test__Expect_EQ(v0.y, TYPE_K(2,0) );
-    Test__Expect_EQ(v0.z, TYPE_K(3,0) );
-    Test__Expect_EQ(v0.w, TYPE_K(4,0) );
+    Test__Expect_EQ(sV0.vT.x, TYPE_K(7,0) );
+    Test__Expect_EQ(sV0.vT.y, TYPE_K(2,0) );
+    Test__Expect_EQ(sV0.vT.z, TYPE_K(3,0) );
+    Test__Expect_EQ(sV0.vT.w, TYPE_K(4,0) );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_SETP_S) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_Init_Point_ELEM) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_SETP_S) )
+TEST_METHOD( FCN_V_UT(tgMH_Init_Point_ELEM) )
 {
-    VEC_T(1)                            v4_0;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    v4_0 = FCN_V(tgMH_SETP_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0));
-    Test__Expect_NE(false, FCN_V(tgMH_Is_Point_Valid)(&v4_0));
+    sV0.vN = FCN_V(tgMH_Init_Point_ELEM)( TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0) );
 
-    Test__Expect_EQ(v4_0.x, TYPE_K(7,0) );
-    Test__Expect_EQ(v4_0.y, TYPE_K(2,0) );
-    Test__Expect_EQ(v4_0.z, TYPE_K(3,0) );
+    Test__Expect_EQ(sV0.vT.x, TYPE_K(7,0) );
+    Test__Expect_EQ(sV0.vT.y, TYPE_K(2,0) );
+    Test__Expect_EQ(sV0.vT.z, TYPE_K(3,0) );
+    Test__Expect_EQ(sV0.vT.w, TYPE_K(1,0) );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_SETV_S) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_Init_Vector_ELEM) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_SETV_S) )
+TEST_METHOD( FCN_V_UT(tgMH_Init_Vector_ELEM) )
 {
-    VEC_T(1)                            v4_0;
-    
-    v4_0 = FCN_V(tgMH_SETV_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0));
-    Test__Expect_NE(false, FCN_V(tgMH_Is_Vector_Valid)(&v4_0));
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    Test__Expect_EQ(v4_0.x, TYPE_K(7,0) );
-    Test__Expect_EQ(v4_0.y, TYPE_K(2,0) );
-    Test__Expect_EQ(v4_0.z, TYPE_K(3,0) );
+    sV0.vN = FCN_V(tgMH_Init_Vector_ELEM)( TYPE_K(2,0), TYPE_K(1,0), TYPE_K(3,0) );
+
+    Test__Expect_EQ(sV0.vT.x, TYPE_K(2,0) );
+    Test__Expect_EQ(sV0.vT.y, TYPE_K(1,0) );
+    Test__Expect_EQ(sV0.vT.z, TYPE_K(3,0) );
+    Test__Expect_EQ(sV0.vT.w, TYPE_K(0,0) );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_SETP) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- FCN_V_UT(tgMH_Init_Point) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_SETP) )
+TEST_METHOD( FCN_V_UT(tgMH_Init_Point) )
 {
-    VEC_T(1)                            v4_0, v4_1;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    v4_0 = FCN_V(tgMH_SETP_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0));
-    v4_1 = FCN_V(tgMH_SETP)(&v4_0);
-    Test__Expect_NE(false, FCN_V(tgMH_Is_Point_Valid)(&v4_1));
+    sV0.vN = FCN_V(tgMH_Init_ELEM)( TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(5,0) );
+    sV0.vN = FCN_V(tgMH_Init_Point)( sV0.vN );
+    Test__Expect_EQ(true, FCN_V(tgMH_Is_Valid_Point_S)( sV0.vT ));
 
-    Test__Expect_EQ(v4_1.x, TYPE_K(7,0) );
-    Test__Expect_EQ(v4_1.y, TYPE_K(2,0) );
-    Test__Expect_EQ(v4_1.z, TYPE_K(3,0) );
-
-    v4_0 = FCN_V(tgMH_SETV_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0));
-    v4_1 = FCN_V(tgMH_SETP)(&v4_0);
-    Test__Expect_NE(false, FCN_V(tgMH_Is_Point_Valid)(&v4_1));
-
-    Test__Expect_EQ(v4_1.x, TYPE_K(7,0) );
-    Test__Expect_EQ(v4_1.y, TYPE_K(2,0) );
-    Test__Expect_EQ(v4_1.z, TYPE_K(3,0) );
+    Test__Expect_EQ(sV0.vT.x, TYPE_K(7,0) );
+    Test__Expect_EQ(sV0.vT.y, TYPE_K(2,0) );
+    Test__Expect_EQ(sV0.vT.z, TYPE_K(3,0) );
+    Test__Expect_EQ(sV0.vT.w, TYPE_K(1,0) );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_SETV) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- FCN_V_UT(tgMH_Init_Vector) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_SETV) )
+TEST_METHOD( FCN_V_UT(tgMH_Init_Vector) )
 {
-    VEC_T(1)                            v4_0, v4_1;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    v4_0 = FCN_V(tgMH_SETP_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0));
-    v4_1 = FCN_V(tgMH_SETV)(&v4_0);
-    Test__Expect_NE(false, FCN_V(tgMH_Is_Vector_Valid)(&v4_1));
+    sV0.vN = FCN_V(tgMH_Init_ELEM)( TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(5,0) );
+    sV0.vN = FCN_V(tgMH_Init_Vector)( sV0.vN );
+    Test__Expect_EQ(true, FCN_V(tgMH_Is_Valid_Vector_S)( sV0.vT ));
 
-    Test__Expect_EQ(v4_1.x, TYPE_K(7,0) );
-    Test__Expect_EQ(v4_1.y, TYPE_K(2,0) );
-    Test__Expect_EQ(v4_1.z, TYPE_K(3,0) );
-
-    v4_0 = FCN_V(tgMH_SETV_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0));
-    v4_1 = FCN_V(tgMH_SETV)(&v4_0);
-    Test__Expect_NE(false, FCN_V(tgMH_Is_Vector_Valid)(&v4_1));
-
-    Test__Expect_EQ(v4_1.x, TYPE_K(7,0) );
-    Test__Expect_EQ(v4_1.y, TYPE_K(2,0) );
-    Test__Expect_EQ(v4_1.z, TYPE_K(3,0) );
+    Test__Expect_EQ(sV0.vT.x, TYPE_K(7,0) );
+    Test__Expect_EQ(sV0.vT.y, TYPE_K(2,0) );
+    Test__Expect_EQ(sV0.vT.z, TYPE_K(3,0) );
+    Test__Expect_EQ(sV0.vT.w, TYPE_K(0,0) );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_RAND) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- FCN_V_UT(tgMH_RAND) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_RAND) )
 {
@@ -129,586 +135,430 @@ TEST_METHOD( FCN_V_UT(tgMH_RAND) )
 }
 
 
-/* ---- FCN_V_UT(tgMH_Set_Ortho) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_SPX) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Set_Ortho) )
+TEST_METHOD( FCN_V_UT(tgMH_SPX) )
 {
-    VEC_T(1)                            v4_0;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    v4_0 = FCN_V(tgMH_Set_Ortho)(&(VEC_K(KTgUNIT_X)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(FCN_V(tgMH_DOT)(&(VEC_K(KTgUNIT_X)), &v4_0)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR1)(FCN_V(tgMH_LEN)(&v4_0)));
-    
-    v4_0 = FCN_V(tgMH_Set_Ortho)(&(VEC_K(KTgUNIT_Y)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(FCN_V(tgMH_DOT)(&(VEC_K(KTgUNIT_Y)), &v4_0)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR1)(FCN_V(tgMH_LEN)(&v4_0)));
-    
-    v4_0 = FCN_V(tgMH_Set_Ortho)(&(VEC_K(KTgUNIT_Z)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(FCN_V(tgMH_DOT)(&(VEC_K(KTgUNIT_Z)), &v4_0)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR1)(FCN_V(tgMH_LEN)(&v4_0)));
+    sV0.vN = FCN_V(tgMH_Init_ELEM)( TYPE_K(2,0), TYPE_K(1,0), TYPE_K(3,0), TYPE_K(5,0) );
+    sV0.vN = FCN_V(tgMH_SPX)( sV0.vN );
+
+    Test__Expect_EQ( sV0.vT.x, sV0.vT.x );
+    Test__Expect_EQ( sV0.vT.y, sV0.vT.x );
+    Test__Expect_EQ( sV0.vT.z, sV0.vT.x );
+    Test__Expect_EQ( sV0.vT.w, sV0.vT.x );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_Init_Basis_From_Vector) ------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- FCN_V_UT(tgMH_SPY) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Init_Basis_From_Vector) )
+TEST_METHOD( FCN_V_UT(tgMH_SPY) )
 {
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-    VAR_T()                             fLimit;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    FCN_V(tgMH_Init_Basis_From_Vector)(&v4_0, &v4_1, &v4_2);
-    fLimit = VAR_K(KTgEPS) * FCN_V(tgMH_ERR)(&v4_0) * FCN_V(tgMH_ERR)(&v4_1) * FCN_V(tgMH_ERR)(&v4_2);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&v4_0, &v4_2)) <= fLimit);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&v4_1, &v4_2)) <= fLimit);
+    sV0.vN = FCN_V(tgMH_Init_ELEM)( TYPE_K(2), TYPE_K(1), TYPE_K(3), TYPE_K(5) );
+    sV0.vN = FCN_V(tgMH_SPY)( sV0.vN );
+
+    Test__Expect_EQ( sV0.vT.x, sV0.vT.y );
+    Test__Expect_EQ( sV0.vT.y, sV0.vT.y );
+    Test__Expect_EQ( sV0.vT.z, sV0.vT.y );
+    Test__Expect_EQ( sV0.vT.w, sV0.vT.y );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_Is_Point_Valid) -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_SPZ) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Is_Point_Valid) )
+TEST_METHOD( FCN_V_UT(tgMH_SPZ) )
 {
-    VAR_T()                            tInvalid = 0;
-    VEC_T(1)                           v4_0;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    tgMM_Set_U08_0xFF( &tInvalid, sizeof( VAR_T() ) );
+    sV0.vN = FCN_V(tgMH_Init_ELEM)( TYPE_K(2,0), TYPE_K(1,0), TYPE_K(3,0), TYPE_K(5,0) );
+    sV0.vN = FCN_V(tgMH_SPZ)( sV0.vN );
 
-    v4_0 = FCN_V(tgMH_SET_S)(TYPE_K(0), tInvalid, TYPE_K(0), TYPE_K(0));
-    Test__Expect_EQ(0, FCN_V(tgMH_Is_Point_Valid)(&v4_0));
-    
-    v4_0 = FCN_V(tgMH_SET_S)(TYPE_K(0), tInvalid, TYPE_K(0), TYPE_K(1));
-    Test__Expect_EQ(0, FCN_V(tgMH_Is_Point_Valid)(&v4_0));
-    
-    v4_0 = FCN_V(tgMH_SET_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(0));
-    Test__Expect_EQ(0, FCN_V(tgMH_Is_Point_Valid)(&v4_0));
-    
-    v4_0 = FCN_V(tgMH_SET_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(1));
-    Test__Expect_NE(false, FCN_V(tgMH_Is_Point_Valid)(&v4_0));
+    Test__Expect_EQ( sV0.vT.x, sV0.vT.z );
+    Test__Expect_EQ( sV0.vT.y, sV0.vT.z );
+    Test__Expect_EQ( sV0.vT.z, sV0.vT.z );
+    Test__Expect_EQ( sV0.vT.w, sV0.vT.z );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_Is_Vector_Valid) ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_SPW) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Is_Vector_Valid) )
+TEST_METHOD( FCN_V_UT(tgMH_SPW) )
 {
-    VAR_T()                            tInvalid = 0;
-    VEC_T(1)                           v4_0;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0;
 
-    tgMM_Set_U08_0xFF( &tInvalid, sizeof( VAR_T() ) );
+    sV0.vN = FCN_V(tgMH_Init_ELEM)( TYPE_K(2,0), TYPE_K(1,0), TYPE_K(3,0), TYPE_K(5,0) );
+    sV0.vN = FCN_V(tgMH_SPW)( sV0.vN );
 
-    v4_0 = FCN_V(tgMH_SET_S)(TYPE_K(0), tInvalid, TYPE_K(0), TYPE_K(0));
-    Test__Expect_EQ(0, FCN_V(tgMH_Is_Vector_Valid)(&v4_0));
-    
-    v4_0 = FCN_V(tgMH_SET_S)(TYPE_K(0), tInvalid, TYPE_K(0), TYPE_K(1));
-    Test__Expect_EQ(0, FCN_V(tgMH_Is_Vector_Valid)(&v4_0));
-    
-    v4_0 = FCN_V(tgMH_SET_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(0));
-    Test__Expect_NE(false, FCN_V(tgMH_Is_Vector_Valid)(&v4_0));
-    
-    v4_0 = FCN_V(tgMH_SET_S)(TYPE_K(7,0), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(1));
-    Test__Expect_EQ(0, FCN_V(tgMH_Is_Vector_Valid)(&v4_0));
+    Test__Expect_EQ( sV0.vT.x, sV0.vT.w );
+    Test__Expect_EQ( sV0.vT.y, sV0.vT.w );
+    Test__Expect_EQ( sV0.vT.z, sV0.vT.w );
+    Test__Expect_EQ( sV0.vT.w, sV0.vT.w );
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_DOT3) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- FCN_V_UT(tgMH_DOT3) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_DOT3) )
 {
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-    VAR_T()                             fTest;
-
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
+    union
     {
-        while (TYPE_K(0) == (v4_0.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-        while (TYPE_K(0) == (v4_1.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0, sV1, sV2;
+    VAR_T()                             fDot;
 
-    v4_0.m_aData[3] = TYPE_K(0);
-    v4_1.m_aData[3] = TYPE_K(0);
+    sV0.vN = FCN_V(tgMH_RAND)();
+    sV1.vN = FCN_V(tgMH_RAND)();
 
-    fTest = v4_0.m_aData[0] * v4_1.m_aData[0];
-    fTest += v4_0.m_aData[1] * v4_1.m_aData[1];
-    fTest += v4_0.m_aData[2] * v4_1.m_aData[2];
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(fTest - FCN_V(tgMH_DOT3)(&v4_0, &v4_1)));
+    sV2.vN = FCN_V(tgMH_DOT3)( sV0.vN, sV1.vN );
+    fDot = FCN_V(tgMH_DOT3_S)( sV0.vT, sV1.vT );
+
+    Test__Expect_NE(false, FCN_F(tgCM_NR0)( fDot - sV2.vT.x ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_CX) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_CX) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_CX) )
 {
-    VEC_T(1)                            v4_0, v4_1, v4_2;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0, sV1, sV2, sV3;
     VAR_T()                             fLimit;
 
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
+    sV2.vN = FCN_V(tgMH_CX)( VEC_K(KTgUNIT_X), VEC_K(KTgUNIT_Y) );
 
-    for (TgRSIZE uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
-    {
-        while (TYPE_K(0) == (v4_0.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-        while (TYPE_K(0) == (v4_1.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[0] - VEC_K(KTgUNIT_Z_S).m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[1] - VEC_K(KTgUNIT_Z_S).m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[2] - VEC_K(KTgUNIT_Z_S).m_aData[2] ));
 
-    v4_2 = FCN_V(tgMH_CX)(&(VEC_K(KTgUNIT_X)), &(VEC_K(KTgUNIT_Y)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[0] - VEC_K(KTgUNIT_Z).m_aData[0]));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[1] - VEC_K(KTgUNIT_Z).m_aData[1]));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[2] - VEC_K(KTgUNIT_Z).m_aData[2]));
+    sV0.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+    sV1.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+
+    sV2.vN = FCN_V(tgMH_CX)( sV0.vN, sV1.vN );
+    sV3.vT = FCN_V(tgMH_CX_S)( sV0.vT, sV1.vT );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[0] - sV3.vT.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[1] - sV3.vT.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[2] - sV3.vT.m_aData[2] ));
+
+    fLimit = VAR_K(KTgEPS) * FCN_V(tgMH_ERR_S)( sV0.vT ) * FCN_V(tgMH_ERR_S)( sV1.vT ) * FCN_V(tgMH_ERR_S)( sV2.vT );
     
-    v4_2 = FCN_V(tgMH_CX)(&v4_0, &v4_1);
-    fLimit = VAR_K(KTgEPS) * FCN_V(tgMH_ERR)(&v4_0) * FCN_V(tgMH_ERR)(&v4_1) * FCN_V(tgMH_ERR)(&v4_2);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&v4_0, &v4_2)) <= fLimit);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&v4_1, &v4_2)) <= fLimit);
+    sV3.vN = FCN_V(tgMH_DOT)( sV0.vN, sV2.vN );
+    Test__Expect_NE(false, FCN_F(tgPM_ABS)(sV3.vT.x) <= fLimit);
+    sV3.vN = FCN_V(tgMH_DOT)( sV1.vN, sV2.vN );
+    Test__Expect_NE(false, FCN_F(tgPM_ABS)(sV3.vT.x) <= fLimit);
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_UCX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_UCX) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_UCX) )
 {
-    VEC_T(1)                            v4_0, v4_1, v4_2;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0, sV1, sV2, sV3;
     VAR_T()                             fLimit;
 
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
+    sV2.vN = FCN_V(tgMH_UCX)( VEC_K(KTgUNIT_X), VEC_K(KTgUNIT_Y) );
 
-    for (TgRSIZE uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
-    {
-        while (TYPE_K(0) == (v4_0.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-        while (TYPE_K(0) == (v4_1.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[0] - VEC_K(KTgUNIT_Z_S).m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[1] - VEC_K(KTgUNIT_Z_S).m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[2] - VEC_K(KTgUNIT_Z_S).m_aData[2] ));
 
-    v4_2 = FCN_V(tgMH_UCX)(&(VEC_K(KTgUNIT_X)), &(VEC_K(KTgUNIT_Y)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[0] - VEC_K(KTgUNIT_Z).m_aData[0]));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[1] - VEC_K(KTgUNIT_Z).m_aData[1]));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[2] - VEC_K(KTgUNIT_Z).m_aData[2]));
-    
-    v4_2 = FCN_V(tgMH_UCX)(&v4_0, &v4_1);
-    fLimit = VAR_K(KTgEPS) * FCN_V(tgMH_ERR)(&v4_0) * FCN_V(tgMH_ERR)(&v4_1);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&v4_0, &v4_2)) <= fLimit);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&v4_1, &v4_2)) <= fLimit);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_LEN)(&v4_2) - TYPE_K(1)) <= fLimit);
+    sV0.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+    sV1.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+
+    sV2.vN = FCN_V(tgMH_UCX)( sV0.vN, sV1.vN );
+    sV3.vT = FCN_V(tgMH_UCX_S)( sV0.vT, sV1.vT );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[0] - sV3.vT.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[1] - sV3.vT.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[2] - sV3.vT.m_aData[2] ));
+
+    fLimit = VAR_K(KTgEPS) * FCN_V(tgMH_ERR_S)( sV0.vT ) * FCN_V(tgMH_ERR_S)( sV1.vT ) * FCN_V(tgMH_ERR_S)( sV2.vT );
+
+    sV3.vN = FCN_V(tgMH_DOT)( sV0.vN, sV2.vN );
+    Test__Expect_NE(false, FCN_F(tgPM_ABS)(sV3.vT.x) <= fLimit);
+    sV3.vN = FCN_V(tgMH_DOT)( sV1.vN, sV2.vN );
+    Test__Expect_NE(false, FCN_F(tgPM_ABS)(sV3.vT.x) <= fLimit);
+
+    sV3.vN = FCN_V(tgMH_LEN)( sV2.vN );
+    Test__Expect_EQ(true, FCN_F(tgCM_NR1)( sV3.vT.m_aData[0] ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_UCX_LEN) --------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_UCX_LEN) ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_UCX_LEN) )
 {
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-    VAR_T()                             fLimit, fLength, fTest;
-
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
+    union
     {
-        while (TYPE_K(0) == (v4_0.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-        while (TYPE_K(0) == (v4_1.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0, sV1, sV2, sV3, sV4;
+    VAR_T()                             fLimit, fLength;
 
-    v4_2 = FCN_V(tgMH_UCX_LEN)(&fTest, &(VEC_K(KTgUNIT_X)), &(VEC_K(KTgUNIT_Y)));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[0] - VEC_K(KTgUNIT_Z).m_aData[0]));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[1] - VEC_K(KTgUNIT_Z).m_aData[1]));
-    Test__Expect_NE(false, FCN_F(tgCM_NR0)(v4_2.m_aData[2] - VEC_K(KTgUNIT_Z).m_aData[2]));
+    sV3.vN = FCN_V(tgMH_UCX_LEN)( &sV2.vN, VEC_K(KTgUNIT_X), VEC_K(KTgUNIT_Y) );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[0] - VEC_K(KTgUNIT_Z_S).m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[1] - VEC_K(KTgUNIT_Z_S).m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[2] - VEC_K(KTgUNIT_Z_S).m_aData[2] ));
+
+    sV0.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+    sV1.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+
+    sV3.vN = FCN_V(tgMH_UCX_LEN)( &sV2.vN, sV0.vN, sV1.vN );
+    sV4.vT = FCN_V(tgMH_UCX_LEN_S)( &fLength, sV0.vT, sV1.vT );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[0] - sV4.vT.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[1] - sV4.vT.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[2] - sV4.vT.m_aData[2] ));
+
+    fLimit = VAR_K(KTgEPS) * FCN_V(tgMH_ERR_S)( sV0.vT ) * FCN_V(tgMH_ERR_S)( sV1.vT ) * FCN_V(tgMH_ERR_S)( sV3.vT );
     
-    v4_2 = FCN_V(tgMH_CX)(&v4_0, &v4_1);
-    fLength = FCN_V(tgMH_LEN)(&v4_2);
-    v4_2 = FCN_V(tgMH_UCX_LEN)(&fTest, &v4_0, &v4_1);
-    fLimit = VAR_K(KTgEPS) * FCN_V(tgMH_ERR)(&v4_0) * FCN_V(tgMH_ERR)(&v4_1);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&v4_0, &v4_2)) <= fLimit);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_DOT)(&v4_1, &v4_2)) <= fLimit);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(FCN_V(tgMH_LEN)(&v4_2) - TYPE_K(1)) <= fLimit);
-    Test__Expect_NE(false, FCN_F(tgPM_ABS)(fLength - fTest) <= fLimit);
+    sV4.vN = FCN_V(tgMH_DOT)( sV0.vN, sV3.vN );
+    Test__Expect_NE(false, FCN_F(tgPM_ABS)( sV4.vT.x ) <= fLimit);
+    sV4.vN = FCN_V(tgMH_DOT)( sV1.vN, sV3.vN );
+    Test__Expect_NE(false, FCN_F(tgPM_ABS)( sV4.vT.x ) <= fLimit);
+    
+    sV4.vN = FCN_V(tgMH_LEN)( sV3.vN );
+    Test__Expect_EQ(true, FCN_F(tgCM_NR1)( sV4.vT.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV2.vT.m_aData[0] - fLength ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_NORM3_LEN) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_PRX3_CMP_EQ) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_NORM3_LEN) )
+TEST_METHOD( FCN_V_UT(tgMH_PRX3_CMP_EQ) )
 {
-    VEC_T(1)                            v4_2;
-    VAR_T()                             fLength;
-
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < 4; ++uiIndex)
+    union
     {
-        while (TYPE_K(0) == (v4_2.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0, sV1;
 
-    v4_2 = FCN_V(tgMH_NORM3_LEN)(&fLength, &v4_2);
+    sV0.vN = FCN_V(tgMH_RAND)();
+    sV1.vN = sV0.vN;
+    Test__Expect_EQ(true, FCN_V(tgMH_PRX3_CMP_EQ)( sV0.vN, sV1.vN ));
+
+    sV1.vT.w = -sV1.vT.w;
+    Test__Expect_NE(false, FCN_V(tgMH_PRX3_CMP_EQ)( sV0.vN, sV1.vN ));
+
+    sV1.vT.w = sV0.vT.w;
+    sV1.vT.y += VAR_K(KTgROOT_EPS) + VAR_K(KTgROOT_EPS);
+    Test__Expect_EQ(false, FCN_V(tgMH_PRX3_CMP_EQ)( sV0.vN, sV1.vN ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_NORM3) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_PRX_CMP_EQ) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_NORM3) )
+TEST_METHOD( FCN_V_UT(tgMH_PRX_CMP_EQ) )
 {
-    VEC_T(1)                            v4_2;
-
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < 4; ++uiIndex)
+    union
     {
-        while (TYPE_K(0) == (v4_2.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0, sV1;
 
-    v4_2 = FCN_V(tgMH_NORM3)(&v4_2);
+    sV0.vN = FCN_V(tgMH_RAND)();
+    sV1.vN = sV0.vN;
+    Test__Expect_NE(false, FCN_V(tgMH_PRX_CMP_EQ)( sV0.vN, sV1.vN ));
 
-    TEST_END_METHOD( KTgS_OK );
-}
+    sV1.vT.w = -sV1.vT.w;
+    Test__Expect_EQ(false, FCN_V(tgMH_PRX_CMP_EQ)( sV0.vN, sV1.vN ));
 
-
-/* ---- FCN_V_UT(tgMH_PRX3) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_PRX3) )
-{
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < 4; ++uiIndex)
-    {
-        while (TYPE_K(0) == (v4_0.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
-
-    v4_1 = v4_0;
-    Test__Expect_NE(false, FCN_V(tgMH_PRX3)( &v4_0, &v4_1 ));
-    v4_1.w = -v4_1.w;
-    Test__Expect_NE(false, FCN_V(tgMH_PRX3)( &v4_0, &v4_1 ));
-    v4_1.w = v4_0.w;
-    v4_1.y += VAR_K(KTgROOT_EPS) + VAR_K(KTgROOT_EPS);
-    Test__Expect_EQ(false, FCN_V(tgMH_PRX3)( &v4_0, &v4_1 ));
-
+    sV1.vT.w = sV0.vT.w;
+    sV1.vT.y += VAR_K(KTgROOT_EPS) + VAR_K(KTgROOT_EPS);
+    Test__Expect_EQ(false, FCN_V(tgMH_PRX_CMP_EQ)( sV0.vN, sV1.vN ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_PRX4) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_PRX4) )
-{
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < 4; ++uiIndex)
-    {
-        while (TYPE_K(0) == (v4_0.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
-
-    v4_1 = v4_0;
-    Test__Expect_NE(false, FCN_V(tgMH_PRX4)( &v4_0, &v4_1 ));
-    v4_1.w = -v4_1.w;
-    Test__Expect_EQ(false, FCN_V(tgMH_PRX4)( &v4_0, &v4_1 ));
-    v4_1.w = v4_0.w;
-    v4_1.y += VAR_K(KTgROOT_EPS) + VAR_K(KTgROOT_EPS);
-    Test__Expect_EQ(false, FCN_V(tgMH_PRX4)( &v4_0, &v4_1 ));
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_QT_Init_Axis_Angle_S) -------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_Init_Axis_Angle_S) )
-{
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
-    {
-        while (TYPE_K(0) == (v4_1.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
-
-    v4_1.m_aData[3] = TYPE_K(0);
-    v4_1 = FCN_V(tgMH_NORM)( &v4_1 );
-
-    FCN_V(tgMH_QT_Init_Axis_Angle_S)( v4_1.x, v4_1.y, v4_1.z, TYPE_K(0,25)*VAR_K(KTgPI) );
-    FCN_V(tgMH_QT_Init_Axis_Angle)( &v4_1 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_QT_Init_Axis_Angle) ---------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_Init_Axis_Angle) )
-{
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
-    {
-        while (TYPE_K(0) == (v4_1.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
-
-    v4_1.m_aData[3] = TYPE_K(0);
-    v4_1 = FCN_V(tgMH_NORM)( &v4_1 );
-
-    FCN_V(tgMH_QT_Init_Axis_Angle)( &v4_1 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_QT_Init_Euler_S) ------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_Init_Euler_S) )
-{
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
-    {
-        while (TYPE_K(0) == (v4_1.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
-
-    v4_1.m_aData[3] = TYPE_K(0);
-    v4_1 = FCN_V(tgMH_NORM)( &v4_1 );
-
-    FCN_V(tgMH_QT_Init_Euler_S)( TYPE_K(0,1)*VAR_K(KTgPI), TYPE_K(0,2)*VAR_K(KTgPI), TYPE_K(0,3)*VAR_K(KTgPI) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_QT_Init_Euler) --------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_Init_Euler) )
-{
-    VEC_T(1)                            v4_0, v4_1, v4_2;
-
-    tgMM_Set_U08_0xFF( &v4_0, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_1, sizeof( VEC_T(1) ) );
-    tgMM_Set_U08_0xFF( &v4_2, sizeof( VEC_T(1) ) );
-
-    for (TgRSIZE uiIndex = 0; uiIndex < TEMPLATE__VECTOR_DIM; ++uiIndex)
-    {
-        while (TYPE_K(0) == (v4_1.m_aData[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
-
-    v4_1.m_aData[3] = TYPE_K(0);
-    v4_1 = FCN_V(tgMH_NORM)( &v4_1 );
-
-    FCN_V(tgMH_QT_Init_Euler)( &v4_1 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_QT_Init_EulerX) -------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_Init_EulerX) )
-{
-    FCN_V(tgMH_QT_Init_EulerX)( TYPE_K(0,25)*VAR_K(KTgPI) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_QT_Init_EulerY) -------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_Init_EulerY) )
-{
-    FCN_V(tgMH_QT_Init_EulerY)( TYPE_K(0,25)*VAR_K(KTgPI) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_QT_Init_EulerZ) -------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_Init_EulerZ) )
-{
-    FCN_V(tgMH_QT_Init_EulerZ)( TYPE_K(0,25)*VAR_K(KTgPI) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_Quat2Euler_S) ---------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Quat2Euler_S) )
-{
-    VEC_T(1)                            v4_0, v4_1;
-
-    v4_0 = FCN_V(tgMH_QT_Init_Euler_S)( TYPE_K(0,1)*VAR_K(KTgPI), TYPE_K(0,2)*VAR_K(KTgPI), TYPE_K(0,3)*VAR_K(KTgPI) );
-    FCN_V(tgMH_Quat2Euler_S)(&v4_1.x, &v4_1.y, &v4_1.z, &v4_0);
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( v4_1.x - TYPE_K(0,1)*VAR_K(KTgPI) ));
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( v4_1.y - TYPE_K(0,2)*VAR_K(KTgPI) ));
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( v4_1.z - TYPE_K(0,3)*VAR_K(KTgPI) ));
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_Quat2Euler) ------------------------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Quat2Euler) )
-{
-    VEC_T(1)                            v4_0, v4_2;
-
-    v4_2 = FCN_V(tgMH_Quat2Euler)(&v4_0);
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( v4_2.x - TYPE_K(0,1)*VAR_K(KTgPI) ));
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( v4_2.y - TYPE_K(0,2)*VAR_K(KTgPI) ));
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( v4_2.z - TYPE_K(0,3)*VAR_K(KTgPI) ));
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_QT_INV) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_QT_INV) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_QT_INV) )
 {
-    VEC_T(1)                            v4_0, v4_1;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vS;
+    }                                   uQ0, uVX, uVZ;
 
-    v4_0 = FCN_V(tgMH_QT_INV)( &v4_1 );
+    uQ0.vS = FCN_V(tgMH_QT_Init_Euler_S)( FCN_V(tgMH_RAND_S)() );
+
+    uVZ.vS = FCN_V(tgMH_QT_INV_S)( uQ0.vS );
+    uVX.vN = FCN_V(tgMH_QT_INV)( uQ0.vN );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[0] - uVZ.vS.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[1] - uVZ.vS.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[2] - uVZ.vS.m_aData[2] ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_QT_MUL) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_QT_MUL) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_QT_MUL) )
 {
-    VEC_T(1)                            v4_0, v4_1, v4_2;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vS;
+    }                                   uQ0, uQ1, uQX, uQZ;
 
-    v4_0 = FCN_V(tgMH_QT_MUL)( &v4_1, &v4_2 );
+    uQ0.vS = FCN_V(tgMH_QT_Init_Euler_S)( FCN_V(tgMH_RAND_S)() );
+    uQ1.vS = FCN_V(tgMH_QT_Init_Euler_S)( FCN_V(tgMH_RAND_S)() );
+
+    uQZ.vS = FCN_V(tgMH_QT_MUL_S)( uQ0.vS, uQ1.vS );
+    uQX.vN = FCN_V(tgMH_QT_MUL)( uQ0.vN, uQ1.vN );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uQX.vS.m_aData[0] - uQZ.vS.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uQX.vS.m_aData[1] - uQZ.vS.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uQX.vS.m_aData[2] - uQZ.vS.m_aData[2] ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_QT_SLERP) -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_QT_Slerp) ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_SLERP) )
+TEST_METHOD( FCN_V_UT(tgMH_QT_Slerp) )
 {
-    VEC_T(1)                            v4_0, v4_1, v4_2;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vS;
+    }                                   uQ0, uQ1, uQX, uQZ;
 
-    v4_0 = FCN_V(tgMH_QT_SLERP)( TYPE_K(0,1), &v4_1, &v4_2 );
+    uQ0.vS = FCN_V(tgMH_QT_Init_Euler_S)( FCN_V(tgMH_RAND_S)() );
+    uQ1.vS = FCN_V(tgMH_QT_Init_Euler_S)( FCN_V(tgMH_RAND_S)() );
+
+    uQZ.vS = FCN_V(tgMH_QT_Slerp_S)( TYPE_K(0,1), uQ0.vS, uQ1.vS );
+    uQX.vN = FCN_V(tgMH_QT_Slerp)( FCN_V(tgMH_SET1)(TYPE_K(0,1)), uQ0.vN, uQ1.vN );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uQX.vS.m_aData[0] - uQZ.vS.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uQX.vS.m_aData[1] - uQZ.vS.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uQX.vS.m_aData[2] - uQZ.vS.m_aData[2] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uQX.vS.m_aData[3] - uQZ.vS.m_aData[3] ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_QT_VECTOR_TO_VECTOR) --------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_QT_Vector_To_Vector) ------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_QT_VECTOR_TO_VECTOR) )
+TEST_METHOD( FCN_V_UT(tgMH_QT_Vector_To_Vector) )
 {
-    VEC_T(1)                            v4_0, v4_1, v4_2;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vT;
+    }                                   sV0, sV1, sV2, sV3;
 
-    v4_0 = FCN_V(tgMH_QT_VECTOR_TO_VECTOR)( &v4_1, &v4_2 );
+    sV0.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+    sV1.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+
+    sV3.vT = FCN_V(tgMH_QT_Vector_To_Vector_S)( sV0.vT, sV1.vT );
+    sV2.vN = FCN_V(tgMH_QT_Vector_To_Vector)( sV0.vN, sV1.vN );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[0] - sV2.vT.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[1] - sV2.vT.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[2] - sV2.vT.m_aData[2] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( sV3.vT.m_aData[3] - sV2.vT.m_aData[3] ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_QT_TX) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_QT_TX) --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_QT_TX) )
 {
-    VEC_T(1)                            v4_0;
-    VEC_T(1)                            q0;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vS;
+    }                                   uV0, uQ0, uVX, uVZ;
 
-    q0 = VEC_K(KTgUNIT_X);
-    FCN_V(tgMH_QT_TX)( &v4_0, &q0 );
+    uQ0.vS = FCN_V(tgMH_QT_Init_Euler_S)( FCN_V(tgMH_RAND_S)() );
+    uV0.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
+
+    uVZ.vS = FCN_V(tgMH_QT_TX_S)( uV0.vS, uQ0.vS );
+    uVX.vN = FCN_V(tgMH_QT_TX)( uV0.vN, uQ0.vN );
+
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[0] - uVZ.vS.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[1] - uVZ.vS.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[2] - uVZ.vS.m_aData[2] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[3] - uVZ.vS.m_aData[3] ));
 
     TEST_END_METHOD( KTgS_OK );
 }
 
 
-/* ---- FCN_V_UT(tgMH_QT_INV_TX) ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- FCN_V_UT(tgMH_QT_INV_TX) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V_UT(tgMH_QT_INV_TX) )
 {
-    VEC_T(1)                            v4_0;
-    VEC_T(1)                            q0;
+    union
+    {
+        VEC_T(1)                            vN;
+        VEC_S_T(1)                          vS;
+    }                                   uV0, uQ0, uVX, uVZ;
 
-    q0 = VEC_K(KTgUNIT_X);
-    FCN_V(tgMH_QT_INV_TX)( &v4_0, &q0 );
+    uQ0.vS = FCN_V(tgMH_QT_Init_Euler_S)( FCN_V(tgMH_RAND_S)() );
+    uV0.vN = FCN_V(tgMH_Init_Vector)( FCN_V(tgMH_RAND)() );
 
-    TEST_END_METHOD( KTgS_OK );
-}
+    uVZ.vS = FCN_V(tgMH_QT_INV_TX_S)( uV0.vS, uQ0.vS );
+    uVX.vN = FCN_V(tgMH_QT_INV_TX)( uV0.vN, uQ0.vN );
 
-
-/* ---- FCN_V_UT(tgMH_Rotate_Vector_EulerX) -------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Rotate_Vector_EulerX) )
-{
-    VEC_T(1)                            v4_0, v4_1;
-
-    v4_0 = VEC_K(KTgUNIT_Y);
-    v4_1 = FCN_V(tgMH_Rotate_Vector_EulerX)( &v4_0, TYPE_K(0,1)*VAR_K(KTgPI) );
-
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_Rotate_Vector_EulerY) -------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Rotate_Vector_EulerY) )
-{
-    VEC_T(1)                            v4_0, v4_1;
-
-    v4_0 = VEC_K(KTgUNIT_X);
-    v4_1 = FCN_V(tgMH_Rotate_Vector_EulerY)( &v4_0, TYPE_K(0,1)*VAR_K(KTgPI) );
-
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V_UT(tgMH_Rotate_Vector_EulerZ) -------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V_UT(tgMH_Rotate_Vector_EulerZ) )
-{
-    VEC_T(1)                            v4_0, v4_1;
-
-    v4_0 = VEC_K(KTgUNIT_X);
-    v4_1 = FCN_V(tgMH_Rotate_Vector_EulerZ)( &v4_0, TYPE_K(0,1)*VAR_K(KTgPI) );
-
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[0] - uVZ.vS.m_aData[0] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[1] - uVZ.vS.m_aData[1] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[2] - uVZ.vS.m_aData[2] ));
+    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( uVX.vS.m_aData[3] - uVZ.vS.m_aData[3] ));
 
     TEST_END_METHOD( KTgS_OK );
 }

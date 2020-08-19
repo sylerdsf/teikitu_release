@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Math API [Matrix] [F] [44].h_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -21,197 +21,17 @@
                                                 @param[out] OUT0 Destination matrix
                                                 @param[in] ARG1 Matrix
                                                 @param[in] ARG2 Matrix */
-TgINLINE TgVOID                             FCN_M(tgMH_CAT_34_44)( MAT_T(PCU) OUT0, VEC_04_3_T(CPCU) ARG1, MAT_T(CPCU) ARG2 );
+TgINLINE TgVOID                             FCN_M(tgMH_CAT_34_44)( VEC_T(4,PC) NONULL OUT0, VEC_T(3,CPC) NONULL ARG1, VEC_T(4,CPC) NONULL ARG2 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
                                                 @brief Store the concatenation (multiplication) of the two arguments (ARG1 x ARG2)
                                                 @param[out] OUT0 Destination matrix
                                                 @param[in] ARG1 Matrix
                                                 @param[in] ARG2 Matrix */
-TgINLINE TgVOID                             FCN_M(tgMH_CAT_44_34)( MAT_T(PCU) OUT0, MAT_T(CPCU) ARG1, VEC_04_3_T(CPCU) ARG2 );
+TgINLINE TgVOID                             FCN_M(tgMH_CAT_44_34)( VEC_T(4,PC) NONULL OUT0, VEC_T(4,CPC) NONULL ARG1, VEC_T(3,CPC) NONULL ARG2 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
                                                 @brief Store the transpose of the matrix ARG1
                                                 @param[out] OUT0 Destination matrix
                                                 @param[in] ARG1 Matrix */
-TgINLINE TgVOID                             FCN_M(tgMH_TR)( MAT_T(PCU) OUT0, MAT_T(CPCU) ARG1 );
-
-
-
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a left-handed view matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Vector, Eye Position
-                                                @param[in] ARG2 Vector, Look at Position
-                                                @param[in] ARG3 Vector, Camera Up Direction */
-TgINLINE TgVOID                             FCN_M(tgMH_LookLH)( MAT_T(PCU) OUT0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a right-handed view matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Vector, Eye Position
-                                                @param[in] ARG2 Vector, Look at Position
-                                                @param[in] ARG3 Vector, Camera Up Direction */
-TgINLINE TgVOID                             FCN_M(tgMH_LookRH)( MAT_T(PCU) OUT0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a left-handed view matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Vector, Eye Position
-                                                @param[in] ARG2 Vector, Look at Position
-                                                @param[in] ARG3 Vector, Camera Up Direction */
-TgINLINE TgVOID                             FCN_M(tgMH_Look)( MAT_T(PCU) OUT0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2, VEC_T(1,CPCU) ARG3 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection left-handed matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 View Width
-                                                @param[in] ARG2 View Height
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProjLH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection right-handed matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 View Width
-                                                @param[in] ARG2 View Height
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProjRH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection left-handed matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 View Width
-                                                @param[in] ARG2 View Height
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProj)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection left-handed matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Right
-                                                @param[in] ARG2 Left
-                                                @param[in] ARG3 Top
-                                                @param[in] ARG4 Bottom
-                                                @param[in] ARG5 MinZ
-                                                @param[in] ARG6 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProj_OffsetLH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection right-handed matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Right
-                                                @param[in] ARG2 Left
-                                                @param[in] ARG3 Top
-                                                @param[in] ARG4 Bottom
-                                                @param[in] ARG5 MinZ
-                                                @param[in] ARG6 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProj_OffsetRH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection left-handed offset matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Right
-                                                @param[in] ARG2 Left
-                                                @param[in] ARG3 Top
-                                                @param[in] ARG4 Bottom
-                                                @param[in] ARG5 MinZ
-                                                @param[in] ARG6 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProj_Offset)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection left-handed field of view matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Field of View
-                                                @param[in] ARG2 Aspect Ratio
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProj_FoVLH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection right-handed field of view matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Field of View
-                                                @param[in] ARG2 Aspect Ratio
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProj_FoVRH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a projection left-handed field of view matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Field of View
-                                                @param[in] ARG2 Aspect Ratio
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_PProj_FoV)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a orthographic left-handed matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 View Width
-                                                @param[in] ARG2 View Height
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_OrthoLH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a orthographic right-handed matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 View Width
-                                                @param[in] ARG2 View Height
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_OrthoRH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a orthographic left-handed matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 View Width
-                                                @param[in] ARG2 View Height
-                                                @param[in] ARG3 MinZ
-                                                @param[in] ARG4 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_Ortho)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a orthographic left-handed offset matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Right
-                                                @param[in] ARG2 Left
-                                                @param[in] ARG3 Top
-                                                @param[in] ARG4 Bottom
-                                                @param[in] ARG5 MinZ
-                                                @param[in] ARG6 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_Ortho_OffsetLH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a orthographic right-handed offset matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Right
-                                                @param[in] ARG2 Left
-                                                @param[in] ARG3 Top
-                                                @param[in] ARG4 Bottom
-                                                @param[in] ARG5 MinZ
-                                                @param[in] ARG6 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_Ortho_OffsetRH)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Store a orthographic left-handed offset matrix
-                                                @param[out] OUT0 Destination matrix
-                                                @param[in] ARG1 Right
-                                                @param[in] ARG2 Left
-                                                @param[in] ARG3 Top
-                                                @param[in] ARG4 Bottom
-                                                @param[in] ARG5 MinZ
-                                                @param[in] ARG6 MaxZ */
-TgINLINE TgVOID                             FCN_M(tgMH_Ortho_Offset)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
-
-
-
-                                            /* Implementations in source */
-TgEXTN TgVOID                               FCN_M(tgMH_CAT_IMPL)( MAT_T(PCU) OUT0, MAT_T(CPCU) ARG1, MAT_T(CPCU) ARG2 );
-TgEXTN TgVOID                               FCN_M(tgMH_INV_DET_IMPL)( MAT_T(PCU) OUT0, VAR_T(C) ARG1, MAT_T(CPCU) ARG2 );
+TgINLINE TgVOID                             FCN_M(tgMH_TR)( VEC_T(4,PC) NONULL OUT0, VEC_T(4,CPC) NONULL ARG1 );

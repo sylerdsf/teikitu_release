@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Util ST - Colour.inl
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -25,96 +25,84 @@
 
 /* ---- tgCM_CL_F32_Init_F32 ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_CL_F32_Init_F32( TgVEC_F32_04_1_PCU NONULL psFC, TgFLOAT32_C fR, TgFLOAT32_C fG, TgFLOAT32_C fB, TgFLOAT32_C fA )
+TgINLINE TgVEC_F32_04_1 tgCM_CL_F32_Init_F32( TgFLOAT32_C fR, TgFLOAT32_C fG, TgFLOAT32_C fB, TgFLOAT32_C fA )
 {
-    TgERROR(nullptr != psFC);
-    psFC->r = fR;
-    psFC->g = fG;
-    psFC->b = fB;
-    psFC->a = fA;
+    return (tgMH_Init_ELEM_F32_04_1( fR, fG, fB, fA ));
 }
 
 
 /* ---- tgCM_CL_F32_Init_U32 ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_CL_F32_Init_U32( TgVEC_F32_04_1_PCU NONULL psFC, TgUINT_F32_C uiColour )
+TgINLINE TgVEC_F32_04_1 tgCM_CL_F32_Init_U32( TgUINT_F32_C uiColour )
 {
-    TgERROR(nullptr != psFC);
-    psFC->r = TgCOLOUR_R( uiColour ) / 255.0F;
-    psFC->g = TgCOLOUR_G(uiColour) / 255.0F;
-    psFC->b = TgCOLOUR_B( uiColour ) / 255.0F;
-    psFC->a = TgCOLOUR_A( uiColour ) / 255.0F;
+    return (tgMH_Init_ELEM_F32_04_1( TgCOLOUR_R( uiColour ) / 255.0F, TgCOLOUR_G(uiColour) / 255.0F, TgCOLOUR_B( uiColour ) / 255.0F, TgCOLOUR_A( uiColour ) / 255.0F ));
 }
 
 
 /* ---- tgCM_CL_F32_Brightness_U16 ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgUINT_F16 tgCM_CL_F32_Brightness_U16( TgVEC_F32_04_1_CPCU NONULL psFC )
+TgINLINE TgUINT_F16 tgCM_CL_F32_Brightness_U16( TgVEC_F32_04_1_C vCL )
 {
-    TgERROR(nullptr != psFC);
-    return ((TgUINT_F16 )(tgCM_CLP_F32( tgCM_CL_F32_Brightness_F32( psFC ), 0.0F, 1.0F )* (TgFLOAT32)KTgMAX_U16));
+    return ((TgUINT_F16 )(tgCM_CLP_F32( tgCM_CL_F32_Brightness_F32( vCL ), 0.0F, 1.0F )* (TgFLOAT32)KTgMAX_U16));
 }
 
 
 /* ---- tgCM_CL_F32_Brightness_F32 ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_F32_Brightness_F32( TgVEC_F32_04_1_CPCU NONULL psFC )
+TgINLINE TgFLOAT32 tgCM_CL_F32_Brightness_F32( TgVEC_F32_04_1_C vCL )
 {
-    TgERROR(nullptr != psFC);
-    return ((tgCM_CL_F32_Query_R_F32( psFC ) + tgCM_CL_F32_Query_G_F32( psFC ) + tgCM_CL_F32_Query_B_F32( psFC )) / 3.0F);
+    return ((tgCM_CL_F32_Query_R_F32( vCL ) + tgCM_CL_F32_Query_G_F32( vCL ) + tgCM_CL_F32_Query_B_F32( vCL )) / 3.0F);
 }
 
 
 /* ---- tgCM_CL_F32_Lightness ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_F32_Lightness( TgVEC_F32_04_1_CPCU NONULL psFC )
+TgINLINE TgFLOAT32 tgCM_CL_F32_Lightness( TgVEC_F32_04_1_C vCL )
 {
-    TgERROR(nullptr != psFC);
     return (0.5F*(
-          tgCM_MAX_F32( tgCM_CL_F32_Query_R_F32( psFC ), tgCM_MAX_F32( tgCM_CL_F32_Query_G_F32( psFC ), tgCM_CL_F32_Query_B_F32( psFC ) ) )
-        + tgCM_MIN_F32( tgCM_CL_F32_Query_R_F32( psFC ), tgCM_MIN_F32( tgCM_CL_F32_Query_G_F32( psFC ), tgCM_CL_F32_Query_B_F32( psFC ) ) )
+          tgCM_MAX_F32( tgCM_CL_F32_Query_R_F32( vCL ), tgCM_MAX_F32( tgCM_CL_F32_Query_G_F32( vCL ), tgCM_CL_F32_Query_B_F32( vCL ) ) )
+        + tgCM_MIN_F32( tgCM_CL_F32_Query_R_F32( vCL ), tgCM_MIN_F32( tgCM_CL_F32_Query_G_F32( vCL ), tgCM_CL_F32_Query_B_F32( vCL ) ) )
     ));
 }
 
 
 /* ---- tgCM_CL_F32_Luminance ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_F32_Luminance( TgVEC_F32_04_1_CPCU NONULL psFC )
+TgINLINE TgFLOAT32 tgCM_CL_F32_Luminance( TgVEC_F32_04_1_C vCL )
 {
-    TgERROR(nullptr != psFC);
-    return (0.3f*tgCM_CL_F32_Query_R_F32( psFC ) + 0.59f*tgCM_CL_F32_Query_G_F32( psFC ) + 0.11f*tgCM_CL_F32_Query_B_F32( psFC ));
+    return (0.3f*tgCM_CL_F32_Query_R_F32( vCL ) + 0.59f*tgCM_CL_F32_Query_G_F32( vCL ) + 0.11f*tgCM_CL_F32_Query_B_F32( vCL ));
 }
 
 
 /* ---- tgCM_CL_F32_Query_R_F32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_F32_Query_R_F32( TgVEC_F32_04_1_CPCU NONULL psFC )
+TgINLINE TgFLOAT32 tgCM_CL_F32_Query_R_F32( TgVEC_F32_04_1_C vCL )
 {
-    return (psFC->r);
+    return (((TgFLOAT32_CP)(&vCL))[0]);
 }
 
 
 /* ---- tgCM_CL_F32_Query_G_F32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_F32_Query_G_F32( TgVEC_F32_04_1_CPCU NONULL psFC )
+TgINLINE TgFLOAT32 tgCM_CL_F32_Query_G_F32( TgVEC_F32_04_1_C vCL )
 {
-    return (psFC->g);
+    return (((TgFLOAT32_CP)(&vCL))[1]);
 }
 
 
 /* ---- tgCM_CL_F32_Query_B_F32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_F32_Query_B_F32( TgVEC_F32_04_1_CPCU NONULL psFC )
+TgINLINE TgFLOAT32 tgCM_CL_F32_Query_B_F32( TgVEC_F32_04_1_C vCL )
 {
-    return (psFC->b);
+    return (((TgFLOAT32_CP)(&vCL))[2]);
 }
 
 
 /* ---- tgCM_CL_F32_Query_A_F32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_F32_Query_A_F32( TgVEC_F32_04_1_CPCU NONULL psFC )
+TgINLINE TgFLOAT32 tgCM_CL_F32_Query_A_F32( TgVEC_F32_04_1_C vCL )
 {
-    return (psFC->a);
+    return (((TgFLOAT32_CP)(&vCL))[3]);
 }
 
 
@@ -122,140 +110,145 @@ TgINLINE TgFLOAT32 tgCM_CL_F32_Query_A_F32( TgVEC_F32_04_1_CPCU NONULL psFC )
 
 /* ---- tgCM_CL_U32_Init_U08 ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_CL_U32_Init_U08( TgCOLOUR32_PCU NONULL psCL, TgUINT_F08_C uiRed, TgUINT_F08_C uiGreen, TgUINT_F08_C uiBlue, TgUINT_F08_C uiAlpha )
+TgINLINE TgCOLOUR32 tgCM_CL_U32_Init_U08( TgUINT_F08_C uiRed, TgUINT_F08_C uiGreen, TgUINT_F08_C uiBlue, TgUINT_F08_C uiAlpha )
 {
-    TgERROR(nullptr != psCL);
-    psCL->m_uiRed = uiRed;
-    psCL->m_uiGreen = uiGreen;
-    psCL->m_uiBlue = uiBlue;
-    psCL->m_uiAlpha = uiAlpha;
+    TgCOLOUR32                          sCL;
+
+    sCL.m_uiRed = uiRed;
+    sCL.m_uiGreen = uiGreen;
+    sCL.m_uiBlue = uiBlue;
+    sCL.m_uiAlpha = uiAlpha;
+
+    return (sCL);
 }
 
 
 /* ---- tgCM_CL_U32_Init_U32 ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_CL_U32_Init_U32( TgCOLOUR32_PCU NONULL psCL, TgUINT_F32_C uiColour )
+TgINLINE TgCOLOUR32 tgCM_CL_U32_Init_U32( TgUINT_F32_C uiColour )
 {
-    TgERROR(nullptr != psCL);
-    psCL->m_uiRed = TgCOLOUR_R( uiColour );
-    psCL->m_uiGreen = TgCOLOUR_G(uiColour);
-    psCL->m_uiBlue = TgCOLOUR_B( uiColour );
-    psCL->m_uiAlpha = TgCOLOUR_A( uiColour );
+    TgCOLOUR32                          sCL;
+
+    sCL.m_uiRed = TgCOLOUR_R( uiColour );
+    sCL.m_uiGreen = TgCOLOUR_G(uiColour);
+    sCL.m_uiBlue = TgCOLOUR_B( uiColour );
+    sCL.m_uiAlpha = TgCOLOUR_A( uiColour );
+
+    return (sCL);
 }
 
 
 /* ---- tgCM_CL_U32_Init_F32 ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_CL_U32_Init_F32( TgCOLOUR32_PCU NONULL psCL, TgVEC_F32_04_1_CPCU NONULL psFCL )
+TgINLINE TgCOLOUR32 tgCM_CL_U32_Init_F32( TgVEC_F32_04_1_C vCL )
 {
-    TgERROR(nullptr != psCL);
-    psCL->m_uiRed = (TgUINT_E08)(tgCM_CLP_F32( tgCM_CL_F32_Query_R_F32( psFCL ), 0.0F, 1.0F )* 255.0F);
-    psCL->m_uiGreen = (TgUINT_E08)(tgCM_CLP_F32( tgCM_CL_F32_Query_G_F32( psFCL ), 0.0F, 1.0F )* 255.0F);
-    psCL->m_uiBlue = (TgUINT_E08)(tgCM_CLP_F32( tgCM_CL_F32_Query_B_F32( psFCL ), 0.0F, 1.0F )* 255.0F);
-    psCL->m_uiAlpha = (TgUINT_E08)(tgCM_CLP_F32( tgCM_CL_F32_Query_A_F32( psFCL ), 0.0F, 1.0F )* 255.0F);
+    TgCOLOUR32                          sCL;
+
+    sCL.m_uiRed = (TgUINT_E08)(tgCM_CLP_F32( tgCM_CL_F32_Query_R_F32( vCL ), 0.0F, 1.0F ) * 255.0F);
+    sCL.m_uiGreen = (TgUINT_E08)(tgCM_CLP_F32( tgCM_CL_F32_Query_G_F32( vCL ), 0.0F, 1.0F ) * 255.0F);
+    sCL.m_uiBlue = (TgUINT_E08)(tgCM_CLP_F32( tgCM_CL_F32_Query_B_F32( vCL ), 0.0F, 1.0F ) * 255.0F);
+    sCL.m_uiAlpha = (TgUINT_E08)(tgCM_CLP_F32( tgCM_CL_F32_Query_A_F32( vCL ), 0.0F, 1.0F ) * 255.0F);
+
+    return (sCL);
 }
 
 
 /* ---- tgCM_CL_U32_Brightness_U16 ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgUINT_F16 tgCM_CL_U32_Brightness_U16( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgUINT_F16 tgCM_CL_U32_Brightness_U16( TgCOLOUR32_C sCL )
 {
-    TgERROR(nullptr != psCL);
-    return ((TgUINT_F16 )(tgCM_CLP_F32( tgCM_CL_U32_Brightness_F32( psCL ), 0.0F, 1.0F )* (TgFLOAT32)KTgMAX_U16));
+    return ((TgUINT_F16 )(tgCM_CLP_F32( tgCM_CL_U32_Brightness_F32( sCL ), 0.0F, 1.0F )* (TgFLOAT32)KTgMAX_U16));
 }
 
 
 /* ---- tgCM_CL_U32_Brightness_F32 ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_U32_Brightness_F32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgFLOAT32 tgCM_CL_U32_Brightness_F32( TgCOLOUR32_C sCL )
 {
-    TgERROR(nullptr != psCL);
-    return ((tgCM_CL_U32_Query_R_F32( psCL ) + tgCM_CL_U32_Query_B_F32( psCL ) + tgCM_CL_U32_Query_G_F32( psCL )) / 3.0F);
+    return ((tgCM_CL_U32_Query_R_F32( sCL ) + tgCM_CL_U32_Query_B_F32( sCL ) + tgCM_CL_U32_Query_G_F32( sCL )) / 3.0F);
 }
 
 
 /* ---- tgCM_CL_U32_Lightness ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_U32_Lightness( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgFLOAT32 tgCM_CL_U32_Lightness( TgCOLOUR32_C sCL )
 {
-    TgERROR(nullptr != psCL);
     return (0.5F*(
-          tgCM_MAX_F32( tgCM_CL_U32_Query_R_F32( psCL ), tgCM_MAX_F32( tgCM_CL_U32_Query_G_F32( psCL ), tgCM_CL_U32_Query_B_F32( psCL ) ) )
-        + tgCM_MIN_F32( tgCM_CL_U32_Query_R_F32( psCL ), tgCM_MIN_F32( tgCM_CL_U32_Query_G_F32( psCL ), tgCM_CL_U32_Query_B_F32( psCL ) ) )
+          tgCM_MAX_F32( tgCM_CL_U32_Query_R_F32( sCL ), tgCM_MAX_F32( tgCM_CL_U32_Query_G_F32( sCL ), tgCM_CL_U32_Query_B_F32( sCL ) ) )
+        + tgCM_MIN_F32( tgCM_CL_U32_Query_R_F32( sCL ), tgCM_MIN_F32( tgCM_CL_U32_Query_G_F32( sCL ), tgCM_CL_U32_Query_B_F32( sCL ) ) )
     ));
 }
 
 
 /* ---- tgCM_CL_U32_Luminance ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_U32_Luminance( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgFLOAT32 tgCM_CL_U32_Luminance( TgCOLOUR32_C sCL )
 {
-    TgERROR(nullptr != psCL);
-    return (0.3f*tgCM_CL_U32_Query_R_F32( psCL ) + 0.59f*tgCM_CL_U32_Query_G_F32( psCL ) + 0.11f*tgCM_CL_U32_Query_B_F32( psCL ));
+    return (0.3f*tgCM_CL_U32_Query_R_F32( sCL ) + 0.59f*tgCM_CL_U32_Query_G_F32( sCL ) + 0.11f*tgCM_CL_U32_Query_B_F32( sCL ));
 }
 
 
 /* ---- tgCM_CL_U32_Query_R_U32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgUINT_F08 tgCM_CL_U32_Query_R_U32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgUINT_F08 tgCM_CL_U32_Query_R_U32( TgCOLOUR32_C sCL )
 {
-    return (psCL->m_uiRed);
+    return (sCL.m_uiRed);
 }
 
 
 /* ---- tgCM_CL_U32_Query_G_U32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgUINT_F08 tgCM_CL_U32_Query_G_U32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgUINT_F08 tgCM_CL_U32_Query_G_U32( TgCOLOUR32_C sCL )
 {
-    return (psCL->m_uiGreen);
+    return (sCL.m_uiGreen);
 }
 
 
 /* ---- tgCM_CL_U32_Query_B_U32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgUINT_F08 tgCM_CL_U32_Query_B_U32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgUINT_F08 tgCM_CL_U32_Query_B_U32( TgCOLOUR32_C sCL )
 {
-    return (psCL->m_uiBlue);
+    return (sCL.m_uiBlue);
 }
 
 
 /* ---- tgCM_CL_U32_Query_A_U32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgUINT_F08 tgCM_CL_U32_Query_A_U32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgUINT_F08 tgCM_CL_U32_Query_A_U32( TgCOLOUR32_C sCL )
 {
-    return (psCL->m_uiAlpha);
+    return (sCL.m_uiAlpha);
 }
 
 
 /* ---- tgCM_CL_U32_Query_R_F32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_U32_Query_R_F32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgFLOAT32 tgCM_CL_U32_Query_R_F32( TgCOLOUR32_C sCL )
 {
-    return (tgCM_CL_U32_Query_R_U32( psCL ) / 255.0F);
+    return (tgCM_CL_U32_Query_R_U32( sCL ) / 255.0F);
 }
 
 
 /* ---- tgCM_CL_U32_Query_G_F32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_U32_Query_G_F32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgFLOAT32 tgCM_CL_U32_Query_G_F32( TgCOLOUR32_C sCL )
 {
-    return (tgCM_CL_U32_Query_G_U32( psCL ) / 255.0F);
+    return (tgCM_CL_U32_Query_G_U32( sCL ) / 255.0F);
 }
 
 
 /* ---- tgCM_CL_U32_Query_B_F32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_U32_Query_B_F32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgFLOAT32 tgCM_CL_U32_Query_B_F32( TgCOLOUR32_C sCL )
 {
-    return (tgCM_CL_U32_Query_B_U32( psCL ) / 255.0F);
+    return (tgCM_CL_U32_Query_B_U32( sCL ) / 255.0F);
 }
 
 
 /* ---- tgCM_CL_U32_Query_A_F32 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgFLOAT32 tgCM_CL_U32_Query_A_F32( TgCOLOUR32_CPCU NONULL psCL )
+TgINLINE TgFLOAT32 tgCM_CL_U32_Query_A_F32( TgCOLOUR32_C sCL )
 {
-    return (tgCM_CL_U32_Query_A_U32( psCL ) / 255.0F);
+    return (tgCM_CL_U32_Query_A_U32( sCL ) / 255.0F);
 }
 
 

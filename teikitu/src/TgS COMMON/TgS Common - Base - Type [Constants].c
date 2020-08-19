@@ -10,6 +10,10 @@
     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details. You should have received a copy of the
     GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#include "TgS COMMON/TgS Common -- BASE.h"
+
+
 /* == Common ===================================================================================================================================================================== */
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
@@ -64,103 +68,119 @@ TgALIGN(16) TgFLOAT64_C                     KTgDEG_TO_RAD_F64           = TgPP_K
 TgALIGN(16) TgFLOAT64_C                     KTgRAD_TO_DEG_F64           = 180.0 / TgPP_KVAL_PI;
 TgALIGN(16) TgFLOAT64_C                     KTgGOLDEN_RATIO_F64         = (1.0 + TgPP_KVAL_SQRT5) * 0.5;
 
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgEPS_N_F32_04_1           = { KTgEPS_F32, KTgEPS_F32, KTgEPS_F32, KTgEPS_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgROOT_EPS_N_F32_04_1      = { KTgROOT_EPS_F32, KTgROOT_EPS_F32, KTgROOT_EPS_F32, KTgROOT_EPS_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgE_N_F32_04_1             = { KTgE_F32, KTgE_F32, KTgE_F32, KTgE_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgPI_N_F32_04_1            = { KTgPI_F32, KTgPI_F32, KTgPI_F32, KTgPI_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgTWO_PI_N_F32_04_1        = { KTgTWO_PI_F32, KTgTWO_PI_F32, KTgTWO_PI_F32, KTgTWO_PI_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgHALF_PI_N_F32_04_1       = { KTgHALF_PI_F32, KTgHALF_PI_F32, KTgHALF_PI_F32, KTgHALF_PI_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgINVPI_N_F32_04_1         = { KTgINVPI_F32, KTgINVPI_F32, KTgINVPI_F32, KTgINVPI_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgSQRT2_N_F32_04_1         = { KTgSQRT2_F32, KTgSQRT2_F32, KTgSQRT2_F32, KTgSQRT2_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgSQRT3_N_F32_04_1         = { KTgSQRT3_F32, KTgSQRT3_F32, KTgSQRT3_F32, KTgSQRT3_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgSQRT5_N_F32_04_1         = { KTgSQRT5_F32, KTgSQRT5_F32, KTgSQRT5_F32, KTgSQRT5_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgTHIRD_N_F32_04_1         = { KTgTHIRD_F32, KTgTHIRD_F32, KTgTHIRD_F32, KTgTHIRD_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgTWENTYSEVENTH_N_F32_04_1 = { KTgTWENTYSEVENTH_F32, KTgTWENTYSEVENTH_F32, KTgTWENTYSEVENTH_F32, KTgTWENTYSEVENTH_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgSQRT1_2_N_F32_04_1       = { KTgSQRT1_2_F32, KTgSQRT1_2_F32, KTgSQRT1_2_F32, KTgSQRT1_2_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgDEG_TO_RAD_N_F32_04_1    = { KTgDEG_TO_RAD_F32, KTgDEG_TO_RAD_F32, KTgDEG_TO_RAD_F32, KTgDEG_TO_RAD_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgRAD_TO_DEG_N_F32_04_1    = { KTgRAD_TO_DEG_F32, KTgRAD_TO_DEG_F32, KTgRAD_TO_DEG_F32, KTgRAD_TO_DEG_F32 };
-TgALIGN(16) TgVEC_N_F32_04_1_C              KTgGOLDEN_RATIO_N_F32_04_1  = { KTgGOLDEN_RATIO_F32, KTgGOLDEN_RATIO_F32, KTgGOLDEN_RATIO_F32, KTgGOLDEN_RATIO_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgEPS_F32_04_1           = { KTgEPS_F32, KTgEPS_F32, KTgEPS_F32, KTgEPS_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgROOT_EPS_F32_04_1      = { KTgROOT_EPS_F32, KTgROOT_EPS_F32, KTgROOT_EPS_F32, KTgROOT_EPS_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgE_F32_04_1             = { KTgE_F32, KTgE_F32, KTgE_F32, KTgE_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgPI_F32_04_1            = { KTgPI_F32, KTgPI_F32, KTgPI_F32, KTgPI_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgTWO_PI_F32_04_1        = { KTgTWO_PI_F32, KTgTWO_PI_F32, KTgTWO_PI_F32, KTgTWO_PI_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgHALF_PI_F32_04_1       = { KTgHALF_PI_F32, KTgHALF_PI_F32, KTgHALF_PI_F32, KTgHALF_PI_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgINVPI_F32_04_1         = { KTgINVPI_F32, KTgINVPI_F32, KTgINVPI_F32, KTgINVPI_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgSQRT2_F32_04_1         = { KTgSQRT2_F32, KTgSQRT2_F32, KTgSQRT2_F32, KTgSQRT2_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgSQRT3_F32_04_1         = { KTgSQRT3_F32, KTgSQRT3_F32, KTgSQRT3_F32, KTgSQRT3_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgSQRT5_F32_04_1         = { KTgSQRT5_F32, KTgSQRT5_F32, KTgSQRT5_F32, KTgSQRT5_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgTHIRD_F32_04_1         = { KTgTHIRD_F32, KTgTHIRD_F32, KTgTHIRD_F32, KTgTHIRD_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgTWENTYSEVENTH_F32_04_1 = { KTgTWENTYSEVENTH_F32, KTgTWENTYSEVENTH_F32, KTgTWENTYSEVENTH_F32, KTgTWENTYSEVENTH_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgSQRT1_2_F32_04_1       = { KTgSQRT1_2_F32, KTgSQRT1_2_F32, KTgSQRT1_2_F32, KTgSQRT1_2_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgDEG_TO_RAD_F32_04_1    = { KTgDEG_TO_RAD_F32, KTgDEG_TO_RAD_F32, KTgDEG_TO_RAD_F32, KTgDEG_TO_RAD_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgRAD_TO_DEG_F32_04_1    = { KTgRAD_TO_DEG_F32, KTgRAD_TO_DEG_F32, KTgRAD_TO_DEG_F32, KTgRAD_TO_DEG_F32 };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgGOLDEN_RATIO_F32_04_1  = { KTgGOLDEN_RATIO_F32, KTgGOLDEN_RATIO_F32, KTgGOLDEN_RATIO_F32, KTgGOLDEN_RATIO_F32 };
 
 
 
-TgALIGN(16) TgUN_V128_C                     KTgFFFF_V128                = { .m_U32_04_1 = {{ 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF }} };
-TgALIGN(16) TgUN_V128_C                     KTgFFF0_V128                = { .m_U32_04_1 = {{ 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTgFF0F_V128                = { .m_U32_04_1 = {{ 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF }} };
-TgALIGN(16) TgUN_V128_C                     KTgFF00_V128                = { .m_U32_04_1 = {{ 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTgF0FF_V128                = { .m_U32_04_1 = {{ 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF }} };
-TgALIGN(16) TgUN_V128_C                     KTgF0F0_V128                = { .m_U32_04_1 = {{ 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTgF00F_V128                = { .m_U32_04_1 = {{ 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF }} };
-TgALIGN(16) TgUN_V128_C                     KTgF000_V128                = { .m_U32_04_1 = {{ 0xFFFFFFFF, 0x00000000, 0x00000000, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTg0FFF_V128                = { .m_U32_04_1 = {{ 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF }} };
-TgALIGN(16) TgUN_V128_C                     KTg0FF0_V128                = { .m_U32_04_1 = {{ 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTg0F0F_V128                = { .m_U32_04_1 = {{ 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF }} };
-TgALIGN(16) TgUN_V128_C                     KTg0F00_V128                = { .m_U32_04_1 = {{ 0x00000000, 0xFFFFFFFF, 0x00000000, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTg00FF_V128                = { .m_U32_04_1 = {{ 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF }} };
-TgALIGN(16) TgUN_V128_C                     KTg00F0_V128                = { .m_U32_04_1 = {{ 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTg000F_V128                = { .m_U32_04_1 = {{ 0x00000000, 0x00000000, 0x00000000, 0xFFFFFFFF }} };
-TgALIGN(16) TgUN_V128_C                     KTg0000_V128                = { .m_U32_04_1 = {{ 0x00000000, 0x00000000, 0x00000000, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTgNaN_V128                 = { .m_U32_04_1 = {{ 0x7F800000, 0x7F800000, 0x7F800000, 0x7F800000 }} };
-TgALIGN(16) TgUN_V128_C                     KTgSgnM_V128                = { .m_U32_04_1 = {{ 0x80000000, 0x80000000, 0x80000000, 0x80000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTgINF_V128                 = { .m_U32_04_1 = {{ 0x7F800000, 0x7F800000, 0x7F800000, 0x7F800000 }} };
-TgALIGN(16) TgUN_V128_C                     KTgPNNP_V128                = { .m_U32_04_1 = {{ 0x00000000, 0x80000000, 0x80000000, 0x00000000 }} };
-TgALIGN(16) TgUN_V128_C                     KTgYZXW_V128                = { .m_U32_04_1 = {{ 0x04050607, 0x08090a0b, 0x00010203, 0x0c0d0e0f }} };
-TgALIGN(16) TgUN_V128_C                     KTgZXYW_V128                = { .m_U32_04_1 = {{ 0x08090a0b, 0x00010203, 0x04050607, 0x0c0d0e0f }} };
+TgALIGN(16) TgUN_V128_C                     KTgFFFF_V128                = { .m_vS_U32_04_1 = {{ 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF }} };
+TgALIGN(16) TgUN_V128_C                     KTgFFF0_V128                = { .m_vS_U32_04_1 = {{ 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTgFF0F_V128                = { .m_vS_U32_04_1 = {{ 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF }} };
+TgALIGN(16) TgUN_V128_C                     KTgFF00_V128                = { .m_vS_U32_04_1 = {{ 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTgF0FF_V128                = { .m_vS_U32_04_1 = {{ 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF }} };
+TgALIGN(16) TgUN_V128_C                     KTgF0F0_V128                = { .m_vS_U32_04_1 = {{ 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTgF00F_V128                = { .m_vS_U32_04_1 = {{ 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF }} };
+TgALIGN(16) TgUN_V128_C                     KTgF000_V128                = { .m_vS_U32_04_1 = {{ 0xFFFFFFFF, 0x00000000, 0x00000000, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTg0FFF_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF }} };
+TgALIGN(16) TgUN_V128_C                     KTg0FF0_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTg0F0F_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF }} };
+TgALIGN(16) TgUN_V128_C                     KTg0F00_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0xFFFFFFFF, 0x00000000, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTg00FF_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF }} };
+TgALIGN(16) TgUN_V128_C                     KTg00F0_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTg000F_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0x00000000, 0x00000000, 0xFFFFFFFF }} };
+TgALIGN(16) TgUN_V128_C                     KTg0000_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0x00000000, 0x00000000, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTgNAN_V128                 = { .m_vS_U32_04_1 = {{ 0x7F800000, 0x7F800000, 0x7F800000, 0x7F800000 }} };
+TgALIGN(16) TgUN_V128_C                     KTgSgnM_V128                = { .m_vS_U32_04_1 = {{ 0x80000000, 0x80000000, 0x80000000, 0x80000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTgINF_V128                 = { .m_vS_U32_04_1 = {{ 0x7F800000, 0x7F800000, 0x7F800000, 0x7F800000 }} };
+TgALIGN(16) TgUN_V128_C                     KTgPNNP_V128                = { .m_vS_U32_04_1 = {{ 0x00000000, 0x80000000, 0x80000000, 0x00000000 }} };
+TgALIGN(16) TgUN_V128_C                     KTgYZXW_V128                = { .m_vS_U32_04_1 = {{ 0x04050607, 0x08090a0b, 0x00010203, 0x0c0d0e0f }} };
+TgALIGN(16) TgUN_V128_C                     KTgZXYW_V128                = { .m_vS_U32_04_1 = {{ 0x08090a0b, 0x00010203, 0x04050607, 0x0c0d0e0f }} };
 
 
 
-TgALIGN(16) TgUN_V128_C                     KTgZERO_V128                = { .m_F32_04_1 = {{ 0.0F, 0.0F, 0.0F, 0.0F }} };
-TgALIGN(16) TgUN_V128_C                     KTgONE_V128                 = { .m_F32_04_1 = {{ 1.0F, 1.0F, 1.0F, 1.0F }} };
-TgALIGN(16) TgUN_V128_C                     KTgUNIT_X_V128              = { .m_F32_04_1 = {{ 1.0F, 0.0F, 0.0F, 0.0F }} };
-TgALIGN(16) TgUN_V128_C                     KTgUNIT_Y_V128              = { .m_F32_04_1 = {{ 0.0F, 1.0F, 0.0F, 0.0F }} };
-TgALIGN(16) TgUN_V128_C                     KTgUNIT_Z_V128              = { .m_F32_04_1 = {{ 0.0F, 0.0F, 1.0F, 0.0F }} };
-TgALIGN(16) TgUN_V128_C                     KTgUNIT_W_V128              = { .m_F32_04_1 = {{ 0.0F, 0.0F, 0.0F, 1.0F }} };
+TgALIGN(16) TgUN_V128_C                     KTgZERO_V128                = { .m_vS_F32_04_1 = {{ 0.0F, 0.0F, 0.0F, 0.0F }} };
+TgALIGN(16) TgUN_V128_C                     KTgONE_V128                 = { .m_vS_F32_04_1 = {{ 1.0F, 1.0F, 1.0F, 1.0F }} };
+TgALIGN(16) TgUN_V128_C                     KTgUNIT_X_V128              = { .m_vS_F32_04_1 = {{ 1.0F, 0.0F, 0.0F, 0.0F }} };
+TgALIGN(16) TgUN_V128_C                     KTgUNIT_Y_V128              = { .m_vS_F32_04_1 = {{ 0.0F, 1.0F, 0.0F, 0.0F }} };
+TgALIGN(16) TgUN_V128_C                     KTgUNIT_Z_V128              = { .m_vS_F32_04_1 = {{ 0.0F, 0.0F, 1.0F, 0.0F }} };
+TgALIGN(16) TgUN_V128_C                     KTgUNIT_W_V128              = { .m_vS_F32_04_1 = {{ 0.0F, 0.0F, 0.0F, 1.0F }} };
 
-TgALIGN(16) TgVEC_N_F32_04_3_C              KTgIDENT_N_F32_04_3         = { .m_avRow = {
-                                                                            1.0F, 0.0F, 0.0F, 0.0F,
-                                                                            0.0F, 1.0F, 0.0F, 0.0F,
-                                                                            0.0F, 0.0F, 1.0F, 0.0F
+TgALIGN(16) TgVEC_F32_04_1_C                KTgZERO_F32_04_1          = { 0.0F, 0.0F, 0.0F, 0.0F };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgONE_F32_04_1           = { 1.0F, 1.0F, 1.0F, 1.0F };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgUNIT_X_F32_04_1        = { 1.0F, 0.0F, 0.0F, 0.0F };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgUNIT_Y_F32_04_1        = { 0.0F, 1.0F, 0.0F, 0.0F };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgUNIT_Z_F32_04_1        = { 0.0F, 0.0F, 1.0F, 0.0F };
+TgALIGN(16) TgVEC_F32_04_1_C                KTgUNIT_W_F32_04_1        = { 0.0F, 0.0F, 0.0F, 1.0F };
+
+#if TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE
+TgALIGN(16) TgVEC_F64_04_1_C                KTgZERO_F64_04_1          = { 0.0, 0.0, 0.0, 0.0 };
+TgALIGN(16) TgVEC_F64_04_1_C                KTgONE_F64_04_1           = { 1.0, 1.0, 1.0, 1.0 };
+TgALIGN(16) TgVEC_F64_04_1_C                KTgUNIT_X_F64_04_1        = { 1.0, 0.0, 0.0, 0.0 };
+TgALIGN(16) TgVEC_F64_04_1_C                KTgUNIT_Y_F64_04_1        = { 0.0, 1.0, 0.0, 0.0 };
+TgALIGN(16) TgVEC_F64_04_1_C                KTgUNIT_Z_F64_04_1        = { 0.0, 0.0, 1.0, 0.0 };
+TgALIGN(16) TgVEC_F64_04_1_C                KTgUNIT_W_F64_04_1        = { 0.0, 0.0, 0.0, 1.0 };
+#endif
+
+TgALIGN(16) TgVEC_F32_04_3_C                KTgIDENT_F32_04_3         = { {
+                                                                            { 1.0F, 0.0F, 0.0F, 0.0F },
+                                                                            { 0.0F, 1.0F, 0.0F, 0.0F },
+                                                                            { 0.0F, 0.0F, 1.0F, 0.0F }
                                                                           } };
 
-TgALIGN(16) TgVEC_N_F32_04_4_C              KTgIDENT_N_F32_04_4         = { .m_avRow = {
-                                                                            1.0F, 0.0F, 0.0F, 0.0F,
-                                                                            0.0F, 1.0F, 0.0F, 0.0F,
-                                                                            0.0F, 0.0F, 1.0F, 0.0F,
-                                                                            0.0F, 0.0F, 0.0F, 1.0F
+TgALIGN(16) TgVEC_F32_04_4_C                KTgIDENT_F32_04_4         = { {
+                                                                            { 1.0F, 0.0F, 0.0F, 0.0F },
+                                                                            { 0.0F, 1.0F, 0.0F, 0.0F },
+                                                                            { 0.0F, 0.0F, 1.0F, 0.0F },
+                                                                            { 0.0F, 0.0F, 0.0F, 1.0F }
                                                                           } };
 
-TgALIGN(16) TgVEC_F32_03_1_C                KTgZERO_F32_03_1            = { { 0.0F, 0.0F, 0.0F } };
-TgALIGN(16) TgVEC_F32_03_1_C                KTgONE_F32_03_1             = { { 1.0F, 1.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_03_1_C                KTgUNIT_X_F32_03_1          = { { 1.0F, 0.0F, 0.0F } };
-TgALIGN(16) TgVEC_F32_03_1_C                KTgUNIT_Y_F32_03_1          = { { 0.0F, 1.0F, 0.0F } };
-TgALIGN(16) TgVEC_F32_03_1_C                KTgUNIT_Z_F32_03_1          = { { 0.0F, 0.0F, 1.0F } };
+TgALIGN(16) TgVEC_S_F32_03_1_C              KTgZERO_S_F32_03_1          = { { 0.0F, 0.0F, 0.0F } };
+TgALIGN(16) TgVEC_S_F32_03_1_C              KTgONE_S_F32_03_1           = { { 1.0F, 1.0F, 1.0F } };
+TgALIGN(16) TgVEC_S_F32_03_1_C              KTgUNIT_X_S_F32_03_1        = { { 1.0F, 0.0F, 0.0F } };
+TgALIGN(16) TgVEC_S_F32_03_1_C              KTgUNIT_Y_S_F32_03_1        = { { 0.0F, 1.0F, 0.0F } };
+TgALIGN(16) TgVEC_S_F32_03_1_C              KTgUNIT_Z_S_F32_03_1        = { { 0.0F, 0.0F, 1.0F } };
 
-TgALIGN(16) TgVEC_F32_04_1_C                KTgZERO_F32_04_1            = { { 0.0F, 0.0F, 0.0F, 0.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C                KTgONE_F32_04_1             = { { 1.0F, 1.0F, 1.0F, 1.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C                KTgUNIT_X_F32_04_1          = { { 1.0F, 0.0F, 0.0F, 0.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C                KTgUNIT_Y_F32_04_1          = { { 0.0F, 1.0F, 0.0F, 0.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C                KTgUNIT_Z_F32_04_1          = { { 0.0F, 0.0F, 1.0F, 0.0F } };
-TgALIGN(16) TgVEC_F32_04_1_C                KTgUNIT_W_F32_04_1          = { { 0.0F, 0.0F, 0.0F, 1.0F } };
+TgALIGN(16) TgVEC_S_F32_04_1_C              KTgZERO_S_F32_04_1          = { { 0.0F, 0.0F, 0.0F, 0.0F } };
+TgALIGN(16) TgVEC_S_F32_04_1_C              KTgONE_S_F32_04_1           = { { 1.0F, 1.0F, 1.0F, 1.0F } };
+TgALIGN(16) TgVEC_S_F32_04_1_C              KTgUNIT_X_S_F32_04_1        = { { 1.0F, 0.0F, 0.0F, 0.0F } };
+TgALIGN(16) TgVEC_S_F32_04_1_C              KTgUNIT_Y_S_F32_04_1        = { { 0.0F, 1.0F, 0.0F, 0.0F } };
+TgALIGN(16) TgVEC_S_F32_04_1_C              KTgUNIT_Z_S_F32_04_1        = { { 0.0F, 0.0F, 1.0F, 0.0F } };
+TgALIGN(16) TgVEC_S_F32_04_1_C              KTgUNIT_W_S_F32_04_1        = { { 0.0F, 0.0F, 0.0F, 1.0F } };
 
-TgALIGN(16) TgVEC_F64_03_1_C                KTgZERO_F64_03_1            = { { 0.0, 0.0, 0.0 } };
-TgALIGN(16) TgVEC_F64_03_1_C                KTgONE_F64_03_1             = { { 1.0, 1.0, 1.0 } };
-TgALIGN(16) TgVEC_F64_03_1_C                KTgUNIT_X_F64_03_1          = { { 1.0, 0.0, 0.0 } };
-TgALIGN(16) TgVEC_F64_03_1_C                KTgUNIT_Y_F64_03_1          = { { 0.0, 1.0, 0.0 } };
-TgALIGN(16) TgVEC_F64_03_1_C                KTgUNIT_Z_F64_03_1          = { { 0.0, 0.0, 1.0 } };
+TgALIGN(16) TgVEC_S_F64_03_1_C              KTgZERO_S_F64_03_1          = { { 0.0, 0.0, 0.0 } };
+TgALIGN(16) TgVEC_S_F64_03_1_C              KTgONE_S_F64_03_1           = { { 1.0, 1.0, 1.0 } };
+TgALIGN(16) TgVEC_S_F64_03_1_C              KTgUNIT_X_S_F64_03_1        = { { 1.0, 0.0, 0.0 } };
+TgALIGN(16) TgVEC_S_F64_03_1_C              KTgUNIT_Y_S_F64_03_1        = { { 0.0, 1.0, 0.0 } };
+TgALIGN(16) TgVEC_S_F64_03_1_C              KTgUNIT_Z_S_F64_03_1        = { { 0.0, 0.0, 1.0 } };
 
-TgALIGN(16) TgVEC_F64_04_1_C                KTgZERO_F64_04_1            = { { 0.0, 0.0, 0.0, 0.0 } };
-TgALIGN(16) TgVEC_F64_04_1_C                KTgONE_F64_04_1             = { { 1.0, 1.0, 1.0, 1.0 } };
-TgALIGN(16) TgVEC_F64_04_1_C                KTgUNIT_X_F64_04_1          = { { 1.0, 0.0, 0.0, 0.0 } };
-TgALIGN(16) TgVEC_F64_04_1_C                KTgUNIT_Y_F64_04_1          = { { 0.0, 1.0, 0.0, 0.0 } };
-TgALIGN(16) TgVEC_F64_04_1_C                KTgUNIT_Z_F64_04_1          = { { 0.0, 0.0, 1.0, 0.0 } };
-TgALIGN(16) TgVEC_F64_04_1_C                KTgUNIT_W_F64_04_1          = { { 0.0, 0.0, 0.0, 1.0 } };
+TgALIGN(16) TgVEC_S_F64_04_1_C              KTgZERO_S_F64_04_1          = { { 0.0, 0.0, 0.0, 0.0 } };
+TgALIGN(16) TgVEC_S_F64_04_1_C              KTgONE_S_F64_04_1           = { { 1.0, 1.0, 1.0, 1.0 } };
+TgALIGN(16) TgVEC_S_F64_04_1_C              KTgUNIT_X_S_F64_04_1        = { { 1.0, 0.0, 0.0, 0.0 } };
+TgALIGN(16) TgVEC_S_F64_04_1_C              KTgUNIT_Y_S_F64_04_1        = { { 0.0, 1.0, 0.0, 0.0 } };
+TgALIGN(16) TgVEC_S_F64_04_1_C              KTgUNIT_Z_S_F64_04_1        = { { 0.0, 0.0, 1.0, 0.0 } };
+TgALIGN(16) TgVEC_S_F64_04_1_C              KTgUNIT_W_S_F64_04_1        = { { 0.0, 0.0, 0.0, 1.0 } };
 
-TgALIGN(16) TgVEC_F32_04_3_C                KTgIDENT_F32_04_3           = { {
+TgALIGN(16) TgVEC_S_F32_04_3_C              KTgIDENT_S_F32_04_3         = { {
                                                                               1.0F, 0.0F, 0.0F, 0.0F,
                                                                               0.0F, 1.0F, 0.0F, 0.0F,
                                                                               0.0F, 0.0F, 1.0F, 0.0F
                                                                             } };
 
-TgALIGN(16) TgVEC_F32_04_4_C                KTgIDENT_F32_04_4           = { {
+TgALIGN(16) TgVEC_S_F32_04_4_C              KTgIDENT_S_F32_04_4         = { {
                                                                               1.0F, 0.0F, 0.0F, 0.0F,
                                                                               0.0F, 1.0F, 0.0F, 0.0F,
                                                                               0.0F, 0.0F, 1.0F, 0.0F,

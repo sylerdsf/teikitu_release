@@ -53,7 +53,7 @@
     @ingroup TGS_COMMON_MATH
 */
 
-/** @defgroup TGS_COMMON_MATH_MATRIX_N_API Matrix SIMD Functions
+/** @defgroup TGS_COMMON_MATH_MATRIX_API Matrix SIMD Functions
     @ingroup TGS_COMMON_MATH
 */
 
@@ -62,30 +62,29 @@
 /*  Public Functions                                                                                                                                                               */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-#include "TgS COMMON/TgS Common - Math [Matrix].h_inc"
-#if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
-    #include "TgS COMMON/TgS Common - Math [Matrix] [N].h_inc"
+#include "TgS COMMON/TgS Common - Math [Matrix] [S].h_inc"
+#if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_MATRIX_GUARD */
+    #include "TgS COMMON/TgS Common - Math [Matrix].h_inc"
 #endif
 
 #if defined(TEMPLATE__ENABLE_INTEGER)
     #error Not supported
 
 #else
-    #include "TgS COMMON/TgS Common - Math [Matrix] [F].h_inc"
-    #if defined(VEC_IS_NATIVE) && VEC_IS_NATIVE
-        #include "TgS COMMON/TgS Common - Math [Matrix] [N] [F].h_inc"
-        #if (32 == TEMPLATE__TYPE_SIZE)
-            #if (4 == TEMPLATE__VECTOR_ROW)
-                #include "TgS COMMON/TgS Common - Math [Matrix] [N] [F] [44].h_inc"
-            #elif (3 == TEMPLATE__VECTOR_ROW)
-                #include "TgS COMMON/TgS Common - Math [Matrix] [N] [F] [34].h_inc"
-            #endif
-        #endif
+    #include "TgS COMMON/TgS Common - Math [Matrix] [S] [F].h_inc"
+    #if (4 == TEMPLATE__VECTOR_COL)
+        #include "TgS COMMON/TgS Common - Math [Matrix] [S] [F] [44].h_inc"
+    #elif (3 == TEMPLATE__VECTOR_COL)
+        #include "TgS COMMON/TgS Common - Math [Matrix] [S] [F] [34].h_inc"
     #endif
-    #if (4 == TEMPLATE__VECTOR_ROW)
-        #include "TgS COMMON/TgS Common - Math [Matrix] [F] [44].h_inc"
-    #elif (3 == TEMPLATE__VECTOR_ROW)
-        #include "TgS COMMON/TgS Common - Math [Matrix] [F] [34].h_inc"
+
+    #if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_MATRIX_GUARD */
+        #include "TgS COMMON/TgS Common - Math [Matrix] [F].h_inc"
+        #if (4 == TEMPLATE__VECTOR_COL)
+            #include "TgS COMMON/TgS Common - Math [Matrix] [F] [44].h_inc"
+        #elif (3 == TEMPLATE__VECTOR_COL)
+            #include "TgS COMMON/TgS Common - Math [Matrix] [F] [34].h_inc"
+        #endif
     #endif
 
 #endif

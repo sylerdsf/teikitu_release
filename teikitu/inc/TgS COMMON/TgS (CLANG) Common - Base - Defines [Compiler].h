@@ -35,6 +35,7 @@
 #pragma clang diagnostic ignored "-Wnullability-extension"          /* Allows for marking pointers (normally function parameters) as being non null to help static analysis */
 #pragma clang diagnostic ignored "-Wnullability-completeness"       /* Prevents warning on incomplete labeling of pointers */
 #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"  /* Xcode lacks support for some of the doxygen commands */
+//#pragma clang diagnostic ignored "-Wundefined-internal"
 
 #if defined(__cplusplus)
     #pragma clang diagnostic ignored "-Wreserved-id-macro"
@@ -177,6 +178,15 @@
 {                                                                                                                                                                                   \
     VAR =  (TYPE *)__builtin_alloca( (COUNT) * sizeof(TYPE) );                                                                                                                      \
 }
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  Intrinsics                                                                                                                                                                     */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+
+#define TgCOMPILE__HARDWARE__BSF
+#define tgPM__HARDWARE__BSF_U32 __builtin_ctz
+#define tgPM__HARDWARE__BSF_U64 __builtin_ctzll
 
 
 /* =============================================================================================================================================================================== */

@@ -72,7 +72,7 @@ TgEXTN TgRSIZE                              tgTR_Stack_Size( TgVOID );
 
 /*# TgCOMPILE__THREAD */
 #endif
-                                            /** @brief Yields the remaining time slice back to the scheduler. Does not guarantee that the scheduler will select a new thread to execute. */
+                                            /** @brief Yields the remaining time slice back to the scheduler but does not guarantee that a new thread will execute next. */
 TgINLINE TgVOID                             tgTR_Yield( TgVOID );
 
                                             /** @brief Cpu instruction meant to be used for spin loops */

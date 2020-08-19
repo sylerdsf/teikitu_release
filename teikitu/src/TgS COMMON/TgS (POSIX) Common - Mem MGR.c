@@ -13,7 +13,8 @@
 
 #include <unistd.h>
 #include <stdlib.h>
-
+#include <mach/mach_init.h>
+#include <mach/vm_map.h>
 
 /* == Common ===================================================================================================================================================================== */
 
@@ -38,7 +39,7 @@ TgEXTN TgVOID                               tgMM_PM_Virtual_Free( TgVOID_PC );
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgUINT_F32 tgMM_PM_Page_Size( TgVOID )
 {
-    return (4096);
+    return ((TgUINT_F32)getpagesize());
 }
 
 
@@ -47,9 +48,28 @@ TgUINT_F32 tgMM_PM_Page_Size( TgVOID )
 TgVOID_P tgMM_PM_Virtual_Reserve( TgSIZE_ALL_C iSize )
 {
     TgVOID_P                            pMem;
-    
+
     posix_memalign( &pMem, tgMM_PM_Page_Size(), iSize );
     return (pMem);
+
+//    TgSIZE_ALL                          uiPageSize, uiSize_To_Allocate;
+//    TgVOID_P                            pMem;
+//    kern_return_t                       err;
+//
+//    uiPageSize = tgMM_PM_Page_Size();
+//    uiSize_To_Allocate = uiPageSize * ((uiSize + uiPageSize - 1) / uiPageSize);
+//    err = vm_allocate(  (vm_map_t) mach_task_self(),
+//                        (vm_address_t*) &pMem,
+//                        uiSize_To_Allocate,
+//                        VM_FLAGS_ANYWHERE);
+//
+//    TgERROR(err == KERN_SUCCESS);
+//    if(err != KERN_SUCCESS)
+//    {
+//       pMem = nullptr;
+//    }
+//
+//    return pMem;
 }
 
 

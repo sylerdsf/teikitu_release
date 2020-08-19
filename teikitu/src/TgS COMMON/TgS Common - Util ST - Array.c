@@ -289,7 +289,7 @@ TgRESULT tgCM_UT_ST__AR__Insert_ElementN( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiI
                 nbyCopy = (TgRSIZE)(psAR->m_puiLast - psAR->m_puiStart) - uiIndex*psAR->m_uiStride;
                 tgMM_Copy( puiNewData, nbyNewData, puiData, nbyCopy );
                 puiNewData += nbyCopy;
-                nbyNewData -= nbyCopy;
+//#             nbyNewData -= nbyCopy;
             };
         };
 
@@ -343,8 +343,8 @@ TgRESULT tgCM_UT_ST__AR__Insert_ElementN( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiI
             else
             {
                 tgMM_Copy( puiDestData, (TgRSIZE)(psAR->m_puiEnd - psAR->m_puiLast), puiSrcData, uiCount*psAR->m_uiStride );
-                puiSrcData += uiCount*psAR->m_uiStride;
-                puiDestData += uiCount*psAR->m_uiStride;
+//#             puiSrcData += uiCount*psAR->m_uiStride;
+//#             puiDestData += uiCount*psAR->m_uiStride;
             };
 
             /* Using an assignment operation (copy), move the remaining elements after the insertion index down to the end of the array */
@@ -480,7 +480,6 @@ TgRESULT tgCM_UT_ST__AR__Insert_ElementN( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiI
 TgRESULT tgCM_UT_ST__AR__Insert_Range( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiIndex, TgVOID_P pInsertStart, TgVOID_P pInsertLast )
 {
     TgRSIZE                             uiInsertSize;
-    TgRSIZE                             nuiInsert;
     TgBOOL                              bIs_Inside;
     TgRSIZE                             uiSize;
     TgRSIZE                             uiNewSize;
@@ -495,7 +494,6 @@ TgRESULT tgCM_UT_ST__AR__Insert_Range( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiInde
 
     uiInsertSize = (TgRSIZE)((TgUINT_E08_P)pInsertLast - (TgUINT_E08_P)pInsertStart);
     TgERROR(0 == (uiInsertSize % psAR->m_uiStride));
-    nuiInsert = uiInsertSize / psAR->m_uiStride;
     bIs_Inside = !(((TgUINT_E08_P)pInsertLast <= psAR->m_puiStart) || ((TgUINT_E08_P)pInsertStart >= psAR->m_puiLast));
 
     uiFreeSize = (TgRSIZE)(psAR->m_puiEnd - psAR->m_puiLast);
@@ -631,8 +629,8 @@ TgRESULT tgCM_UT_ST__AR__Insert_Range( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiInde
             else
             {
                 tgMM_Copy( puiDestData, uiFreeSize, puiSrcData, uiInsertSize );
-                puiSrcData += uiInsertSize;
-                puiDestData += uiInsertSize;
+//#             puiSrcData += uiInsertSize;
+//#             puiDestData += uiInsertSize;
             };
 
             /* Copy [m_puiLast] <= [puiDataAtIndex, pLast - InsertSize) backwards */
@@ -769,19 +767,18 @@ TgRESULT tgCM_UT_ST__AR__Insert_Range( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiInde
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgVOID tgCM_UT_ST__AR__Erase_Range( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiStart, TgRSIZE_C uiLast )
 {
-    TgUINT_F08_P                        puiEraseStart;
-    TgUINT_F08_P                        puiEraseLast;
     TgUINT_F08_P                        puiErase;
-    TgUINT_F08_P                        puiDataLast;
 
-    puiEraseStart = psAR->m_puiStart + uiStart*psAR->m_uiStride;
+    TgUINT_F08_PC   puiEraseStart = psAR->m_puiStart + uiStart*psAR->m_uiStride;
+
     if (nullptr == psAR->m_puiStart || psAR->m_puiLast <= puiEraseStart)
         return;
 
-    puiEraseLast = psAR->m_puiStart + uiLast*psAR->m_uiStride;
-    puiEraseLast = psAR->m_puiLast < puiEraseLast ? psAR->m_puiLast : puiEraseLast;
+    TgUINT_F08_PC   puiEraseLast_Test = psAR->m_puiStart + uiLast*psAR->m_uiStride;
+    TgUINT_F08_PC   puiEraseLast = psAR->m_puiLast < puiEraseLast_Test ? psAR->m_puiLast : puiEraseLast_Test;
+    TgUINT_F08_PC   puiDataLast = psAR->m_puiLast;
+
     puiErase = puiEraseStart;
-    puiDataLast = psAR->m_puiLast;
 
     if (psAR->m_pInitCopy)
     {

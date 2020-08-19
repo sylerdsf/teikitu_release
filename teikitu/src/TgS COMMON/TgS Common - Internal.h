@@ -13,7 +13,7 @@
 #if !defined(TGS_COMMON_INTERNAL_H)
 #define TGS_COMMON_INTERNAL_H
 
-#include "TgS COMMON/TgS Common -- INCLUDE.h"
+#include "TgS Common.h"
 
 
 /* == Common ===================================================================================================================================================================== */

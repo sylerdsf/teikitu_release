@@ -30,9 +30,8 @@ TgFORCEINLINE TgBOOL                        tgCM_UT_ST__ST__Overlap( TgVOID_CPC,
 
 TgFORCEINLINE TgVOID                        tgCM_UT_ST__ST__Reserve_Buffer_Internal( STg2_UT_ST__ST_PCU, TgRSIZE_C );
 
-TgFORCEINLINE TgRESULT                      tgCM_UT_ST__ST__Query_Region_Internal(
-                                                TgCHAR_MB_CPP, TgCHAR_MB_CPP, TgCHAR_MB_CPP, TgCHAR_MB_CPP,
-                                                STg1_Text_Length_PC, STg2_UT_ST__ST_CPC, TgRSIZE_C, TgRSIZE_C, TgBOOL_C );
+TgFORCEINLINE TgRESULT                      tgCM_UT_ST__ST__Query_Region_Internal( TgCHAR_MB_CPP, TgCHAR_MB_CPP, TgCHAR_MB_CPP, TgCHAR_MB_CPP, STg1_Text_Length_PC,
+                                                                                   STg2_UT_ST__ST_CPC, TgRSIZE_C, TgRSIZE_C, TgBOOL_C );
 
 
 
@@ -42,13 +41,14 @@ TgFORCEINLINE TgRESULT                      tgCM_UT_ST__ST__Query_Region_Interna
 
 /* ---- tgCM_UT_ST__ST__SF_Assign ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgCM_UT_ST__ST__SF_Assign( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
+TgVOID tgCM_UT_ST__ST__SF_Assign( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
 {
     TgCHAR_MB_P                         mbzDest_Start;
     TgCHAR_MB_CP                        mbzARG_Begin, mbzARG_End;
     TgRSIZE                             nbyARG_Buffer;
 
-    TgPARAM_CHECK(nullptr != psDest && nullptr != psARG);
+    TgPARAM_CHECK(nullptr != psDest);
+    TgPARAM_CHECK(nullptr != psARG);
 
     mbzDest_Start = tgCM_UT_ST__ST__Get_String( psDest );
 
@@ -82,13 +82,14 @@ TgVOID tgCM_UT_ST__ST__SF_Assign( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__S
 
 /* ---- tgCM_UT_ST__ST__SF_Append ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgCM_UT_ST__ST__SF_Append( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
+TgVOID tgCM_UT_ST__ST__SF_Append( STg2_UT_ST__ST_PC psDest, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
 {
     TgCHAR_MB_P                         mbzDest_Start;
     TgCHAR_MB_CP                        mbzARG_Begin, mbzARG_End;
     TgRSIZE                             nbyARG_Buffer;
 
-    TgPARAM_CHECK(nullptr != psDest && nullptr != psARG);
+    TgPARAM_CHECK(nullptr != psDest);
+    TgPARAM_CHECK(nullptr != psARG);
 
     if (TgFAILED(tgMBZ_Query_Region( &mbzARG_Begin, &mbzARG_End, tgCM_UT_ST__ST__Query_String( psARG ), psARG->m_nbyBuffer, uiARG_Offset, uiMaxRead )))
     {
@@ -137,15 +138,15 @@ TgVOID tgCM_UT_ST__ST__SF_Append( STg2_UT_ST__ST_PC NONULL psDest, STg2_UT_ST__S
 
 /* ---- tgCM_UT_ST__ST__SF_Replace ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgCM_UT_ST__ST__SF_Replace(
-    STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C uiDest_Start, TgRSIZE_C uiDest_End, STg2_UT_ST__ST_CPC NONULL psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
+TgVOID tgCM_UT_ST__ST__SF_Replace( STg2_UT_ST__ST_PC psDest, TgRSIZE_C uiDest_Start, TgRSIZE_C uiDest_End, STg2_UT_ST__ST_CPC psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiMaxRead )
 {
     TgCHAR_MB_P                         mbzDest_Start, mbzDest_Begin, mbzDest_End;
     TgRSIZE                             nbyDest_Begin, nbyDest_End;
     TgCHAR_MB_CP                        mbzARG_Begin, mbzARG_End;
     TgRSIZE                             nbyARG_Buffer, nbyNew_Buffer, nbyNew_Reserve;
 
-    TgPARAM_CHECK(nullptr != psDest && nullptr != psARG);
+    TgPARAM_CHECK(nullptr != psDest);
+    TgPARAM_CHECK(nullptr != psARG);
 
     mbzDest_Start = tgCM_UT_ST__ST__Get_String( psDest );
     if (TgFAILED(tgMBZ_Get_Region( &mbzDest_Begin, &mbzDest_End, mbzDest_Start, psDest->m_nbyBuffer, uiDest_Start, uiDest_End - uiDest_Start )))
@@ -226,7 +227,7 @@ TgVOID tgCM_UT_ST__ST__SF_Replace(
 
 /* ---- tgCM_UT_ST__ST__Erase ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgCM_UT_ST__ST__Erase( STg2_UT_ST__ST_PC NONULL psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiARG_MaxErase )
+TgVOID tgCM_UT_ST__ST__Erase( STg2_UT_ST__ST_PC psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C uiARG_MaxErase )
 {
     TgCHAR_MB_CP                        mbzARG_Begin, mbzARG_End;
     TgCHAR_MB_P                         mbzARG_Start;
@@ -260,7 +261,7 @@ TgVOID tgCM_UT_ST__ST__Erase( STg2_UT_ST__ST_PC NONULL psARG, TgRSIZE_C uiARG_Of
 
 /* ---- tgCM_UT_ST__ST__Erase_U08 ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgCM_UT_ST__ST__Erase_U08( STg2_UT_ST__ST_PC NONULL psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C nbyARG_MaxErase )
+TgVOID tgCM_UT_ST__ST__Erase_U08( STg2_UT_ST__ST_PC psARG, TgRSIZE_C uiARG_Offset, TgRSIZE_C nbyARG_MaxErase )
 {
     TgCHAR_MB_CP                        mbzARG_Begin;
     TgCHAR_MB_P                         mbzARG_Start;
@@ -290,7 +291,7 @@ TgVOID tgCM_UT_ST__ST__Erase_U08( STg2_UT_ST__ST_PC NONULL psARG, TgRSIZE_C uiAR
 
 /* ---- tgCM_UT_ST__ST__Format --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgCM_UT_ST__ST__Format( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NONULL pText, ... )
+TgVOID tgCM_UT_ST__ST__Format( STg2_UT_ST__ST_PC psDest, TgCHAR_MB_CPC pText, ... )
 {
     va_list                             arg_list;
     TgRSIZE                             iLength;
@@ -313,7 +314,7 @@ TgVOID tgCM_UT_ST__ST__Format( STg2_UT_ST__ST_PC NONULL psDest, TgCHAR_MB_CPC NO
 
 /* ---- tgCM_UT_ST__ST__Resize --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgCM_UT_ST__ST__Resize_NCS( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C nbyNew_Buffer, TgCHAR_NC_C uiChar )
+TgVOID tgCM_UT_ST__ST__Resize_NCS( STg2_UT_ST__ST_PC psDest, TgRSIZE_C nbyNew_Buffer, TgCHAR_NC_C uiChar )
 {
     TgCHAR_MB_P                         mbzDest_Start;
 
@@ -367,7 +368,7 @@ TgVOID tgCM_UT_ST__ST__Resize_NCS( STg2_UT_ST__ST_PC NONULL psDest, TgRSIZE_C nb
 
 /* ---- tgCM_UT_ST__ST__Change_Cast_Internal ------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_UT_ST__ST__Change_Cast_Internal( STg2_UT_ST__ST_PC NONULL psDest, TgBOOL_C bToUpper )
+TgRESULT tgCM_UT_ST__ST__Change_Cast_Internal( STg2_UT_ST__ST_PC psDest, TgBOOL_C bToUpper )
 {
     TgCHAR_MB_P                         mbzDest_Start;
     TgRSIZE                             nbyNew_Buffer, nbyNew_Reserve;
@@ -444,9 +445,8 @@ TgRESULT tgCM_UT_ST__ST__Change_Cast_Internal( STg2_UT_ST__ST_PC NONULL psDest, 
 
 /* ---- tgCM_UT_ST__ST__SO_SF_Find_String_Internal ------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_UT_ST__ST__SO_SF_Find_String_Internal(
-    STg1_Text_Length_PC NONULL psOffset, STg2_UT_ST__ST_CPC NONULL psARG_0, TgRSIZE_C uiARG_0_Offset, STg2_UT_ST__ST_CPC NONULL psARG_1, TgRSIZE_C uiARG_1_Offset,
-    TgRSIZE_C uiMaxRead, TgBOOL_C bReverse )
+TgRESULT tgCM_UT_ST__ST__SO_SF_Find_String_Internal( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG_0, TgRSIZE_C uiARG_0_Offset, STg2_UT_ST__ST_CPC psARG_1,
+                                                     TgRSIZE_C uiARG_1_Offset, TgRSIZE_C uiMaxRead, TgBOOL_C bReverse )
 {
     TgCHAR_MB_CP                        mbzARG_0_Start, mbzARG_0_Begin, mbzARG_0_End;
     TgCHAR_MB_CP                        mbzARG_1_Start, mbzARG_1_Begin, mbzARG_1_End;
@@ -455,7 +455,8 @@ TgRESULT tgCM_UT_ST__ST__SO_SF_Find_String_Internal(
     TgRSIZE                             nbyARG0_Remain;
     TgSINT_F08                          iRet;
 
-    TgPARAM_CHECK(nullptr != psARG_0 && nullptr != psARG_1);
+    TgPARAM_CHECK(nullptr != psARG_0);
+    TgPARAM_CHECK(nullptr != psARG_1);
 
     /* Define the region of the search string argument (the string to be found) */
     mbzARG_1_Start = tgCM_UT_ST__ST__Query_String( psARG_1 );
@@ -522,9 +523,8 @@ TgRESULT tgCM_UT_ST__ST__SO_SF_Find_String_Internal(
 
 /* ---- tgCM_UT_ST__ST__SO_SN_Find_Set_Internal ---------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_UT_ST__ST__SO_SN_Find_Set_Internal(
-    STg1_Text_Length_PC NONULL psOffset, STg2_UT_ST__ST_CPC NONULL psARG_0, TgRSIZE_C uiARG_0_Offset, TgCHAR_MB_CPC NONULL mbzARG_1, TgRSIZE_C nbyARG_1,
-    TgBOOL_C bInSet, TgBOOL_C bReverse )
+TgRESULT tgCM_UT_ST__ST__SO_SN_Find_Set_Internal( STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG_0, TgRSIZE_C uiARG_0_Offset, TgCHAR_MB_CPC mbzARG_1, TgRSIZE_C nbyARG_1,
+                                                  TgBOOL_C bInSet, TgBOOL_C bReverse )
 {
     TgCHAR_MB_CP                        mbzARG_0_Start, mbzARG_0_Begin, mbzARG_0_End, mbzARG_0_Iter;
     TgRSIZE                             nbyARG_0_Buffer, nbyARG0_Remain;
@@ -671,9 +671,9 @@ TgFORCEINLINE TgVOID tgCM_UT_ST__ST__Reserve_Buffer_Internal( STg2_UT_ST__ST_PCU
 
 /* ---- tgCM_UT_ST__ST__Reserve_Buffer_Internal ---------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgFORCEINLINE TgRESULT tgCM_UT_ST__ST__Query_Region_Internal(
-    TgCHAR_MB_CPP NONULL pmbzARG_0_Start, TgCHAR_MB_CPP NONULL pmbzARG_0_Begin, TgCHAR_MB_CPP NONULL pmbzARG_0_End, TgCHAR_MB_CPP NONULL pmbzARG_0_Iter,
-    STg1_Text_Length_PC NONULL psOffset, STg2_UT_ST__ST_CPC NONULL psARG_0, TgRSIZE_C uiARG_0_Offset, TgRSIZE_C nbyARG_1_Buffer, TgBOOL_C bReverse )
+TgFORCEINLINE TgRESULT tgCM_UT_ST__ST__Query_Region_Internal( TgCHAR_MB_CPP pmbzARG_0_Start, TgCHAR_MB_CPP pmbzARG_0_Begin, TgCHAR_MB_CPP pmbzARG_0_End,
+                                                              TgCHAR_MB_CPP pmbzARG_0_Iter, STg1_Text_Length_PC psOffset, STg2_UT_ST__ST_CPC psARG_0, TgRSIZE_C uiARG_0_Offset,
+                                                              TgRSIZE_C nbyARG_1_Buffer, TgBOOL_C bReverse )
 {
     /* Define the search region - offset in from left for forward searches and in from the right for reverse searches */
     *pmbzARG_0_Start = tgCM_UT_ST__ST__Query_String( psARG_0 );

@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Math [Scalar] [F].c_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -96,7 +96,7 @@ TgBOOL FCN_F(tgMH_BrentZ)(VAR_T(PCU) pfT0, TgVOID_PCU pParam, VAR_T()( *pfnFunc 
         {
             /* Attempt inverse quadratic interpolation. */
 
-            VAR_T(C)                            fBA = fValB / fValA, fBC = fValB / fValC, fAC = fValA / fValC;
+            VAR_T(C)        fBA = fValB / fValA, fBC = fValB / fValC, fAC = fValA / fValC;
 
             p = FCN_F(tgPM_FSEL)(-FCN_F(tgPM_ABS)(fTA - fTC), TYPE_K(2,0)*fTM*fBA, fBA*(TYPE_K(2,0)*fTM*fAC*(fAC - fBC) - (fTB - fTA)*(fBC - TYPE_K(1))) );
             q = FCN_F(tgPM_FSEL)(-FCN_F(tgPM_ABS)(fTA - fTC), TYPE_K(1) - fBA, (fAC - TYPE_K(1))*(fBC - TYPE_K(1))*(fBA - TYPE_K(1)));
@@ -107,9 +107,9 @@ TgBOOL FCN_F(tgMH_BrentZ)(VAR_T(PCU) pfT0, TgVOID_PCU pParam, VAR_T()( *pfnFunc 
             p = FCN_F(tgPM_ABS)(p);
 
             {
-                VAR_T(C)                            fMin1 = TYPE_K(3,0)*fTM*q - FCN_F(tgPM_ABS)(fTol1*q);
-                VAR_T(C)                            fMin2 = FCN_F(tgPM_ABS)(e*q);
-                VAR_T(C)                            fInt = FCN_F(tgPM_FSEL)(fMin2 - fMin1, fMin1, fMin2) - TYPE_K(2,0)*p;
+                VAR_T(C)        fMin1 = TYPE_K(3,0)*fTM*q - FCN_F(tgPM_ABS)(fTol1*q);
+                VAR_T(C)        fMin2 = FCN_F(tgPM_ABS)(e*q);
+                VAR_T(C)        fInt = FCN_F(tgPM_FSEL)(fMin2 - fMin1, fMin1, fMin2) - TYPE_K(2,0)*p;
 
                 e = FCN_F(tgPM_FSEL)(fInt, d, fTM);
                 d = FCN_F(tgPM_FSEL)(fInt, p / q, fTM);
@@ -167,12 +167,11 @@ TgBOOL FCN_F(tgMH_BrentD)(
     VAR_T()                             fX, fFX, fDX;
     VAR_T()                             fA = FCN_F(tgPM_FSEL)(fT3 - fT1, fT1, fT3);
     VAR_T()                             fB = FCN_F(tgPM_FSEL)(fT1 - fT3, fT1, fT3);
-    VAR_T()                             fPrevD, fPrevE;
+    VAR_T()                             fPrevE;
     TgSINT_F32                          niCount;
 
-    fD = TYPE_K(0,0);
+    //fD = TYPE_K(0,0);
     //fE = TYPE_K(0,0);
-    //fPrevD = TYPE_K(0,0);
     fPrevE = TYPE_K(0,0);
     fX = fW = fV = fT2;
     fFX = fFW = fFV = (*pfnFunc0) (pParam, fX);
@@ -180,8 +179,8 @@ TgBOOL FCN_F(tgMH_BrentD)(
 
     for (niCount = 1; niCount <= 100; ++niCount)
     {
-        VAR_T(C)                            fTol1 = VAR_K(KTgROOT_EPS) * FCN_F(tgPM_ABS)(fX) + VAR_K(KTgEPS);
-        VAR_T(C)                            fTol2 = TYPE_K(2,0) * fTol1;
+        VAR_T(C)        fTol1 = VAR_K(KTgROOT_EPS) * FCN_F(tgPM_ABS)(fX) + VAR_K(KTgEPS);
+        VAR_T(C)        fTol2 = TYPE_K(2,0) * fTol1;
 
         TgDIAG( fTol1 > TYPE_K(0) );
 
@@ -194,26 +193,26 @@ TgBOOL FCN_F(tgMH_BrentD)(
             return (true);
         };
 
-        fPrevD = fD;
+//#        fPrevD = fD;
 
         fD = TYPE_K(0,5) * (fE = FCN_F(tgPM_FSEL)(fDX, fA - fX, fB - fX));
 
         if (FCN_F(tgPM_ABS)(fPrevE) - fTol1 > TYPE_K(0))
         {
-            VAR_T(C)                            fK0 = fDW - fDX;
-            VAR_T(C)                            fK1 = fK0 <= VAR_K(KTgEPS) ? TYPE_K(0) : TYPE_K(1) / fK0;
-            VAR_T(C)                            fD1 = FCN_F(tgPM_FSEL)( -FCN_F(tgPM_ABS)(fK0), (fX - fW)*fDX *fK1, TYPE_K(2,0)*(fB - fA) );
-            VAR_T(C)                            fK2 = fDV - fDX;
-            VAR_T(C)                            fK3 = fK2 <= VAR_K(KTgEPS) ? TYPE_K(0,0) : TYPE_K(1) / fK0;
-            VAR_T(C)                            fD2 = FCN_F(tgPM_FSEL)( -FCN_F(tgPM_ABS)(fK2), (fX - fV)*fDX * fK3, fD1 );
-            VAR_T(C)                            fOK1 = FCN_F(tgPM_FSEL)( (fA - fX - fD1)*(fX + fD1 - fB), FCN_F(tgPM_FSEL)(-fDX*fD1, TYPE_K(1), -TYPE_K(1)), -TYPE_K(1) );
-            VAR_T(C)                            fOK2 = FCN_F(tgPM_FSEL)( (fA - fX - fD2)*(fX + fD2 - fB), FCN_F(tgPM_FSEL)(-fDX*fD2, TYPE_K(1), -TYPE_K(1)), -TYPE_K(1) );
+            VAR_T(C)        fK0 = fDW - fDX;
+            VAR_T(C)        fK1 = fK0 <= VAR_K(KTgEPS) ? TYPE_K(0) : TYPE_K(1) / fK0;
+            VAR_T(C)        fD1 = FCN_F(tgPM_FSEL)( -FCN_F(tgPM_ABS)(fK0), (fX - fW)*fDX *fK1, TYPE_K(2,0)*(fB - fA) );
+            VAR_T(C)        fK2 = fDV - fDX;
+            VAR_T(C)        fK3 = fK2 <= VAR_K(KTgEPS) ? TYPE_K(0,0) : TYPE_K(1) / fK0;
+            VAR_T(C)        fD2 = FCN_F(tgPM_FSEL)( -FCN_F(tgPM_ABS)(fK2), (fX - fV)*fDX * fK3, fD1 );
+            VAR_T(C)        fOK1 = FCN_F(tgPM_FSEL)( (fA - fX - fD1)*(fX + fD1 - fB), FCN_F(tgPM_FSEL)(-fDX*fD1, TYPE_K(1), -TYPE_K(1)), -TYPE_K(1) );
+            VAR_T(C)        fOK2 = FCN_F(tgPM_FSEL)( (fA - fX - fD2)*(fX + fD2 - fB), FCN_F(tgPM_FSEL)(-fDX*fD2, TYPE_K(1), -TYPE_K(1)), -TYPE_K(1) );
 
             VAR_T(C) fTMP = FCN_F(tgPM_FSEL)( fOK1, FCN_F(tgPM_FSEL)(fOK2, FCN_F(tgPM_FSEL)(FCN_F(tgPM_ABS)(fD2) - FCN_F(tgPM_ABS)(fD1), fD1, fD2), fD1), fD2 );
 
             if ((fOK1 + fOK2 >= TYPE_K(0)) && (FCN_F(tgPM_ABS)(TYPE_K(0,5) * fPrevE) - FCN_F(tgPM_ABS)(fTMP) >= TYPE_K(0)))
             {
-                VAR_T(C)                            fNewD = FCN_F(tgPM_COPY_SIGN)(fTol1, fTM - fX);
+                VAR_T(C)        fNewD = FCN_F(tgPM_COPY_SIGN)(fTol1, fTM - fX);
 
                 fPrevE = fE;
                 //fE = fPrevD;
@@ -360,7 +359,7 @@ TgBOOL FCN_F(tgMH_Calc_Root_3)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
 
     if (fC3 != TYPE_K(1))
     {
-        VAR_T(C)                            fInvC3 = TYPE_K(1) / fC3;
+        VAR_T(C)        fInvC3 = TYPE_K(1) / fC3;
 
         fC0 *= fInvC3;
         fC1 *= fInvC3;
@@ -370,11 +369,11 @@ TgBOOL FCN_F(tgMH_Calc_Root_3)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
     /* Convert to y^3+a*y+b = 0 by x = y-c2/3 */
 
     {
-        VAR_T(C)                            fOffset = fC2 / TYPE_K(3,0);
-        VAR_T(C)                            fA = fC1 - fC2*fOffset;
-        VAR_T(C)                            fTMP00 = fC2*fC2;
-        VAR_T(C)                            fB = fC0 + fC2*(fTMP00 + fTMP00 - TYPE_K(9,0)*fC1)*(TYPE_K(1) / TYPE_K(27,0));
-        VAR_T(C)                            fHalfB = TYPE_K(0,5)*fB;
+        VAR_T(C)        fOffset = fC2 / TYPE_K(3,0);
+        VAR_T(C)        fA = fC1 - fC2*fOffset;
+        VAR_T(C)        fTMP00 = fC2*fC2;
+        VAR_T(C)        fB = fC0 + fC2*(fTMP00 + fTMP00 - TYPE_K(9,0)*fC1)*(TYPE_K(1) / TYPE_K(27,0));
+        VAR_T(C)        fHalfB = TYPE_K(0,5)*fB;
 
         VAR_T()                             fDSC = fHalfB*fHalfB + fA*fA*fA*(TYPE_K(1) / TYPE_K(27,0));
 
@@ -385,9 +384,9 @@ TgBOOL FCN_F(tgMH_Calc_Root_3)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
 
         if (fDSC > TYPE_K(0))
         {
-            VAR_T(C)                            fDSC_SQRT = FCN_F(tgPM_SQRT)(fDSC);
-            VAR_T(C)                            fTMP01 = -fHalfB + fDSC_SQRT;
-            VAR_T(C)                            fTMP02 = -fHalfB - fDSC_SQRT;
+            VAR_T(C)        fDSC_SQRT = FCN_F(tgPM_SQRT)(fDSC);
+            VAR_T(C)        fTMP01 = -fHalfB + fDSC_SQRT;
+            VAR_T(C)        fTMP02 = -fHalfB - fDSC_SQRT;
 
             if (fTMP01 >= TYPE_K(0))
             {
@@ -414,11 +413,11 @@ TgBOOL FCN_F(tgMH_Calc_Root_3)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
         else if (fDSC < TYPE_K(0))
         {
 
-            VAR_T(C)                            fDist = FCN_F(tgPM_SQRT)(-fA / TYPE_K(3,0));
-            VAR_T(C)                            fAngle = FCN_F(tgPM_ATAN2)(FCN_F(tgPM_SQRT)(-fDSC), -fHalfB) / TYPE_K(3,0);
-            VAR_T(C)                            fCos = FCN_F(tgPM_COS)(fAngle);
-            VAR_T(C)                            fSin = FCN_F(tgPM_SIN)(fAngle);
-            VAR_T(C)                            fTMP01 = fDist*fCos;
+            VAR_T(C)        fDist = FCN_F(tgPM_SQRT)(-fA / TYPE_K(3,0));
+            VAR_T(C)        fAngle = FCN_F(tgPM_ATAN2)(FCN_F(tgPM_SQRT)(-fDSC), -fHalfB) / TYPE_K(3,0);
+            VAR_T(C)        fCos = FCN_F(tgPM_COS)(fAngle);
+            VAR_T(C)        fSin = FCN_F(tgPM_SIN)(fAngle);
+            VAR_T(C)        fTMP01 = fDist*fCos;
 
             atyRoot[0] = fTMP01 + fTMP01 - fOffset;
             atyRoot[1] = -fDist*(fCos + VAR_K(KTgSQRT3)*fSin) - fOffset;
@@ -455,7 +454,7 @@ TgBOOL FCN_F(tgMH_Calc_Root_3)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgBOOL FCN_F(tgMH_Calc_Root_4)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T() fC0, VAR_T() fC1, VAR_T() fC2, VAR_T() fC3, VAR_T() fC4)
 {
-    VAR_T(C)                            fInvC4 = TYPE_K(1) / fC4;
+    VAR_T(C)        fInvC4 = TYPE_K(1) / fC4;
 
     if (FCN_F(tgPM_ABS)(fC4) <= VAR_K(KTgROOT_EPS))
     {
@@ -493,10 +492,10 @@ TgBOOL FCN_F(tgMH_Calc_Root_4)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
 
         if (fDSC > TYPE_K(0))
         {
-            VAR_T(C)                            fTMP00 = FCN_F(tgPM_SQRT)(fDSC);
-            VAR_T(C)                            fTMP01 = TYPE_K(0,75)*fC3*fC3 - fTMP00*fTMP00 - fC2 - fC2;
-            VAR_T(C)                            fTMP02 = TYPE_K(4,0)*(fC3*fC2 - fC1 - fC1);
-            VAR_T(C)                            fTMP03 = TYPE_K(0,25)*(fTMP02 - fC3*fC3*fC3) / (fTMP00);
+            VAR_T(C)        fTMP00 = FCN_F(tgPM_SQRT)(fDSC);
+            VAR_T(C)        fTMP01 = TYPE_K(0,75)*fC3*fC3 - fTMP00*fTMP00 - fC2 - fC2;
+            VAR_T(C)        fTMP02 = TYPE_K(4,0)*(fC3*fC2 - fC1 - fC1);
+            VAR_T(C)        fTMP03 = TYPE_K(0,25)*(fTMP02 - fC3*fC3*fC3) / (fTMP00);
 
             VAR_T()                             fTMP04 = fTMP01 + fTMP03;
             VAR_T()                             fTMP05 = fTMP01 - fTMP03;
@@ -513,7 +512,7 @@ TgBOOL FCN_F(tgMH_Calc_Root_4)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
 
             if (fTMP04 >= TYPE_K(0))
             {
-                VAR_T(C)                            fTMP06 = FCN_F(tgPM_SQRT)(fTMP04);
+                VAR_T(C)        fTMP06 = FCN_F(tgPM_SQRT)(fTMP04);
 
                 atyRoot[0] = -TYPE_K(0,25)*fC3 + TYPE_K(0,5)*(fTMP00 + fTMP06);
                 atyRoot[1] = -TYPE_K(0,25)*fC3 + TYPE_K(0,5)*(fTMP00 - fTMP06);
@@ -522,7 +521,7 @@ TgBOOL FCN_F(tgMH_Calc_Root_4)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
 
             if (fTMP05 >= TYPE_K(0))
             {
-                VAR_T(C)                            fTMP06 = FCN_F(tgPM_SQRT)(fTMP05);
+                VAR_T(C)        fTMP06 = FCN_F(tgPM_SQRT)(fTMP05);
 
                 atyRoot[(*piCount)++] = -TYPE_K(0,25)*fC3 + TYPE_K(0,5)*(fTMP06 - fTMP00);
                 atyRoot[(*piCount)++] = -TYPE_K(0,25)*fC3 - TYPE_K(0,5)*(fTMP06 + fTMP00);
@@ -545,7 +544,7 @@ TgBOOL FCN_F(tgMH_Calc_Root_4)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
 
                 if (fTMP00 + fTMP01 >= VAR_K(KTgROOT_EPS))
                 {
-                    VAR_T(C)                            fTMP02 = FCN_F(tgPM_SQRT)(fTMP00 + fTMP01);
+                    VAR_T(C)        fTMP02 = FCN_F(tgPM_SQRT)(fTMP00 + fTMP01);
 
                     atyRoot[0] = -TYPE_K(0,25)*fC3 + TYPE_K(0,5)*fTMP02;
                     atyRoot[1] = -TYPE_K(0,25)*fC3 - TYPE_K(0,5)*fTMP02;
@@ -554,7 +553,7 @@ TgBOOL FCN_F(tgMH_Calc_Root_4)(VAR_T(PCU) atyRoot, TgSINT_F32_PCU piCount, VAR_T
 
                 if (fTMP00 - fTMP01 >= VAR_K(KTgROOT_EPS))
                 {
-                    VAR_T(C)                            fTMP02 = FCN_F(tgPM_SQRT)(fTMP00 - fTMP01);
+                    VAR_T(C)        fTMP02 = FCN_F(tgPM_SQRT)(fTMP00 - fTMP01);
 
                     atyRoot[(*piCount)++] = -TYPE_K(0,25)*fC3 + TYPE_K(0,5)*fTMP02;
                     atyRoot[(*piCount)++] = -TYPE_K(0,25)*fC3 - TYPE_K(0,5)*fTMP02;

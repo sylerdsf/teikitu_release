@@ -28,117 +28,117 @@
 /*  Public Types                                                                                                                                                                   */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-#define TgVEC_N_U08_16_1_C              __m128i const
-#define TgVEC_N_U08_16_1_P              __m128i *
-#define TgVEC_N_U08_16_1_PC             __m128i * const
-#define TgVEC_N_U08_16_1_PCU            __m128i * const __restrict
-#define TgVEC_N_U08_16_1_PU             __m128i * __restrict
-#define TgVEC_N_U08_16_1_CP             __m128i const *
-#define TgVEC_N_U08_16_1_CPU            __m128i const * __restrict
-#define TgVEC_N_U08_16_1_CPC            __m128i const * const
-#define TgVEC_N_U08_16_1_CPCU           __m128i const * const __restrict
-#define TgVEC_N_U08_16_1_PP             __m128i**
-#define TgVEC_N_U08_16_1_PPU            __m128i ** __restrict
-#define TgVEC_N_U08_16_1_CPCPU          __m128i const *const * __restrict
-#define TgVEC_N_U08_16_1_CPPU           __m128i const ** __restrict
-#define TgVEC_N_U08_16_1_PPCU           __m128i ** const __restrict
-#define TgVEC_N_U08_16_1                __m128i
+#define TgVEC_U08_16_1_C                __m128i const
+#define TgVEC_U08_16_1_P                __m128i *
+#define TgVEC_U08_16_1_PC               __m128i * const
+#define TgVEC_U08_16_1_PCU              __m128i * const __restrict
+#define TgVEC_U08_16_1_PU               __m128i * __restrict
+#define TgVEC_U08_16_1_CP               __m128i const *
+#define TgVEC_U08_16_1_CPU              __m128i const * __restrict
+#define TgVEC_U08_16_1_CPC              __m128i const * const
+#define TgVEC_U08_16_1_CPCU             __m128i const * const __restrict
+#define TgVEC_U08_16_1_PP               __m128i**
+#define TgVEC_U08_16_1_PPU              __m128i ** __restrict
+#define TgVEC_U08_16_1_CPCPU            __m128i const *const * __restrict
+#define TgVEC_U08_16_1_CPPU             __m128i const ** __restrict
+#define TgVEC_U08_16_1_PPCU             __m128i ** const __restrict
+#define TgVEC_U08_16_1                  __m128i
 
-#define TgVEC_N_U16_08_1_C              __m128i const
-#define TgVEC_N_U16_08_1_P              __m128i *
-#define TgVEC_N_U16_08_1_PC             __m128i * const
-#define TgVEC_N_U16_08_1_PCU            __m128i * const __restrict
-#define TgVEC_N_U16_08_1_PU             __m128i * __restrict
-#define TgVEC_N_U16_08_1_CP             __m128i const *
-#define TgVEC_N_U16_08_1_CPU            __m128i const * __restrict
-#define TgVEC_N_U16_08_1_CPC            __m128i const * const
-#define TgVEC_N_U16_08_1_CPCU           __m128i const * const __restrict
-#define TgVEC_N_U16_08_1_PP             __m128i**
-#define TgVEC_N_U16_08_1_PPU            __m128i ** __restrict
-#define TgVEC_N_U16_08_1_CPCPU          __m128i const *const * __restrict
-#define TgVEC_N_U16_08_1_CPPU           __m128i const ** __restrict
-#define TgVEC_N_U16_08_1_PPCU           __m128i ** const __restrict
-#define TgVEC_N_U16_08_1                __m128i
+#define TgVEC_U16_08_1_C                __m128i const
+#define TgVEC_U16_08_1_P                __m128i *
+#define TgVEC_U16_08_1_PC               __m128i * const
+#define TgVEC_U16_08_1_PCU              __m128i * const __restrict
+#define TgVEC_U16_08_1_PU               __m128i * __restrict
+#define TgVEC_U16_08_1_CP               __m128i const *
+#define TgVEC_U16_08_1_CPU              __m128i const * __restrict
+#define TgVEC_U16_08_1_CPC              __m128i const * const
+#define TgVEC_U16_08_1_CPCU             __m128i const * const __restrict
+#define TgVEC_U16_08_1_PP               __m128i**
+#define TgVEC_U16_08_1_PPU              __m128i ** __restrict
+#define TgVEC_U16_08_1_CPCPU            __m128i const *const * __restrict
+#define TgVEC_U16_08_1_CPPU             __m128i const ** __restrict
+#define TgVEC_U16_08_1_PPCU             __m128i ** const __restrict
+#define TgVEC_U16_08_1                  __m128i
 
-#define TgVEC_N_U32_04_1_C              __m128i const
-#define TgVEC_N_U32_04_1_P              __m128i *
-#define TgVEC_N_U32_04_1_PC             __m128i * const
-#define TgVEC_N_U32_04_1_PCU            __m128i * const __restrict
-#define TgVEC_N_U32_04_1_PU             __m128i * __restrict
-#define TgVEC_N_U32_04_1_CP             __m128i const *
-#define TgVEC_N_U32_04_1_CPU            __m128i const * __restrict
-#define TgVEC_N_U32_04_1_CPC            __m128i const * const
-#define TgVEC_N_U32_04_1_CPCU           __m128i const * const __restrict
-#define TgVEC_N_U32_04_1_PP             __m128i**
-#define TgVEC_N_U32_04_1_PPU            __m128i ** __restrict
-#define TgVEC_N_U32_04_1_CPCPU          __m128i const *const * __restrict
-#define TgVEC_N_U32_04_1_CPPU           __m128i const ** __restrict
-#define TgVEC_N_U32_04_1_PPCU           __m128i ** const __restrict
-#define TgVEC_N_U32_04_1                __m128i
+#define TgVEC_U32_04_1_C                __m128i const
+#define TgVEC_U32_04_1_P                __m128i *
+#define TgVEC_U32_04_1_PC               __m128i * const
+#define TgVEC_U32_04_1_PCU              __m128i * const __restrict
+#define TgVEC_U32_04_1_PU               __m128i * __restrict
+#define TgVEC_U32_04_1_CP               __m128i const *
+#define TgVEC_U32_04_1_CPU              __m128i const * __restrict
+#define TgVEC_U32_04_1_CPC              __m128i const * const
+#define TgVEC_U32_04_1_CPCU             __m128i const * const __restrict
+#define TgVEC_U32_04_1_PP               __m128i**
+#define TgVEC_U32_04_1_PPU              __m128i ** __restrict
+#define TgVEC_U32_04_1_CPCPU            __m128i const *const * __restrict
+#define TgVEC_U32_04_1_CPPU             __m128i const ** __restrict
+#define TgVEC_U32_04_1_PPCU             __m128i ** const __restrict
+#define TgVEC_U32_04_1                  __m128i
 
-#define TgVEC_N_S08_16_1_C              __m128i const
-#define TgVEC_N_S08_16_1_P              __m128i *
-#define TgVEC_N_S08_16_1_PC             __m128i * const
-#define TgVEC_N_S08_16_1_PCU            __m128i * const __restrict
-#define TgVEC_N_S08_16_1_PU             __m128i * __restrict
-#define TgVEC_N_S08_16_1_CP             __m128i const *
-#define TgVEC_N_S08_16_1_CPU            __m128i const * __restrict
-#define TgVEC_N_S08_16_1_CPC            __m128i const * const
-#define TgVEC_N_S08_16_1_CPCU           __m128i const * const __restrict
-#define TgVEC_N_S08_16_1_PP             __m128i**
-#define TgVEC_N_S08_16_1_PPU            __m128i ** __restrict
-#define TgVEC_N_S08_16_1_CPCPU          __m128i const *const * __restrict
-#define TgVEC_N_S08_16_1_CPPU           __m128i const ** __restrict
-#define TgVEC_N_S08_16_1_PPCU           __m128i ** const __restrict
-#define TgVEC_N_S08_16_1                __m128i
+#define TgVEC_S08_16_1_C                __m128i const
+#define TgVEC_S08_16_1_P                __m128i *
+#define TgVEC_S08_16_1_PC               __m128i * const
+#define TgVEC_S08_16_1_PCU              __m128i * const __restrict
+#define TgVEC_S08_16_1_PU               __m128i * __restrict
+#define TgVEC_S08_16_1_CP               __m128i const *
+#define TgVEC_S08_16_1_CPU              __m128i const * __restrict
+#define TgVEC_S08_16_1_CPC              __m128i const * const
+#define TgVEC_S08_16_1_CPCU             __m128i const * const __restrict
+#define TgVEC_S08_16_1_PP               __m128i**
+#define TgVEC_S08_16_1_PPU              __m128i ** __restrict
+#define TgVEC_S08_16_1_CPCPU            __m128i const *const * __restrict
+#define TgVEC_S08_16_1_CPPU             __m128i const ** __restrict
+#define TgVEC_S08_16_1_PPCU             __m128i ** const __restrict
+#define TgVEC_S08_16_1                  __m128i
 
-#define TgVEC_N_S16_08_1_C              __m128i const
-#define TgVEC_N_S16_08_1_P              __m128i *
-#define TgVEC_N_S16_08_1_PC             __m128i * const
-#define TgVEC_N_S16_08_1_PCU            __m128i * const __restrict
-#define TgVEC_N_S16_08_1_PU             __m128i * __restrict
-#define TgVEC_N_S16_08_1_CP             __m128i const *
-#define TgVEC_N_S16_08_1_CPU            __m128i const * __restrict
-#define TgVEC_N_S16_08_1_CPC            __m128i const * const
-#define TgVEC_N_S16_08_1_CPCU           __m128i const * const __restrict
-#define TgVEC_N_S16_08_1_PP             __m128i**
-#define TgVEC_N_S16_08_1_PPU            __m128i ** __restrict
-#define TgVEC_N_S16_08_1_CPCPU          __m128i const *const * __restrict
-#define TgVEC_N_S16_08_1_CPPU           __m128i const ** __restrict
-#define TgVEC_N_S16_08_1_PPCU           __m128i ** const __restrict
-#define TgVEC_N_S16_08_1                __m128i
+#define TgVEC_S16_08_1_C                __m128i const
+#define TgVEC_S16_08_1_P                __m128i *
+#define TgVEC_S16_08_1_PC               __m128i * const
+#define TgVEC_S16_08_1_PCU              __m128i * const __restrict
+#define TgVEC_S16_08_1_PU               __m128i * __restrict
+#define TgVEC_S16_08_1_CP               __m128i const *
+#define TgVEC_S16_08_1_CPU              __m128i const * __restrict
+#define TgVEC_S16_08_1_CPC              __m128i const * const
+#define TgVEC_S16_08_1_CPCU             __m128i const * const __restrict
+#define TgVEC_S16_08_1_PP               __m128i**
+#define TgVEC_S16_08_1_PPU              __m128i ** __restrict
+#define TgVEC_S16_08_1_CPCPU            __m128i const *const * __restrict
+#define TgVEC_S16_08_1_CPPU             __m128i const ** __restrict
+#define TgVEC_S16_08_1_PPCU             __m128i ** const __restrict
+#define TgVEC_S16_08_1                  __m128i
 
-#define TgVEC_N_S32_04_1_C              __m128i const
-#define TgVEC_N_S32_04_1_P              __m128i *
-#define TgVEC_N_S32_04_1_PC             __m128i * const
-#define TgVEC_N_S32_04_1_PCU            __m128i * const __restrict
-#define TgVEC_N_S32_04_1_PU             __m128i * __restrict
-#define TgVEC_N_S32_04_1_CP             __m128i const *
-#define TgVEC_N_S32_04_1_CPU            __m128i const * __restrict
-#define TgVEC_N_S32_04_1_CPC            __m128i const * const
-#define TgVEC_N_S32_04_1_CPCU           __m128i const * const __restrict
-#define TgVEC_N_S32_04_1_PP             __m128i**
-#define TgVEC_N_S32_04_1_PPU            __m128i ** __restrict
-#define TgVEC_N_S32_04_1_CPCPU          __m128i const *const * __restrict
-#define TgVEC_N_S32_04_1_CPPU           __m128i const ** __restrict
-#define TgVEC_N_S32_04_1_PPCU           __m128i ** const __restrict
-#define TgVEC_N_S32_04_1                __m128i
+#define TgVEC_S32_04_1_C                __m128i const
+#define TgVEC_S32_04_1_P                __m128i *
+#define TgVEC_S32_04_1_PC               __m128i * const
+#define TgVEC_S32_04_1_PCU              __m128i * const __restrict
+#define TgVEC_S32_04_1_PU               __m128i * __restrict
+#define TgVEC_S32_04_1_CP               __m128i const *
+#define TgVEC_S32_04_1_CPU              __m128i const * __restrict
+#define TgVEC_S32_04_1_CPC              __m128i const * const
+#define TgVEC_S32_04_1_CPCU             __m128i const * const __restrict
+#define TgVEC_S32_04_1_PP               __m128i**
+#define TgVEC_S32_04_1_PPU              __m128i ** __restrict
+#define TgVEC_S32_04_1_CPCPU            __m128i const *const * __restrict
+#define TgVEC_S32_04_1_CPPU             __m128i const ** __restrict
+#define TgVEC_S32_04_1_PPCU             __m128i ** const __restrict
+#define TgVEC_S32_04_1                  __m128i
 
-#define TgVEC_N_F32_04_1_C              __m128 const
-#define TgVEC_N_F32_04_1_P              __m128 *
-#define TgVEC_N_F32_04_1_PC             __m128 * const
-#define TgVEC_N_F32_04_1_PCU            __m128 * const __restrict
-#define TgVEC_N_F32_04_1_PU             __m128 * __restrict
-#define TgVEC_N_F32_04_1_CP             __m128 const *
-#define TgVEC_N_F32_04_1_CPU            __m128 const * __restrict
-#define TgVEC_N_F32_04_1_CPC            __m128 const * const
-#define TgVEC_N_F32_04_1_CPCU           __m128 const * const __restrict
-#define TgVEC_N_F32_04_1_PP             __m128**
-#define TgVEC_N_F32_04_1_PPU            __m128 ** __restrict
-#define TgVEC_N_F32_04_1_CPCPU          __m128 const *const * __restrict
-#define TgVEC_N_F32_04_1_CPPU           __m128 const ** __restrict
-#define TgVEC_N_F32_04_1_PPCU           __m128 ** const __restrict
-#define TgVEC_N_F32_04_1                __m128
+#define TgVEC_F32_04_1_C                __m128 const
+#define TgVEC_F32_04_1_P                __m128 *
+#define TgVEC_F32_04_1_PC               __m128 * const
+#define TgVEC_F32_04_1_PCU              __m128 * const __restrict
+#define TgVEC_F32_04_1_PU               __m128 * __restrict
+#define TgVEC_F32_04_1_CP               __m128 const *
+#define TgVEC_F32_04_1_CPU              __m128 const * __restrict
+#define TgVEC_F32_04_1_CPC              __m128 const * const
+#define TgVEC_F32_04_1_CPCU             __m128 const * const __restrict
+#define TgVEC_F32_04_1_PP               __m128**
+#define TgVEC_F32_04_1_PPU              __m128 ** __restrict
+#define TgVEC_F32_04_1_CPCPU            __m128 const *const * __restrict
+#define TgVEC_F32_04_1_CPPU             __m128 const ** __restrict
+#define TgVEC_F32_04_1_PPCU             __m128 ** const __restrict
+#define TgVEC_F32_04_1                  __m128
 
 
 /* =============================================================================================================================================================================== */

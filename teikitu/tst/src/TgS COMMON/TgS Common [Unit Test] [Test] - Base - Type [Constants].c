@@ -21,45 +21,45 @@
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD_DEFINE( UNIT_TEST__TEST__Base_Type_Constants )
 {
-    Test__Expect_EQ(0.0F, KTg_BLACK_709_F32_04.r);
-    Test__Expect_EQ(0.0F, KTg_BLACK_709_F32_04.g);
-    Test__Expect_EQ(0.0F, KTg_BLACK_709_F32_04.b);
-    Test__Expect_EQ(1.0F, KTg_BLACK_709_F32_04.a);
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_R_F32(KTg_BLACK_709_F32_04));
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_G_F32(KTg_BLACK_709_F32_04));
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_B_F32(KTg_BLACK_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_A_F32(KTg_BLACK_709_F32_04));
 
-    Test__Expect_EQ(1.0F, KTg_WHITE_709_F32_04.r);
-    Test__Expect_EQ(1.0F, KTg_WHITE_709_F32_04.g);
-    Test__Expect_EQ(1.0F, KTg_WHITE_709_F32_04.b);
-    Test__Expect_EQ(1.0F, KTg_WHITE_709_F32_04.a);
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_R_F32(KTg_WHITE_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_G_F32(KTg_WHITE_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_B_F32(KTg_WHITE_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_A_F32(KTg_WHITE_709_F32_04));
 
-    Test__Expect_EQ(1.0F, KTg_RED_709_F32_04.r);
-    Test__Expect_EQ(0.0F, KTg_RED_709_F32_04.g);
-    Test__Expect_EQ(0.0F, KTg_RED_709_F32_04.b);
-    Test__Expect_EQ(1.0F, KTg_RED_709_F32_04.a);
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_R_F32(KTg_RED_709_F32_04));
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_G_F32(KTg_RED_709_F32_04));
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_B_F32(KTg_RED_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_A_F32(KTg_RED_709_F32_04));
 
-    Test__Expect_EQ(0.0F, KTg_GREEN_709_F32_04.r);
-    Test__Expect_EQ(1.0F, KTg_GREEN_709_F32_04.g);
-    Test__Expect_EQ(0.0F, KTg_GREEN_709_F32_04.b);
-    Test__Expect_EQ(1.0F, KTg_GREEN_709_F32_04.a);
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_R_F32(KTg_GREEN_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_G_F32(KTg_GREEN_709_F32_04));
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_B_F32(KTg_GREEN_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_A_F32(KTg_GREEN_709_F32_04));
 
-    Test__Expect_EQ(0.0F, KTg_BLUE_709_F32_04.r);
-    Test__Expect_EQ(0.0F, KTg_BLUE_709_F32_04.g);
-    Test__Expect_EQ(1.0F, KTg_BLUE_709_F32_04.b);
-    Test__Expect_EQ(1.0F, KTg_BLUE_709_F32_04.a);
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_R_F32(KTg_BLUE_709_F32_04));
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_G_F32(KTg_BLUE_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_B_F32(KTg_BLUE_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_A_F32(KTg_BLUE_709_F32_04));
 
-    Test__Expect_EQ(1.0F, KTg_YELLOW_709_F32_04.r);
-    Test__Expect_EQ(1.0F, KTg_YELLOW_709_F32_04.g);
-    Test__Expect_EQ(0.0F, KTg_YELLOW_709_F32_04.b);
-    Test__Expect_EQ(1.0F, KTg_YELLOW_709_F32_04.a);
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_R_F32(KTg_YELLOW_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_G_F32(KTg_YELLOW_709_F32_04));
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_B_F32(KTg_YELLOW_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_A_F32(KTg_YELLOW_709_F32_04));
 
-    Test__Expect_EQ(1.0F, KTg_MAGENTA_709_F32_04.r);
-    Test__Expect_EQ(0.0F, KTg_MAGENTA_709_F32_04.g);
-    Test__Expect_EQ(1.0F, KTg_MAGENTA_709_F32_04.b);
-    Test__Expect_EQ(1.0F, KTg_MAGENTA_709_F32_04.a);
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_R_F32(KTg_MAGENTA_709_F32_04));
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_G_F32(KTg_MAGENTA_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_B_F32(KTg_MAGENTA_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_A_F32(KTg_MAGENTA_709_F32_04));
 
-    Test__Expect_EQ(0.0F, KTg_CYAN_709_F32_04.r);
-    Test__Expect_EQ(1.0F, KTg_CYAN_709_F32_04.g);
-    Test__Expect_EQ(1.0F, KTg_CYAN_709_F32_04.b);
-    Test__Expect_EQ(1.0F, KTg_CYAN_709_F32_04.a);
+    Test__Expect_EQ(0.0F, tgCM_CL_F32_Query_R_F32(KTg_CYAN_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_G_F32(KTg_CYAN_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_B_F32(KTg_CYAN_709_F32_04));
+    Test__Expect_EQ(1.0F, tgCM_CL_F32_Query_A_F32(KTg_CYAN_709_F32_04));
 
 
     Test__Expect_EQ(0x00u, KTg_BLACK_709_U32.m_uiRed);

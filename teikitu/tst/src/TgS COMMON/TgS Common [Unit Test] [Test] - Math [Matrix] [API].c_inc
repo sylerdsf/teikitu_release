@@ -39,8 +39,8 @@
 #include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
 
 #define FCN_M_UT(...)                       MULTI_MACRO(FCN_M_UT, __VA_ARGS__)
-#define FCN_M_UT_1(F)                       GENERATE__DECROATE_VEC_LZ( UNIT_TEST__TEST__##F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM, _, TEMPLATE__VECTOR_ROW,,, )
-#define FCN_M_UT_2(F, ROW)                  GENERATE__DECROATE_VEC_LZ( UNIT_TEST__TEST__##F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM, _, ROW ,,,)
+#define FCN_M_UT_1(F)                       TgMACRO_CONCAT5( UNIT_TEST__TEST__##F, _, GENERATE__VEC_DESC, _, TEMPLATE__VECTOR_COL )
+#define FCN_M_UT_2(F, COL)                  TgMACRO_CONCAT5( UNIT_TEST__TEST__##F, _, GENERATE__VEC_DESC, _, COL )
 
 
 /* == Common ===================================================================================================================================================================== */
@@ -54,30 +54,28 @@
     #error Not supported
 
 #else
-    #include "TgS Common [Unit Test] [Test] - Math [Matrix] [F].c_inc"
-    #if ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
-        #include "TgS Common [Unit Test] [Test] - Math [Matrix] [N] [F].c_inc"
-        #if (32 == TEMPLATE__TYPE_SIZE)
-            #if (4 == TEMPLATE__VECTOR_ROW)
-                #include "TgS Common [Unit Test] [Test] - Math [Matrix] [N] [F] [44].c_inc"
-            #elif (3 == TEMPLATE__VECTOR_ROW)
-                #include "TgS Common [Unit Test] [Test] - Math [Matrix] [N] [F] [34].c_inc"
-            #endif
+    #include "TgS Common [Unit Test] [Test] - Math [Matrix] [S] [F].c_inc"
+    #if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_MATRIX_GUARD */
+        #include "TgS Common [Unit Test] [Test] - Math [Matrix] [F].c_inc"
+        #if (4 == TEMPLATE__VECTOR_COL)
+            #include "TgS Common [Unit Test] [Test] - Math [Matrix] [F] [44].c_inc"
+        #elif (3 == TEMPLATE__VECTOR_COL)
+            #include "TgS Common [Unit Test] [Test] - Math [Matrix] [F] [34].c_inc"
         #endif
     #endif
-    #if (4 == TEMPLATE__VECTOR_ROW)
-        #include "TgS Common [Unit Test] [Test] - Math [Matrix] [F] [44].c_inc"
-    #elif (3 == TEMPLATE__VECTOR_ROW)
-        #include "TgS Common [Unit Test] [Test] - Math [Matrix] [F] [34].c_inc"
+    #if (4 == TEMPLATE__VECTOR_COL)
+        #include "TgS Common [Unit Test] [Test] - Math [Matrix] [S] [F] [44].c_inc"
+    #elif (3 == TEMPLATE__VECTOR_COL)
+        #include "TgS Common [Unit Test] [Test] - Math [Matrix] [S] [F] [34].c_inc"
     #endif
 
 #endif
 
-#if ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
-    #include "TgS Common [Unit Test] [Test] - Math [Matrix] [N].c_inc"
+#if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_MATRIX_GUARD */
+    #include "TgS Common [Unit Test] [Test] - Math [Matrix].c_inc"
 #endif
 
-#include "TgS Common [Unit Test] [Test] - Math [Matrix].c_inc"
+#include "TgS Common [Unit Test] [Test] - Math [Matrix] [S].c_inc"
 
 
 /* =============================================================================================================================================================================== */
@@ -85,6 +83,6 @@
 #include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
 
 #undef FCN_M_UT
-#undef FCN_N_UT_1
-#undef FCN_N_UT_2
+#undef FCN_UT_1
+#undef FCN_UT_2
 

@@ -24,9 +24,9 @@
 
 /** @defgroup TGS_COMMON_STRING_MGR String Manager
     @ingroup TGS_COMMON_COMMON
-    @details The global dictionary is used during run time to create a common string pool. The primary purpose is to eliminate the need to store redundant string data that is sourced
-    from data files.  The strings are encoded (compressed) internally so as to keep the minimal memory foot print. The expected usage pattern is that it is used for limited string
-    lengths and entirely for system string data.  Since all game string data needs to be localized, that should come in through string tables.
+    @details The global dictionary is used during run time to create a common string pool. The primary purpose is to eliminate the need to store redundant string data that is
+    sourced from data files.  The strings are encoded (compressed) internally so as to keep the minimal memory foot print. The expected usage pattern is that it is used for limited
+    string lengths and entirely for system string data.  Since all game string data needs to be localized, that should come in through string tables.
     @details Hash collisions are not handled!
     @details A string table is a list of sets of a unique id (unique globally as enforced by tool generation), associated user data, and an encoded string.  Each table has its own
     dictionary and does not use the global dictionary.

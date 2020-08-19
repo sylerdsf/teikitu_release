@@ -27,14 +27,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Is_Contained) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_TX) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Copy_TX) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Init) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Init_3D) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Copy) );
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Reference_Frame) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Origin) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Axes_Unit_Index) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_U) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Normal) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_V) );
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_3D) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Radius) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Query_Origin) );
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Query_U) );
@@ -74,14 +69,9 @@ TEST_METHOD_DEFINE( FCN_V(UNIT_TEST__TEST__GEOM_DK) )
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_TX)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Copy_TX)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Init)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Init_3D)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Copy)());
+    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Set_Reference_Frame)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Set_Origin)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Set_Axes_Unit_Index)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Set_U)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Set_Normal)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Set_V)());
-    Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Set_3D)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Set_Radius)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Query_Origin)());
     Test__Expect_EQ(KTgS_OK, FCN_V(UNIT_TEST__TEST__GM_DK_Query_U)());
@@ -135,10 +125,10 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Support_Point) )
     VEC_OBJ_T(TgDISK)                   sDK0;
     VEC_T(1)                            vV0;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
     FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Support_Point)( &sDK0, &vV0 );
+    FCN_VO(tgGM_DK_Support_Point)( &sDK0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -179,10 +169,10 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Sweep_BA) )
     VEC_OBJ_T(TgBOXAA)                  sBA0;
     VEC_T(1)                            vV0;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
     FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Sweep_BA)( &sBA0, &sDK0, &vV0 );
+    FCN_VO(tgGM_DK_Sweep_BA)( &sBA0, &sDK0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -193,13 +183,12 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Sweep_BA) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Project) )
 {
     VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_T(1)                            vV0;
-    VAR_T()                             fVal;
+    VEC_T(1)                            vV0, vVal;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
+    vV0 = FCN_V(tgMH_Init_Vector_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vV0 = FCN_V(tgMH_NORM)( vV0 );
     FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Project)( &fVal, &fVal, &sDK0, &vV0 );
+    FCN_VO(tgGM_DK_Project)( &vVal, &vVal, &sDK0, vV0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -212,9 +201,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Is_Contained) )
     VEC_OBJ_T(TgDISK)                   sDK0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Is_Contained)( &sDK0, &vS0 );
+    FCN_VO(tgGM_DK_Is_Contained)( &sDK0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -225,9 +214,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Is_Contained) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_TX) )
 {
     VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
     FCN_VO(tgGM_DK_TX)( &sDK0, &xM0 );
 
@@ -240,9 +229,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_TX) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Copy_TX) )
 {
     VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
+    FCN_V(tgMH_CLI,3)( &xM0 );
     FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
     FCN_VO(tgGM_DK_Copy_TX)( &sDK0, &sDK0, &xM0 );
 
@@ -255,27 +244,10 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Copy_TX) )
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Init) )
 {
     VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_T(1)                            vS0;
-    VEC_T(1)                            vV0;
+    VEC_T(3)                            xM0;
 
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    FCN_VO(tgGM_DK_Init)( &sDK0, &vV0, &vV0, &vV0, &vS0, TYPE_K(1) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_DK_Init_3D) ------------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Init_3D) )
-{
-    VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_04_3_T()                        xM0;
-
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_VO(tgGM_DK_Init_3D)( &sDK0, &xM0, TYPE_K(1) );
+    FCN_V(tgMH_CLI,3)( &xM0 );
+    FCN_VO(tgGM_DK_Init)( &sDK0, &xM0, TYPE_K(1) );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -294,6 +266,21 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Copy) )
 }
 
 
+/* ---- FCN_V(UNIT_TEST__TEST__GM_DK_Set_Reference_Frame) ------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Reference_Frame) )
+{
+    VEC_OBJ_T(TgDISK)                   sDK0;
+    VEC_T(3)                            xM0;
+
+    FCN_V(tgMH_CLI,3)( &xM0 );
+    FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
+    FCN_VO(tgGM_DK_Set_Reference_Frame)( &sDK0, &xM0 );
+
+    TEST_END_METHOD( KTgS_OK );
+}
+
+
 /* ---- FCN_V(UNIT_TEST__TEST__GM_DK_Set_Origin) --------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Origin) )
@@ -301,88 +288,9 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Origin) )
     VEC_OBJ_T(TgDISK)                   sDK0;
     VEC_T(1)                            vS0;
 
-    vS0 = FCN_V(tgMH_SETP_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
+    vS0 = FCN_V(tgMH_Init_Point_ELEM)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
     FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Set_Origin)( &sDK0, &vS0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_DK_Set_Axes_Unit_Index) ------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Axes_Unit_Index) )
-{
-    VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Set_Axes_Unit_Index)( &sDK0, 0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_DK_Set_U) -------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_U) )
-{
-    VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Set_U)( &sDK0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_DK_Set_Normal) --------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_Normal) )
-{
-    VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Set_Normal)( &sDK0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_DK_Set_V) -------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_V) )
-{
-    VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_T(1)                            vV0;
-
-    vV0 = FCN_V(tgMH_SETV_S)( FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)(), FCN_F(tgCM_RAND)() );
-    vV0 = FCN_V(tgMH_NORM)( &vV0 );
-    FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Set_V)( &sDK0, &vV0 );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_V(UNIT_TEST__TEST__GM_DK_Set_3D) ------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Set_3D) )
-{
-    VEC_OBJ_T(TgDISK)                   sDK0;
-    VEC_04_3_T()                        xM0;
-
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_V(UNIT_TEST__SETUP__DK)( &sDK0 );
-    FCN_VO(tgGM_DK_Set_3D)( &sDK0, &xM0 );
+    FCN_VO(tgGM_DK_Set_Origin)( &sDK0, vS0 );
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -487,8 +395,8 @@ TEST_METHOD( FCN_V(UNIT_TEST__TEST__GM_DK_Query_Radius_Sq) )
 
 static TgVOID FCN_V(UNIT_TEST__SETUP__DK)( VEC_OBJ_T(TgDISK,PCU) psDK )
 {
-    VEC_04_3_T()                        xM0;
+    VEC_T(3)                            xM0;
 
-    FCN_04_3_V(tgMH_CLI)( &xM0 );
-    FCN_VO(tgGM_DK_Init_3D)( psDK, &xM0, TYPE_K(1) );
+    FCN_V(tgMH_CLI,3)( &xM0 );
+    FCN_VO(tgGM_DK_Init)( psDK, &xM0, TYPE_K(1) );
 }

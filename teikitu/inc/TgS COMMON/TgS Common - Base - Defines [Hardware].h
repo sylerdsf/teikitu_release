@@ -24,13 +24,7 @@
 /*  Configuration                                                                                                                                                                  */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-#define TgCOMPILE_POINTER_SIZE              (TgTARGET_HARDWARE__POINTER_SIZE)
-
-#if defined(TgTARGET_HARDWARE__VECTOR_PASS_IN_REGISTER)
-    #define TgCOMPILE_VECTOR_PASS_IN_REGISTER
-#endif
-
-#define TgCCL                               (TgCOMPILE_CPU_CACHE_LINE_SIZE)
+#define TgCCL                               (TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE)
 
 
 /* =============================================================================================================================================================================== */

@@ -48,6 +48,8 @@
     #define TgCOMPILE__MEM_MALLOC_CLEAR         0
     #define TgCOMPILE__MEM_FREE_CLEAR           0
 
+    #define TgCOMPILE_ASSERT__GEOM_PARAM_CHECK  0
+
     #define TgCOMPILE__STR_LENGTH_CHECK         1
 
     #define TgCOMPILE__CONSOLE                  1
@@ -111,6 +113,8 @@
     #define TgCOMPILE__MEM_TRACK                0
     #define TgCOMPILE__MEM_MALLOC_CLEAR         0
     #define TgCOMPILE__MEM_FREE_CLEAR           0
+
+    #define TgCOMPILE_ASSERT__GEOM_PARAM_CHECK  0
 
     #define TgCOMPILE__STR_LENGTH_CHECK         0
 
@@ -179,6 +183,8 @@
     #define TgS_COMPILE__MEMORY_TRACE           1
     #define TgS_COMPILE__LOCK_TRACE             1
 
+    #define TgCOMPILE_ASSERT__GEOM_PARAM_CHECK  1
+
     #define TgCOMPILE__STR_LENGTH_CHECK         1
 
     #define TgCOMPILE__CONSOLE                  1
@@ -243,6 +249,8 @@
     #define TgCOMPILE__MEM_MALLOC_CLEAR         1
     #define TgCOMPILE__MEM_FREE_CLEAR           1
 
+    #define TgCOMPILE_ASSERT__GEOM_PARAM_CHECK  1
+
     #define TgCOMPILE__STR_LENGTH_CHECK         1
 
     #define TgCOMPILE__CONSOLE                  1
@@ -300,8 +308,9 @@
 
 
 /* Special Build Flags */
-#define TgCOMPILE_VIEWER_BUILD              0
-#define TgCOMPILE_TOOL_BUILD                0
+#define TgCOMPILE_VIEWER_BUILD                  0
+#define TgCOMPILE_TOOL_BUILD                    0
+#define TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE  1
 
 
 /* =============================================================================================================================================================================== */

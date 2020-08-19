@@ -39,8 +39,8 @@
 #include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"
 
 #define FCN_V_UT(...)                       MULTI_MACRO(FCN_V_UT, __VA_ARGS__)
-#define FCN_V_UT_1(F)                       GENERATE__DECROATE_VEC_LZ( UNIT_TEST__TEST__##F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM, _, 1,,, )
-#define FCN_V_UT_2(F, ROW)                  GENERATE__DECROATE_VEC_LZ( UNIT_TEST__TEST__##F, GENERATE__TYPE_SYMBOL, GENERATE__TYPE_SIZE_TEXT, TEMPLATE__VECTOR_DIM, _, ROW ,,,)
+#define FCN_V_UT_1(F)                       TgMACRO_CONCAT5( UNIT_TEST__TEST__##F, _, GENERATE__VEC_DESC, _, 1 )
+#define FCN_V_UT_2(F, COL)                  TgMACRO_CONCAT5( UNIT_TEST__TEST__##F, _, GENERATE__VEC_DESC, _, COL )
 
 
 /* == Common ===================================================================================================================================================================== */
@@ -50,30 +50,30 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
 #if defined(TEMPLATE__ENABLE_INTEGER)
-    #include "TgS Common [Unit Test] [Test] - Math [Vector] [I].c_inc"
-    #if ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
-        #include "TgS Common [Unit Test] [Test] - Math [Vector] [N] [I].c_inc"
+    #include "TgS Common [Unit Test] [Test] - Math [Vector] [S] [I].c_inc"
+    #if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_VECTOR_GUARD */
+        #include "TgS Common [Unit Test] [Test] - Math [Vector] [I].c_inc"
     #endif
 
 #else
-    #include "TgS Common [Unit Test] [Test] - Math [Vector] [F].c_inc"
-    #if ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
-        #include "TgS Common [Unit Test] [Test] - Math [Vector] [N] [F].c_inc"
-        #if (32 == TEMPLATE__TYPE_SIZE) && (4 == TEMPLATE__VECTOR_DIM)
-            #include "TgS Common [Unit Test] [Test] - Math [Vector] [N] [F32_04].c_inc"
+    #include "TgS Common [Unit Test] [Test] - Math [Vector] [S] [F].c_inc"
+    #if (4 == TEMPLATE__VECTOR_DIM)
+        #include "TgS Common [Unit Test] [Test] - Math [Vector] [S] [FXX_04].c_inc"
+    #endif
+    #if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_VECTOR_GUARD */
+        #include "TgS Common [Unit Test] [Test] - Math [Vector] [F].c_inc"
+        #if (4 == TEMPLATE__VECTOR_DIM)
+            #include "TgS Common [Unit Test] [Test] - Math [Vector] [FXX_04].c_inc"
         #endif
     #endif
-    #if (4 == TEMPLATE__VECTOR_DIM)
-        #include "TgS Common [Unit Test] [Test] - Math [Vector] [FXX_04].c_inc"
-    #endif
 
 #endif
 
-#if ((128 == TEMPLATE__TYPE_SIZE * TEMPLATE__VECTOR_DIM) && (32 >= TEMPLATE__TYPE_SIZE))
-    #include "TgS Common [Unit Test] [Test] - Math [Vector] [N].c_inc"
+#if (!VEC_IS_NATIVE && TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE) || VEC_IS_NATIVE /* MACRO_COMPILE_NATIVE_VECTOR_GUARD */
+    #include "TgS Common [Unit Test] [Test] - Math [Vector].c_inc"
 #endif
 
-#include "TgS Common [Unit Test] [Test] - Math [Vector].c_inc"
+#include "TgS Common [Unit Test] [Test] - Math [Vector] [S].c_inc"
 
 
 /* =============================================================================================================================================================================== */

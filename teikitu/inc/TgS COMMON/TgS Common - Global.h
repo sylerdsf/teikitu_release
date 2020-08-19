@@ -14,7 +14,7 @@
 #define TGS_COMMON_GLOBAL_H
 #pragma once
 
-#include TgHEADER_PLATFORM(TgS COMMON/TgS,Common - Global.h)
+#include TgHEADER_THREAD_SUPPORT(TgS COMMON/TgS,Common - Global.h)
 
 
 /* == Common ===================================================================================================================================================================== */

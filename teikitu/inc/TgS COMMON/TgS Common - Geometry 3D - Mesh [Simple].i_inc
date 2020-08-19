@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Geometry 3D - Mesh [Simple].i_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -65,95 +65,93 @@ TgINLINE VAR_T() FCN_VO(tgGM_MS_Area)( VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1 )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_MS_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1 )
 {
-    TgUINT_F32                          uiIndex;
-
     FCN_VO(tgGM_BA_Reset)( psBA0 );
 
-    for (uiIndex = 0; uiIndex < psMS1->m_nuiVert; ++uiIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < psMS1->m_nuiVert; ++uiIndex)
     {
-        FCN_VO(tgGM_BA_Union_PT)( psBA0, psMS1->m_pvVert_List + uiIndex );
+        FCN_VO(tgGM_BA_Union_PT)( psBA0, psMS1->m_pvVert_List[uiIndex] );
     };
 }
 
 
 /* ---- FCN_VO(tgGM_MS_Sweep_BA) ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_MS_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_T(1,CPCU) pvDT )
+TgINLINE TgVOID FCN_VO(tgGM_MS_Sweep_BA)( VEC_OBJ_T(TgBOXAA,PCU) psBA0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_T(1,C) vDT )
 {
     FCN_VO(tgGM_MS_BA)( psBA0, psMS1 );
-    FCN_VO(tgGM_BA_Sweep)( psBA0, pvDT );
+    FCN_VO(tgGM_BA_Sweep)( psBA0, vDT );
 }
 
 
 /* ---- FCN_VO(tgGM_MS_Project) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_MS_Project)( VAR_T(PCU) ptyMin, VAR_T(PCU) ptyMax, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_T(1,CPCU) pvDN )
+TgINLINE TgVOID FCN_VO(tgGM_MS_Project)( VEC_T(1,PCU) pvMin, VEC_T(1,PCU) pvMax, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_T(1,C) vDN )
 {
-    VAR_T()                             fMinL =  VAR_K(KTgMAX);
-    VAR_T()                             fMaxL = -VAR_K(KTgMAX);
-    TgUINT_F32                          uiIndex;
+    VEC_T(1)                            vMin, vMax, vProj;
 
-    for (uiIndex = 0; uiIndex < psMS1->m_nuiVert; ++uiIndex)
+    vMin = FCN_V(tgMH_SET1)( VAR_K(KTgMAX) );
+    vMax = FCN_V(tgMH_SET1)( -VAR_K(KTgMAX) );
+
+    for (TgRSIZE uiIndex = 0; uiIndex < psMS1->m_nuiVert; ++uiIndex)
     {
-        VAR_T(C)                            fDot = FCN_V(tgMH_DOT3)( psMS1->m_pvVert_List + uiIndex, pvDN );
+        vProj = FCN_V(tgMH_DOT3)( psMS1->m_pvVert_List[uiIndex], vDN );
 
-        fMinL = FCN_F(tgCM_MIN)( fMinL, fDot );
-        fMaxL = FCN_F(tgCM_MAX)( fMaxL, fDot );
+        vMin = FCN_V(tgMH_MIN)( vMin, vProj );
+        vMax = FCN_V(tgMH_MAX)( vMax, vProj );
     };
 
-    *ptyMin = fMinL;
-    *ptyMax = fMaxL;
+    *pvMin = vMin;
+    *pvMax = vMax;
 }
 
 
 /* ---- FCN_VO(tgGM_MS_Is_Contained) --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL FCN_VO(tgGM_MS_Is_Contained)( VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_T(1,CPCU) pvS0 )
+TgINLINE TgBOOL FCN_VO(tgGM_MS_Is_Contained)( VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_T(1,C) vS0 )
 {
     if (nullptr == psMS1->m_puiIndx_List)
     {
-        return (FCN_VO(tgGM_Is_Contained_MS_VL)( psMS1, pvS0) );
+        return (FCN_VO(tgGM_Is_Contained_MS_VL)( psMS1, vS0) );
     }
     else
     {
-        return (FCN_VO(tgGM_Is_Contained_MS_IL)( psMS1, pvS0) );
+        return (FCN_VO(tgGM_Is_Contained_MS_IL)( psMS1, vS0) );
     };
 }
 
 
 /* ---- FCN_VO(tgGM_MS_TX) ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_MS_TX)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, VEC_04_3_T(CPCU) pxM0 )
+TgINLINE TgVOID FCN_VO(tgGM_MS_TX)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, VEC_T(3,CPCU) pmM0 )
 {
-    TgUINT_F32                          uiIndex;
-
-    for (uiIndex = 0; uiIndex < psMS0->m_nuiVert; ++uiIndex)
+    for (TgRSIZE uiIndex = 0; uiIndex < psMS0->m_nuiVert; ++uiIndex)
     {
-        psMS0->m_pvVert_List[uiIndex] = FCN_04_3_V(tgMH_TX_P)( pxM0, psMS0->m_pvVert_List + uiIndex );
+        psMS0->m_pvVert_List[uiIndex] = FCN_V(tgMH_TX_P,3)( psMS0->m_pvVert_List[uiIndex], pmM0 );
     };
 }
 
 
 /* ---- FCN_VO(tgGM_MS_Copy_TX) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_MS_Copy_TX)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_04_3_T(CPCU) pxM0 )
+TgINLINE TgVOID FCN_VO(tgGM_MS_Copy_TX)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1, VEC_T(3,CPCU) pmM0 )
 {
-    TgUINT_F32_C                        nuiVert_MA1 = psMS1->m_nuiVert;
-    TgUINT_F32_C                        nuiIndx_MA1 = psMS1->m_nuiIndx;
     TgUINT_F32                          uiIndex;
+
+    TgUINT_F32_C    nuiVert_MA1 = psMS1->m_nuiVert;
+    TgUINT_F32_C    nuiIndx_MA1 = psMS1->m_nuiIndx;
 
     FCN_VO(tgGM_MS_Init)( psMS0, nuiVert_MA1, nuiIndx_MA1 );
 
     for (uiIndex = 0; uiIndex < nuiVert_MA1; ++uiIndex)
     {
-        psMS0->m_pvVert_List[uiIndex] = FCN_04_3_V(tgMH_TX_P)( pxM0, psMS1->m_pvVert_List + uiIndex );
+        psMS0->m_pvVert_List[uiIndex] = FCN_V(tgMH_TX_P,3)( psMS1->m_pvVert_List[uiIndex], pmM0 );
     };
 
     if (nuiIndx_MA1 > 0)
     {
-        TgRSIZE_C                           uiIndx_Size_MA0 = sizeof( psMS1->m_puiIndx_List[0] );
-        TgRSIZE_C                           uiIndx_Size_MA1 = sizeof( psMS1->m_puiIndx_List[1] );
-        TgUINT_F32_C                        nuiIndx_MA0 = psMS0->m_nuiIndx;
+        TgRSIZE_C       uiIndx_Size_MA0 = sizeof( psMS1->m_puiIndx_List[0] );
+        TgRSIZE_C       uiIndx_Size_MA1 = sizeof( psMS1->m_puiIndx_List[1] );
+        TgUINT_F32_C    nuiIndx_MA0 = psMS0->m_nuiIndx;
 
         tgMM_Copy( psMS0->m_puiIndx_List, nuiIndx_MA0*uiIndx_Size_MA0, psMS1->m_puiIndx_List, nuiIndx_MA1*uiIndx_Size_MA1 );
     };
@@ -164,25 +162,25 @@ TgINLINE TgVOID FCN_VO(tgGM_MS_Copy_TX)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, VEC
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID FCN_VO(tgGM_MS_Copy)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) psMS1 )
 {
-    TgUINT_F32_C                        nuiVert_MA1 = psMS1->m_nuiVert;
-    TgUINT_F32_C                        nuiIndx_MA1 = psMS1->m_nuiIndx;
+    TgUINT_F32_C    nuiVert_MA1 = psMS1->m_nuiVert;
+    TgUINT_F32_C    nuiIndx_MA1 = psMS1->m_nuiIndx;
 
     FCN_VO(tgGM_MS_Init)( psMS0, nuiVert_MA1, nuiIndx_MA1 );
 
     if (nuiVert_MA1 > 0)
     {
-        TgRSIZE_C                           uiVert_Size_MA0 = sizeof( psMS1->m_pvVert_List[0] );
-        TgRSIZE_C                           uiVert_Size_MA1 = sizeof( psMS1->m_pvVert_List[1] );
-        TgUINT_F32_C                        nuiVert_MA0 = psMS0->m_nuiVert;
+        TgRSIZE_C       uiVert_Size_MA0 = sizeof( psMS1->m_pvVert_List[0] );
+        TgRSIZE_C       uiVert_Size_MA1 = sizeof( psMS1->m_pvVert_List[1] );
+        TgUINT_F32_C    nuiVert_MA0 = psMS0->m_nuiVert;
 
         tgMM_Copy( psMS0->m_pvVert_List, nuiVert_MA0*uiVert_Size_MA0, psMS1->m_pvVert_List, nuiVert_MA1*uiVert_Size_MA1 );
     };
 
     if (nuiIndx_MA1 > 0)
     {
-        TgRSIZE_C                           uiIndx_Size_MA0 = sizeof( psMS1->m_puiIndx_List[0] );
-        TgRSIZE_C                           uiIndx_Size_MA1 = sizeof( psMS1->m_puiIndx_List[1] );
-        TgUINT_F32_C                        nuiIndx_MA0 = psMS0->m_nuiIndx;
+        TgRSIZE_C       uiIndx_Size_MA0 = sizeof( psMS1->m_puiIndx_List[0] );
+        TgRSIZE_C       uiIndx_Size_MA1 = sizeof( psMS1->m_puiIndx_List[1] );
+        TgUINT_F32_C    nuiIndx_MA0 = psMS0->m_nuiIndx;
 
         tgMM_Copy( psMS0->m_puiIndx_List, nuiIndx_MA0*uiIndx_Size_MA0, psMS1->m_puiIndx_List, nuiIndx_MA1*uiIndx_Size_MA1 );
     };
@@ -191,7 +189,7 @@ TgINLINE TgVOID FCN_VO(tgGM_MS_Copy)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, VEC_OB
 
 /* ---- FCN_VO(tgGM_MS_Init) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_VO(tgGM_MS_Init)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, TgUINT_F32_C nuiVert, TgUINT_F32_C nuiIndx )
+TgINLINE TgVOID FCN_VO(tgGM_MS_Init)( VEC_OBJ_T(TgMESH_SIMPLE,PCU) psMS0, TgRSIZE_C nuiVert, TgRSIZE_C nuiIndx )
 {
     if (!(nuiVert == psMS0->m_nuiVert))
     {

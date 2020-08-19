@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common [Unit Test] [Test] - Math [Matrix] [F] [44].c_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -20,36 +20,27 @@
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_M_UT(tgMH_CAT_34_44) )
 {
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0, xM1;
-    VEC_T(3)                            xM2;
-
-    for (TgRSIZE uiIndex = 0; uiIndex < 12; ++uiIndex)
+    union
     {
-        while (0 == (xM1.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
-        while (0 == (xM2.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
-    for (TgRSIZE uiIndex = 12; uiIndex < 16; ++uiIndex)
+        VEC_T(4)                            m4_V;
+        VEC_S_T(4)                          m4_S;
+        VEC_T(3)                            m3_V;
+        VEC_S_T(3)                          m3_S;
+    }                                   uM0, uM1, uMX, uMZ;
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 4; ++uiIndex)
     {
-        while (0 == (xM1.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+        uM0.m4_S.m_avCol[uiIndex] = FCN_V(tgMH_RAND_S)();
+        uM1.m4_S.m_avCol[uiIndex] = FCN_V(tgMH_RAND_S)();
     };
 
-    FCN_M(tgMH_CAT_34_44)( &xM0, &xM2, &xM1 );
+    FCN_M(tgMH_CAT_34_44_S)( &uMZ.m4_S, &uM0.m3_S, &uM1.m4_S );
+    FCN_M(tgMH_CAT_34_44)( &uMX.m4_V, &uM0.m3_V, &uM1.m4_V );
 
-    for (TgRSIZE i0 = 0; i0 < 12; ++i0)
+    for (TgRSIZE uiIndex = 0; uiIndex < 16; ++uiIndex)
     {
-        VAR_T()                             tTotal;
-
-        tTotal = TYPE_K(0);
-        for (TgRSIZE iIndex = 0; iIndex < 4; ++iIndex)
-        {
-            tTotal += xM2.m_aRowCol[i0 / 4][iIndex] * xM1.m_aRowCol[iIndex][i0 % 4];
-        };
-        Test__Expect_EQ(true, FCN_F(tgCM_NR0)( tTotal - xM0.m_aElement[i0] ));
+        Test__Expect_EQ( true, FCN_F(tgCM_NR0)( uMX.m4_S.m_aElement[uiIndex] - uMZ.m4_S.m_aElement[uiIndex] ) );
     };
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( xM1._41 - xM0._41 ));
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( xM1._42 - xM0._42 ));
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( xM1._43 - xM0._43 ));
-    Test__Expect_EQ(true, FCN_F(tgCM_NR0)( xM1._44 - xM0._44 ));
 
     TEST_END_METHOD( KTgS_OK );
 }
@@ -59,32 +50,26 @@ TEST_METHOD( FCN_M_UT(tgMH_CAT_34_44) )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_M_UT(tgMH_CAT_44_34) )
 {
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0, xM1;
-    VEC_T(3)                            xM2;
-
-    for (TgRSIZE uiIndex = 0; uiIndex < 12; ++uiIndex)
+    union
     {
-        while (0 == (xM1.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
-        while (0 == (xM2.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
+        VEC_T(4)                            m4_V;
+        VEC_S_T(4)                          m4_S;
+        VEC_T(3)                            m3_V;
+        VEC_S_T(3)                          m3_S;
+    }                                   uM0, uM1, uMX, uMZ;
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 4; ++uiIndex)
+    {
+        uM0.m4_S.m_avCol[uiIndex] = FCN_V(tgMH_RAND_S)();
+        uM1.m4_S.m_avCol[uiIndex] = FCN_V(tgMH_RAND_S)();
     };
-    for (TgRSIZE uiIndex = 12; uiIndex < 16; ++uiIndex)
+
+    FCN_M(tgMH_CAT_44_34_S)( &uMZ.m4_S, &uM0.m4_S, &uM1.m3_S );
+    FCN_M(tgMH_CAT_44_34)( &uMX.m4_V, &uM0.m4_V, &uM1.m3_V );
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 16; ++uiIndex)
     {
-        while (0 == (xM1.m_aElement[uiIndex] = FCN_F(tgCM_RAND)()));
-    };
-
-    FCN_M(tgMH_CAT_44_34)( &xM0, &xM1, &xM2 );
-
-    for (TgRSIZE i0 = 0; i0 < 16; ++i0)
-    {
-        VAR_T()                             tTotal;
-
-        tTotal = TYPE_K(0);
-        for (TgRSIZE iIndex = 0; iIndex < 3; ++iIndex)
-        {
-            tTotal += xM1.m_aRowCol[i0 / 4][iIndex] * xM2.m_aRowCol[iIndex][i0 % 4];
-        };
-        if (3 == (i0 % 4)) tTotal += xM1.m_aRowCol[i0 / 4][3];
-        Test__Expect_EQ(true, FCN_F(tgCM_NR0)( tTotal - xM0.m_aElement[i0] ));
+        Test__Expect_EQ( true, FCN_F(tgCM_NR0)( uMX.m4_S.m_aElement[uiIndex] - uMZ.m4_S.m_aElement[uiIndex] ) );
     };
 
     TEST_END_METHOD( KTgS_OK );
@@ -95,290 +80,24 @@ TEST_METHOD( FCN_M_UT(tgMH_CAT_44_34) )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( FCN_M_UT(tgMH_TR) )
 {
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0, xM1;
-
-    for (TgRSIZE iIndex = 0; iIndex < TEMPLATE__VECTOR_ROW * TEMPLATE__VECTOR_DIM; ++iIndex)
+    union
     {
-        while (0 == (xM1.m_aElement[iIndex] = FCN_F(tgCM_RAND)()));
+        VEC_T(4)                            mMV;
+        VEC_S_T(4)                          mMS;
+    }                                   uM0, uMX, uMZ;
+
+    for (TgRSIZE uiIndex = 0; uiIndex < 4; ++uiIndex)
+    {
+        uM0.mMS.m_avCol[uiIndex] = FCN_V(tgMH_RAND_S)();
     };
 
-    FCN_M(tgMH_TR)( &xM0, &xM1 );
+    FCN_M(tgMH_TR_S)( &uMZ.mMS, &uM0.mMS );
+    FCN_M(tgMH_TR)( &uMX.mMV, &uM0.mMV );
 
-    for (TgRSIZE iRow = 0; iRow < 4; ++iRow)
+    for (TgRSIZE uiIndex = 0; uiIndex < 16; ++uiIndex)
     {
-        for (TgRSIZE iCol = 0; iCol < 4; ++iCol)
-        {
-            Test__Expect_EQ( xM0.m_aRowCol[iCol][iRow], xM1.m_aRowCol[iRow][iCol] );
-        };
+        Test__Expect_EQ( true, FCN_F(tgCM_NR0)( uMX.mMS.m_aElement[uiIndex] - uMZ.mMS.m_aElement[uiIndex] ) );
     };
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_Look) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_Look) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-    VEC_T(1)                            vFrom, vTo, vUp, vT;
-
-    for (TgRSIZE iIndex = 0; iIndex < 3; ++iIndex)
-    {
-        while (0 == (vUp.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-        while (0 == (vFrom.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-        while (0 == (vTo.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-    };
-    vFrom.w = TYPE_K(1);
-    vTo.w = TYPE_K(1);
-    vUp.w = TYPE_K(0);
-
-    vT = FCN_V(tgMH_SET1)( TYPE_K(0) );
-    vT.x = vUp.x;
-    vT.y = vUp.y;
-    vT.z = vUp.z;
-    FCN_V(tgMH_NORM)( &vT );
-
-    FCN_M(tgMH_Look)( &xM0, &vFrom, &vTo, &vT );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_LookLH) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_LookLH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-    VEC_T(1)                            vFrom, vTo, vUp, vT;
-
-    for (TgRSIZE iIndex = 0; iIndex < 3; ++iIndex)
-    {
-        while (0 == (vUp.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-        while (0 == (vFrom.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-        while (0 == (vTo.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-    };
-    vFrom.w = TYPE_K(1);
-    vTo.w = TYPE_K(1);
-    vUp.w = TYPE_K(0);
-
-    vT = FCN_V(tgMH_SET1)( TYPE_K(0) );
-    vT.x = vUp.x;
-    vT.y = vUp.y;
-    vT.z = vUp.z;
-    FCN_V(tgMH_NORM)( &vT );
-
-    /* #UNITTEST */
-    FCN_M(tgMH_LookLH)(&xM0, &vFrom, &vTo, &vT );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_LookRH) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_LookRH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-    VEC_T(1)                            vFrom, vTo, vUp, vT;
-
-    for (TgRSIZE iIndex = 0; iIndex < 3; ++iIndex)
-    {
-        while (0 == (vUp.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-        while (0 == (vFrom.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-        while (0 == (vTo.m_aData[iIndex] = FCN_F(tgCM_RAND)()));
-    };
-    vFrom.w = TYPE_K(1);
-    vTo.w = TYPE_K(1);
-    vUp.w = TYPE_K(0);
-
-    vT = FCN_V(tgMH_SET1)( TYPE_K(0) );
-    vT.x = vUp.x;
-    vT.y = vUp.y;
-    vT.z = vUp.z;
-    FCN_V(tgMH_NORM)( &vT );
-
-    FCN_M(tgMH_LookRH)( &xM0, &vFrom, &vTo, &vT );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProjLH) --------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProjLH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProjLH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProjRH) --------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProjRH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProjRH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProj) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProj) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProj)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProj_OffsetLH) -------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProj_OffsetLH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProj_OffsetLH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0), TYPE_K(5,0), TYPE_K(6,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProj_OffsetRH) -------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProj_OffsetRH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProj_OffsetRH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0), TYPE_K(5,0), TYPE_K(6,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProj_Offset) ---------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProj_Offset) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProj_Offset)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0), TYPE_K(5,0), TYPE_K(6,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProj_FoV) ------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProj_FoV) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProj_FoVLH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProj_FoVLH) ----------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProj_FoVLH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProj_FoVRH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_PProj_FoVRH) ----------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_PProj_FoVRH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_PProj_FoV)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_OrthoLH) --------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_OrthoLH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_OrthoLH)(&xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_OrthoRH) --------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_OrthoRH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_OrthoRH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_Ortho) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_Ortho) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_Ortho)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_Ortho_OffsetLH) -------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_Ortho_OffsetLH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_Ortho_OffsetLH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0), TYPE_K(5,0), TYPE_K(6,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_Ortho_OffsetRH) -------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_Ortho_OffsetRH) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_Ortho_OffsetRH)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0), TYPE_K(5,0), TYPE_K(6,0) );
-
-    TEST_END_METHOD( KTgS_OK );
-}
-
-
-/* ---- FCN_M_UT(tgMH_Ortho_Offset) ---------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TEST_METHOD( FCN_M_UT(tgMH_Ortho_Offset) )
-{
-    VEC_T(TEMPLATE__VECTOR_ROW)         xM0;
-
-    FCN_M(tgMH_Ortho_Offset)( &xM0, TYPE_K(1), TYPE_K(2,0), TYPE_K(3,0), TYPE_K(4,0), TYPE_K(5,0), TYPE_K(6,0) );
 
     TEST_END_METHOD( KTgS_OK );
 }

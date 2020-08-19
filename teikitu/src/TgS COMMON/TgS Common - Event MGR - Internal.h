@@ -76,7 +76,7 @@ TgTYPE_STRUCT(STg2_EM_TE_Pool,)
     /* Synchronization is achieved for these members through execution logic (isolated, non-concurrent access) */
     STg2_EM_TB_P                                m_psWaiting;  /**< Synchronization: Logical (isolation) */
     STg2_EM_TB_P                                m_psActive;  /**< Synchronization: Logical (isolation) */
-    TgUINT_E08                                  m_iPad1[TgCOMPILE_POINTER_SIZE];
+    TgUINT_E08                                  m_iPad1[TgBUILD_HARDWARE__POINTER_SIZE];
 
     union {
         TgEM_TE_FRM_ID                              m_atiEM_TE_FRM_NoSingleton[KTgEM_NUM_TE_IN_POOL];  /**< Synchronization: g_asXXX_Data_Lock */

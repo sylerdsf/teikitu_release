@@ -290,11 +290,11 @@ TgINLINE TgSINT_F08 FPM(BSF)( VAR_T() ARG )
         return (-1);
     }
 
-#if defined(TgCOMPILE__HARDWARE__LZCNT)
+#if defined(TgCOMPILE__HARDWARE__BSF)
     #if 64 == TEMPLATE__TYPE_SIZE
-        return (tgPM__HARDWARE__LZCNT_U64(ARG));
+        return (tgPM__HARDWARE__BSF_U64(ARG));
     #elif 64 > TEMPLATE__TYPE_SIZE
-        return (tgPM__HARDWARE__LZCNT_U32(ARG));
+        return (tgPM__HARDWARE__BSF_U32(ARG));
     #endif
 #else
     for (TgSINT_F08 TRAILING_ZERO = 0; ARG != 0; ++TRAILING_ZERO, ARG >>= 1)
@@ -328,7 +328,7 @@ TgINLINE TgSINT_F08 FPM(BSR)( VAR_T() ARG )
 #else
     UVAR_T()                            MASK;
 
-    MASK = ~(UTYPE_K(KTgMAX) >> 1);
+    MASK = ~(VAR_K(KTgMAX) >> 1);
     for (TgSINT_F32 iIndex = 0; ARG != 0; ++iIndex, ARG <<= 1)
     {
         if (ARG & MASK)
@@ -411,7 +411,7 @@ TgINLINE TgBOOL FCM(EQ)( VAR_T(C) ARG0, VAR_T(C) ARG1, VAR_T(C) ARG2 )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgBOOL FPM(NAN)( VAR_T(C) ARG0 )
 {
-    return (ARG0 != ARG0);
+    return (!(ARG0 == ARG0));
 }
 
 

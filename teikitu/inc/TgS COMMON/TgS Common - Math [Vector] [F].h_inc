@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Math API [Vector] [F].h_inc
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,7 +16,7 @@
 /*  DOXYGEN                                                                                                                                                                        */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-/** @defgroup TGS_COMMON_MATH_VECTOR_CALC Calculations
+/** @defgroup TGS_COMMON_MATH_VECTOR_CALC SIMD - Calculations
     @ingroup TGS_COMMON_MATH_VECTOR_API
 */
 
@@ -25,12 +25,14 @@
 /*  Public Functions                                                                                                                                                               */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation ARG0 + ARG1
-                                                @param[in] ARG0 Vector
-                                                @param[in] ARG1 Vector
-                                                @return A vector that is assigned the per-element operation ARG0 + ARG1 */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_ADD)( VEC_T(1,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
+                                                @brief Return true if the argument is a valid vector and false otherwise
+                                                @param[in] ARG Vector*/
+                                            /** @return True if the argument is a vector and false otherwise */
+TgINLINE TgBOOL                             FCN_V(tgMH_Is_Valid)( VEC_T(1,C) ARG );
+
+
+
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
                                                 @brief Return a vector that is assigned the per-element operation ARG0 * (ARG1 + ARG2)
@@ -38,7 +40,7 @@ TgINLINE VEC_T(1)                           FCN_V(tgMH_ADD)( VEC_T(1,CPCU) ARG0,
                                                 @param[in] ARG1 Vector
                                                 @param[in] ARG2 Vector
                                                 @return A vector that is assigned the per-element operation ARG0 * (ARG1 + ARG2) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_MAD)( VEC_T(1,CPCU) ARG0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_MAD)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
                                                 @brief Return a vector that is assigned the per-element operation -ARG0 * (ARG1 - ARG2)
@@ -46,141 +48,94 @@ TgINLINE VEC_T(1)                           FCN_V(tgMH_MAD)( VEC_T(1,CPCU) ARG0,
                                                 @param[in] ARG1 Vector
                                                 @param[in] ARG2 Vector
                                                 @return A vector that is assigned the per-element operation -ARG0 * (ARG1 - ARG2) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_NMS)( VEC_T(1,CPCU) ARG0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_NMS)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return the result of the dot product between the two vectors
+                                                @brief Return a vector where each element contains the result of the dot product between the two vectors
                                                 @param[in] ARG0 Vector
                                                 @param[in] ARG1 Vector
-                                                @return The result of the dot product between the two vectors */
-TgINLINE VAR_T()                            FCN_V(tgMH_DOT)( VEC_T(1,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+                                                @return A vector where each element contains the result of the dot product between the two vectors */
+TgINLINE VEC_T(1)                           FCN_V(tgMH_DOT)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
                                                 @brief Return a vector that is assigned the per-element operation ARG0 * ARG1
                                                 @param[in] ARG0 Vector
                                                 @param[in] ARG1 Vector
                                                 @return A vector that is assigned the per-element operation ARG0 * ARG1 */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_MUL)( VEC_T(1,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_MUL)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
                                                 @brief Return a vector that is assigned the per-element operation ARG0 / ARG1
                                                 @param[in] ARG0 Vector
                                                 @param[in] ARG1 Vector
                                                 @return A vector that is assigned the per-element operation ARG0 / ARG1 */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_DIV)( VEC_T(1,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_DIV)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation ARG0 - ARG1
+                                                @brief Return a vector where each element is the inverse of the argument
                                                 @param[in] ARG0 Vector
-                                                @param[in] ARG1 Vector
-                                                @return A vector that is assigned the per-element operation ARG0 - ARG1 */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_SUB)( VEC_T(1,CPCU) ARG0, VEC_T(1,CPCU) ARG1 );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation ARG0 * (ARG1 + ARG2)
-                                                @param[in] ARG0 Scalar
-                                                @param[in] ARG1 Vector
-                                                @param[in] ARG2 Vector
-                                                @return A vector that is assigned the per-element operation ARG0 * (ARG1 + ARG2) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_MAD_SVV)( VAR_T(C), VEC_T(1,CPCU), VEC_T(1,CPCU) );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation ARG0 * (ARG1 + ARG2)
-                                                @param[in] ARG0 Vector
-                                                @param[in] ARG1 Scalar
-                                                @param[in] ARG2 Vector
-                                                @return A vector that is assigned the per-element operation ARG0 * (ARG1 + ARG2) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_MAD_VSV)( VEC_T(1,CPCU), VAR_T(C), VEC_T(1,CPCU) );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation -ARG0 * (ARG1 - ARG2)
-                                                @param[in] ARG0 Scalar
-                                                @param[in] ARG1 Vector
-                                                @param[in] ARG2 Vector
-                                                @return A vector that is assigned the per-element operation -ARG0 * (ARG1 - ARG2) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_NMS_SVV)( VAR_T(C), VEC_T(1,CPCU), VEC_T(1,CPCU) );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation -ARG0 * (ARG1 - ARG2)
-                                                @param[in] ARG0 Vector
-                                                @param[in] ARG1 Scalar
-                                                @param[in] ARG2 Vector
-                                                @return A vector that is assigned the per-element operation -ARG0 * (ARG1 - ARG2) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_NMS_VSV)( VEC_T(1,CPCU), VAR_T(C), VEC_T(1,CPCU) );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation ARG0 * ARG1
-                                                @param[in] ARG0 Scalar
-                                                @param[in] ARG1 Vector
-                                                @return A vector that is assigned the per-element operation ARG0 * ARG1 */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_MUL_SV)( VAR_T(C), VEC_T(1,CPCU) );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation ARG0 * ARG1
-                                                @param[in] ARG0 Vector
-                                                @param[in] ARG1 Scalar
-                                                @return A vector that is assigned the per-element operation ARG0 * ARG1 */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_MUL_VS)( VEC_T(1,CPCU), VAR_T(C) );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation ARG0 / ARG1
-                                                @param[in] ARG0 Scalar
-                                                @param[in] ARG1 Vector
-                                                @return A vector that is assigned the per-element operation ARG0 / ARG1 */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_DIV_SV)( VAR_T(C), VEC_T(1,CPCU) );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
-                                                @brief Return a vector that is assigned the per-element operation ARG0 / ARG1
-                                                @param[in] ARG0 Vector
-                                                @param[in] ARG1 Scalar
-                                                @return A vector that is assigned the per-element operation ARG0 / ARG1 */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_DIV_VS)( VEC_T(1,CPCU), VAR_T(C) );
+                                                @return A vector where each element is the inverse of the argument */
+TgINLINE VEC_T(1)                           FCN_V(tgMH_RCP)( VEC_T(1,C) ARG );
 
 
 
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
+                                                @return Linear interpolation / extrapolation [ARG0 + ARG2*(ARG1 - ARG0)]
+                                                @param[in] ARG0 A value of the function type
+                                                @param[in] ARG1 A value of the function type
+                                                @param[in] ARG2 Interpolant / extrapolant */
+TgINLINE VEC_T(1)                           FCN_V(tgMH_LRP)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
                                                 @brief Return a vector where each element contains the the squared-length of the vector
                                                 @param[in] ARG0 Vector
                                                 @return A vector where each element contains the the squared-length of the vector */
-TgINLINE VAR_T()                            FCN_V(tgMH_LSQ)( VEC_T(1,CPCU) ARG );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_LSQ)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
                                                 @brief Return a vector where each element contains the the length of the vector
                                                 @param[in] ARG0 Vector
                                                 @return A vector where each element contains the the length of the vector */
-TgINLINE VAR_T()                            FCN_V(tgMH_LEN)( VEC_T(1,CPCU) ARG );
-
-                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
-                                                @brief Return a vector that is the negative of the argument
-                                                @param[in] ARG0 Vector
-                                                @return A vector that is the negative of the argument */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_NEG)( VEC_T(1,CPCU) ARG );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_LEN)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
                                                 @brief Return a vector that is assigned the per-element operation sqrt(ARG0)
                                                 @param[in] ARG0 Vector
                                                 @return A vector that is assigned the per-element operation sqrt(ARG0) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_SQRT)( VEC_T(1,CPCU) ARG );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_SQRT)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
                                                 @brief Return a vector that is assigned the per-element operation 1.0 / sqrt(ARG0)
                                                 @param[in] ARG0 Vector
                                                 @return A vector that is assigned the per-element operation 1.0 / sqrt(ARG0) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_RSQRT)( VEC_T(1,CPCU) ARG );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_RSQRT)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
                                                 @brief Return a vector that is a normalized version of the argument
                                                 @param[in] ARG0 Vector
                                                 @return A vector that is a normalized version of the argument */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_NORM)( VEC_T(1,CPCU) ARG );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_NORM)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
                                                 @brief Return a vector that is a normalized version of the argument and its original length
-                                                @param[out] OUT0 Destination to hold the original length of the vector in ARG1
+                                                @param[out] OUT0 Destination vector to hold the original length of the vector in ARG1
                                                 @param[in] ARG1 Vector
                                                 @return A vector that is a normalized version of the argument and its original length */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_NORM_LEN)( VAR_T(P) OUT0, VEC_T(1,CPCU) ARG1 );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_NORM_LEN)( VEC_T(1,PC) NONULL OUT0, VEC_T(1,C) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
+                                                @brief Return a new vector with values from ARG0 and the sign in ARG1
+                                                @param[in] ARG0 Vector
+                                                @param[in] ARG1 Vector
+                                                @return A new vector with values from ARG0 and the sign in ARG1 */
+TgINLINE VEC_T(1)                           FCN_V(tgMH_CP_SGN)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
+                                                @brief Return a new vector whose element value are (-1,0,+1) based on the sign of the argument elements
+                                                @param[in] ARG Vector
+                                                @return A new vector whose element value are (-1,0,+1) based on the sign of the argument elements */
+TgINLINE VEC_T(1)                           FCN_V(tgMH_PRX_SGN)( VEC_T(1,C) ARG );
 
 
 
@@ -189,37 +144,67 @@ TgINLINE VEC_T(1)                           FCN_V(tgMH_NORM_LEN)( VAR_T(P) OUT0,
                                                 @brief Return a vector that is assigned the per-element operation floor(ARG0)
                                                 @param[in] ARG Vector
                                                 @return A vector that is assigned the per-element operation floor(ARG0) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_FLR)( VEC_T(1,CPCU) ARG );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_FLR)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_BOUNDS
                                                 @brief Return a vector that is assigned the per-element operation ceil(ARG0)
                                                 @param[in] ARG Vector
                                                 @return A vector that is assigned the per-element operation ceil(ARG0) */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_CEL)( VEC_T(1,CPCU) ARG );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_CEL)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_BOUNDS
                                                 @brief Return a new vector clamping each element of ARG0 between the range of [ARG1,ARG2]
-                                                @param[in] ARG Vector
-                                                @param[in] ARG Vector for the minimum range
-                                                @param[in] ARG Vector for the maximum range
+                                                @param[in] ARG0 Vector
+                                                @param[in] ARG1 Vector for the minimum range
+                                                @param[in] ARG2 Vector for the maximum range
                                                 @return A new vector clamping each element of ARG0 between the range of [ARG1,ARG2]  */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_CLP)( VEC_T(1,CPCU) ARG0, VEC_T(1,CPCU) ARG1, VEC_T(1,CPCU) ARG2 );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_CLP)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_BOUNDS
                                                 @brief Return a new vector that clamps the result to [0,1]
                                                 @param[in] ARG Vector
                                                 @return A new vector that clamps the result to [0,1] */
-TgINLINE VEC_T(1)                           FCN_V(tgMH_SAT)( VEC_T(1,CPCU) ARG );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_SAT)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_BOUNDS
-                                                @brief Return a new vector whose element value is set if the argument element is NaN and zero otherwise
+                                                @brief Return true if any lane is not a finite number, and false otherwise
                                                 @param[in] ARG Vector
-                                                @return A new vector whose element value is set if the argument element is NaN and zero otherwise */
-TgINLINE TgBOOL                             FCN_V(tgMH_NaN)( VEC_T(1,CPCU) ARG );
+                                                @return True if any lane is not a finite number, and false otherwise */
+TgINLINE TgBOOL                             FCN_V(tgMH_NAN)( VEC_T(1,C) ARG );
 
                                             /** @addtogroup TGS_COMMON_MATH_VECTOR_BOUNDS
                                                 @brief Return a new vector whose element value is set if the argument element is in the range of [-ARG1,ARG1]
-                                                @param[in] ARG Vector
-                                                @param[in] ARG Vector whose elements representing the bounding range
+                                                @param[in] ARG0 Vector
+                                                @param[in] ARG1 Vector whose elements representing the bounding range
                                                 @return A new vector whose element value is set if the argument element is in the range of [-ARG1,ARG1] */
-TgINLINE TgBOOL                             FCN_V(tgMH_BND)( VEC_T(1,CPC) ARG0, VEC_T(1,CPC) ARG1 );
+TgINLINE VEC_T(1)                           FCN_V(tgMH_BND)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_BOUNDS
+                                                @brief Return a new vector whose element value is set if the argument element is NAN and zero otherwise
+                                                @param[in] ARG0 Vector
+                                                @param[in] ARG1 Vector for the minimum range
+                                                @param[in] ARG2 Vector for the maximum range
+                                                @return True if the input vector is within the closed interval of [ARG1, ARG2] */
+TgINLINE TgBOOL                             FCN_V(tgMH_Test_Interval)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
+
+
+
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CMP
+                                                @brief Return true if the two arguments are approximately the same vector, and false otherwise
+                                                @param[in] ARG0 Vector
+                                                @param[in] ARG1 Vector
+                                                @return True if the two arguments are approximately the same vector, and false otherwise */
+TgINLINE TgBOOL                             FCN_V(tgMH_PRX_CMP_EQ)( VEC_T(1,C) ARG0, VEC_T(1,C) ARG1 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CMP
+                                                @brief Return true if all lanes of the argument are near zero, and false otherwise
+                                                @param[in] ARG0 Vector
+                                                @return True if all lanes of the argument are near zero, and false otherwise */
+TgINLINE TgBOOL                             FCN_V(tgMH_NR0)( VEC_T(1,C) ARG0 );
+
+                                            /** @addtogroup TGS_COMMON_MATH_VECTOR_CMP
+                                                @brief Return true if all lanes of the argument are near one, and false otherwise
+                                                @param[in] ARG0 Vector
+                                                @return True if all lanes of the argument are near one, and false otherwise */
+TgINLINE TgBOOL                             FCN_V(tgMH_NR1)( VEC_T(1,C) ARG0 );

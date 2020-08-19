@@ -2,7 +2,7 @@
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
     »File«      TgS Common - Math [Matrix].inl
     »Author«    Andrew Aye (mailto: andrew.aye@teikitu.com, https://www.andrew.aye.page)
-    »Version«   5.16 / »GUID« 015482FC-A4BD-4E1C-AE49-A30E5728D73A */
+    »Version«   5.17 / »GUID« 3ED3C595-046B-47FB-8785-5C167178CD24 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /*  Copyright: © 2002-2020, Andrew Aye.  All Rights Reserved.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation,
@@ -22,15 +22,15 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
 #define MAT_03_ASSIGN_EQN                                                                                                                                                           \
-    pxRet->m_avRow[0] = EQN( 0 );                                                                                                                                                   \
-    pxRet->m_avRow[1] = EQN( 1 );                                                                                                                                                   \
-    pxRet->m_avRow[2] = EQN( 2 );
+    pmOUT_0->m_avCol[0] = EQN( 0 );                                                                                                                                                 \
+    pmOUT_0->m_avCol[1] = EQN( 1 );                                                                                                                                                 \
+    pmOUT_0->m_avCol[2] = EQN( 2 );
 
 #define MAT_04_ASSIGN_EQN                                                                                                                                                           \
-    pxRet->m_avRow[0] = EQN( 0 );                                                                                                                                                   \
-    pxRet->m_avRow[1] = EQN( 1 );                                                                                                                                                   \
-    pxRet->m_avRow[2] = EQN( 2 );                                                                                                                                                   \
-    pxRet->m_avRow[3] = EQN( 3 );
+    pmOUT_0->m_avCol[0] = EQN( 0 );                                                                                                                                                 \
+    pmOUT_0->m_avCol[1] = EQN( 1 );                                                                                                                                                 \
+    pmOUT_0->m_avCol[2] = EQN( 2 );                                                                                                                                                 \
+    pmOUT_0->m_avCol[3] = EQN( 3 );
 
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
@@ -39,11 +39,11 @@
 
 #define TEMPLATE__TEST_AND_UNLOAD_TEMPLATE_MACROS
 #define TEMPLATE__VECTOR_DIM 4
-#define TEMPLATE__VECTOR_ROW 3
+#define TEMPLATE__VECTOR_COL 3
 #include "TgS COMMON/TgS Common - Math [Matrix] [API].i_inc"
 
 #define TEMPLATE__VECTOR_DIM 4
-#define TEMPLATE__VECTOR_ROW 4
+#define TEMPLATE__VECTOR_COL 4
 #include "TgS COMMON/TgS Common - Math [Matrix] [API].i_inc"
 
 #define TGS_COMMON_MATH_API_MATRIX_IINC

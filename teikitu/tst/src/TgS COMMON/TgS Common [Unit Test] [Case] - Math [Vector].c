@@ -16,12 +16,12 @@
 /*  File Local Tests                                                                                                                                                               */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-TEST_LOCAL TgFLOAT32 tgMH_ERR_F32_02_1( TgVEC_F32_02_1_CPCU ptv0 ) { return (tgCM_MAX_F32( 10.0F*tgMH_LEN_F32_02_1( ptv0 ), 1.0F )); }
-TEST_LOCAL TgFLOAT32 tgMH_ERR_F32_03_1( TgVEC_F32_03_1_CPCU ptv0 ) { return (tgCM_MAX_F32( 10.0F*tgMH_LEN_F32_03_1( ptv0 ), 1.0F )); }
-TEST_LOCAL TgFLOAT32 tgMH_ERR_F32_04_1( TgVEC_F32_04_1_CPCU ptv0 ) { return (tgCM_MAX_F32( 10.0F*tgMH_LEN_F32_04_1( ptv0 ), 1.0F )); }
-TEST_LOCAL TgFLOAT64 tgMH_ERR_F64_02_1( TgVEC_F64_02_1_CPCU ptv0 ) { return (tgCM_MAX_F64( 10.0*tgMH_LEN_F64_02_1( ptv0 ), 1.0 )); }
-TEST_LOCAL TgFLOAT64 tgMH_ERR_F64_03_1( TgVEC_F64_03_1_CPCU ptv0 ) { return (tgCM_MAX_F64( 10.0*tgMH_LEN_F64_03_1( ptv0 ), 1.0 )); }
-TEST_LOCAL TgFLOAT64 tgMH_ERR_F64_04_1( TgVEC_F64_04_1_CPCU ptv0 ) { return (tgCM_MAX_F64( 10.0*tgMH_LEN_F64_04_1( ptv0 ), 1.0 )); }
+TEST_LOCAL TgFLOAT32 tgMH_ERR_S_F32_02_1( TgVEC_S_F32_02_1_C v0 ) { return (tgCM_MAX_F32( 10.0F*tgMH_LEN_S_F32_02_1( v0 ), 1.0F )); }
+TEST_LOCAL TgFLOAT32 tgMH_ERR_S_F32_03_1( TgVEC_S_F32_03_1_C v0 ) { return (tgCM_MAX_F32( 10.0F*tgMH_LEN_S_F32_03_1( v0 ), 1.0F )); }
+TEST_LOCAL TgFLOAT32 tgMH_ERR_S_F32_04_1( TgVEC_S_F32_04_1_C v0 ) { return (tgCM_MAX_F32( 10.0F*tgMH_LEN_S_F32_04_1( v0 ), 1.0F )); }
+TEST_LOCAL TgFLOAT64 tgMH_ERR_S_F64_02_1( TgVEC_S_F64_02_1_C v0 ) { return (tgCM_MAX_F64(  10.0*tgMH_LEN_S_F64_02_1( v0 ), 1.0 )); }
+TEST_LOCAL TgFLOAT64 tgMH_ERR_S_F64_03_1( TgVEC_S_F64_03_1_C v0 ) { return (tgCM_MAX_F64(  10.0*tgMH_LEN_S_F64_03_1( v0 ), 1.0 )); }
+TEST_LOCAL TgFLOAT64 tgMH_ERR_S_F64_04_1( TgVEC_S_F64_04_1_C v0 ) { return (tgCM_MAX_F64(  10.0*tgMH_LEN_S_F64_04_1( v0 ), 1.0 )); }
 
 
 #define TEMPLATE__ENABLE_INTEGER

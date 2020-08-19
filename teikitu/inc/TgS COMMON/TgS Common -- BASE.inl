@@ -20,16 +20,16 @@
 /* TgS Common - Inline Implementation */
 #include "TgS COMMON/TgS Common - Base - Type.inl"
 
-#include TgHEADER_HARDWARE(TgS COMMON/TgS,Common - Base - API.inl)
+#include "TgS COMMON/TgS Common - Base - API.inl"
 #include "TgS COMMON/TgS Common - Base - API [Math].inl"
 #include "TgS COMMON/TgS Common - Base - API [Text].inl"
 
 /* Compiler and Hardware - Inline Implementation */
-#include TgHEADER_PLATFORM(TgS COMMON/TgS,Common - STg1_MT_SM.inl)
-#include TgHEADER_PLATFORM(TgS COMMON/TgS,Common - STg1_MT_MX.inl)
+#include TgHEADER_THREAD_SUPPORT(TgS COMMON/TgS,Common - STg1_MT_SM.inl)
+#include TgHEADER_THREAD_SUPPORT(TgS COMMON/TgS,Common - STg1_MT_MX.inl)
 
 #include TgHEADER_COMPILER(TgS COMMON/TgS,Common - Base - API [Platform].inl)
-#include TgHEADER_PLATFORM(TgS COMMON/TgS,Common - Base - API [Platform].inl)
+#include TgHEADER_THREAD_SUPPORT(TgS COMMON/TgS,Common - Base - API [Platform].inl)
 
 
 /* =============================================================================================================================================================================== */

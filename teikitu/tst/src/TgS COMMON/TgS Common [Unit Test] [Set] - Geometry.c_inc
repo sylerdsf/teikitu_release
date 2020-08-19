@@ -21,10 +21,12 @@
     #if !defined (ENABLE_RELOAD_GUARD)
         #define ENABLE_RELOAD_GUARD
         #if !defined(TEMPLATE__TYPE_SIZE)
+            #if TgCOMPILE__NON_NATIVE_VECTOR_AS_NATIVE
+                #define TEMPLATE__TYPE_SIZE 64
+                #include __FILE__
+                #undef TEMPLATE__TYPE_SIZE
+            #endif
             #define TEMPLATE__TYPE_SIZE 32
-            #include __FILE__
-            #undef TEMPLATE__TYPE_SIZE
-            #define TEMPLATE__TYPE_SIZE 64
         #endif
         #undef ENABLE_RELOAD_GUARD
     #endif
